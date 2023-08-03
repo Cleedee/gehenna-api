@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "gehenna-api"
 version = "0.1.0"
-description = ""
+description = "API Rest para gerenciamento de coleções e decks de V:TES"
 authors = ["Claudio Torcato <claudiotorcato@gmail.com>"]
 readme = "README.md"
 packages = [{include = "gehenna_api"}]
