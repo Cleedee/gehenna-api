@@ -10,6 +10,7 @@ packages = [{include = "gehenna_api"}]
 python = "^3.11"
 fastapi = "^0.100.1"
 uvicorn = "^0.23.2"
+pydantic = {extras = ["email"], version = "^2.1.1"}
 
 
 [tool.poetry.group.dev.dependencies]
@@ -38,7 +39,7 @@ extend-exclude = '(migrations/)'
 [tool.taskipy.tasks]
 lint = 'ruff . && blue --check . --diff'
 format = 'blue .  && isort .'
-run = 'uvicorn gehenna_api.app:app --reload'
+run = 'uvicorn gehenna_api.app:app --port=8002 --reload'
 pre_test = 'task lint'
 test = 'pytest -s -x --cov=gehenna_api -vv'
 post_test = 'coverage html'
