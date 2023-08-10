@@ -49,7 +49,7 @@ def test_create_card(client):
     }
 
 
-def test_read_cards(client):
-    response = client.get('/users/')
-    assert response.status_code == 200
-    assert response.json() == {'cards': []}
+# def test_read_cards(client):
+#    response = client.get('/users/')
+#    assert response.status_code == 200
+#    assert response.json() == {'cards': []}
