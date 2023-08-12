@@ -13,6 +13,7 @@ def test_create_card(client):
         json={
             'code': 0,
             'name': 'Nergal',
+            'tipo': 'vampire',
             'disciplines': '',
             'clan': '',
             'cost': '',
@@ -28,6 +29,7 @@ def test_create_card(client):
     assert response.json() == {
         'code': 0,
         'name': 'Nergal',
+        'tipo': 'vampire',
         'disciplines': '',
         'clan': '',
         'cost': '',
@@ -59,6 +61,7 @@ def test_update_card(client, card):
         json={
             'code': 0,
             'name': 'Nergal',
+            'tipo': 'vampire',
             'disciplines': '',
             'clan': '',
             'cost': '',
@@ -75,6 +78,7 @@ def test_update_card(client, card):
     assert response.json() == {
         'code': 0,
         'name': 'Nergal',
+        'tipo': 'vampire',
         'disciplines': '',
         'clan': '',
         'cost': '',

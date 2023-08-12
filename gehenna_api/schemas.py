@@ -6,6 +6,7 @@ from pydantic import BaseModel, ConfigDict
 class CardSchema(BaseModel):
     code: int   # código da carta na base do Gehenna
     name: str
+    tipo: str
     disciplines: Optional[str] = ''
     clan: Optional[str] = ''
     cost: Optional[str] = ''

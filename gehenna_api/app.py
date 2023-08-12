@@ -25,6 +25,7 @@ def create_card(card: CardSchema, session: Session = Depends(get_session)):
     db_card = Card(
         code=card.code,
         name=card.name,
+        tipo=card.tipo,
         disciplines=card.disciplines,
         clan=card.clan,
         capacity=card.capacity,
@@ -56,6 +57,7 @@ def update_card(
     if db_card is None:
         raise HTTPException(statud_code=404, detail='Card not found')
     db_card.name = card.name
+    db_card.tipo = card.tipo
     db_card.disciplines = card.disciplines
     db_card.capacity = card.capacity
     db_card.clan = card.clan
