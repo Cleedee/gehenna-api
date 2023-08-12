@@ -1,11 +1,10 @@
 from logging.config import fileConfig
 
-from sqlalchemy import engine_from_config
-from sqlalchemy import pool
-
 from alembic import context
-from gehenna_api.settings import Settings
+from sqlalchemy import engine_from_config, pool
+
 from gehenna_api.models import Base
+from gehenna_api.settings import Settings
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

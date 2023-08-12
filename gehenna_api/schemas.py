@@ -1,18 +1,21 @@
-from pydantic import BaseModel
+from typing import Optional
+
+from pydantic import BaseModel, ConfigDict
 
 
 class CardSchema(BaseModel):
     code: int   # código da carta na base do Gehenna
     name: str
-    disciplines: str
-    clan: str
-    cost: str
-    capacity: str
-    group: str
-    attributes: str
-    text: str
-    title: str
-    sect: str
+    disciplines: Optional[str] = ''
+    clan: Optional[str] = ''
+    cost: Optional[str] = ''
+    capacity: Optional[str] = ''
+    group: Optional[str] = ''
+    attributes: Optional[str] = ''
+    text: Optional[str] = ''
+    title: Optional[str] = ''
+    sect: Optional[str] = ''
+    model_config = ConfigDict(from_attributes=True)
 
 
 class CardPublic(CardSchema):
