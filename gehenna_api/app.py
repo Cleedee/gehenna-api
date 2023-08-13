@@ -48,17 +48,22 @@ def read_cards(
     cards = session.scalars(select(Card).offset(skip).limit(limit)).all()
     return {'cards': cards}
 
+
 @app.get('/card/{card_id}', response_model=CardPublic)
-def read_card_by_id(card_id:int, session: Session = Depends(get_session)):
+def read_card_by_id(card_id: int, session: Session = Depends(get_session)):
     card = session.scalar(select(Card).where(Card.id == card_id))
     if card is None:
         raise HTTPException(status_code=404, detail='Card not found')
     return card
 
+
 @app.get('/cards/{name}', response_model=CardList)
 def read_cards_by_name(name: str, session: Session = Depends(get_session)):
-    cards = session.scalars(select(Card).where(Card.name.like(f'%{name}%'))).all()
+    cards = session.scalars(
+        select(Card).where(Card.name.like(f'%{name}%'))
+    ).all()
     return {'cards': cards}
+
 
 @app.put('/cards/{card_id}', response_model=CardPublic)
 def update_card(
