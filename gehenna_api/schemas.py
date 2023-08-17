@@ -15,6 +15,10 @@ class UserPublic(BaseModel):
     email: EmailStr
 
 
+class UserList(BaseModel):
+    users: list[UserPublic]
+
+
 class CardSchema(BaseModel):
     code: int   # código da carta na base do Gehenna
     name: str
