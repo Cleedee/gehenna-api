@@ -1,3 +1,5 @@
+import datetime
+
 from gehenna_api.schemas import CardPublic
 
 
@@ -125,3 +127,58 @@ def test_get_token(client, user):
     assert response.status_code == 200
     assert 'access_token' in token
     assert 'token_type' in token
+
+
+def test_create_moviment(client, moviment):
+    response = client.post(
+        '/stocks/moviment',
+        json=moviment,
+    )
+    assert response.status_code == 201
+    assert response.json() == moviment
+
+
+def test_read_moviments(client):
+    dt = datetime.date.today()
+    dt_str = dt.strftime('%Y-%m-%d')
+    response = client.get('/stocks/moviments')
+    assert response.status_code == 200
+    assert response.json() == {
+        'moviments': [
+            {
+                'name': 'Loja de Fortaleza',
+                'tipo': 'entrada',
+                'owner': 1,
+                'date_move': dt_str,
+                'price': '16.5',
+                'id': 1,
+            }
+        ]
+    }
+
+
+def test_update_moviment(client):
+    dt = datetime.date.today()
+    dt_str = dt.strftime('%Y-%m-%d')
+    response = client.put(
+        '/stocks/moviment/1',
+        json={
+            'name': 'Loja de Fortaleza',
+            'tipo': 'saida',
+            'owner': 1,
+            'date_move': dt_str,
+            'price': '16.5',
+        },
+    )
+    assert response.status_code == 200
+    assert response.json() == {
+        'name': 'Loja de Fortaleza',
+        'tipo': 'saida',
+        'owner': 1,
+        'date_move': dt_str,
+        'price': '16.5',
+        'id': 1,
+    }
+
+def test_delete_moviment(client):
+    response = client.delete('/moviments/1')

@@ -1,3 +1,5 @@
+import decimal
+from datetime import date
 from typing import Optional
 
 from pydantic import BaseModel, ConfigDict, EmailStr
@@ -41,6 +43,22 @@ class CardPublic(CardSchema):
 
 class CardList(BaseModel):
     cards: list[CardPublic]
+
+
+class MovimentSchema(BaseModel):
+    name: str
+    tipo: str
+    owner: int
+    date_move: date
+    price: decimal.Decimal
+
+
+class MovimentPublic(MovimentSchema):
+    id: int
+
+
+class MovimentList(BaseModel):
+    moviments: list[MovimentPublic]
 
 
 class Message(BaseModel):

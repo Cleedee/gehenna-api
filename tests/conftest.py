@@ -1,3 +1,5 @@
+import datetime
+
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
@@ -59,6 +61,19 @@ def user(session):
     user.clean_password = 'testtest'
 
     return user
+
+
+@pytest.fixture
+def moviment():
+    dt = datetime.date.today()
+    dt_str = dt.strftime('%Y-%m-%d')
+    return {
+        'name': 'Loja de Fortaleza',
+        'tipo': 'entrada',
+        'date_move': dt_str,
+        'price': '16.5',
+        'owner': 1,
+    }
 
 
 @pytest.fixture

@@ -4,13 +4,14 @@ from sqlalchemy.orm import Session
 
 from gehenna_api.database import get_session
 from gehenna_api.models import Card
-from gehenna_api.routes import auth, users
+from gehenna_api.routes import auth, stocks, users
 from gehenna_api.schemas import CardList, CardPublic, CardSchema, Message
 
 app = FastAPI()
 
 app.include_router(users.router)
 app.include_router(auth.router)
+app.include_router(stocks.router)
 
 
 @app.get('/')
