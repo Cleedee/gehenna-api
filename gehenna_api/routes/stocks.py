@@ -3,7 +3,12 @@ import datetime
 from fastapi import APIRouter
 from fastapi.exceptions import HTTPException
 
-from gehenna_api.schemas import Message, MovimentList, MovimentPublic, MovimentSchema
+from gehenna_api.schemas import (
+    Message,
+    MovimentList,
+    MovimentPublic,
+    MovimentSchema,
+)
 
 router = APIRouter(prefix='/stocks', tags=['stocks'])
 
@@ -31,6 +36,7 @@ def create_moviment(moviment: MovimentSchema):
 def read_moviments():
     return {'moviments': database}
 
+
 @router.put('/moviments/{id}', response_model=MovimentPublic)
 def update_moviment(id: int, moviment: MovimentSchema):
     if id > len(database) or id < 1:
@@ -39,10 +45,10 @@ def update_moviment(id: int, moviment: MovimentSchema):
     database[id - 1] = moviment_with_id
     return moviment_with_id
 
+
 @router.delete('/moviments/{id}', response_model=Message)
 def delete_moviment(id: int):
     if id > len(database) or id < 1:
         raise HTTPException(status_code=404, detail='Moviment not found')
     del database[id - 1]
     return {'detail': 'Moviment deleted'}
-

@@ -1,6 +1,9 @@
+from datetime import date
+from decimal import Decimal
+
 from sqlalchemy import select
 
-from gehenna_api.models import Card, User
+from gehenna_api.models import Card, Moviment, User
 
 
 def test_create_card(session):
@@ -21,3 +24,17 @@ def test_create_user(session):
     user = session.scalar(select(User).where(User.username == 'chackero'))
 
     assert user.username == 'chackero'
+
+
+def test_create_moviment(session):
+    new_move = Moviment(
+        name='eBay',
+        tipo='entrada',
+        date_move=date.today(),
+        price=Decimal('16.5'),
+    )
+    session.add(new_move)
+    session.commit()
+
+    move = session.scalar(select(Moviment).where(Moviment.name == 'eBay'))
+    assert move.name == 'eBay'

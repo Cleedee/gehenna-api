@@ -1,3 +1,5 @@
+import datetime
+from decimal import Decimal
 from typing import Optional
 
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
@@ -32,3 +34,15 @@ class Card(Base):
     text: Mapped[Optional[str]]
     title: Mapped[Optional[str]]
     sect: Mapped[Optional[str]]
+
+
+class Moviment(Base):
+    __tablename__ = 'moviments'
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str]
+    tipo: Mapped[str]
+    date_move: Mapped[datetime.date]
+    price: Mapped[Decimal]
+    # owner_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    # owner: Mapped["User"] = relationship()

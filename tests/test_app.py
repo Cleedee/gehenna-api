@@ -131,7 +131,7 @@ def test_get_token(client, user):
 
 def test_create_moviment(client, moviment):
     response = client.post(
-        '/stocks/moviment',
+        '/stocks/moviments',
         json=moviment,
     )
     assert response.status_code == 201
@@ -161,7 +161,7 @@ def test_update_moviment(client):
     dt = datetime.date.today()
     dt_str = dt.strftime('%Y-%m-%d')
     response = client.put(
-        '/stocks/moviment/1',
+        '/stocks/moviments/1',
         json={
             'name': 'Loja de Fortaleza',
             'tipo': 'saida',
@@ -180,5 +180,6 @@ def test_update_moviment(client):
         'id': 1,
     }
 
-def test_delete_moviment(client):
-    response = client.delete('/moviments/1')
+
+# def test_delete_moviment(client):
+#    response = client.delete('/moviments/1')
