@@ -181,5 +181,7 @@ def test_update_moviment(client):
     }
 
 
-# def test_delete_moviment(client):
-#    response = client.delete('/moviments/1')
+def test_delete_moviment(client):
+    response = client.delete('/stocks/moviments/1')
+    assert response.status_code == 200
+    assert response.json() == {'detail': 'Moviment deleted'}
