@@ -1,8 +1,9 @@
 import datetime
 from decimal import Decimal
 from typing import Optional
+from sqlalchemy import ForeignKey
 
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 
 class Base(DeclarativeBase):
@@ -44,5 +45,5 @@ class Moviment(Base):
     tipo: Mapped[str]
     date_move: Mapped[datetime.date]
     price: Mapped[Decimal]
-    # owner_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
-    # owner: Mapped["User"] = relationship()
+    owner_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    owner: Mapped["User"] = relationship()
