@@ -1,8 +1,12 @@
 import datetime
+from decimal import Decimal
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from fastapi.exceptions import HTTPException
+from sqlalchemy.orm import Session
 
+from gehenna_api.database import get_session
+from gehenna_api.models import Moviment
 from gehenna_api.schemas import (
     Message,
     MovimentList,
@@ -19,7 +23,7 @@ database = [
     {
         'name': 'Loja de Fortaleza',
         'tipo': 'entrada',
-        'owner': 1,
+        'owner_id': 1,
         'date_move': dt_str,
         'price': '16.5',
         'id': 1,
@@ -28,8 +32,20 @@ database = [
 
 
 @router.post('/moviments', status_code=201)
-def create_moviment(moviment: MovimentSchema):
-    return moviment
+def create_moviment(
+    moviment: MovimentSchema, session: Session = Depends(get_session)
+):
+    db_move = Moviment(
+        name=moviment.name,
+        tipo=moviment.tipo,
+        date_move=moviment.date_move,
+        price=Decimal(moviment.price),
+        owner_id=moviment.owner_id,
+    )
+    session.add(db_move)
+    session.commit()
+    session.refresh(db_move)
+    return db_move
 
 
 @router.get('/moviments', response_model=MovimentList)

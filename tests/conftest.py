@@ -1,4 +1,5 @@
 import datetime
+from decimal import Decimal
 
 import pytest
 from fastapi.testclient import TestClient
@@ -8,7 +9,7 @@ from sqlalchemy.pool import StaticPool
 
 from gehenna_api.app import app
 from gehenna_api.database import get_session
-from gehenna_api.models import Base, Card, User
+from gehenna_api.models import Base, Card, Moviment, User
 from gehenna_api.security import get_password_hash
 
 
@@ -64,16 +65,20 @@ def user(session):
 
 
 @pytest.fixture
-def moviment():
+def moviment(session):
     dt = datetime.date.today()
-    dt_str = dt.strftime('%Y-%m-%d')
-    return {
-        'name': 'Loja de Fortaleza',
-        'tipo': 'entrada',
-        'date_move': dt_str,
-        'price': '16.5',
-        'owner': 1,
-    }
+    #    dt_str = dt.strftime('%Y-%m-%d')
+    moviment = Moviment(
+        name='Loja de Fortaleza',
+        tipo='entrada',
+        date_move=dt,
+        price=Decimal('16.5'),
+        owner_id=1,
+    )
+    session.add(moviment)
+    session.commit()
+    session.refresh(moviment)
+    return moviment
 
 
 @pytest.fixture

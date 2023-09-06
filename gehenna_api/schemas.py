@@ -48,9 +48,10 @@ class CardList(BaseModel):
 class MovimentSchema(BaseModel):
     name: str
     tipo: str
-    owner: int
+    owner_id: int
     date_move: date
     price: decimal.Decimal
+    model_config = ConfigDict(from_attributes=True)
 
 
 class MovimentPublic(MovimentSchema):

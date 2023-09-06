@@ -129,13 +129,26 @@ def test_get_token(client, user):
     assert 'token_type' in token
 
 
-def test_create_moviment(client, moviment):
+def test_create_moviment(client):
     response = client.post(
         '/stocks/moviments',
-        json=moviment,
+        json={
+            'name': 'Loja de Fortaleza',
+            'tipo': 'entrada',
+            'date_move': '2023-10-10',
+            'price': 16.5,
+            'owner_id': 1,
+        },
     )
     assert response.status_code == 201
-    assert response.json() == moviment
+    assert response.json() == {
+        'name': 'Loja de Fortaleza',
+        'tipo': 'entrada',
+        'owner_id': 1,
+        'date_move': '2023-10-10',
+        'price': 16.5,
+        'id': 1,
+    }
 
 
 def test_read_moviments(client):
@@ -148,7 +161,7 @@ def test_read_moviments(client):
             {
                 'name': 'Loja de Fortaleza',
                 'tipo': 'entrada',
-                'owner': 1,
+                'owner_id': 1,
                 'date_move': dt_str,
                 'price': '16.5',
                 'id': 1,
@@ -165,7 +178,7 @@ def test_update_moviment(client):
         json={
             'name': 'Loja de Fortaleza',
             'tipo': 'saida',
-            'owner': 1,
+            'owner_id': 1,
             'date_move': dt_str,
             'price': '16.5',
         },
@@ -174,7 +187,7 @@ def test_update_moviment(client):
     assert response.json() == {
         'name': 'Loja de Fortaleza',
         'tipo': 'saida',
-        'owner': 1,
+        'owner_id': 1,
         'date_move': dt_str,
         'price': '16.5',
         'id': 1,

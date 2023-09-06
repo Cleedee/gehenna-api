@@ -32,9 +32,11 @@ def test_create_moviment(session):
         tipo='entrada',
         date_move=date.today(),
         price=Decimal('16.5'),
+        owner_id=1,
     )
     session.add(new_move)
     session.commit()
 
     move = session.scalar(select(Moviment).where(Moviment.name == 'eBay'))
     assert move.name == 'eBay'
+    assert move.owner_id == 1
