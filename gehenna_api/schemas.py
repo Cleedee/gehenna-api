@@ -51,6 +51,7 @@ class MovimentSchema(BaseModel):
     owner_id: int
     date_move: date
     price: decimal.Decimal
+    code: int
     model_config = ConfigDict(from_attributes=True)
 
 

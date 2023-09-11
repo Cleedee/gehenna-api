@@ -41,6 +41,7 @@ def create_moviment(
         date_move=moviment.date_move,
         price=Decimal(moviment.price),
         owner_id=moviment.owner_id,
+        code=moviment.code
     )
     session.add(db_move)
     session.commit()
