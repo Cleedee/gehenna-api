@@ -4,9 +4,10 @@ from decimal import Decimal
 from fastapi import APIRouter, Depends
 from fastapi.exceptions import HTTPException
 from sqlalchemy.orm import Session
+from sqlalchemy import select
 
 from gehenna_api.database import get_session
-from gehenna_api.models import Moviment
+from gehenna_api.models import Moviment, User
 from gehenna_api.schemas import (
     Message,
     MovimentList,
@@ -49,18 +50,36 @@ def create_moviment(
     return db_move
 
 
-@router.get('/moviments', response_model=MovimentList)
-def read_moviments():
-    return {'moviments': database}
+@router.get('/moviments/{username}', response_model=MovimentList)
+def read_moviments(
+    username: str,
+    skip: int = 0, limit:int = 100, session: Session = Depends(get_session)
+    ):
+    user: User = session.scalar(select(User).where(User.username == username))
+    if user is None:
+        raise HTTPException(status_code=404, detail='User not found')
+    moves = session.scalars(select(Moviment).where(
+        Moviment.owner_id == user.id
+    ).offset(skip).limit(limit)).all()
+    return {'moviments': moves}
 
 
 @router.put('/moviments/{id}', response_model=MovimentPublic)
-def update_moviment(id: int, moviment: MovimentSchema):
-    if id > len(database) or id < 1:
+def update_moviment(
+    id: int, moviment: MovimentSchema, session: Session = Depends(get_session)
+):
+    db_move: Moviment  = session.scalar(select(Moviment).where(Moviment.id == id))
+    if db_move is None:
         raise HTTPException(status_code=404, detail='Moviment not found')
-    moviment_with_id = MovimentPublic(**moviment.model_dump(), id=id)
-    database[id - 1] = moviment_with_id
-    return moviment_with_id
+    db_move.name = moviment.name
+    db_move.tipo = moviment.tipo
+    db_move.code = moviment.code
+    db_move.price = moviment.price
+    db_move.owner_id = moviment.owner_id
+    db_move.date_move = moviment.date_move
+    session.commit()
+    session.refresh(db_move)
+    return db_move
 
 
 @router.delete('/moviments/{id}', response_model=Message)
