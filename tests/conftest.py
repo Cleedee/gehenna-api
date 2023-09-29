@@ -67,13 +67,14 @@ def user(session):
 @pytest.fixture
 def moviment(session):
     dt = datetime.date.today()
-    #    dt_str = dt.strftime('%Y-%m-%d')
+    # dt_str = dt.strftime('%Y-%m-%d')
     moviment = Moviment(
         name='Loja de Fortaleza',
         tipo='entrada',
         date_move=dt,
         price=Decimal('16.5'),
         owner_id=1,
+        code=1,
     )
     session.add(moviment)
     session.commit()

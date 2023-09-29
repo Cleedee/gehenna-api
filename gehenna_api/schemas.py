@@ -1,8 +1,8 @@
 import decimal
 from datetime import date
-from typing import Optional
+from typing import Any, Optional
 
-from pydantic import BaseModel, ConfigDict, EmailStr
+from pydantic import BaseModel, ConfigDict, EmailStr, validator
 
 
 class UserSchema(BaseModel):
@@ -52,7 +52,13 @@ class MovimentSchema(BaseModel):
     date_move: date
     price: decimal.Decimal
     code: int
-    model_config = ConfigDict(from_attributes=True)
+    model_config = ConfigDict(
+        from_attributes=True, json_encoders={decimal.Decimal: str}
+    )
+
+    @validator('price', pre=True)
+    def quantize_two_decimal_places(cls, v: Any):
+        return decimal.Decimal(v).quantize(decimal.Decimal('0.01'))
 
 
 class MovimentPublic(MovimentSchema):
@@ -74,3 +80,19 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     username: str | None = None
+
+
+class ItemSchema(BaseModel):
+    card_id: int
+    moviment_id: int
+    quantity: int
+    code: int
+    model_config = ConfigDict(from_attributes=True)
+
+
+class ItemPublic(ItemSchema):
+    id: int
+
+
+class ItemDB(ItemSchema):
+    id: int

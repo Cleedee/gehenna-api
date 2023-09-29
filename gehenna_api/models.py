@@ -23,7 +23,7 @@ class Card(Base):
     __tablename__ = 'cards'
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    code: Mapped[int] # codigo no gehenna legacy
+    code: Mapped[int]   # codigo no gehenna legacy
     name: Mapped[str]
     tipo: Mapped[str]
     disciplines: Mapped[Optional[str]]
@@ -47,4 +47,16 @@ class Moviment(Base):
     price: Mapped[Decimal]
     owner_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
     owner: Mapped['User'] = relationship()
-    code: Mapped[int] # codigo no gehenna legacy
+    code: Mapped[int]   # codigo no gehenna legacy
+
+
+class Item(Base):
+    __tablename__ = 'items'
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    moviment_id: Mapped[int] = mapped_column(ForeignKey('moviments.id'))
+    moviment: Mapped['Moviment'] = relationship()
+    card_id: Mapped[int] = mapped_column(ForeignKey('cards.id'))
+    card: Mapped['Card'] = relationship()
+    quantity: Mapped[int]
+    code: Mapped[int]   # codigo no gehenna legacy

@@ -1,6 +1,6 @@
 import datetime
 
-from gehenna_api.schemas import CardPublic
+from gehenna_api.schemas import CardPublic, MovimentPublic
 
 
 def test_root_deve_retornar_200_e_ola_mundo(client):
@@ -136,8 +136,9 @@ def test_create_moviment(client):
             'name': 'Loja de Fortaleza',
             'tipo': 'entrada',
             'date_move': '2023-10-10',
-            'price': 16.5,
+            'price': '16.50',
             'owner_id': 1,
+            'code': 1,
         },
     )
     assert response.status_code == 201
@@ -146,33 +147,38 @@ def test_create_moviment(client):
         'tipo': 'entrada',
         'owner_id': 1,
         'date_move': '2023-10-10',
-        'price': 16.5,
+        'price': '16.50',
         'id': 1,
+        'code': 1,
     }
 
 
 def test_read_moviments(client):
-    dt = datetime.date.today()
-    dt_str = dt.strftime('%Y-%m-%d')
-    response = client.get('/stocks/moviments')
+    response = client.get('/stocks/moviments/test')
     assert response.status_code == 200
-    assert response.json() == {
-        'moviments': [
-            {
-                'name': 'Loja de Fortaleza',
-                'tipo': 'entrada',
-                'owner_id': 1,
-                'date_move': dt_str,
-                'price': '16.5',
-                'id': 1,
-            }
-        ]
-    }
+    assert response.json() == {'moviments': []}
+
+
+def test_read_moviments_with_items(client, moviment):
+    move_schema = MovimentPublic.model_validate(moviment).model_dump()
+
+    response = client.get('/stocks/moviments/test')
+    assert response.status_code == 200
+    assert response.json() == {'moviments': [move_schema]}
 
 
 def test_update_moviment(client):
     dt = datetime.date.today()
     dt_str = dt.strftime('%Y-%m-%d')
+    move = {
+        'name': 'Loja de Fortaleza',
+        'tipo': 'entrada',
+        'owner_id': 1,
+        'date_move': dt_str,
+        'price': '16.50',
+        'code': 1,
+    }
+    client.post('/stocks/moviments', json=move)
     response = client.put(
         '/stocks/moviments/1',
         json={
@@ -180,7 +186,8 @@ def test_update_moviment(client):
             'tipo': 'saida',
             'owner_id': 1,
             'date_move': dt_str,
-            'price': '16.5',
+            'price': '16.50',
+            'code': 1,
         },
     )
     assert response.status_code == 200
@@ -189,12 +196,25 @@ def test_update_moviment(client):
         'tipo': 'saida',
         'owner_id': 1,
         'date_move': dt_str,
-        'price': '16.5',
+        'price': '16.50',
         'id': 1,
+        'code': 1,
     }
 
 
-def test_delete_moviment(client):
+def test_delete_moviment(client, moviment):
     response = client.delete('/stocks/moviments/1')
     assert response.status_code == 200
     assert response.json() == {'detail': 'Moviment deleted'}
+
+
+def test_create_item(client):
+    response = client.post(
+        '/stocks/items',
+        json={
+            'quantity': 3,
+            'card_id': 1,
+            'moviment_id': 1,
+        },
+    )
+    assert response.status_code == 201
