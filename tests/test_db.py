@@ -33,6 +33,7 @@ def test_create_moviment(session):
         date_move=date.today(),
         price=Decimal('16.5'),
         owner_id=1,
+        code=1,
     )
     session.add(new_move)
     session.commit()

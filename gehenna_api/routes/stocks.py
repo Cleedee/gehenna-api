@@ -8,9 +8,9 @@ from sqlalchemy.orm import Session
 from gehenna_api.database import get_session
 from gehenna_api.models import Item, Moviment, User
 from gehenna_api.schemas import (
-    ItemDB,
     ItemPublic,
     ItemSchema,
+    ItemList,
     Message,
     MovimentList,
     MovimentPublic,
@@ -44,6 +44,13 @@ def create_moviment(
     session.commit()
     session.refresh(db_move)
     return db_move
+
+@router.get('/all-moviments/', response_model=MovimentList)
+def read_all_moviments(
+    skip: int = 0, limit: int = 100, session: Session = Depends(get_session)
+):
+    moves = session.scalars(select(Moviment).offset(skip).limit(limit)).all()
+    return {'moviments': moves}
 
 
 @router.get('/moviments/{username}', response_model=MovimentList)
@@ -85,16 +92,32 @@ def update_moviment(
 
 @router.delete('/moviments/{id}', response_model=Message)
 def delete_moviment(id: int, session: Session = Depends(get_session)):
-    db_item = session.scalar(select(Item).where(Item.id == id))
-    if db_item is None:
-        raise HTTPException(status_code=404, detail='Item not found')
-    session.delete(db_item)
+    db_move = session.scalar(select(Moviment).where(Moviment.id == id))
+    if db_move is None:
+        raise HTTPException(status_code=404, detail='Moviment not found')
+    session.delete(db_move)
     session.commit()
-    return {'detail': 'Item deleted'}
+    return {'detail': 'Moviment deleted'}
 
 
 @router.post('/items', status_code=201, response_model=ItemPublic)
-def create_item(item: ItemSchema):
-    item_with_id = ItemDB(**item.model_dump(), id=len(database) + 1)
-    database.append(item_with_id)
-    return item_with_id
+def create_item(item: ItemSchema, session: Session = Depends(get_session)):
+    db_item = Item(
+        quantity=item.quantity,
+        moviment_id=item.moviment_id,
+        card_id=item.card_id,
+        code=item.code,
+    )
+    session.add(db_item)
+    session.commit()
+    session.refresh(db_item)
+    return db_item
+
+@router.get('/items/{moviment_id}', status_code=201, response_model=ItemList)
+def read_items_by_moviment(
+    moviment_id: int, 
+    skip: int = 0,
+    limit: int = 100,
+    session: Session = Depends(get_session)):
+    items = session.scalars(select(Item).where(Item.moviment_id == moviment_id)).all()
+    return {'items': items}

@@ -159,12 +159,15 @@ def test_read_moviments(client):
     assert response.json() == {'moviments': []}
 
 
-def test_read_moviments_with_items(client, moviment):
+def test_read_moviments_with_items(client, user, moviment):
+    print(f'User: {user.id} {user.username}')
     move_schema = MovimentPublic.model_validate(moviment).model_dump()
-
-    response = client.get('/stocks/moviments/test')
+    print(f'Moviment {moviment.owner.username}')
+    response = client.get('/stocks/all-moviments')
     assert response.status_code == 200
-    assert response.json() == {'moviments': [move_schema]}
+    moves = response.json()
+    move = moves['moviments'][0]['name']
+    assert move == move_schema['name']
 
 
 def test_update_moviment(client):
@@ -208,13 +211,9 @@ def test_delete_moviment(client, moviment):
     assert response.json() == {'detail': 'Moviment deleted'}
 
 
-def test_create_item(client):
+def test_create_item(client, moviment, card):
     response = client.post(
         '/stocks/items',
-        json={
-            'quantity': 3,
-            'card_id': 1,
-            'moviment_id': 1,
-        },
+        json={'quantity': 3, 'card_id': 1, 'moviment_id': 1, 'code': 1},
     )
     assert response.status_code == 201

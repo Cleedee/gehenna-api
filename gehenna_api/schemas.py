@@ -96,3 +96,6 @@ class ItemPublic(ItemSchema):
 
 class ItemDB(ItemSchema):
     id: int
+
+class ItemList(BaseModel):
+    items: list[ItemPublic]
