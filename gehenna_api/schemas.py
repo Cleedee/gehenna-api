@@ -1,5 +1,5 @@
 import decimal
-from datetime import date
+from datetime import date, datetime
 from typing import Any, Optional
 
 from pydantic import BaseModel, ConfigDict, EmailStr, validator
@@ -99,3 +99,14 @@ class ItemDB(ItemSchema):
 
 class ItemList(BaseModel):
     items: list[ItemPublic]
+
+class DeckSchema(BaseModel):
+    name: str
+    description: str
+    creator: Optional[str] = ''
+    player: Optional[str] = ''
+    tipo: str
+    created: date
+    updated: Optional[datetime] = None
+    preconstructed: bool = False
+    owner_id: int
