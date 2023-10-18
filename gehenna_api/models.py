@@ -61,6 +61,7 @@ class Item(Base):
     quantity: Mapped[int]
     code: Mapped[int]   # codigo no gehenna legacy
 
+
 class Deck(Base):
     __tablename__ = 'decks'
 
@@ -75,4 +76,4 @@ class Deck(Base):
     preconstructed: Mapped[bool]
     owner_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
     owner: Mapped['User'] = relationship()
-    code: Mapped[int]   # codigo no gehenna legacy 
+    code: Mapped[int]   # codigo no gehenna legacy

@@ -97,8 +97,10 @@ class ItemPublic(ItemSchema):
 class ItemDB(ItemSchema):
     id: int
 
+
 class ItemList(BaseModel):
     items: list[ItemPublic]
+
 
 class DeckSchema(BaseModel):
     name: str
@@ -110,3 +112,12 @@ class DeckSchema(BaseModel):
     updated: Optional[datetime] = None
     preconstructed: bool = False
     owner_id: int
+    code: int
+
+
+class DeckPublic(DeckSchema):
+    id: int
+
+
+class DeckList(BaseModel):
+    decks: list[DeckPublic]

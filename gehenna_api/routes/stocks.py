@@ -8,9 +8,9 @@ from sqlalchemy.orm import Session
 from gehenna_api.database import get_session
 from gehenna_api.models import Item, Moviment, User
 from gehenna_api.schemas import (
+    ItemList,
     ItemPublic,
     ItemSchema,
-    ItemList,
     Message,
     MovimentList,
     MovimentPublic,
@@ -44,6 +44,7 @@ def create_moviment(
     session.commit()
     session.refresh(db_move)
     return db_move
+
 
 @router.get('/all-moviments/', response_model=MovimentList)
 def read_all_moviments(
@@ -113,11 +114,15 @@ def create_item(item: ItemSchema, session: Session = Depends(get_session)):
     session.refresh(db_item)
     return db_item
 
+
 @router.get('/items/{moviment_id}', status_code=201, response_model=ItemList)
 def read_items_by_moviment(
-    moviment_id: int, 
+    moviment_id: int,
     skip: int = 0,
     limit: int = 100,
-    session: Session = Depends(get_session)):
-    items = session.scalars(select(Item).where(Item.moviment_id == moviment_id)).all()
+    session: Session = Depends(get_session),
+):
+    items = session.scalars(
+        select(Item).where(Item.moviment_id == moviment_id)
+    ).all()
     return {'items': items}

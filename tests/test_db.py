@@ -3,7 +3,7 @@ from decimal import Decimal
 
 from sqlalchemy import select
 
-from gehenna_api.models import Card, Moviment, User
+from gehenna_api.models import Card, Deck, Moviment, User
 
 
 def test_create_card(session):
@@ -41,3 +41,19 @@ def test_create_moviment(session):
     move = session.scalar(select(Moviment).where(Moviment.name == 'eBay'))
     assert move.name == 'eBay'
     assert move.owner_id == 1
+
+
+def test_create_deck(session):
+    new_deck = Deck(
+        name='Meu deck',
+        description='Deck bom',
+        created=date.today(),
+        tipo='other',
+        owner_id=1,
+        code=1,
+    )
+    session.add(new_deck)
+    session.commit()
+    deck = session.scalar(select(Deck).where(Deck.name == 'Meu deck'))
+    assert deck.name == 'Meu deck'
+    assert deck.owner_id == 1

@@ -62,12 +62,14 @@ def read_card_by_id(card_id: int, session: Session = Depends(get_session)):
         raise HTTPException(status_code=404, detail='Card not found')
     return card
 
+
 @app.get('/card_by_code/{code}', response_model=CardPublic)
 def read_card_by_code(code: int, session: Session = Depends(get_session)):
     card = session.scalar(select(Card).where(Card.code == code))
     if card is None:
         raise HTTPException(status_code=404, detail='Card not found')
     return card
+
 
 @app.get('/cards/{name}', response_model=CardList)
 def read_cards_by_name(name: str, session: Session = Depends(get_session)):
