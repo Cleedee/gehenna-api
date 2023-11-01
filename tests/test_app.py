@@ -217,3 +217,33 @@ def test_create_item(client, moviment, card):
         json={'quantity': 3, 'card_id': 1, 'moviment_id': 1, 'code': 1},
     )
     assert response.status_code == 201
+
+
+def test_create_deck(client):
+    dt = datetime.date.today()
+    dt_str = dt.strftime('%Y-%m-%d')
+    response = client.post(
+        '/decks',
+        json={
+            'name': 'Super Deck',
+            'description': 'Deck legal',
+            'tipo': 'other',
+            'created': dt_str,
+            'owner_id': 1,
+            'code': 1,
+        },
+    )
+    assert response.status_code == 201
+    assert response.json() == {
+        'name': 'Super Deck',
+        'description': 'Deck legal',
+        'creator': None,
+        'player': None,
+        'tipo': 'other',
+        'created': dt_str,
+        'updated': None,
+        'preconstructed': False,
+        'owner_id': 1,
+        'code': 1,
+        'id': 1,
+    }

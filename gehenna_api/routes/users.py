@@ -2,8 +2,8 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from gehenna_api.database import get_session
-from gehenna_api.models import User
+from gehenna_api.database import create_session
+from gehenna_api.models.auth import User
 from gehenna_api.schemas import UserPublic, UserSchema
 from gehenna_api.security import get_current_user, get_password_hash
 
@@ -11,7 +11,7 @@ router = APIRouter(prefix='/users', tags=['users'])
 
 
 @router.post('/', response_model=UserPublic, status_code=201)
-def create_user(user: UserSchema, session: Session = Depends(get_session)):
+def create_user(user: UserSchema, session: Session = Depends(create_session)):
     db_user = session.scalar(select(User).where(User.email == user.email))
     if db_user:
         raise HTTPException(status_code=400, detail='Email already registered')
@@ -31,7 +31,7 @@ def create_user(user: UserSchema, session: Session = Depends(get_session)):
 def update_user(
     user_id: int,
     user: UserSchema,
-    session: Session = Depends(get_session),
+    session: Session = Depends(create_session),
     current_user: User = Depends(get_current_user),
 ):
     if current_user.id != user_id:

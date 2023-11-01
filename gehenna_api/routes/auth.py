@@ -3,8 +3,8 @@ from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from gehenna_api.database import get_session
-from gehenna_api.models import User
+from gehenna_api.database import create_session
+from gehenna_api.models.auth import User
 from gehenna_api.schemas import Token
 from gehenna_api.security import create_access_token, verify_password
 
@@ -14,7 +14,7 @@ router = APIRouter(tags=['token'])
 @router.post('/token', response_model=Token)
 def login_for_access_token(
     form_data: OAuth2PasswordRequestForm = Depends(),
-    session: Session = Depends(get_session),
+    session: Session = Depends(create_session),
 ):
     user = session.scalar(select(User).where(User.email == form_data.username))
 

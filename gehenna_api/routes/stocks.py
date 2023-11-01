@@ -5,8 +5,10 @@ from fastapi.exceptions import HTTPException
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from gehenna_api.database import get_session
-from gehenna_api.models import Item, Moviment, User
+from gehenna_api.database import create_session
+from gehenna_api.models.auth import User
+from gehenna_api.models.item import Item
+from gehenna_api.models.moviment import Moviment
 from gehenna_api.schemas import (
     ItemList,
     ItemPublic,
@@ -30,7 +32,7 @@ database = []
 
 @router.post('/moviments', status_code=201, response_model=MovimentPublic)
 def create_moviment(
-    moviment: MovimentSchema, session: Session = Depends(get_session)
+    moviment: MovimentSchema, session: Session = Depends(create_session)
 ):
     db_move = Moviment(
         name=moviment.name,
@@ -48,7 +50,7 @@ def create_moviment(
 
 @router.get('/all-moviments/', response_model=MovimentList)
 def read_all_moviments(
-    skip: int = 0, limit: int = 100, session: Session = Depends(get_session)
+    skip: int = 0, limit: int = 100, session: Session = Depends(create_session)
 ):
     moves = session.scalars(select(Moviment).offset(skip).limit(limit)).all()
     return {'moviments': moves}
@@ -59,7 +61,7 @@ def read_moviments(
     username: str,
     skip: int = 0,
     limit: int = 100,
-    session: Session = Depends(get_session),
+    session: Session = Depends(create_session),
 ):
     user = session.scalar(select(User).where(User.username == username))
     if user is None:
@@ -75,7 +77,9 @@ def read_moviments(
 
 @router.put('/moviments/{id}', response_model=MovimentPublic)
 def update_moviment(
-    id: int, moviment: MovimentSchema, session: Session = Depends(get_session)
+    id: int,
+    moviment: MovimentSchema,
+    session: Session = Depends(create_session),
 ):
     db_move = session.scalar(select(Moviment).where(Moviment.id == id))
     if db_move is None:
@@ -92,7 +96,7 @@ def update_moviment(
 
 
 @router.delete('/moviments/{id}', response_model=Message)
-def delete_moviment(id: int, session: Session = Depends(get_session)):
+def delete_moviment(id: int, session: Session = Depends(create_session)):
     db_move = session.scalar(select(Moviment).where(Moviment.id == id))
     if db_move is None:
         raise HTTPException(status_code=404, detail='Moviment not found')
@@ -102,7 +106,7 @@ def delete_moviment(id: int, session: Session = Depends(get_session)):
 
 
 @router.post('/items', status_code=201, response_model=ItemPublic)
-def create_item(item: ItemSchema, session: Session = Depends(get_session)):
+def create_item(item: ItemSchema, session: Session = Depends(create_session)):
     db_item = Item(
         quantity=item.quantity,
         moviment_id=item.moviment_id,
@@ -120,7 +124,7 @@ def read_items_by_moviment(
     moviment_id: int,
     skip: int = 0,
     limit: int = 100,
-    session: Session = Depends(get_session),
+    session: Session = Depends(create_session),
 ):
     items = session.scalars(
         select(Item).where(Item.moviment_id == moviment_id)

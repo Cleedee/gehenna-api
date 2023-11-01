@@ -3,7 +3,10 @@ from decimal import Decimal
 
 from sqlalchemy import select
 
-from gehenna_api.models import Card, Deck, Moviment, User
+from gehenna_api.models.auth import User
+from gehenna_api.models.card import Card
+from gehenna_api.models.deck import Deck
+from gehenna_api.models.moviment import Moviment
 
 
 def test_create_card(session):
