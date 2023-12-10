@@ -21,4 +21,3 @@ with open('scripts/cardbase_crypt.json') as json_file:
         carta = CardService(session).get_cards_by_name(name)
         if carta:
             print(f'{carta.name} recebe o código [{key}].')
-
