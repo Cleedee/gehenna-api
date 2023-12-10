@@ -21,3 +21,4 @@ class Card(SQLModel):
     text: Mapped[Optional[str]]
     title: Mapped[Optional[str]]
     sect: Mapped[Optional[str]]
+    codevdb: Mapped[Optional[int]]

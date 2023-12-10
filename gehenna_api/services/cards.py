@@ -23,6 +23,7 @@ class CardService(BaseService):
     def add_card(self, card: CardSchema) -> None:
         CardDataManager(self.session).add_card(card)
 
+
 class CardDataManager(BaseDataManager):
     def get_card(self, card_id: int) -> CardPublic:
         stmt = select(Card).where(Card.id == card_id)
@@ -45,7 +46,7 @@ class CardDataManager(BaseDataManager):
         return schemas
 
     def get_card_by_name(self, name: str) -> CardPublic | None:
-        stmt = select(Card).where(Card.name == name)    
+        stmt = select(Card).where(Card.name == name)
         model = self.get_one(stmt)
         return CardPublic(**model.to_dict()) if model else None
 
