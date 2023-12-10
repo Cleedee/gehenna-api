@@ -34,6 +34,7 @@ class CardSchema(BaseModel):
     text: Optional[str] = ''
     title: Optional[str] = ''
     sect: Optional[str] = ''
+    codevdb: Optional[int] = 0
     model_config = ConfigDict(from_attributes=True)
 
 
