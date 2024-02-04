@@ -18,6 +18,7 @@ from gehenna_api.schemas import (
     MovimentPublic,
     MovimentSchema,
 )
+from gehenna_api.services.moviments import MovimentService
 
 # from decimal import Decimal
 
@@ -30,22 +31,12 @@ dt_str = dt.strftime('%Y-%m-%d')
 database = []
 
 
-@router.post('/moviments', status_code=201, response_model=MovimentPublic)
+@router.post('/moviments', status_code=201, response_model=Message)
 def create_moviment(
     moviment: MovimentSchema, session: Session = Depends(create_session)
 ):
-    db_move = Moviment(
-        name=moviment.name,
-        tipo=moviment.tipo,
-        date_move=moviment.date_move,
-        price=moviment.price,
-        owner_id=moviment.owner_id,
-        code=moviment.code,
-    )
-    session.add(db_move)
-    session.commit()
-    session.refresh(db_move)
-    return db_move
+    MovimentService(session).add_moviment(moviment)
+    return {'detail': 'Moviment created.'}
 
 
 @router.get('/all-moviments/', response_model=MovimentList)

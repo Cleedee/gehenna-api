@@ -21,7 +21,20 @@ class CardService(BaseService):
         return CardDataManager(self.session).get_card_by_name(name)
 
     def add_card(self, card: CardSchema) -> None:
-        CardDataManager(self.session).add_card(card)
+        card_model = Card(
+            name = card.name,
+            tipo = card.tipo,
+            attributes = card.attributes,
+            capacity = card.capacity,
+            clan = card.clan,
+            cost = card.cost,
+            disciplines = card.disciplines,
+            text = card.text,
+            sect = card.sect,
+            title = card.title,
+            group = card.group
+        )
+        CardDataManager(self.session).add_card(card_model)
 
 
 class CardDataManager(BaseDataManager):
@@ -50,7 +63,7 @@ class CardDataManager(BaseDataManager):
         model = self.get_one(stmt)
         return CardPublic(**model.to_dict()) if model else None
 
-    def add_card(self, card: CardSchema) -> None:
+    def add_card(self, card: Card) -> None:
         self.add_one(card)
 
     def update_card(self, id: int, card: CardSchema) -> None:

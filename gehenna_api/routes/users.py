@@ -4,8 +4,9 @@ from sqlalchemy.orm import Session
 
 from gehenna_api.database import create_session
 from gehenna_api.models.auth import User
-from gehenna_api.schemas import UserPublic, UserSchema
+from gehenna_api.schemas import UserList, UserPublic, UserSchema
 from gehenna_api.security import get_current_user, get_password_hash
+from gehenna_api.services.users import UserService
 
 router = APIRouter(prefix='/users', tags=['users'])
 
@@ -42,3 +43,11 @@ def update_user(
     session.commit()
     session.refresh(current_user)
     return current_user
+
+@router.get('/', response_model=UserList)
+def get_users(
+    skip: int = 0,
+    limit: int = 100,
+    session: Session = Depends(create_session)):
+    lista = UserService(session).get_users(skip, limit)
+    return {'users': lista}

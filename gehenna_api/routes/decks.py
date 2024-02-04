@@ -6,6 +6,8 @@ from gehenna_api.database import create_session
 from gehenna_api.models.auth import User
 from gehenna_api.models.deck import Deck
 from gehenna_api.schemas import DeckList, DeckPublic, DeckSchema
+from gehenna_api.services.decks import DeckService
+from gehenna_api.services.users import UserService
 
 router = APIRouter(prefix='/decks', tags=['decks'])
 
@@ -33,12 +35,10 @@ def read_decks(
     limit: int = 100,
     session: Session = Depends(create_session),
 ):
-    user = session.scalar(select(User).where(User.username == username))
+    user = UserService(session).get_user_by_username(username)
     if user is None:
         return {'decks': []}
-    lista = session.scalars(
-        select(Deck).where(Deck.owner_id == 1).offset(skip).limit(limit)
-    ).all()
+    lista = DeckService(session).get_decks(user.id, skip, limit)
     return {'decks': lista}
 
 

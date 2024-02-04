@@ -1,1 +1,8 @@
+# Exemplo de estrutura para FastAPI 
+
 https://github.com/viktorsapozhok/fastapi-services-oauth2
+https://levelup.gitconnected.com/structuring-fastapi-project-using-3-tier-design-pattern-4d2e88a55757
+
+# TODO
+
+
