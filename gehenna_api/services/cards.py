@@ -22,17 +22,17 @@ class CardService(BaseService):
 
     def add_card(self, card: CardSchema) -> None:
         card_model = Card(
-            name = card.name,
-            tipo = card.tipo,
-            attributes = card.attributes,
-            capacity = card.capacity,
-            clan = card.clan,
-            cost = card.cost,
-            disciplines = card.disciplines,
-            text = card.text,
-            sect = card.sect,
-            title = card.title,
-            group = card.group
+            name=card.name,
+            tipo=card.tipo,
+            attributes=card.attributes,
+            capacity=card.capacity,
+            clan=card.clan,
+            cost=card.cost,
+            disciplines=card.disciplines,
+            text=card.text,
+            sect=card.sect,
+            title=card.title,
+            group=card.group,
         )
         CardDataManager(self.session).add_card(card_model)
 

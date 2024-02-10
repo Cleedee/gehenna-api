@@ -5,4 +5,4 @@ https://levelup.gitconnected.com/structuring-fastapi-project-using-3-tier-design
 
 # TODO
 
-
+- Consultar estoque de uma carta

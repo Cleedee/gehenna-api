@@ -4,13 +4,14 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
 
 from gehenna_api.config import config
+from gehenna_api.settings import Settings
 
-# engine = create_engine(Settings().DATABASE_URL)
+engine = create_engine(Settings().DATABASE_URL)
 
 
-# def get_session():
-#    with Session(engine) as session:
-#        yield session
+def get_session():
+    with Session(engine) as session:
+        yield session
 
 
 SessionFactory = sessionmaker(

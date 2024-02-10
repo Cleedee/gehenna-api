@@ -1,15 +1,13 @@
-
-
 from typing import List
 
 from sqlalchemy import select
+
 from gehenna_api.models.moviment import Moviment
 from gehenna_api.schemas import MovimentPublic, MovimentSchema
 from gehenna_api.services.base import BaseDataManager, BaseService
 
 
 class MovimentService(BaseService):
-    
     def get_moviment(self, moviment_id) -> MovimentPublic:
         return MovimentDataManager(self.session).get_moviment(moviment_id)
 
@@ -18,12 +16,12 @@ class MovimentService(BaseService):
 
     def add_moviment(self, moviment: MovimentSchema) -> None:
         moviment_model = Moviment(
-            name = moviment.name,
-            tipo = moviment.tipo,
-            date_move = moviment.date_move,
-            price = moviment.price,
-            owner_id = moviment.owner_id,
-            code = moviment.code
+            name=moviment.name,
+            tipo=moviment.tipo,
+            date_move=moviment.date_move,
+            price=moviment.price,
+            owner_id=moviment.owner_id,
+            code=moviment.code,
         )
         MovimentDataManager(self.session).add_moviment(moviment_model)
 
@@ -31,8 +29,8 @@ class MovimentService(BaseService):
         moviment = self.get_moviment(moviment_id)
         MovimentDataManager(self.session).delete_moviment(moviment)
 
-class MovimentDataManager(BaseDataManager):
 
+class MovimentDataManager(BaseDataManager):
     def get_moviment(self, moviment_id: int) -> MovimentPublic:
         stmt = select(Moviment).where(Moviment.id == moviment_id)
         model = self.get_one(stmt)

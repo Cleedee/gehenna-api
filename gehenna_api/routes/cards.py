@@ -1,12 +1,13 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
 from sqlalchemy.orm import Session
+
 from gehenna_api.database import create_session
 from gehenna_api.models.card import Card
-
 from gehenna_api.schemas import CardList, CardPublic, CardSchema, Message
 
 router = APIRouter(prefix='/cards', tags=['cards'])
+
 
 @router.post('/', status_code=201, response_model=CardPublic)
 def create_card(card: CardSchema, session: Session = Depends(create_session)):
@@ -28,6 +29,7 @@ def create_card(card: CardSchema, session: Session = Depends(create_session)):
         text=card.text,
         title=card.title,
         sect=card.sect,
+        codevdb=card.codevdb,
     )
     session.add(db_card)
     session.commit()
@@ -59,7 +61,7 @@ def read_card_by_code(code: int, session: Session = Depends(create_session)):
     return card
 
 
-@router.get('/{name}', response_model=CardList)
+@router.get('/card_by_name/{name}', response_model=CardList)
 def read_cards_by_name(name: str, session: Session = Depends(create_session)):
     cards = session.scalars(
         select(Card).where(Card.name.like(f'%{name}%'))
@@ -86,6 +88,7 @@ def update_card(
     db_card.cost = card.cost
     db_card.text = card.text
     db_card.title = card.title
+    db_card.codevdb = card.codevdb
     session.commit()
     session.refresh(db_card)
     return db_card

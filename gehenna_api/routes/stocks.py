@@ -17,8 +17,10 @@ from gehenna_api.schemas import (
     MovimentList,
     MovimentPublic,
     MovimentSchema,
+    Scalar,
 )
 from gehenna_api.services.moviments import MovimentService
+from gehenna_api.services.stocks import StockService
 
 # from decimal import Decimal
 
@@ -31,12 +33,22 @@ dt_str = dt.strftime('%Y-%m-%d')
 database = []
 
 
-@router.post('/moviments', status_code=201, response_model=Message)
+@router.post('/moviments', status_code=201, response_model=MovimentPublic)
 def create_moviment(
     moviment: MovimentSchema, session: Session = Depends(create_session)
 ):
-    MovimentService(session).add_moviment(moviment)
-    return {'detail': 'Moviment created.'}
+    db_moviment = Moviment(
+        name=moviment.name,
+        tipo=moviment.tipo,
+        date_move=moviment.date_move,
+        price=moviment.price,
+        owner_id=moviment.owner_id,
+        code=moviment.code
+    )
+    session.add(db_moviment)
+    session.commit()
+    session.refresh(db_moviment)
+    return {'moviment': db_moviment}
 
 
 @router.get('/all-moviments/', response_model=MovimentList)
@@ -121,3 +133,10 @@ def read_items_by_moviment(
         select(Item).where(Item.moviment_id == moviment_id)
     ).all()
     return {'items': items}
+
+
+@router.get('/cards/{card_id}/{username}', response_model=Scalar)
+def read_total_card_in_store(
+    card_id: int, username: str, session: Session = Depends(create_session)
+):
+    return StockService(session).get_card_quantity(card_id, username)

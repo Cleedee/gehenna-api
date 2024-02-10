@@ -3,7 +3,6 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from gehenna_api.database import create_session
-from gehenna_api.models.auth import User
 from gehenna_api.models.deck import Deck
 from gehenna_api.schemas import DeckList, DeckPublic, DeckSchema
 from gehenna_api.services.decks import DeckService

@@ -21,7 +21,7 @@ class BaseService(SessionMixin):
 class BaseDataManager(SessionMixin):
     """Base data manager class responsible for operations over database."""
 
-    def delete_one(self,  model: Any) -> None:
+    def delete_one(self, model: Any) -> None:
         self.session.delete(model)
 
     def add_one(self, model: Any) -> None:

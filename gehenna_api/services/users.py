@@ -1,12 +1,13 @@
-
 from typing import List
+
 from sqlalchemy import select
+
 from gehenna_api.models.auth import User
 from gehenna_api.schemas import UserPublic
 from gehenna_api.services.base import BaseDataManager, BaseService
 
+
 class UserService(BaseService):
-    
     def get_user(self, user_id: int) -> UserPublic:
         return UserDataManager(self.session).get_user(user_id)
 
@@ -16,8 +17,8 @@ class UserService(BaseService):
     def get_users(self, skip: int = 0, limit: int = 100) -> List[UserPublic]:
         return UserDataManager(self.session).get_users(skip, limit)
 
+
 class UserDataManager(BaseDataManager):
-    
     def get_user(self, user_id: int) -> UserPublic:
         stmt = select(User).where(User.id == user_id)
         model = self.get_one(stmt)

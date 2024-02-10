@@ -44,10 +44,10 @@ def update_user(
     session.refresh(current_user)
     return current_user
 
+
 @router.get('/', response_model=UserList)
 def get_users(
-    skip: int = 0,
-    limit: int = 100,
-    session: Session = Depends(create_session)):
+    skip: int = 0, limit: int = 100, session: Session = Depends(create_session)
+):
     lista = UserService(session).get_users(skip, limit)
     return {'users': lista}

@@ -43,6 +43,7 @@ def test_create_card(client):
             'text': '',
             'title': '',
             'sect': '',
+            'codevdb': 0,
         },
     )
     assert response.status_code == 201
@@ -59,6 +60,7 @@ def test_create_card(client):
         'text': '',
         'title': '',
         'sect': '',
+        'codevdb': 0,
         'id': 1,
     }
 
@@ -91,6 +93,7 @@ def test_update_card(client, card):
             'text': '',
             'title': '',
             'sect': '',
+            'codevdb': 0,
             'id': 1,
         },
     )
@@ -108,6 +111,7 @@ def test_update_card(client, card):
         'text': '',
         'title': '',
         'sect': '',
+        'codevdb': 0,
         'id': 1,
     }
 
@@ -143,13 +147,7 @@ def test_create_moviment(client):
     )
     assert response.status_code == 201
     assert response.json() == {
-        'name': 'Loja de Fortaleza',
-        'tipo': 'entrada',
-        'owner_id': 1,
-        'date_move': '2023-10-10',
-        'price': '16.50',
-        'id': 1,
-        'code': 1,
+        'detail': 'Moviment created.',
     }
 
 

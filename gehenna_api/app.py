@@ -1,6 +1,6 @@
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import FastAPI
 
-from gehenna_api.routes import auth, decks, stocks, users, cards
+from gehenna_api.routes import auth, cards, decks, stocks, users
 
 app = FastAPI()
 
@@ -14,6 +14,3 @@ app.include_router(cards.router)
 @app.get('/')
 def read_root():
     return {'message': 'Olá Mundo!'}
-
-
-

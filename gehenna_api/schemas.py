@@ -74,6 +74,10 @@ class Message(BaseModel):
     detail: str
 
 
+class Scalar(BaseModel):
+    quantity: int
+
+
 class Token(BaseModel):
     access_token: str
     token_type: str
