@@ -2,7 +2,7 @@ import decimal
 from datetime import date, datetime
 from typing import Any, Optional
 
-from pydantic import BaseModel, ConfigDict, EmailStr, validator
+from pydantic import BaseModel, ConfigDict, EmailStr, field_validator
 
 
 class UserSchema(BaseModel):
@@ -57,7 +57,7 @@ class MovimentSchema(BaseModel):
         from_attributes=True, json_encoders={decimal.Decimal: str}
     )
 
-    @validator('price', pre=True)
+    @field_validator('price', mode='before')
     def quantize_two_decimal_places(cls, v: Any):
         return decimal.Decimal(v).quantize(decimal.Decimal('0.01'))
 

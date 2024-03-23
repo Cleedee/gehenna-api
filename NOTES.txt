@@ -6,3 +6,12 @@ https://levelup.gitconnected.com/structuring-fastapi-project-using-3-tier-design
 # TODO
 
 - Consultar estoque de uma carta
+
+## Cartas trocadas com o David
+
+Entombment (saída cadastrada)
+Shadowed Eyes (saída cadastrada)
+
+Fiquei com: Kúyen (cadastrar a carta)
+
+Dia: 5 de março de 2024

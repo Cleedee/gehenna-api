@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from gehenna_api.database import create_session
+from gehenna_api.database import get_session
 from gehenna_api.models.card import Card
 from gehenna_api.schemas import CardList, CardPublic, CardSchema, Message
 
@@ -10,7 +10,7 @@ router = APIRouter(prefix='/cards', tags=['cards'])
 
 
 @router.post('/', status_code=201, response_model=CardPublic)
-def create_card(card: CardSchema, session: Session = Depends(create_session)):
+def create_card(card: CardSchema, session: Session = Depends(get_session)):
     print(card.name)
     db_card = session.scalar(select(Card).where(Card.name == card.name))
     if db_card:
@@ -39,14 +39,14 @@ def create_card(card: CardSchema, session: Session = Depends(create_session)):
 
 @router.get('/', response_model=CardList)
 def read_cards(
-    skip: int = 0, limit: int = 100, session: Session = Depends(create_session)
+    skip: int = 0, limit: int = 100, session: Session = Depends(get_session)
 ):
     cards = session.scalars(select(Card).offset(skip).limit(limit)).all()
     return {'cards': cards}
 
 
 @router.get('/{card_id}', response_model=CardPublic)
-def read_card_by_id(card_id: int, session: Session = Depends(create_session)):
+def read_card_by_id(card_id: int, session: Session = Depends(get_session)):
     card = session.scalar(select(Card).where(Card.id == card_id))
     if card is None:
         raise HTTPException(status_code=404, detail='Card not found')
@@ -54,7 +54,7 @@ def read_card_by_id(card_id: int, session: Session = Depends(create_session)):
 
 
 @router.get('/card_by_code/{code}', response_model=CardPublic)
-def read_card_by_code(code: int, session: Session = Depends(create_session)):
+def read_card_by_code(code: int, session: Session = Depends(get_session)):
     card = session.scalar(select(Card).where(Card.code == code))
     if card is None:
         raise HTTPException(status_code=404, detail='Card not found')
@@ -62,7 +62,7 @@ def read_card_by_code(code: int, session: Session = Depends(create_session)):
 
 
 @router.get('/card_by_name/{name}', response_model=CardList)
-def read_cards_by_name(name: str, session: Session = Depends(create_session)):
+def read_cards_by_name(name: str, session: Session = Depends(get_session)):
     cards = session.scalars(
         select(Card).where(Card.name.like(f'%{name}%'))
     ).all()
@@ -71,7 +71,7 @@ def read_cards_by_name(name: str, session: Session = Depends(create_session)):
 
 @router.put('/{card_id}', response_model=CardPublic)
 def update_card(
-    card_id: int, card: CardSchema, session: Session = Depends(create_session)
+    card_id: int, card: CardSchema, session: Session = Depends(get_session)
 ):
     db_card = session.scalar(select(Card).where(Card.id == card_id))
     if db_card is None:
@@ -95,7 +95,7 @@ def update_card(
 
 
 @router.delete('/{card_id}', response_model=Message)
-def delete_card(card_id: int, session: Session = Depends(create_session)):
+def delete_card(card_id: int, session: Session = Depends(get_session)):
     db_card = session.scalar(select(Card).where(Card.id == card_id))
     if db_card is None:
         raise HTTPException(status_code=404, detail='Card not found')

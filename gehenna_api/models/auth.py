@@ -1,9 +1,9 @@
 from sqlalchemy.orm import Mapped, mapped_column
 
-from gehenna_api.models.base import SQLModel
+from gehenna_api.models.base import Base
 
 
-class User(SQLModel):
+class User(Base):
     __tablename__ = 'users'
 
     id: Mapped[int] = mapped_column(primary_key=True)

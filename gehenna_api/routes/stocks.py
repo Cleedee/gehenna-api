@@ -2,10 +2,10 @@ import datetime
 
 from fastapi import APIRouter, Depends
 from fastapi.exceptions import HTTPException
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
-from gehenna_api.database import create_session
+from gehenna_api.database import get_session
 from gehenna_api.models.auth import User
 from gehenna_api.models.item import Item
 from gehenna_api.models.moviment import Moviment
@@ -19,8 +19,6 @@ from gehenna_api.schemas import (
     MovimentSchema,
     Scalar,
 )
-from gehenna_api.services.moviments import MovimentService
-from gehenna_api.services.stocks import StockService
 
 # from decimal import Decimal
 
@@ -35,7 +33,7 @@ database = []
 
 @router.post('/moviments', status_code=201, response_model=MovimentPublic)
 def create_moviment(
-    moviment: MovimentSchema, session: Session = Depends(create_session)
+    moviment: MovimentSchema, session: Session = Depends(get_session)
 ):
     db_moviment = Moviment(
         name=moviment.name,
@@ -43,17 +41,17 @@ def create_moviment(
         date_move=moviment.date_move,
         price=moviment.price,
         owner_id=moviment.owner_id,
-        code=moviment.code
+        code=moviment.code,
     )
     session.add(db_moviment)
     session.commit()
     session.refresh(db_moviment)
-    return {'moviment': db_moviment}
+    return db_moviment
 
 
 @router.get('/all-moviments/', response_model=MovimentList)
 def read_all_moviments(
-    skip: int = 0, limit: int = 100, session: Session = Depends(create_session)
+    skip: int = 0, limit: int = 100, session: Session = Depends(get_session)
 ):
     moves = session.scalars(select(Moviment).offset(skip).limit(limit)).all()
     return {'moviments': moves}
@@ -64,7 +62,7 @@ def read_moviments(
     username: str,
     skip: int = 0,
     limit: int = 100,
-    session: Session = Depends(create_session),
+    session: Session = Depends(get_session),
 ):
     user = session.scalar(select(User).where(User.username == username))
     if user is None:
@@ -82,7 +80,7 @@ def read_moviments(
 def update_moviment(
     id: int,
     moviment: MovimentSchema,
-    session: Session = Depends(create_session),
+    session: Session = Depends(get_session),
 ):
     db_move = session.scalar(select(Moviment).where(Moviment.id == id))
     if db_move is None:
@@ -99,7 +97,7 @@ def update_moviment(
 
 
 @router.delete('/moviments/{id}', response_model=Message)
-def delete_moviment(id: int, session: Session = Depends(create_session)):
+def delete_moviment(id: int, session: Session = Depends(get_session)):
     db_move = session.scalar(select(Moviment).where(Moviment.id == id))
     if db_move is None:
         raise HTTPException(status_code=404, detail='Moviment not found')
@@ -109,7 +107,7 @@ def delete_moviment(id: int, session: Session = Depends(create_session)):
 
 
 @router.post('/items', status_code=201, response_model=ItemPublic)
-def create_item(item: ItemSchema, session: Session = Depends(create_session)):
+def create_item(item: ItemSchema, session: Session = Depends(get_session)):
     db_item = Item(
         quantity=item.quantity,
         moviment_id=item.moviment_id,
@@ -127,16 +125,42 @@ def read_items_by_moviment(
     moviment_id: int,
     skip: int = 0,
     limit: int = 100,
-    session: Session = Depends(create_session),
+    session: Session = Depends(get_session),
 ):
     items = session.scalars(
-        select(Item).where(Item.moviment_id == moviment_id)
+        select(Item)
+        .where(Item.moviment_id == moviment_id)
+        .offset(skip)
+        .limit(limit)
     ).all()
     return {'items': items}
 
 
 @router.get('/cards/{card_id}/{username}', response_model=Scalar)
 def read_total_card_in_store(
-    card_id: int, username: str, session: Session = Depends(create_session)
+    card_id: int, username: str, session: Session = Depends(get_session)
 ):
-    return StockService(session).get_card_quantity(card_id, username)
+    stmt_entradas = (
+        select(func.sum(Item.quantity))
+        .join(Item.moviment)
+        .join(Moviment.owner)
+        .where(
+            User.username == username,
+            Moviment.tipo == 'E',
+            Item.card_id == card_id,
+        )
+    )
+    stmt_saidas = (
+        select(func.sum(Item.quantity))
+        .join(Item.moviment)
+        .join(Moviment.owner)
+        .where(
+            User.username == username,
+            Moviment.tipo == 'S',
+            Item.card_id == card_id,
+        )
+    )
+    soma_entradas = session.execute(stmt_entradas).scalar() or 0
+    soma_saidas = session.execute(stmt_saidas).scalar() or 0
+    soma = soma_entradas - soma_saidas
+    return Scalar(quantity=soma)

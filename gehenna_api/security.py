@@ -7,7 +7,7 @@ from passlib.context import CryptContext
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from gehenna_api.database import create_session
+from gehenna_api.database import get_session
 from gehenna_api.models.auth import User
 from gehenna_api.schemas import TokenData
 
@@ -35,7 +35,7 @@ def verify_password(plain_password: str, hashed_password: str):
 
 
 async def get_current_user(
-    session: Session = Depends(create_session),
+    session: Session = Depends(get_session),
     token: str = Depends(oauth2_scheme),
 ):
     credentials_exception = HTTPException(

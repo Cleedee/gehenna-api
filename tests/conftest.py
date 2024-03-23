@@ -8,9 +8,9 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 
 from gehenna_api.app import app
-from gehenna_api.database import create_session
+from gehenna_api.database import get_session
 from gehenna_api.models.auth import User
-from gehenna_api.models.base import SQLModel
+from gehenna_api.models.base import Base
 from gehenna_api.models.card import Card
 from gehenna_api.models.deck import Deck
 from gehenna_api.models.moviment import Moviment
@@ -24,10 +24,10 @@ def session():
         connect_args={'check_same_thread': False},
         poolclass=StaticPool,
     )
-    SQLModel.metadata.create_all(engine)
+    Base.metadata.create_all(engine)
     Session = sessionmaker(bind=engine)
     yield Session()
-    SQLModel.metadata.drop_all(engine)
+    Base.metadata.drop_all(engine)
 
 
 @pytest.fixture
@@ -36,7 +36,7 @@ def client(session):
         return session
 
     with TestClient(app) as client:
-        app.dependency_overrides[create_session] = get_session_override
+        app.dependency_overrides[get_session] = get_session_override
         yield client
 
     app.dependency_overrides.clear()

@@ -5,10 +5,10 @@ from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from gehenna_api.models.auth import User
-from gehenna_api.models.base import SQLModel
+from gehenna_api.models.base import Base
 
 
-class Moviment(SQLModel):
+class Moviment(Base):
     __tablename__ = 'moviments'
 
     id: Mapped[int] = mapped_column(primary_key=True)

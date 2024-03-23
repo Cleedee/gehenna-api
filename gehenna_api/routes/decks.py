@@ -2,17 +2,16 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from gehenna_api.database import create_session
+from gehenna_api.database import get_session
+from gehenna_api.models.auth import User
 from gehenna_api.models.deck import Deck
 from gehenna_api.schemas import DeckList, DeckPublic, DeckSchema
-from gehenna_api.services.decks import DeckService
-from gehenna_api.services.users import UserService
 
 router = APIRouter(prefix='/decks', tags=['decks'])
 
 
 @router.post('/', status_code=201, response_model=DeckPublic)
-def create_deck(deck: DeckSchema, session: Session = Depends(create_session)):
+def create_deck(deck: DeckSchema, session: Session = Depends(get_session)):
     db_deck = Deck(
         name=deck.name,
         description=deck.description,
@@ -32,12 +31,14 @@ def read_decks(
     username: str,
     skip: int = 0,
     limit: int = 100,
-    session: Session = Depends(create_session),
+    session: Session = Depends(get_session),
 ):
-    user = UserService(session).get_user_by_username(username)
+    user = session.scalar(select(User).where(User.username == username))
     if user is None:
         return {'decks': []}
-    lista = DeckService(session).get_decks(user.id, skip, limit)
+    lista = session.scalars(
+        select(Deck).where(Deck.owner_id == user.id).offset(skip).limit(limit)
+    ).all()
     return {'decks': lista}
 
 
@@ -45,7 +46,7 @@ def read_decks(
 def update_deck(
     deck_id: int,
     deck: DeckSchema,
-    session: Session = Depends(create_session),
+    session: Session = Depends(get_session),
 ):
     db_deck = session.scalar(select(Deck).where(Deck.id == deck_id))
     if db_deck is None:

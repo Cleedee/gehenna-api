@@ -2,10 +2,10 @@ from typing import Optional
 
 from sqlalchemy.orm import Mapped, mapped_column
 
-from gehenna_api.models.base import SQLModel
+from gehenna_api.models.base import Base
 
 
-class Card(SQLModel):
+class Card(Base):
     __tablename__ = 'cards'
 
     id: Mapped[int] = mapped_column(primary_key=True)

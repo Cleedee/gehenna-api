@@ -147,7 +147,13 @@ def test_create_moviment(client):
     )
     assert response.status_code == 201
     assert response.json() == {
-        'detail': 'Moviment created.',
+        'name': 'Loja de Fortaleza',
+        'tipo': 'entrada',
+        'date_move': '2023-10-10',
+        'price': '16.50',
+        'owner_id': 1,
+        'code': 1,
+        'id': 1,
     }
 
 
