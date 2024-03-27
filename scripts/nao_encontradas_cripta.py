@@ -22,12 +22,12 @@ with open('scripts/cardbase_crypt.json') as json_file:
         avancado = data[key]['Adv']
         if avancado:
             print('Atributo avançado', avancado)
-            carta: Card = session.scalar(
-                select(Card).where(Card.name == name + ' Adv')
+            carta = session.scalar(
+                select(Card).where(Card.name == (name + ' Adv'))
             )
             print(carta.name, ' é avançada')
         else:
-            carta: Card = session.scalar(select(Card).where(Card.name == name))
+            carta = session.scalar(select(Card).where(Card.name == name))
             print(carta.name)
         if not carta:
             print(f'{name} [{key}] não encontrada.')

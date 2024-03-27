@@ -1,4 +1,5 @@
 from typing import Optional
+from sqlalchemy import Boolean
 
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -22,3 +23,4 @@ class Card(Base):
     title: Mapped[Optional[str]]
     sect: Mapped[Optional[str]]
     codevdb: Mapped[Optional[int]]
+    avancado: Mapped[bool]

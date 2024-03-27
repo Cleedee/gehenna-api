@@ -3,15 +3,3 @@
 https://github.com/viktorsapozhok/fastapi-services-oauth2
 https://levelup.gitconnected.com/structuring-fastapi-project-using-3-tier-design-pattern-4d2e88a55757
 
-# TODO
-
-- Consultar estoque de uma carta
-
-## Cartas trocadas com o David
-
-Entombment (saída cadastrada)
-Shadowed Eyes (saída cadastrada)
-
-Fiquei com: Kúyen (cadastrar a carta)
-
-Dia: 5 de março de 2024

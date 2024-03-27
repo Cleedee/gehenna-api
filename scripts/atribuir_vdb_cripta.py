@@ -15,11 +15,25 @@ with open('scripts/cardbase_crypt.json') as json_file:
 
     session = next(get_session())
 
-    cards = session.scalars(select(Card)).all()
-    print(len(cards))
     for key in data.keys():
         name = data[key]['Name']
-        avancado = data[key]['Adv']
-        carta = session.scalar(select(Card).where(Card.name == name))
-        if carta:
-            print(f'{carta.name} recebe o código [{key}].')
+        avancado = False if data[key]['Adv'] == '' else data[key]['Adv'][0]
+        if avancado:
+            carta = session.scalar(
+                select(Card).where(
+                    Card.name == name + ' Adv'
+                )
+            )
+            if carta:
+                print(f'{carta.name} recebe o código [{key}].')
+                carta.codevdb = int(key)
+                carta.avancado = True
+                session.add(carta)
+        else:
+            pass
+            carta = session.scalar(select(Card).where(Card.name == name))
+            if carta:
+                print(f'{carta.name} recebe o código [{key}].')
+                carta.codevdb = int(key)
+                session.add(carta)
+    session.commit()
