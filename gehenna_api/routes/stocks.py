@@ -18,6 +18,7 @@ from gehenna_api.schemas import (
     MovimentPublic,
     MovimentSchema,
     Scalar,
+    UserList,
 )
 
 # from decimal import Decimal
@@ -135,6 +136,13 @@ def read_items_by_moviment(
     ).all()
     return {'items': items}
 
+@router.get('/owners/{card_id}', response_model=UserList)
+def read_owners_by_card(
+    card_id: int,
+    session: Session = Depends(get_session)
+    ):
+    # TODO
+    return {'users': []}
 
 @router.get('/cards/{card_id}/{username}', response_model=Scalar)
 def read_total_card_in_store(

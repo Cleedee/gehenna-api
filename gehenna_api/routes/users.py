@@ -50,3 +50,16 @@ def get_users(
 ):
     lista = session.scalars(select(User).offset(skip).limit(limit))
     return {'users': lista}
+
+@router.get('/{username}/by_name', response_model=UserPublic)
+def get_user_by_name(
+        username: str, 
+        session: Session = Depends(get_session),
+    ):
+    user = session.scalar(select(User).where(User.username == username))
+    return user
+
+@router.get('/{user_id}', response_model=UserPublic)
+def get_user_by_id(user_id: int, session: Session = Depends(get_session)):
+    user = session.scalar(select(User).where(User.id == user_id))
+    return user

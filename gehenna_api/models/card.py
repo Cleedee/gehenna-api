@@ -24,3 +24,9 @@ class Card(Base):
     sect: Mapped[Optional[str]]
     codevdb: Mapped[Optional[int]]
     avancado: Mapped[bool]
+
+    def __repr__(self):
+        return (f'<Card id={self.id} name={self.name}\n'
+            f'tipo={self.tipo} disciplines={self.disciplines}\n'
+            f'text={self.text} />'
+        )

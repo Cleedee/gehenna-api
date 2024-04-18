@@ -62,12 +62,22 @@ def read_card_by_code(code: int, session: Session = Depends(get_session)):
 
 
 @router.get('/card_by_name/{name}', response_model=CardList)
-def read_cards_by_name(name: str, session: Session = Depends(get_session)):
+def read_cards_by_name(
+        name: str, 
+        skip: int = 0,
+        limit: int = 100,
+        session: Session = Depends(get_session)):
     cards = session.scalars(
-        select(Card).where(Card.name.like(f'%{name}%'))
+        select(Card).where(Card.name.like(f'%{name}%')).offset(skip).limit(limit)
     ).all()
     return {'cards': cards}
 
+@router.get('/{name}/name', response_model=CardPublic)
+def read_card_by_name(name: str, session: Session = Depends(get_session)):
+    card = session.scalar(select(Card).where(Card.name == name))
+    if card is None:
+        raise HTTPException(status_code=404, detail='Card not found')
+    return card
 
 @router.put('/{card_id}', response_model=CardPublic)
 def update_card(
