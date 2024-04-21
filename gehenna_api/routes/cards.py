@@ -1,3 +1,4 @@
+from typing import Union
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -39,9 +40,22 @@ def create_card(card: CardSchema, session: Session = Depends(get_session)):
 
 @router.get('/', response_model=CardList)
 def read_cards(
-    skip: int = 0, limit: int = 100, session: Session = Depends(get_session)
+    name: Union[str, None] = None, 
+    code: Union[str, None] = None, 
+    skip: int = 0, 
+    limit: int = 100, 
+    session: Session = Depends(get_session)
 ):
-    cards = session.scalars(select(Card).offset(skip).limit(limit)).all()
+    if name:
+        cards = session.scalars(
+            select(Card).where(Card.name.like(f'%{name}%')).offset(skip).limit(limit)
+        ).all()
+    elif code:
+        cards = session.scalars(
+            select(Card).where(Card.code == code)
+        ).all()
+    else:
+        cards = session.scalars(select(Card).offset(skip).limit(limit)).all()
     return {'cards': cards}
 
 
@@ -52,25 +66,6 @@ def read_card_by_id(card_id: int, session: Session = Depends(get_session)):
         raise HTTPException(status_code=404, detail='Card not found')
     return card
 
-
-@router.get('/card_by_code/{code}', response_model=CardPublic)
-def read_card_by_code(code: int, session: Session = Depends(get_session)):
-    card = session.scalar(select(Card).where(Card.code == code))
-    if card is None:
-        raise HTTPException(status_code=404, detail='Card not found')
-    return card
-
-
-@router.get('/card_by_name/{name}', response_model=CardList)
-def read_cards_by_name(
-        name: str, 
-        skip: int = 0,
-        limit: int = 100,
-        session: Session = Depends(get_session)):
-    cards = session.scalars(
-        select(Card).where(Card.name.like(f'%{name}%')).offset(skip).limit(limit)
-    ).all()
-    return {'cards': cards}
 
 @router.get('/{name}/name', response_model=CardPublic)
 def read_card_by_name(name: str, session: Session = Depends(get_session)):

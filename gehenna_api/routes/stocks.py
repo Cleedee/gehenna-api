@@ -141,8 +141,17 @@ def read_owners_by_card(
     card_id: int,
     session: Session = Depends(get_session)
     ):
-    # TODO
-    return {'users': []}
+    stmt = (select(User)
+        .join(Moviment)
+        .join(Item)
+        .where(
+            User.id == Moviment.owner_id,
+            Moviment.id == Item.moviment_id,
+            Item.card_id == card_id
+        ).distinct()
+    )
+    users = session.execute(stmt).scalars().all()
+    return {'users': users }
 
 @router.get('/cards/{card_id}/{username}', response_model=Scalar)
 def read_total_card_in_store(
@@ -168,6 +177,8 @@ def read_total_card_in_store(
             Item.card_id == card_id,
         )
     )
+    #stmt_diferencas = select(stmt_entradas - stmt_saidas)
+    #soma = session.execute(stmt_diferencas).scalar() or 0
     soma_entradas = session.execute(stmt_entradas).scalar() or 0
     soma_saidas = session.execute(stmt_saidas).scalar() or 0
     soma = soma_entradas - soma_saidas

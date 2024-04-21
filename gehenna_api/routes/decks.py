@@ -15,8 +15,11 @@ def create_deck(deck: DeckSchema, session: Session = Depends(get_session)):
     db_deck = Deck(
         name=deck.name,
         description=deck.description,
+        creator=deck.creator,
+        player=deck.player,
         tipo=deck.tipo,
         created=deck.created,
+        preconstructed=deck.preconstructed,
         owner_id=deck.owner_id,
         code=deck.code,
     )
