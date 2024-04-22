@@ -126,3 +126,19 @@ class DeckPublic(DeckSchema):
 
 class DeckList(BaseModel):
     decks: list[DeckPublic]
+
+class SlotSchema(BaseModel):
+    deck_id: int
+    card_id: int
+    quantity: int
+    code: int
+
+class SlotQuantitySchema(BaseModel):
+    id: int
+    quantity: int
+
+class SlotPublic(SlotSchema):
+    id: int
+
+class SlotList(BaseModel):
+    slots: list[SlotPublic]
