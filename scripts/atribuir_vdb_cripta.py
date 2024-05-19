@@ -20,9 +20,7 @@ with open('scripts/cardbase_crypt.json') as json_file:
         avancado = False if data[key]['Adv'] == '' else data[key]['Adv'][0]
         if avancado:
             carta = session.scalar(
-                select(Card).where(
-                    Card.name == name + ' Adv'
-                )
+                select(Card).where(Card.name == name + ' Adv')
             )
             if carta:
                 print(f'{carta.name} recebe o código [{key}].')

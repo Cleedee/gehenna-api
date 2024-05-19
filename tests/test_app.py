@@ -43,6 +43,7 @@ def test_create_card(client):
             'text': '',
             'title': '',
             'sect': '',
+            'advanced': False,
             'codevdb': 0,
         },
     )
@@ -60,6 +61,7 @@ def test_create_card(client):
         'text': '',
         'title': '',
         'sect': '',
+        'advanced': False,
         'codevdb': 0,
         'id': 1,
     }
@@ -93,6 +95,7 @@ def test_update_card(client, card):
             'text': '',
             'title': '',
             'sect': '',
+            'advanced': False,
             'codevdb': 0,
             'id': 1,
         },
@@ -111,6 +114,7 @@ def test_update_card(client, card):
         'text': '',
         'title': '',
         'sect': '',
+        'advanced': False,
         'codevdb': 0,
         'id': 1,
     }
@@ -241,8 +245,8 @@ def test_create_deck(client):
     assert response.json() == {
         'name': 'Super Deck',
         'description': 'Deck legal',
-        'creator': None,
-        'player': None,
+        'creator': '',
+        'player': '',
         'tipo': 'other',
         'created': dt_str,
         'updated': None,
@@ -250,4 +254,36 @@ def test_create_deck(client):
         'owner_id': 1,
         'code': 1,
         'id': 1,
+    }
+
+
+def test_create_slot(client, card, deck):
+    response = client.post(
+        '/slots',
+        json={'quantity': 3, 'card_id': 1, 'deck_id': 1, 'code': 1},
+    )
+    assert response.status_code == 201
+    assert response.json() == {
+        'quantity': 3,
+        'card_id': 1,
+        'deck_id': 1,
+        'code': 1,
+        'id': 1,
+        'card': {
+            'code': 1,
+            'name': 'Teste',
+            'tipo': 'master',
+            'disciplines': '',
+            'clan': '',
+            'cost': '',
+            'capacity': '',
+            'group': '',
+            'attributes': '',
+            'text': '',
+            'title': '',
+            'sect': '',
+            'advanced': False,
+            'codevdb': 0,
+            'id': 1,
+        },
     }

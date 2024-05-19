@@ -38,17 +38,19 @@ mapa_disciplinas = {
     'Vengeance': {1: 'ven', 2: 'VEN'},
     'Vicissitude': {1: 'vic', 2: 'VIC'},
     'Visceratika': {1: 'vis', 2: 'VIS'},
-    'Vision': {1: 'vin', 2: 'VIN'}
+    'Vision': {1: 'vin', 2: 'VIN'},
 }
+
 
 def converte_disciplinas_cripta(disciplinas: Dict[str, str]) -> str:
     texto = '|'
-    for chave in disciplinas.keys(): 
+    for chave in disciplinas.keys():
         valor = mapa_disciplinas[chave][disciplinas[chave]]
         texto += f'{valor}|'
     if texto == '|':
         texto = '||'
     return texto
+
 
 def converte_disciplinas_biblioteca(disciplinas: str) -> str:
     if not disciplinas:

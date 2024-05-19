@@ -44,7 +44,7 @@ def client(session):
 
 @pytest.fixture
 def card(session):
-    card = Card(code=1, name='Teste', tipo='master')
+    card = Card(code=1, name='Teste', tipo='master', avancado=False, codevdb=0)
     session.add(card)
     session.commit()
     session.refresh(card)

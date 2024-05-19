@@ -34,12 +34,18 @@ class CardSchema(BaseModel):
     text: Optional[str] = ''
     title: Optional[str] = ''
     sect: Optional[str] = ''
+    advanced: Optional[bool] = False
     codevdb: Optional[int] = 0
     model_config = ConfigDict(from_attributes=True)
 
 
 class CardPublic(CardSchema):
     id: int
+
+
+class CardSimplePublic(BaseModel):
+    id: int
+    name: str
 
 
 class CardList(BaseModel):
@@ -127,18 +133,23 @@ class DeckPublic(DeckSchema):
 class DeckList(BaseModel):
     decks: list[DeckPublic]
 
+
 class SlotSchema(BaseModel):
     deck_id: int
     card_id: int
     quantity: int
     code: int
 
+
 class SlotQuantitySchema(BaseModel):
     id: int
     quantity: int
 
+
 class SlotPublic(SlotSchema):
     id: int
+    card: CardPublic
+
 
 class SlotList(BaseModel):
     slots: list[SlotPublic]

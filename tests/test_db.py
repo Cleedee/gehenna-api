@@ -10,7 +10,7 @@ from gehenna_api.models.moviment import Moviment
 
 
 def test_create_card(session):
-    new_card = Card(code=1, name='Cobra Coral', tipo='vampire')
+    new_card = Card(code=1, name='Cobra Coral', tipo='vampire', avancado=False)
     session.add(new_card)
     session.commit()
 

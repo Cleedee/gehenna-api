@@ -1,4 +1,5 @@
 from typing import Union
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -30,6 +31,7 @@ def create_card(card: CardSchema, session: Session = Depends(get_session)):
         text=card.text,
         title=card.title,
         sect=card.sect,
+        avancado=card.advanced,
         codevdb=card.codevdb,
     )
     session.add(db_card)
@@ -40,20 +42,21 @@ def create_card(card: CardSchema, session: Session = Depends(get_session)):
 
 @router.get('/', response_model=CardList)
 def read_cards(
-    name: Union[str, None] = None, 
-    code: Union[str, None] = None, 
-    skip: int = 0, 
-    limit: int = 100, 
-    session: Session = Depends(get_session)
+    name: Union[str, None] = None,
+    code: Union[str, None] = None,
+    skip: int = 0,
+    limit: int = 100,
+    session: Session = Depends(get_session),
 ):
     if name:
         cards = session.scalars(
-            select(Card).where(Card.name.like(f'%{name}%')).offset(skip).limit(limit)
+            select(Card)
+            .where(Card.name.like(f'%{name}%'))
+            .offset(skip)
+            .limit(limit)
         ).all()
     elif code:
-        cards = session.scalars(
-            select(Card).where(Card.code == code)
-        ).all()
+        cards = session.scalars(select(Card).where(Card.code == code)).all()
     else:
         cards = session.scalars(select(Card).offset(skip).limit(limit)).all()
     return {'cards': cards}
@@ -73,6 +76,7 @@ def read_card_by_name(name: str, session: Session = Depends(get_session)):
     if card is None:
         raise HTTPException(status_code=404, detail='Card not found')
     return card
+
 
 @router.put('/{card_id}', response_model=CardPublic)
 def update_card(

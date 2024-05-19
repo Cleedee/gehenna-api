@@ -17,9 +17,7 @@ with open('scripts/cardbase_lib.json') as json_file:
 
     for key in data.keys():
         name = data[key]['Name']
-        carta = session.scalar(
-            select(Card).where(Card.name == name)
-        )
+        carta = session.scalar(select(Card).where(Card.name == name))
         if carta and not carta.codevdb:
             print(f'{carta.name} recebe o código [{key}].')
             carta.codevdb = int(key)
