@@ -103,7 +103,7 @@ class ItemSchema(BaseModel):
 
 class ItemPublic(ItemSchema):
     id: int
-
+    card: CardSimplePublic
 
 class ItemDB(ItemSchema):
     id: int

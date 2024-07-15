@@ -1,4 +1,5 @@
 import datetime
+from typing import Union
 
 from fastapi import APIRouter, Depends
 from fastapi.exceptions import HTTPException
@@ -58,9 +59,28 @@ def read_all_moviments(
     return {'moviments': moves}
 
 
+
+@router.get('/moviment/{id}', response_model=MovimentPublic)
+def read_moviment(
+    id: int,
+    session: Session = Depends(get_session)
+    ):
+    moviment = session.scalar(select(Moviment).where(Moviment.id == id))
+    if moviment is None:
+        raise HTTPException(status_code=404, detail='Moviment not found')
+    return moviment
+
+def read_moviments_by_card(
+    username: str,
+    card_id: int,
+    session: Session = Depends(get_session)
+    ):
+    pass
+
 @router.get('/moviments/{username}', response_model=MovimentList)
 def read_moviments(
     username: str,
+    tipo: Union[str, None] = None,
     skip: int = 0,
     limit: int = 100,
     session: Session = Depends(get_session),
@@ -68,12 +88,25 @@ def read_moviments(
     user = session.scalar(select(User).where(User.username == username))
     if user is None:
         return {'moviments': []}
-    moves = session.scalars(
-        select(Moviment)
-        .where(Moviment.owner_id == user.id)
-        .offset(skip)
-        .limit(limit)
-    ).all()
+    if tipo:
+        if tipo not in ('E','S'):
+            raise HTTPException(status_code=404, detail='Moviment type not found: {tipo}')
+        moves = session.scalars(
+            select(Moviment)
+            .where(
+                Moviment.owner_id == user.id,
+                Moviment.tipo == tipo
+            )
+            .offset(skip)
+            .limit(limit)
+        ).all()
+    else:
+        moves = session.scalars(
+            select(Moviment)
+            .where(Moviment.owner_id == user.id)
+            .offset(skip)
+            .limit(limit)
+        ).all()
     return {'moviments': moves}
 
 
@@ -120,6 +153,15 @@ def create_item(item: ItemSchema, session: Session = Depends(get_session)):
     session.refresh(db_item)
     return db_item
 
+@router.put('/items', response_model=ItemPublic)
+def update_item(item_id: int, item: ItemSchema, session: Session = Depends(get_session)):
+    db_item = session.scalar(select(Item).where(Item.id == item_id))
+    if db_item is None:
+        raise HTTPException(status_code=404, detail='Item not found')
+    db_item.quantity = item.quantity
+    session.commit()
+    session.refresh(db_item)
+    return db_item 
 
 @router.get('/items/{moviment_id}', status_code=201, response_model=ItemList)
 def read_items_by_moviment(
@@ -176,6 +218,35 @@ def read_total_card_in_store(
             User.username == username,
             Moviment.tipo == 'S',
             Item.card_id == card_id,
+        )
+    )
+    # stmt_diferencas = select(stmt_entradas - stmt_saidas)
+    # soma = session.execute(stmt_diferencas).scalar() or 0
+    soma_entradas = session.execute(stmt_entradas).scalar() or 0
+    soma_saidas = session.execute(stmt_saidas).scalar() or 0
+    soma = soma_entradas - soma_saidas
+    return Scalar(quantity=soma)
+
+@router.get('/{username}/total', response_model=Scalar)
+def read_total_cards(
+    username: str, session: Session = Depends(get_session)
+    ):
+    stmt_entradas = (
+        select(func.sum(Item.quantity))
+        .join(Item.moviment)
+        .join(Moviment.owner)
+        .where(
+            User.username == username,
+            Moviment.tipo == 'E',
+        )
+    )
+    stmt_saidas = (
+        select(func.sum(Item.quantity))
+        .join(Item.moviment)
+        .join(Moviment.owner)
+        .where(
+            User.username == username,
+            Moviment.tipo == 'S',
         )
     )
     # stmt_diferencas = select(stmt_entradas - stmt_saidas)
