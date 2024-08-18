@@ -5,4 +5,4 @@ https://levelup.gitconnected.com/structuring-fastapi-project-using-3-tier-design
 
 ONDE ESTOU:
 
-Executando testes
+Implementando extração de decks da internet, baseado no código do Gehenna Bot.

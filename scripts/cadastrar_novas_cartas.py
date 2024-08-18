@@ -84,8 +84,8 @@ def importar_cartas_de_biblioteca():
     with open('scripts/cardbase_lib.json') as json_file:
         data = json.load(json_file)
         #        print(data['100741'])
-        cadastrar_carta(data, criar_carta_cripta)
+        cadastrar_carta(data, criar_carta_biblioteca)
 
 
 if __name__ == '__main__':
-    importar_cartas_de_biblioteca()
+    importar_cartas_de_cripta()

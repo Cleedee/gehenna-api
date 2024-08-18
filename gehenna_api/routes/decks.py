@@ -1,6 +1,8 @@
 from typing import Union
+from datetime import date
+
 from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from gehenna_api.database import get_session
@@ -8,7 +10,7 @@ from gehenna_api.models.auth import User
 from gehenna_api.models.deck import Deck
 from gehenna_api.models.slot import Slot
 from gehenna_api.models.card import Card
-from gehenna_api.schemas import DeckList, DeckPublic, DeckSchema
+from gehenna_api.schemas import DeckList, DeckPublic, DeckSchema, Scalar
 
 router = APIRouter(prefix='/decks', tags=['decks'])
 
@@ -21,7 +23,7 @@ def create_deck(deck: DeckSchema, session: Session = Depends(get_session)):
         creator=deck.creator,
         player=deck.player,
         tipo=deck.tipo,
-        created=deck.created,
+        created=deck.created if deck.created else date.today(),
         preconstructed=deck.preconstructed,
         owner_id=deck.owner_id,
         code=deck.code,
@@ -37,6 +39,7 @@ def read_decks(
     username: Union[str, None] = None,
     card_name: Union[str, None] = None,
     code: Union[str, None] = None,
+    preconstructed: Union[bool, None] = None,
     skip: int = 0,
     limit: int = 100,
     session: Session = Depends(get_session),
@@ -78,6 +81,9 @@ def read_decks(
             return {'decks': []}
         else:
             return {'decks': [ deck  ]}
+    if preconstructed:
+        lista = session.scalars(select(Deck).where(Deck.preconstructed == True).offset(skip).limit(limit)).all()
+        return {'decks': lista}
     lista = session.scalars(
         select(Deck).offset(skip).limit(limit)
     ).all()
@@ -90,9 +96,14 @@ def read_deck_by_id(id, session: Session = Depends(get_session)):
         raise HTTPException(status_code=404, detail='Deck not found')
     return deck
 
-@router.get('/{username}/total', response_model=)
+@router.get('/{username}/total', response_model=Scalar)
 def read_total(username, session: Session = Depends(get_session)):
-
+    user = session.scalar(select(User).where(User.username == username))
+    if user is None:
+        raise HTTPException(status_code=404, detail='User not found')
+    stmt = select(func.count(Deck.id)).where(Deck.owner_id == user.id)
+    total = session.execute(stmt).scalar() or 0
+    return Scalar(quantity=total)
 
 @router.put('/{deck_id}', response_model=DeckPublic)
 def update_deck(

@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Adicionado
 
+- Extração de deck da internet.
 - Atualizar texto de cartas atualizadas.
 
 ## [0.1.0]

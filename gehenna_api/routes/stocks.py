@@ -158,6 +158,7 @@ def update_item(item_id: int, item: ItemSchema, session: Session = Depends(get_s
     db_item = session.scalar(select(Item).where(Item.id == item_id))
     if db_item is None:
         raise HTTPException(status_code=404, detail='Item not found')
+    db_item.card_id = item.card_id
     db_item.quantity = item.quantity
     session.commit()
     session.refresh(db_item)

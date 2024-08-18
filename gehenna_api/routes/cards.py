@@ -1,12 +1,13 @@
-from typing import Union
+from typing import Annotated, Union
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from gehenna_api.database import get_session
 from gehenna_api.models.card import Card
 from gehenna_api.schemas import CardList, CardPublic, CardSchema, Message
+from gehenna_api.utils.parameters import CommaSeparatedList
 
 router = APIRouter(prefix='/cards', tags=['cards'])
 
@@ -44,6 +45,7 @@ def create_card(card: CardSchema, session: Session = Depends(get_session)):
 def read_cards(
     name: Union[str, None] = None,
     code: Union[str, None] = None,
+    ids: Union[str, None] = None,
     skip: int = 0,
     limit: int = 100,
     session: Session = Depends(get_session),
@@ -57,6 +59,8 @@ def read_cards(
         ).all()
     elif code:
         cards = session.scalars(select(Card).where(Card.code == code)).all()
+    elif ids:
+        cards = session.scalars(select(Card).where(Card.id.in_(ids))).all()
     else:
         cards = session.scalars(select(Card).offset(skip).limit(limit)).all()
     return {'cards': cards}
