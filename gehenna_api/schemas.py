@@ -119,7 +119,7 @@ class DeckSchema(BaseModel):
     creator: Optional[str] = ''
     player: Optional[str] = ''
     tipo: str
-    created: date
+    created: Optional[date] = None
     updated: Optional[datetime] = None
     preconstructed: bool = False
     owner_id: int

@@ -10,6 +10,7 @@ from gehenna_api.database import get_session
 from gehenna_api.models.auth import User
 from gehenna_api.models.item import Item
 from gehenna_api.models.moviment import Moviment
+from gehenna_api.models.card import Card
 from gehenna_api.schemas import (
     ItemList,
     ItemPublic,
@@ -70,12 +71,25 @@ def read_moviment(
         raise HTTPException(status_code=404, detail='Moviment not found')
     return moviment
 
+@router.get('/in/{username}/{card_id}', response_model=MovimentList)
 def read_moviments_by_card(
     username: str,
     card_id: int,
     session: Session = Depends(get_session)
     ):
-    pass
+    moves = session.scalars(
+        select(Moviment)
+        .join(Item)
+        .join(User)
+        .join(Card)
+        .where(
+            Moviment.owner_id == User.id,
+            Item.moviment_id == Moviment.id,
+            Card.id == card_id,
+            User.username == username
+        )
+    ).all()
+    return {'moviments': moves}
 
 @router.get('/moviments/{username}', response_model=MovimentList)
 def read_moviments(

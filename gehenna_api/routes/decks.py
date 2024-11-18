@@ -10,7 +10,7 @@ from gehenna_api.models.auth import User
 from gehenna_api.models.deck import Deck
 from gehenna_api.models.slot import Slot
 from gehenna_api.models.card import Card
-from gehenna_api.schemas import DeckList, DeckPublic, DeckSchema, Scalar
+from gehenna_api.schemas import DeckList, DeckPublic, DeckSchema, Message, Scalar
 
 router = APIRouter(prefix='/decks', tags=['decks'])
 
@@ -116,6 +116,19 @@ def update_deck(
         raise HTTPException(status_code=404, detail='Deck not found')
     db_deck.name = deck.name
     db_deck.description = deck.description
+    db_deck.preconstructed = deck.preconstructed
     session.commit()
     session.refresh(db_deck)
     return db_deck
+
+@router.delete('/{deck_id}', response_model=Message)
+def delete_deck(deck_id: int, session: Session = Depends(get_session)):
+    db_deck = session.scalar(select(Deck).where(Deck.id == deck_id))
+    if db_deck is None:
+        raise HTTPException(status_code=404, detail='Deck not found')
+    slots = session.scalars(select(Slot).where(Slot.deck_id == deck_id))
+    session.delete(db_deck)
+    for slot in slots:
+        session.delete(slot)
+    session.commit()
+    return {'detail': "Deck deleted"}
