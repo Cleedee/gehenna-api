@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extração de deck da internet.
 - Atualizar texto de cartas atualizadas.
 
+## 0.2.0
+
+- Consultar item de movimento por id com GET /stocks/item/id
+
 ## [0.1.0]
 
 ### Adicionado

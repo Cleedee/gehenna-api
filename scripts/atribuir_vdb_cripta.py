@@ -28,7 +28,6 @@ with open('scripts/cardbase_crypt.json') as json_file:
                 carta.avancado = True
                 session.add(carta)
         else:
-            pass
             carta = session.scalar(select(Card).where(Card.name == name))
             if carta:
                 print(f'{carta.name} recebe o código [{key}].')

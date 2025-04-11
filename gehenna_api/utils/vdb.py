@@ -21,6 +21,7 @@ mapa_disciplinas = {
     'Necromancy': {1: 'nec', 2: 'NEC'},
     'Obeah': {1: 'obe', 2: 'OBE'},
     'Obfuscate': {1: 'obf', 2: 'OBF'},
+    'Oblivion': {1: 'obl', 2: 'OBL'},
     'Obtenebration': {1: 'obt', 2: 'OBT'},
     'Potence': {1: 'pot', 2: 'POT'},
     'Presence': {1: 'pre', 2: 'PRE'},

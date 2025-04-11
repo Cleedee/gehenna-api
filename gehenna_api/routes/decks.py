@@ -37,6 +37,7 @@ def create_deck(deck: DeckSchema, session: Session = Depends(get_session)):
 @router.get('/', response_model=DeckList)
 def read_decks(
     username: Union[str, None] = None,
+    name: Union[str, None] = None,
     card_name: Union[str, None] = None,
     code: Union[str, None] = None,
     preconstructed: Union[bool, None] = None,
@@ -44,6 +45,18 @@ def read_decks(
     limit: int = 100,
     session: Session = Depends(get_session),
 ):
+    if name and username:
+        user = session.scalar(select(User).where(User.username == username))
+        if user is None:
+            return {'decks': []}
+        lista = session.scalars(
+            select(Deck).where(
+                Deck.owner_id == user.id,
+                Deck.name.contains(name)
+            )
+            .offset(skip).limit(limit)
+        ).all()
+        return {'decks': lista}
     if username and card_name is None:
         user = session.scalar(select(User).where(User.username == username))
         if user is None:

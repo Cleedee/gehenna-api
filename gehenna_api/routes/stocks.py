@@ -3,7 +3,7 @@ from typing import Union
 
 from fastapi import APIRouter, Depends
 from fastapi.exceptions import HTTPException
-from sqlalchemy import func, select
+from sqlalchemy import delete, func, select
 from sqlalchemy.orm import Session
 
 from gehenna_api.database import get_session
@@ -150,6 +150,8 @@ def delete_moviment(id: int, session: Session = Depends(get_session)):
     if db_move is None:
         raise HTTPException(status_code=404, detail='Moviment not found')
     session.delete(db_move)
+    stmt = delete(Item).where(Item.moviment_id == id)
+    session.execute(stmt)
     session.commit()
     return {'detail': 'Moviment deleted'}
 
@@ -166,6 +168,16 @@ def create_item(item: ItemSchema, session: Session = Depends(get_session)):
     session.commit()
     session.refresh(db_item)
     return db_item
+
+@router.get('/item/{id}', response_model=ItemPublic)
+def read_item(
+    id: int,
+    session: Session = Depends(get_session)
+    ):
+    item = session.scalar(select(Item).where(Item.id == id))
+    if item is None:
+        raise HTTPException(status_code=404, detail='Item not found')
+    return item
 
 @router.put('/items', response_model=ItemPublic)
 def update_item(item_id: int, item: ItemSchema, session: Session = Depends(get_session)):

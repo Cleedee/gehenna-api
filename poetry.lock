@@ -1220,6 +1220,16 @@ files = [
 windows-terminal = ["colorama (>=0.4.6)"]
 
 [[package]]
+name = "pyjsonq"
+version = "1.0.2"
+description = "Query over Json file"
+optional = false
+python-versions = "*"
+files = [
+    {file = "pyjsonq-1.0.2.tar.gz", hash = "sha256:6fc482e662a6a730979207059eb1482dfd838171fcc22344038eebb9b89d179a"},
+]
+
+[[package]]
 name = "pytest"
 version = "7.4.4"
 description = "pytest: simple powerful testing with Python"
@@ -1688,4 +1698,4 @@ standard = ["colorama (>=0.4)", "httptools (>=0.5.0)", "python-dotenv (>=0.13)",
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "22b37045b9de91aaf7c947d48b6369cebaea6fafffa1826fd557432db04496ef"
+content-hash = "d510360107fed7e1065a9733945dad674bd9bb7bb1a365186788318d35d6395a"
