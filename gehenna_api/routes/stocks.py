@@ -96,7 +96,7 @@ def read_moviments(
     username: str,
     tipo: Union[str, None] = None,
     skip: int = 0,
-    limit: int = 100,
+    limit: int = 200,
     session: Session = Depends(get_session),
 ):
     user = session.scalar(select(User).where(User.username == username))
@@ -185,10 +185,21 @@ def update_item(item_id: int, item: ItemSchema, session: Session = Depends(get_s
     if db_item is None:
         raise HTTPException(status_code=404, detail='Item not found')
     db_item.card_id = item.card_id
+    db_item.moviment_id = item.moviment_id
     db_item.quantity = item.quantity
     session.commit()
     session.refresh(db_item)
     return db_item 
+
+@router.delete('/{item_id}', response_model=Message)
+def delete_item(item_id: int, session: Session = Depends(get_session)):
+    db_item = session.scalar(select(Item).where(Item.id == item_id))
+    if db_item is None:
+        raise HTTPException(status_code=404, detail='Item not found')
+    session.delete(db_item)
+    session.commit()
+
+    return {'detail': 'Item deleted'}
 
 @router.get('/items/{moviment_id}', status_code=201, response_model=ItemList)
 def read_items_by_moviment(
