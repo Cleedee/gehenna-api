@@ -61,6 +61,7 @@ def read_cards(
     elif code:
         cards = session.scalars(select(Card).where(Card.code == code)).all()
     elif ids:
+        ids = eval('[' + ids + ']')
         cards = session.scalars(select(Card).where(Card.id.in_(ids))).all()
     elif codevdb:
         cards = session.scalars(select(Card).where(Card.codevdb == codevdb)).all()
