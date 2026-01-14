@@ -5,6 +5,7 @@ mapa_disciplinas = {
     'Animalism': {1: 'ani', 2: 'ANI'},
     'Auspex': {1: 'aus', 2: 'AUS'},
     'Blood Sorcery': {1: 'blo', 2: 'BLO'},
+    'BloodSorcery': {1: 'blo', 2: 'BLO'},
     'Celerity': {1: 'cel', 2: 'CEL'},
     'Chimerstry': {1: 'chi', 2: 'CHI'},
     'Daimonon': {1: 'dai', 2: 'DAI'},
