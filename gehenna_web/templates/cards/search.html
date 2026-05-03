@@ -6,11 +6,14 @@
 <h2>Card Search</h2>
 
 <form method="GET" class="row g-3 mb-4">
-    <div class="col-md-4">
+    <div class="col-md-3">
         {{ form.name(class="form-control", placeholder="Card Name") }}
     </div>
-    <div class="col-md-3">
+    <div class="col-md-2">
         {{ form.code(class="form-control", placeholder="Card Code") }}
+    </div>
+    <div class="col-md-3">
+        {{ form.tipo(class="form-select") }}
     </div>
     <div class="col-md-2">
         {{ form.submit(class="btn btn-primary w-100") }}
@@ -44,7 +47,7 @@
         {% endfor %}
     </tbody>
 </table>
-{% elif name or code %}
+{% elif name or code or tipo %}
 <p class="text-muted">No cards found.</p>
 {% endif %}
 

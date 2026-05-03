@@ -75,7 +75,7 @@ def delete_deck(deck_id):
     return api.delete(f'/decks/{deck_id}')
 
 
-def get_cards(name=None, code=None, codevdb=None, skip=0, limit=100):
+def get_cards(name=None, code=None, codevdb=None, tipo=None, skip=0, limit=100):
     params = {'skip': skip, 'limit': limit}
     if name:
         params['name'] = name
@@ -83,6 +83,8 @@ def get_cards(name=None, code=None, codevdb=None, skip=0, limit=100):
         params['code'] = code
     if codevdb:
         params['codevdb'] = codevdb
+    if tipo:
+        params['tipo'] = tipo
     return api.get('/cards/', params=params)
 
 

@@ -47,6 +47,7 @@ def read_cards(
     code: Union[str, None] = None,
     ids: Union[str, None] = None,
     codevdb: Union[str, None] = None,
+    tipo: Union[str, None] = None,
     skip: int = 0,
     limit: int = 100,
     session: Session = Depends(get_session),
@@ -65,6 +66,13 @@ def read_cards(
         cards = session.scalars(select(Card).where(Card.id.in_(ids))).all()
     elif codevdb:
         cards = session.scalars(select(Card).where(Card.codevdb == codevdb)).all()
+    elif tipo:
+        cards = session.scalars(
+            select(Card)
+            .where(Card.tipo == tipo)
+            .offset(skip)
+            .limit(limit)
+        ).all()
     else:
         cards = session.scalars(select(Card).offset(skip).limit(limit)).all()
     return {'cards': cards}
