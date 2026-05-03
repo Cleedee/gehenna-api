@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Moviments{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>My Moviments</h2>
+    <a href="{{ url_for('moviments.create') }}" class="btn btn-primary">New Moviment</a>
+</div>
+
+<form method="GET" class="row g-3 mb-4">
+    <div class="col-md-3">
+        <select name="tipo" class="form-select">
+            <option value="">All Types</option>
+            <option value="E">Entry</option>
+            <option value="S">Sale</option>
+        </select>
+    </div>
+    <div class="col-md-2">
+        <button type="submit" class="btn btn-secondary">Filter</button>
+    </div>
+</form>
+
+{% if moviments %}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Date</th>
+            <th>Price</th>
+            <th>Code</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for mov in moviments %}
+        <tr>
+            <td>{{ mov.id }}</td>
+            <td>{{ mov.name }}</td>
+            <td>
+                <span class="badge bg-{{ 'success' if mov.tipo == 'E' else 'warning' }}">
+                    {{ 'Entry' if mov.tipo == 'E' else 'Sale' }}
+                </span>
+            </td>
+            <td>{{ mov.date_move }}</td>
+            <td>${{ mov.price }}</td>
+            <td>{{ mov.code or '-' }}</td>
+            <td>
+                <a href="{{ url_for('moviments.edit', moviment_id=mov.id) }}" class="btn btn-sm btn-warning">Edit</a>
+                <a href="{{ url_for('moviments.delete', moviment_id=mov.id) }}" class="btn btn-sm btn-danger" onclick="return confirm('Delete moviment?')">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p class="text-muted">No moviments found.</p>
+{% endif %}
+
+<a href="{{ url_for('index') }}" class="btn btn-secondary mt-3">Back</a>
+{% endblock %}

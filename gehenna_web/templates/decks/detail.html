@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}{{ deck.name if deck else 'Deck' }}{% endblock %}
+
+{% block content %}
+{% if deck %}
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h3>{{ deck.name }}</h3>
+        {% if session.username and session.user_id == deck.owner_id %}
+        <div>
+            <a href="{{ url_for('decks.edit', deck_id=deck.id) }}" class="btn btn-warning btn-sm">Edit</a>
+            <a href="{{ url_for('decks.delete', deck_id=deck.id) }}" class="btn btn-danger btn-sm" onclick="return confirm('Delete deck?')">Delete</a>
+        </div>
+        {% endif %}
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <p><strong>Type:</strong> {{ deck.tipo }}</p>
+                <p><strong>Creator:</strong> {{ deck.creator or '-' }}</p>
+                <p><strong>Player:</strong> {{ deck.player or '-' }}</p>
+                <p><strong>Preconstructed:</strong> {{ 'Yes' if deck.preconstructed else 'No' }}</p>
+            </div>
+            <div class="col-md-6">
+                <p><strong>Description:</strong></p>
+                <p>{{ deck.description or 'No description' }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+<p class="text-muted">Deck not found.</p>
+{% endif %}
+
+<a href="{{ url_for('decks.list') }}" class="btn btn-secondary mt-3">Back to List</a>
+{% endblock %}

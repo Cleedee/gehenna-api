@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Cards Search{% endblock %}
+
+{% block content %}
+<h2>Card Search</h2>
+
+<form method="GET" class="row g-3 mb-4">
+    <div class="col-md-4">
+        {{ form.name(class="form-control", placeholder="Card Name") }}
+    </div>
+    <div class="col-md-3">
+        {{ form.code(class="form-control", placeholder="Card Code") }}
+    </div>
+    <div class="col-md-2">
+        {{ form.submit(class="btn btn-primary w-100") }}
+    </div>
+</form>
+
+{% if cards %}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Code</th>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Clan</th>
+            <th>Disciplines</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for card in cards %}
+        <tr>
+            <td>{{ card.id }}</td>
+            <td>{{ card.code }}</td>
+            <td>
+                <a href="{{ url_for('cards.detail', card_id=card.id) }}">{{ card.name }}</a>
+            </td>
+            <td>{{ card.tipo or '-' }}</td>
+            <td>{{ card.clan or '-' }}</td>
+            <td>{{ card.disciplines or '-' }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% elif name or code %}
+<p class="text-muted">No cards found.</p>
+{% endif %}
+
+<a href="{{ url_for('index') }}" class="btn btn-secondary mt-3">Back</a>
+{% endblock %}
