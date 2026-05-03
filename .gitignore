@@ -1,4 +1,9 @@
+# Json do VDB
+scripts/cardbase_crypt.json
+scripts/cardbase_library.json
+
 TOKEN.txt
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
