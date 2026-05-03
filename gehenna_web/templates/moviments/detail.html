@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}{{ moviment.name if moviment else 'Moviment' }}{% endblock %}
+
+{% block content %}
+{% if moviment %}
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h3>{{ moviment.name }}</h3>
+        <div>
+            <a href="{{ url_for('items.list', moviment_id=moviment.id) }}" class="btn btn-info btn-sm">Items</a>
+            <a href="{{ url_for('moviments.edit', moviment_id=moviment.id) }}" class="btn btn-warning btn-sm">Edit</a>
+            <a href="{{ url_for('moviments.delete', moviment_id=moviment.id) }}" class="btn btn-danger btn-sm" onclick="return confirm('Delete moviment?')">Delete</a>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <p><strong>Type:</strong> {{ 'Entry' if moviment.tipo == 'E' else 'Sale' }}</p>
+                <p><strong>Date:</strong> {{ moviment.date_move }}</p>
+                <p><strong>Price:</strong> ${{ moviment.price }}</p>
+                <p><strong>Code:</strong> {{ moviment.code or '-' }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+<p class="text-muted">Moviment not found.</p>
+{% endif %}
+
+<a href="{{ url_for('moviments.list') }}" class="btn btn-secondary mt-3">Back to List</a>
+{% endblock %}

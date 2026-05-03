@@ -57,7 +57,7 @@ def read_decks(
             .offset(skip).limit(limit)
         ).all()
         return {'decks': lista}
-    if username and card_name is None:
+    if username and not card_name:
         user = session.scalar(select(User).where(User.username == username))
         if user is None:
             return {'decks': []}

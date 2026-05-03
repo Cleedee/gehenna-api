@@ -36,7 +36,7 @@ api = APIClient()
 
 
 def login(username: str, password: str):
-    url = f'{Config.API_BASE_URL}/auth/token'
+    url = f'{Config.API_BASE_URL}/token'
     data = {'username': username, 'password': password}
     response = requests.post(url, data=data)
     if response.status_code == 200:
@@ -126,3 +126,45 @@ def create_user(data):
 
 def update_user(user_id, data):
     return api.put(f'/users/{user_id}', json=data)
+
+
+def get_slots(deck_id, skip=0, limit=100):
+    params = {'skip': skip, 'limit': limit}
+    return api.get(f'/slots/{deck_id}/deck', params=params)
+
+
+def get_slot(slot_id):
+    return api.get(f'/slots/{slot_id}')
+
+
+def create_slot(data):
+    return api.post('/slots/', json=data)
+
+
+def update_slot(slot_id, data):
+    return api.put(f'/slots/{slot_id}', json=data)
+
+
+def delete_slot(slot_id):
+    return api.delete(f'/slots/{slot_id}')
+
+
+def get_items(moviment_id, skip=0, limit=100):
+    params = {'skip': skip, 'limit': limit}
+    return api.get(f'/stocks/items/{moviment_id}', params=params)
+
+
+def get_item(item_id):
+    return api.get(f'/stocks/item/{item_id}')
+
+
+def create_item(data):
+    return api.post('/stocks/items', json=data)
+
+
+def update_item(item_id, data):
+    return api.put(f'/stocks/items/{item_id}', json=data)
+
+
+def delete_item(item_id):
+    return api.delete(f'/stocks/items/{item_id}')

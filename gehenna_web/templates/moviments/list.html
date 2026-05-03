@@ -48,6 +48,7 @@
             <td>${{ mov.price }}</td>
             <td>{{ mov.code or '-' }}</td>
             <td>
+                <a href="{{ url_for('moviments.detail', moviment_id=mov.id) }}" class="btn btn-sm btn-info">View</a>
                 <a href="{{ url_for('moviments.edit', moviment_id=mov.id) }}" class="btn btn-sm btn-warning">Edit</a>
                 <a href="{{ url_for('moviments.delete', moviment_id=mov.id) }}" class="btn btn-sm btn-danger" onclick="return confirm('Delete moviment?')">Delete</a>
             </td>

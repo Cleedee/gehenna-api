@@ -30,7 +30,7 @@ def login():
         result = api_client.login(username, password)
         if result:
             session['access_token'] = result.get('access_token')
-            session['username'] = username
+            session['username'] = result.get('username')
             session['user_id'] = result.get('id')
             flash('Logged in successfully', 'success')
             return redirect(url_for('index'))

@@ -98,3 +98,14 @@ def delete(moviment_id):
     else:
         flash('Error deleting moviment', 'error')
     return redirect(url_for('moviments.list'))
+
+
+@bp.route('/<int:moviment_id>')
+@login_required
+def detail(moviment_id):
+    from gehenna_web.services.api_client import api
+    response = api.get(f'/stocks/moviment/{moviment_id}')
+    moviment = None
+    if response.status_code == 200:
+        moviment = response.json()
+    return render_template('moviments/detail.html', moviment=moviment)

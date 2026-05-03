@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<h2>{{ title }}</h2>
+
+<form method="POST" class="mb-4">
+    {{ form.hidden_tag() }}
+    <div class="mb-3">
+        {{ form.deck_id.label(class="form-label") }}
+        {{ form.deck_id(class="form-control", type="hidden") }}
+        <input type="hidden" name="deck_id" value="{{ deck_id }}">
+    </div>
+    <div class="mb-3">
+        {{ form.card_id.label(class="form-label") }}
+        {{ form.card_id(class="form-control", required=True) }}
+    </div>
+    <div class="mb-3">
+        {{ form.quantity.label(class="form-label") }}
+        {{ form.quantity(class="form-control", required=True) }}
+    </div>
+    <div class="mb-3">
+        {{ form.code.label(class="form-label") }}
+        {{ form.code(class="form-control") }}
+    </div>
+    {{ form.submit(class="btn btn-primary") }}
+    <a href="{{ url_for('slots.list', deck_id=deck_id) }}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}
