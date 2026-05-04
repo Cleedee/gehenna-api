@@ -188,6 +188,7 @@ def get_card_image_url(card_name: str, format: str = 'jpg', group: str = None, a
     if not card_name:
         return None
     normalized = card_name.lower().replace(' ', '').replace("'", '').replace('-', '').replace('/', '').replace('(', '').replace(')', '').replace('.', '').replace(',', '')
+    normalized = normalized.replace('adv', '').replace('advanced', '')
     if group:
         normalized += f'g{group}'
         if advanced is True:
