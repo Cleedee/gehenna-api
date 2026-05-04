@@ -416,3 +416,118 @@ def create_moviment_from_deck(
         'total_items': len(slots),
         'total_cards': sum(s.quantity for s in slots),
     }
+
+
+@router.get('/statistics')
+def get_statistics(
+    owner_id: int | None = None,
+    session: Session = Depends(get_session),
+):
+    from gehenna_api.models.card import Card
+    from gehenna_api.models.deck import Deck
+    from gehenna_api.models.item import Item
+
+    query_filters = []
+    if owner_id:
+        query_filters.append(Moviment.owner_id == owner_id)
+
+    total_moviments = session.scalar(
+        select(func.count(Moviment.id)).where(*query_filters)
+    ) or 0
+
+    total_entries = session.scalar(
+        select(func.count(Moviment.id))
+        .where(Moviment.tipo == 'E', *query_filters)
+    ) or 0
+
+    total_sales = session.scalar(
+        select(func.count(Moviment.id))
+        .where(Moviment.tipo == 'S', *query_filters)
+    ) or 0
+
+    total_value = session.scalar(
+        select(func.sum(Moviment.price)).where(*query_filters)
+    ) or 0
+
+    total_cards = session.scalar(
+        select(func.sum(Item.quantity))
+        .select_from(Item)
+        .join(Moviment)
+        .where(*query_filters)
+    ) or 0
+
+    moviments_by_month = session.execute(
+        select(
+            func.strftime('%Y-%m', Moviment.date_move).label('month'),
+            func.count(Moviment.id).label('count'),
+            func.sum(Moviment.price).label('value'),
+        )
+        .where(*query_filters)
+        .group_by(func.strftime('%Y-%m', Moviment.date_move))
+        .order_by(func.strftime('%Y-%m', Moviment.date_move))
+    ).fetchall()
+
+    cards_by_type = session.execute(
+        select(Card.tipo, func.count(Card.id))
+        .where(Card.tipo != '')
+        .group_by(Card.tipo)
+        .order_by(func.count(Card.id).desc())
+    ).fetchall()
+
+    cards_by_clan = session.execute(
+        select(Card.clan, func.count(Card.id))
+        .where(Card.clan != '')
+        .group_by(Card.clan)
+        .order_by(func.count(Card.id).desc())
+        .limit(15)
+    ).fetchall()
+
+    cards_by_discipline = session.execute(
+        select(Card.disciplines, func.count(Card.id))
+        .where(Card.disciplines != '')
+        .group_by(Card.disciplines)
+        .order_by(func.count(Card.id).desc())
+        .limit(20)
+    ).fetchall()
+
+    total_decks_query = select(func.count(Deck.id))
+    if owner_id:
+        total_decks_query = total_decks_query.where(Deck.owner_id == owner_id)
+    total_decks = session.scalar(total_decks_query) or 0
+
+    decks_by_type_query = select(Deck.tipo, func.count(Deck.id))
+    if owner_id:
+        decks_by_type_query = decks_by_type_query.where(Deck.owner_id == owner_id)
+    decks_by_type_query = decks_by_type_query.group_by(Deck.tipo).order_by(func.count(Deck.id).desc())
+    decks_by_type = session.execute(decks_by_type_query).fetchall()
+
+    return {
+        'summary': {
+            'total_moviments': total_moviments,
+            'total_entries': total_entries,
+            'total_sales': total_sales,
+            'total_value': round(float(total_value), 2),
+            'total_cards': total_cards,
+            'total_decks': total_decks,
+        },
+        'moviments_by_month': [
+            {'month': r[0], 'count': r[1], 'value': float(r[2] or 0)}
+            for r in moviments_by_month
+        ],
+        'cards_by_type': [
+            {'type': r[0], 'count': r[1]}
+            for r in cards_by_type
+        ],
+        'cards_by_clan': [
+            {'clan': r[0], 'count': r[1]}
+            for r in cards_by_clan
+        ],
+        'cards_by_discipline': [
+            {'discipline': r[0], 'count': r[1]}
+            for r in cards_by_discipline
+        ],
+        'decks_by_type': [
+            {'type': r[0], 'count': r[1]}
+            for r in decks_by_type
+        ],
+    }

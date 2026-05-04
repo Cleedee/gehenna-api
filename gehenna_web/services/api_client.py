@@ -233,3 +233,10 @@ def create_moviment_from_deck(deck_id, owner_id, date_move, price=0):
         'price': price,
     }
     return api.post('/stocks/moviments/from-deck', json=data)
+
+
+def get_statistics(owner_id=None):
+    params = {}
+    if owner_id:
+        params['owner_id'] = owner_id
+    return api.get('/stocks/statistics', params=params)

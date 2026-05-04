@@ -1,0 +1,220 @@
+{% extends "base.html" %}
+
+{% block title %}Statistics{% endblock %}
+
+{% block content %}
+<h2>My Statistics</h2>
+
+{% if stats.summary %}
+<div class="row mb-4">
+    <div class="col-md-2">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">Total Cards</h5>
+                <h3>{{ stats.summary.total_cards }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">Total Value</h5>
+                <h3>R$ {{ "%.2f"|format(stats.summary.total_value) }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">Moviments</h5>
+                <h3>{{ stats.summary.total_moviments }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">Entries</h5>
+                <h3>{{ stats.summary.total_entries }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">Sales</h5>
+                <h3>{{ stats.summary.total_sales }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">Decks</h5>
+                <h3>{{ stats.summary.total_decks }}</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5>Cards by Type</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="cardsByTypeChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5>Cards by Clan</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="cardsByClanChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5>Moviments by Month</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="movimentsChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5>Cards by Discipline</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="cardsByDisciplineChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5>Decks by Type</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="decksByTypeChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Cards by Type (Doughnut)
+    new Chart(document.getElementById('cardsByTypeChart'), {
+        type: 'doughnut',
+        data: {
+            labels: {{ stats.cards_by_type|map(attribute='type')|list }},
+            datasets: [{
+                data: {{ stats.cards_by_type|map(attribute='count')|list }},
+                backgroundColor: [
+                    '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF',
+                    '#FF9F40', '#C9CBCF', '#4D5360', '#FF6384', '#36A2EB'
+                ]
+            }]
+        },
+        options: { responsive: true }
+    });
+
+    // Cards by Clan (Bar)
+    new Chart(document.getElementById('cardsByClanChart'), {
+        type: 'bar',
+        data: {
+            labels: {{ stats.cards_by_clan|map(attribute='clan')|list }},
+            datasets: [{
+                label: 'Cards',
+                data: {{ stats.cards_by_clan|map(attribute='count')|list }},
+                backgroundColor: '#36A2EB'
+            }]
+        },
+        options: {
+            responsive: true,
+            indexAxis: 'y',
+            scales: { x: { beginAtZero: true } }
+        }
+    });
+
+    // Moviments by Month (Line + Bar)
+    new Chart(document.getElementById('movimentsChart'), {
+        type: 'bar',
+        data: {
+            labels: {{ stats.moviments_by_month|map(attribute='month')|list }},
+            datasets: [{
+                label: 'Moviments',
+                data: {{ stats.moviments_by_month|map(attribute='count')|list }},
+                backgroundColor: '#4BC0C0',
+                yAxisID: 'y'
+            }, {
+                type: 'line',
+                label: 'Value (R$)',
+                data: {{ stats.moviments_by_month|map(attribute='value')|list }},
+                borderColor: '#FF6384',
+                fill: false,
+                yAxisID: 'y1'
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: { beginAtZero: true, position: 'left' },
+                y1: { beginAtZero: true, position: 'right', grid: { drawOnChartArea: false } }
+            }
+        }
+    });
+
+    // Cards by Discipline (Bar)
+    new Chart(document.getElementById('cardsByDisciplineChart'), {
+        type: 'bar',
+        data: {
+            labels: {{ stats.cards_by_discipline|map(attribute='discipline')|list }},
+            datasets: [{
+                label: 'Cards',
+                data: {{ stats.cards_by_discipline|map(attribute='count')|list }},
+                backgroundColor: '#9966FF'
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: { y: { beginAtZero: true } }
+        }
+    });
+
+    // Decks by Type (Pie)
+    new Chart(document.getElementById('decksByTypeChart'), {
+        type: 'pie',
+        data: {
+            labels: {{ stats.decks_by_type|map(attribute='type')|list }},
+            datasets: [{
+                data: {{ stats.decks_by_type|map(attribute='count')|list }},
+                backgroundColor: [
+                    '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40'
+                ]
+            }]
+        },
+        options: { responsive: true }
+    });
+</script>
+{% else %}
+<p class="text-muted">No statistics available.</p>
+{% endif %}
+
+<a href="{{ url_for('moviments.list') }}" class="btn btn-secondary mt-3">Back to Moviments</a>
+{% endblock %}

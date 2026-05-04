@@ -119,3 +119,14 @@ def detail(moviment_id):
     if response.status_code == 200:
         moviment = response.json()
     return render_template('moviments/detail.html', moviment=moviment)
+
+
+@bp.route('/statistics')
+@login_required
+def statistics():
+    owner_id = session.get('user_id')
+    response = api_client.get_statistics(owner_id=owner_id)
+    stats = {}
+    if response.status_code == 200:
+        stats = response.json()
+    return render_template('moviments/statistics.html', stats=stats)
