@@ -9,8 +9,9 @@ FastAPI REST API for managing V:TES (Vampire: The Eternal Struggle) card collect
 ```bash
 task lint        # Run ruff + blue checks
 task format      # Run blue + isort formatting
-task server      # Start dev server on port 8002 (uvicorn --reload)
+task server      # Start dev API server on port 8002 (uvicorn --reload)
 task test        # Run pytest with coverage
+task web         # Start API server (8002) + web UI (5000)
 ```
 
 ## Key Details
@@ -40,3 +41,18 @@ task test        # Run pytest with coverage
 - Models: `gehenna_api/models/`
 - Settings: `gehenna_api/settings.py` (loads `.env`)
 - DB session: `gehenna_api/database.py`
+
+## Web UI (gehenna_web)
+
+Flask-based web interface that consumes the REST API.
+
+- **Port**: 5000
+- **Entry point**: `gehenna_web/run.py`
+- **Run command**: `python gehenna_web/run.py`
+- **Templates**: `gehenna_web/templates/` (auth, cards, decks, items, moviments, slots, users)
+- **Static**: `gehenna_web/static/css/style.css`
+- **Routes**: `gehenna_web/routes/` (auth, cards, decks, items, moviments, slots, users)
+- **API Client**: `gehenna_web/services/api_client.py`
+- **Config**: `gehenna_web/config.py`
+
+Note: API must be running on port 8002 for the web UI to work.
