@@ -111,6 +111,7 @@ def read_moviments(
                 Moviment.owner_id == user.id,
                 Moviment.tipo == tipo
             )
+            .order_by(Moviment.date_move.desc(), Moviment.id.desc())
             .offset(skip)
             .limit(limit)
         ).all()
@@ -118,6 +119,7 @@ def read_moviments(
         moves = session.scalars(
             select(Moviment)
             .where(Moviment.owner_id == user.id)
+            .order_by(Moviment.date_move.desc(), Moviment.id.desc())
             .offset(skip)
             .limit(limit)
         ).all()
