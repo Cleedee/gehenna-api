@@ -1,5 +1,5 @@
 from collections import Counter
-from datetime import datetime
+from datetime import datetime, date
 import json
 import os
 from typing import Optional
@@ -303,4 +303,97 @@ def read_recommendations(
         'gaps': gaps,
         'total_trending': len(card_counter),
         'example_decks': example_decks,
+    }
+
+
+@router.get('/deck/{deck_id}')
+def read_twda_deck(deck_id: str):
+    twda = _get_twda_data()
+    for deck in twda:
+        if deck.get('id') == deck_id:
+            return deck
+    return {'error': 'Deck not found'}
+
+
+class TWDAImportRequest(BaseModel):
+    deck_id: str
+    owner_id: int
+
+
+@router.post('/import-deck')
+def import_twda(
+    request: TWDAImportRequest,
+    session: Session = Depends(get_session),
+):
+    twda = _get_twda_data()
+    twda_deck = None
+    for deck in twda:
+        if deck.get('id') == request.deck_id:
+            twda_deck = deck
+            break
+
+    if twda_deck is None:
+        return {'error': 'Deck not found'}
+
+    name = twda_deck.get('name', 'Imported Deck')
+    player = twda_deck.get('player', '')
+    event = twda_deck.get('event', '')
+    tipo = twda_deck.get('tournament_format', '2R+F')
+    deck_date = date.today()
+    try:
+        deck_date = datetime.strptime(twda_deck.get('date', ''), '%Y-%m-%d').date()
+    except ValueError:
+        deck_date = date.today()
+
+    db_deck = Deck(
+        name=name,
+        description=f"Imported from TWDA. Event: {event}. Player: {player}",
+        creator=player,
+        player=player,
+        tipo=tipo,
+        created=deck_date,
+        preconstructed=False,
+        owner_id=request.owner_id,
+        code=int(twda_deck.get('id', 0)),
+    )
+    session.add(db_deck)
+    session.commit()
+    session.refresh(db_deck)
+
+    vtes = _load_vtes_lookup()
+    twda_to_local = {}
+    all_cards = session.scalars(select(Card)).all()
+    for card in all_cards:
+        if card.codevdb:
+            twda_to_local[card.codevdb] = card.id
+
+    for vamp in twda_deck.get('crypt', {}).get('cards', []):
+        twda_id = vamp['id']
+        local_id = twda_to_local.get(twda_id)
+        if local_id:
+            slot = Slot(
+                deck_id=db_deck.id,
+                card_id=local_id,
+                quantity=vamp['count'],
+            )
+            session.add(slot)
+
+    for lib_section in twda_deck.get('library', {}).get('cards', []):
+        for card in lib_section.get('cards', []):
+            twda_id = card['id']
+            local_id = twda_to_local.get(twda_id)
+            if local_id:
+                slot = Slot(
+                    deck_id=db_deck.id,
+                    card_id=local_id,
+                    quantity=card['count'],
+                )
+                session.add(slot)
+
+    session.commit()
+
+    return {
+        'deck_id': db_deck.id,
+        'name': db_deck.name,
+        'message': 'Deck imported successfully',
     }

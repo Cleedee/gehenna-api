@@ -249,3 +249,11 @@ def get_trend_recommendations(username, limit=20, format=None, year=None):
     if year:
         params['year'] = year
     return api.get(f'/trends/recommendations/{username}', params=params)
+
+
+def get_twda_deck(deck_id):
+    return api.get(f'/trends/deck/{deck_id}')
+
+
+def import_twda_deck(deck_id, owner_id):
+    return api.post('/trends/import-deck', json={'deck_id': deck_id, 'owner_id': owner_id})

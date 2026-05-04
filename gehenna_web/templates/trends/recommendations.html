@@ -112,6 +112,7 @@
                             <th>Date</th>
                             <th>Format</th>
                             <th>Matching Cards</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -123,6 +124,9 @@
                             <td>{{ deck.format }}</td>
                             <td>
                                 <span class="badge bg-info">{{ deck.cards_count }}</span>
+                            </td>
+                            <td>
+                                <a href="{{ url_for('trends.deck_detail', deck_id=deck.id) }}" class="btn btn-sm btn-outline-primary">View</a>
                             </td>
                         </tr>
                         {% endfor %}

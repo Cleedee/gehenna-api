@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}{{ deck.get('name', 'Deck') }} - Gehenna{% endblock %}
+
+{% block content %}
+{% if deck %}
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h3>{{ deck.player }} - {{ deck.name if deck.name else '(unnamed)' }}</h3>
+        {% if session.user_id %}
+        <form method="POST" action="{{ url_for('trends.import_deck', deck_id=deck.id) }}">
+            <button type="submit" class="btn btn-success btn-sm">Import to My Decks</button>
+        </form>
+        {% endif %}
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <p><strong>Event:</strong> {{ deck.event }}</p>
+                <p><strong>Date:</strong> {{ deck.date }}</p>
+                <p><strong>Format:</strong> {{ deck.tournament_format }}</p>
+                <p><strong>Players:</strong> {{ deck.players_count }}</p>
+                <p><strong>Score:</strong> {{ deck.score }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Crypt ({{ deck.crypt.count }} cards)</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-group">
+                    {% for card in deck.crypt.cards %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        {{ card.name }}
+                        <span class="badge bg-primary rounded-pill">{{ card.count }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Library ({{ deck.library.count }} cards)</h5>
+            </div>
+            <div class="card-body">
+                {% for section in deck.library.cards %}
+                <h6>{{ section.type }} ({{ section.count }})</h6>
+                <ul class="list-group mb-3">
+                    {% for card in section.cards %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        {{ card.name }}
+                        <span class="badge bg-secondary rounded-pill">{{ card.count }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+<p class="text-muted">Deck not found.</p>
+{% endif %}
+
+<a href="{{ url_for('trends.recommendations') }}" class="btn btn-secondary mt-3">Back to Recommendations</a>
+{% endblock %}
