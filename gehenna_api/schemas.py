@@ -128,6 +128,18 @@ class DeckSchema(BaseModel):
     code: int
 
 
+class DeckUpdateSchema(BaseModel):
+    name: Optional[str] = None
+    description: Optional[str] = None
+    creator: Optional[str] = None
+    player: Optional[str] = None
+    tipo: Optional[str] = None
+    created: Optional[date] = None
+    preconstructed: Optional[bool] = None
+    code: Optional[int] = None
+    model_config = ConfigDict(from_attributes=True)
+
+
 class DeckPublic(DeckSchema):
     id: int
 
