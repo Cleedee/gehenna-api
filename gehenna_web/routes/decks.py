@@ -134,3 +134,20 @@ def delete(deck_id):
     else:
         flash('Error deleting deck', 'error')
     return redirect(url_for('decks.my_decks'))
+
+
+@bp.route('/<int:deck_id>/missing')
+def missing_cards(deck_id):
+    username = session.get('username')
+    response = api_client.get_deck(deck_id)
+    deck = None
+    if response.status_code == 200:
+        deck = response.json()
+
+    missing = {'cards': [], 'total': 0}
+    if username:
+        response = api_client.get_missing_cards(deck_id, username)
+        if response.status_code == 200:
+            missing = response.json()
+
+    return render_template('decks/missing.html', deck=deck, missing=missing)

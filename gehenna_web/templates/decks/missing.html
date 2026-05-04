@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Missing Cards - {{ deck.name if deck else 'Deck' }}{% endblock %}
+
+{% block content %}
+{% if deck %}
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h3>Missing Cards for {{ deck.name }}</h3>
+        <a href="{{ url_for('decks.detail', deck_id=deck.id) }}" class="btn btn-secondary btn-sm">Back to Deck</a>
+    </div>
+    <div class="card-body">
+        {% if missing.cards %}
+        <p class="alert alert-info">
+            Total missing cards: <strong>{{ missing.total }}</strong>
+        </p>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Card</th>
+                    <th>Owned</th>
+                    <th>Needed</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for card in missing.cards %}
+                <tr>
+                    <td>
+                        <a href="{{ url_for('cards.detail', card_id=card.card_id) }}" target="_blank">
+                            {{ card.name }}
+                        </a>
+                    </td>
+                    <td>{{ card.owned }}</td>
+                    <td><span class="badge bg-danger">{{ card.needed }}</span></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="alert alert-success">You have all the cards needed for this deck!</p>
+        {% endif %}
+    </div>
+</div>
+{% else %}
+<p class="text-muted">Deck not found.</p>
+{% endif %}
+
+<a href="{{ url_for('decks.detail', deck_id=deck.id) if deck else url_for('decks.list') }}" class="btn btn-secondary mt-3">Back to Deck</a>
+{% endblock %}

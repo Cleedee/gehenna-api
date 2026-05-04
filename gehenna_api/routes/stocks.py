@@ -11,6 +11,8 @@ from gehenna_api.models.auth import User
 from gehenna_api.models.item import Item
 from gehenna_api.models.moviment import Moviment
 from gehenna_api.models.card import Card
+from gehenna_api.models.deck import Deck
+from gehenna_api.models.slot import Slot
 from gehenna_api.schemas import (
     ItemList,
     ItemPublic,
@@ -295,3 +297,58 @@ def read_total_cards(
     soma_saidas = session.execute(stmt_saidas).scalar() or 0
     soma = soma_entradas - soma_saidas
     return Scalar(quantity=soma)
+
+
+@router.get('/missing-cards/{deck_id}/{username}')
+def read_missing_cards(
+    deck_id: int,
+    username: str,
+    session: Session = Depends(get_session),
+):
+    user = session.scalar(select(User).where(User.username == username))
+    if user is None:
+        return {'cards': [], 'total': 0}
+
+    deck = session.scalar(select(Deck).where(Deck.id == deck_id))
+    if deck is None:
+        return {'cards': [], 'total': 0}
+
+    slots = session.scalars(select(Slot).where(Slot.deck_id == deck_id)).all()
+
+    missing_cards = []
+    for slot in slots:
+        card = session.scalar(select(Card).where(Card.id == slot.card_id))
+        if card is None:
+            continue
+
+        stmt_entradas = (
+            select(func.sum(Item.quantity))
+            .join(Item.moviment)
+            .where(
+                Moviment.owner_id == user.id,
+                Moviment.tipo == 'E',
+                Item.card_id == slot.card_id,
+            )
+        )
+        stmt_saidas = (
+            select(func.sum(Item.quantity))
+            .join(Item.moviment)
+            .where(
+                Moviment.owner_id == user.id,
+                Moviment.tipo == 'S',
+                Item.card_id == slot.card_id,
+            )
+        )
+        owned = (session.execute(stmt_entradas).scalar() or 0) - (
+            session.execute(stmt_saidas).scalar() or 0
+        )
+        needed = slot.quantity - owned
+        if needed > 0:
+            missing_cards.append({
+                'card_id': card.id,
+                'name': card.name,
+                'needed': needed,
+                'owned': owned,
+            })
+
+    return {'cards': missing_cards, 'total': len(missing_cards)}
