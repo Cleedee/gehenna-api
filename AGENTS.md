@@ -56,3 +56,9 @@ Flask-based web interface that consumes the REST API.
 - **Config**: `gehenna_web/config.py`
 
 Note: API must be running on port 8002 for the web UI to work.
+
+## Test Users
+
+For automated testing (Playwright, etc.):
+
+- **opencode**: `username=opencode`, `password=test123456`, `id=6`
