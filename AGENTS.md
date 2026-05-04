@@ -37,10 +37,24 @@ task web         # Start API server (8002) + web UI (5000)
 ## Architecture
 
 - Entry point: `gehenna_api/app.py`
-- Routes: `gehenna_api/routes/` (auth, cards, decks, slots, stocks, users)
+- Routes: `gehenna_api/routes/` (auth, cards, decks, slots, stocks, trends, users)
 - Models: `gehenna_api/models/`
 - Settings: `gehenna_api/settings.py` (loads `.env`)
 - DB session: `gehenna_api/database.py`
+
+## Trends API
+
+Endpoints for tournament winning deck analysis (TWDA):
+
+- **GET /trends/** - Trends analysis (cards, clans, disciplines, formats)
+  - `limit` - Number of top cards (default 100)
+  - `format` - Filter by tournament format (2R+F, 3R+F)
+  - `year` - Filter by year
+- **GET /trends/recommendations/{username}** - Card recommendations based on user collection
+  - Suggests cards from meta that user needs
+  - Shows gaps (cards user doesn't have)
+
+Cache: `gehenna_api/data/vtes_lookup.json` (card metadata)
 
 ## Web UI (gehenna_web)
 
@@ -49,13 +63,19 @@ Flask-based web interface that consumes the REST API.
 - **Port**: 5000
 - **Entry point**: `gehenna_web/run.py`
 - **Run command**: `python gehenna_web/run.py`
-- **Templates**: `gehenna_web/templates/` (auth, cards, decks, items, moviments, slots, users)
+- **Templates**: `gehenna_web/templates/` (auth, cards, decks, items, moviments, slots, trends, users)
 - **Static**: `gehenna_web/static/css/style.css`
-- **Routes**: `gehenna_web/routes/` (auth, cards, decks, items, moviments, slots, users)
+- **Routes**: `gehenna_web/routes/` (auth, cards, decks, items, moviments, slots, trends, users)
 - **API Client**: `gehenna_web/services/api_client.py`
 - **Config**: `gehenna_web/config.py`
 
 Note: API must be running on port 8002 for the web UI to work.
+
+### Web Features
+
+- **/trends/recommendations** - Card recommendations based on user's collection vs tournament meta
+  - Shows cards from winning decks user may need
+  - Highlights gaps (cards user doesn't own)
 
 ## Test Users
 
