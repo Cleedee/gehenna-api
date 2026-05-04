@@ -60,10 +60,12 @@ def detail(card_id):
     if response.status_code == 200:
         card = response.json()
 
+    card_image_url = None
     prices = []
     if card and card.get('name'):
+        card_image_url = api_client.get_card_image_url(card['name'], 'webp')
         price_data = api_client.search_joestock_prices(card['name'])
         if price_data.get('success'):
             prices = price_data.get('results', [])
 
-    return render_template('cards/detail.html', card=card, prices=prices)
+    return render_template('cards/detail.html', card=card, prices=prices, card_image_url=card_image_url)

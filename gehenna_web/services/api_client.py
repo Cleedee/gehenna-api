@@ -181,6 +181,16 @@ def delete_item(item_id):
     return api.delete(f'/stocks/items/{item_id}')
 
 
+KRCG_IMAGE_URL = 'https://static.krcg.org/card'
+
+
+def get_card_image_url(card_name: str, format: str = 'jpg') -> str:
+    if not card_name:
+        return None
+    normalized = card_name.lower().replace(' ', '').replace("'", '').replace('-', '').replace('/', '').replace('(', '').replace(')', '').replace('.', '').replace(',', '')
+    return f'{KRCG_IMAGE_URL}/{normalized}.{format}'
+
+
 def search_joestock_prices(card_name: str, limit: int = 10):
     try:
         params = {
