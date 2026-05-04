@@ -1,3 +1,6 @@
+.pi/
+.playwright-mcp/
+
 # Json do VDB
 scripts/cardbase_crypt.json
 scripts/cardbase_library.json

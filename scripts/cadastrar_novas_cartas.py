@@ -89,3 +89,4 @@ def importar_cartas_de_biblioteca():
 
 if __name__ == '__main__':
     importar_cartas_de_cripta()
+    importar_cartas_de_biblioteca()
