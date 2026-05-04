@@ -26,6 +26,7 @@ def recommendations():
     cards = []
     gaps = []
     total_trending = 0
+    example_decks = []
 
     response = api_client.get_trend_recommendations(
         session.get('username'),
@@ -39,12 +40,14 @@ def recommendations():
         cards = data.get('cards', [])
         gaps = data.get('gaps', [])
         total_trending = data.get('total_trending', 0)
+        example_decks = data.get('example_decks', [])
 
     return render_template(
         'trends/recommendations.html',
         cards=cards,
         gaps=gaps,
         total_trending=total_trending,
+        example_decks=example_decks,
         limit=limit,
         format=format,
         year=year

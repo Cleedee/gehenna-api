@@ -264,8 +264,43 @@ def read_recommendations(
         if len(recommendations) >= limit:
             break
 
+    # Find example decks that use the recommended cards
+    example_decks = []
+    needed_ids = set(r['card_id'] for r in recommendations[:10])
+    local_to_twda = {v: k for k, v in twda_to_local.items()}
+
+    for deck in twda[:50]:
+        deck_card_ids = set()
+        for vamp in deck.get('crypt', {}).get('cards', []):
+            twda_id = vamp['id']
+            local_id = twda_to_local.get(twda_id)
+            if local_id:
+                deck_card_ids.add(local_id)
+
+        for lib_section in deck.get('library', {}).get('cards', []):
+            for card in lib_section.get('cards', []):
+                twda_id = card['id']
+                local_id = twda_to_local.get(twda_id)
+                if local_id:
+                    deck_card_ids.add(local_id)
+
+        # Check overlap with needed cards
+        overlap = deck_card_ids & needed_ids
+        if overlap and len(overlap) >= 2:
+            example_decks.append({
+                'id': deck['id'],
+                'name': deck.get('name', ''),
+                'player': deck.get('player', ''),
+                'date': deck.get('date', ''),
+                'format': deck.get('tournament_format', ''),
+                'cards_count': len(overlap),
+            })
+
+    example_decks = sorted(example_decks, key=lambda x: -x['cards_count'])[:10]
+
     return {
         'cards': recommendations,
         'gaps': gaps,
         'total_trending': len(card_counter),
+        'example_decks': example_decks,
     }

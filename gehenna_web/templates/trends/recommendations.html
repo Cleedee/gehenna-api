@@ -96,6 +96,44 @@
 </div>
 {% endif %}
 
+{% if example_decks %}
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card border-info">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">Example Decks (Using Recommended Cards)</h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Deck Name</th>
+                            <th>Player</th>
+                            <th>Date</th>
+                            <th>Format</th>
+                            <th>Matching Cards</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for deck in example_decks %}
+                        <tr>
+                            <td>{{ deck.name or '(unnamed)' }}</td>
+                            <td>{{ deck.player }}</td>
+                            <td>{{ deck.date }}</td>
+                            <td>{{ deck.format }}</td>
+                            <td>
+                                <span class="badge bg-info">{{ deck.cards_count }}</span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
 <div class="row mt-4">
     <div class="col-md-12">
         <a href="{{ url_for('cards.search') }}" class="btn btn-primary">Search Cards</a>
