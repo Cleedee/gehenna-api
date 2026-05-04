@@ -75,6 +75,10 @@ def delete_deck(deck_id):
     return api.delete(f'/decks/{deck_id}')
 
 
+def get_preconstructed_decks_with_card(card_id):
+    return api.get(f'/decks/preconstructed/with-card/{card_id}')
+
+
 def get_cards(name=None, code=None, codevdb=None, tipo=None, skip=0, limit=100):
     params = {'skip': skip, 'limit': limit}
     if name:

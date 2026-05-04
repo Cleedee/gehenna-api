@@ -148,6 +148,14 @@ def missing_cards(deck_id):
     if username:
         response = api_client.get_missing_cards(deck_id, username)
         if response.status_code == 200:
-            missing = response.json()
+            data = response.json()
+            cards = data.get('cards', [])
+            for card in cards:
+                response = api_client.get_preconstructed_decks_with_card(card['card_id'])
+                if response.status_code == 200:
+                    card['preconstructed_decks'] = response.json().get('decks', [])
+                else:
+                    card['preconstructed_decks'] = []
+            missing = {'cards': cards, 'total': data.get('total', 0)}
 
     return render_template('decks/missing.html', deck=deck, missing=missing)

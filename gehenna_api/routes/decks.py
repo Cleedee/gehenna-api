@@ -145,3 +145,33 @@ def delete_deck(deck_id: int, session: Session = Depends(get_session)):
         session.delete(slot)
     session.commit()
     return {'detail': "Deck deleted"}
+
+
+@router.get('/preconstructed/with-card/{card_id}')
+def read_preconstructed_decks_with_card(
+    card_id: int,
+    session: Session = Depends(get_session),
+):
+    decks = session.scalars(
+        select(Deck)
+        .join(Slot)
+        .where(
+            Deck.preconstructed == True,
+            Slot.card_id == card_id
+        )
+        .distinct()
+    ).all()
+    return {
+        'decks': [
+            {
+                'id': deck.id,
+                'name': deck.name,
+                'tipo': deck.tipo,
+                'slots': [
+                    {'card_id': s.card_id, 'quantity': s.quantity}
+                    for s in session.scalars(select(Slot).where(Slot.deck_id == deck.id, Slot.card_id == card_id)).all()
+                ]
+            }
+            for deck in decks
+        ]
+    }

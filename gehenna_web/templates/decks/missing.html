@@ -20,6 +20,7 @@
                     <th>Card</th>
                     <th>Owned</th>
                     <th>Needed</th>
+                    <th>Preconstructed Decks</th>
                 </tr>
             </thead>
             <tbody>
@@ -32,6 +33,17 @@
                     </td>
                     <td>{{ card.owned }}</td>
                     <td><span class="badge bg-danger">{{ card.needed }}</span></td>
+                    <td>
+                        {% if card.preconstructed_decks %}
+                        {% for pdeck in card.preconstructed_decks %}
+                        <a href="{{ url_for('decks.detail', deck_id=pdeck.id) }}" class="badge bg-primary text-decoration-none" target="_blank">
+                            {{ pdeck.name }} ({{ pdeck.slots[0].quantity }}x)
+                        </a>
+                        {% endfor %}
+                        {% else %}
+                        <span class="text-muted">-</span>
+                        {% endif %}
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
