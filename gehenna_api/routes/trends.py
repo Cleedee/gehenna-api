@@ -266,7 +266,7 @@ def read_recommendations(
 
     # Find example decks that use the recommended cards
     example_decks = []
-    needed_ids = set(r['card_id'] for r in recommendations[:10])
+    needed_ids = set(r.card_id for r in recommendations[:10])
     local_to_twda = {v: k for k, v in twda_to_local.items()}
 
     for deck in twda[:50]:
