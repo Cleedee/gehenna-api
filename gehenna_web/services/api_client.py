@@ -184,10 +184,14 @@ def delete_item(item_id):
 KRCG_IMAGE_URL = 'https://static.krcg.org/card'
 
 
-def get_card_image_url(card_name: str, format: str = 'jpg') -> str:
+def get_card_image_url(card_name: str, format: str = 'jpg', group: str = None, advanced: bool = None) -> str:
     if not card_name:
         return None
     normalized = card_name.lower().replace(' ', '').replace("'", '').replace('-', '').replace('/', '').replace('(', '').replace(')', '').replace('.', '').replace(',', '')
+    if group:
+        normalized += f'g{group}'
+        if advanced is True:
+            normalized += 'adv'
     return f'{KRCG_IMAGE_URL}/{normalized}.{format}'
 
 

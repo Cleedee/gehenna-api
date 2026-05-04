@@ -63,7 +63,11 @@ def detail(card_id):
     card_image_url = None
     prices = []
     if card and card.get('name'):
-        card_image_url = api_client.get_card_image_url(card['name'], 'webp')
+        card_image_url = api_client.get_card_image_url(
+            card['name'], 'webp',
+            group=card.get('group'),
+            advanced=card.get('avancado')
+        )
         price_data = api_client.search_joestock_prices(card['name'])
         if price_data.get('success'):
             prices = price_data.get('results', [])
