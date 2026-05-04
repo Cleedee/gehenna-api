@@ -10,6 +10,7 @@ FastAPI REST API for managing V:TES (Vampire: The Eternal Struggle) card collect
 task lint        # Run ruff + blue checks
 task format      # Run blue + isort formatting
 task server      # Start dev API server on port 8002 (uvicorn --reload)
+task stop       # Stop all services (API + Web UI)
 task test        # Run pytest with coverage
 task web         # Start API server (8002) + web UI (5000)
 ```
