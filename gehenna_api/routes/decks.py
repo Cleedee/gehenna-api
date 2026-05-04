@@ -187,3 +187,78 @@ def read_preconstructed_decks_with_card(
             for deck in decks
         ]
     }
+
+
+VDB_API = 'https://vdb.im/api/deck'
+
+
+@router.post('/import-vdb')
+def import_vdb_deck(
+    deck_id: str,
+    owner_id: int,
+    session: Session = Depends(get_session),
+):
+    from httpx import Client
+
+    try:
+        with Client() as client:
+            response = client.get(f'{VDB_API}/{deck_id}')
+        if response.status_code != 200:
+            raise HTTPException(status_code=404, detail='Deck not found in VDB')
+
+        vdb_data = response.json()
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f'Error fetching deck: {str(e)}')
+
+    name = vdb_data.get('name', 'Imported from VDB')
+    description = vdb_data.get('description', '')
+    tags = ','.join(vdb_data.get('tags', []))
+    tipo = '2R+F'
+
+    db_deck = Deck(
+        name=name,
+        description=description,
+        creator=vdb_data.get('author', ''),
+        player=vdb_data.get('author', ''),
+        tipo=tipo,
+        tags=tags,
+        created=date.today(),
+        preconstructed=False,
+        owner_id=owner_id,
+        code=0,
+    )
+    session.add(db_deck)
+    session.commit()
+    session.refresh(db_deck)
+
+    codevdb_to_local = {}
+    all_cards = session.scalars(select(Card)).all()
+    for card in all_cards:
+        if card.codevdb:
+            codevdb_to_local[card.codevdb] = card.id
+
+    vdb_cards = vdb_data.get('cards', {})
+    for codevdb_str, qty in vdb_cards.items():
+        if qty <= 0:
+            continue
+        try:
+            codevdb = int(codevdb_str)
+        except ValueError:
+            continue
+        local_id = codevdb_to_local.get(codevdb)
+        if local_id:
+            slot = Slot(
+                deck_id=db_deck.id,
+                card_id=local_id,
+                quantity=qty,
+            )
+            session.add(slot)
+
+    session.commit()
+
+    return {
+        'deck_id': db_deck.id,
+        'name': db_deck.name,
+        'message': 'Deck imported from VDB',
+        'cards_imported': sum(1 for q in vdb_cards.values() if q > 0),
+    }

@@ -165,6 +165,27 @@ def missing_cards(deck_id):
     return render_template('decks/missing.html', deck=deck, missing=missing)
 
 
+@bp.route('/import-vdb', methods=['GET', 'POST'])
+@login_required
+def import_vdb():
+    form = VDBImportForm()
+    if form.validate_on_submit():
+        deck_id = form.deck_id.data
+        owner_id = session.get('user_id')
+        response = api_client.import_vdb_deck(deck_id, owner_id)
+        if response.status_code == 201:
+            data = response.json()
+            flash(f"Deck imported: {data.get('name')} ({data.get('cards_imported')} cards)", 'success')
+            return redirect(url_for('decks.my_decks'))
+        flash('Error importing deck', 'error')
+    return render_template('decks/import_vdb.html', form=form)
+
+
+class VDBImportForm(FlaskForm):
+    deck_id = StringField('VDB Deck ID', validators=[DataRequired()], description='Ex: 8c46348db')
+    submit = SubmitField('Import')
+
+
 @bp.route('/<int:deck_id>/import', methods=['GET', 'POST'])
 @login_required
 def import_to_moviment(deck_id):

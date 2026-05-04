@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Import from VDB - Gehenna{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h4>Import Deck from VDB</h4>
+            </div>
+            <div class="card-body">
+                <p class="text-muted">
+                    Enter the VDB deck ID to import. The deck ID is the last part of the VDB URL.
+                    <br>Example: For <code>https://vdb.im/decks/8c46348db</code>, enter <code>8c46348db</code>
+                </p>
+                <form method="POST">
+                    {{ form.hidden_tag() }}
+                    <div class="mb-3">
+                        {{ form.deck_id.label(class="form-label") }}
+                        {{ form.deck_id(class="form-control") }}
+                    </div>
+                    {{ form.submit(class="btn btn-primary") }}
+                    <a href="{{ url_for('decks.my_decks') }}" class="btn btn-secondary">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
