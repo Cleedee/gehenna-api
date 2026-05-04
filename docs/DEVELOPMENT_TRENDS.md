@@ -14,10 +14,15 @@
 - [ ] Combinações de cards característicos
 
 ## 4. Recomendações
-- [ ] Sugerir cards para montar deck
-- [ ] Identificar gaps no acervo local
+- [x] Sugerir cards para montar deck
+- [x] Identificar gaps no acervo local
+- [x] Visualizar decks exemplo que usam as cartas
+- [x] Importar decks do TWDA para cadastro
 
 ## 5. Web UI
-- [ ] Exibir tendências na interface
+- [x] Exibir recomendações na interface
+- [x] Exibir decks примеро (que usam as cartas recomendadas)
+- [x] Visualizar detalhe de deck do TWDA
+- [x] Importar deck do TWDA para meus decks
 - [ ] Rankings visuais
 - [ ] Gráficos de evolução
