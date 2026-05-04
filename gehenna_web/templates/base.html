@@ -24,6 +24,9 @@
                     </li>
 {% if session.username %}
                     <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('decks.my_decks') }}">My Decks</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('moviments.list') }}">Moviments</a>
                     </li>
                     <li class="nav-item">
