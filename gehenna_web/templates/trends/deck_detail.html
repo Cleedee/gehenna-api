@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
 
 {% block title %}{{ deck.get('name', 'Deck') }} - Gehenna{% endblock %}
 
@@ -9,6 +10,7 @@
         <h3>{{ deck.player }} - {{ deck.name if deck.name else '(unnamed)' }}</h3>
         {% if session.user_id %}
         <form method="POST" action="{{ url_for('trends.import_deck', deck_id=deck.id) }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
             <button type="submit" class="btn btn-success btn-sm">Import to My Decks</button>
         </form>
         {% endif %}
