@@ -23,16 +23,44 @@
             {% endif %}
                 <p><strong>Code:</strong> {{ card.code }}</p>
                 <p><strong>Type:</strong> {{ card.tipo or '-' }}</p>
-                <p><strong>Clan:</strong> {{ card.clan or '-' }}</p>
-                <p><strong>Disciplines:</strong> {{ card.disciplines or '-' }}</p>
-                <p><strong>Cost:</strong> {{ card.cost or '-' }}</p>
+                <p>
+                    <strong>Clan:</strong>
+                    {% if clan_icon_url %}
+                    <img src="{{ clan_icon_url }}" alt="{{ card.clan }}" style="height: 20px; vertical-align: middle;" title="{{ card.clan }}">
+                    {% else %}
+                    {{ card.clan or '-' }}
+                    {% endif %}
+                </p>
+                <p>
+                    <strong>Disciplines:</strong>
+                    {% if discipline_icons %}
+                    {% for disc in discipline_icons %}
+                    <img src="{{ disc.url }}" alt="{{ disc.name }}" style="height: 20px; vertical-align: middle; margin-right: 2px;" title="{{ disc.name }}{% if disc.superior %} ( Superior){% endif %}">
+                    {% endfor %}
+                    {% else %}
+                    {{ card.disciplines or '-' }}
+                    {% endif %}
+                </p>
+                <p>
+                    <strong>Cost:</strong>
+                    {% if cost_icon %}
+                    <img src="{{ cost_icon.url }}" alt="{{ cost_icon.value }}" style="height: 20px; vertical-align: middle;" title="{{ cost_icon.value }}">
+                    {% endif %}
+                    {{ card.cost or '-' }}
+                </p>
             </div>
             {% if card_image_url %}
         </div>
         <div class="row">
             {% endif %}
             <div class="col-md-6">
-                <p><strong>Capacity:</strong> {{ card.capacity or '-' }}</p>
+                <p>
+                    <strong>Capacity:</strong>
+                    {% if card.capacity %}
+                    <img src="https://static.krcg.org/png/icon/capacity.png" alt="Capacity" style="height: 20px; vertical-align: middle;" title="Capacity">
+                    {% endif %}
+                    {{ card.capacity or '-' }}
+                </p>
                 <p><strong>Group:</strong> {{ card.group or '-' }}</p>
                 <p><strong>Sect:</strong> {{ card.sect or '-' }}</p>
                 <p><strong>Title:</strong> {{ card.title or '-' }}</p>

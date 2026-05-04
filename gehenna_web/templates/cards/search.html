@@ -41,8 +41,25 @@
                 <a href="{{ url_for('cards.detail', card_id=card.id) }}">{{ card.name }}</a>
             </td>
             <td>{{ card.tipo or '-' }}</td>
-            <td>{{ card.clan or '-' }}</td>
-            <td>{{ card.disciplines or '-' }}</td>
+            <td>
+                {% if card.clan_icon_url %}
+                <img src="{{ card.clan_icon_url }}" alt="{{ card.clan }}" style="height: 18px; vertical-align: middle;" title="{{ card.clan }}">
+                {% else %}
+                {{ card.clan or '-' }}
+                {% endif %}
+            </td>
+            <td>
+                {% if card.discipline_icons %}
+                {% for disc in card.discipline_icons[:5] %}
+                <img src="{{ disc.url }}" alt="{{ disc.name }}" style="height: 16px; vertical-align: middle; margin-right: 1px;" title="{{ disc.name }}{% if disc.superior %} (S){% endif %}">
+                {% endfor %}
+                {% if card.discipline_icons|length > 5 %}
+                <small class="text-muted">+{{ card.discipline_icons|length - 5 }}</small>
+                {% endif %}
+                {% else %}
+                {{ card.disciplines or '-' }}
+                {% endif %}
+            </td>
         </tr>
         {% endfor %}
     </tbody>
