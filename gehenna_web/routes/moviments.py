@@ -69,7 +69,6 @@ def create():
 def edit(moviment_id):
     form = MovimentForm()
     if request.method == 'GET':
-        url = f'{api_client.base_url}/stocks/moviment/{moviment_id}'
         from gehenna_web.services.api_client import api
         response = api.get(f'/stocks/moviment/{moviment_id}')
         if response.status_code == 200:
@@ -77,7 +76,9 @@ def edit(moviment_id):
             form.name.data = moviment.get('name')
             form.tipo.data = moviment.get('tipo')
             form.date_move.data = moviment.get('date_move')
-            form.price.data = moviment.get('price')
+            price_val = moviment.get('price')
+            if price_val is not None:
+                form.price.data = float(price_val)
             form.code.data = moviment.get('code')
 
     if form.validate_on_submit():
