@@ -54,6 +54,7 @@ def read_decks(
                 Deck.owner_id == user.id,
                 Deck.name.contains(name)
             )
+            .order_by(Deck.created.desc())
             .offset(skip).limit(limit)
         ).all()
         return {'decks': lista}
@@ -62,7 +63,9 @@ def read_decks(
         if user is None:
             return {'decks': []}
         lista = session.scalars(
-            select(Deck).where(Deck.owner_id == user.id).offset(skip).limit(limit)
+            select(Deck).where(Deck.owner_id == user.id)
+            .order_by(Deck.created.desc())
+            .offset(skip).limit(limit)
         ).all()
         return {'decks': lista}
     if card_name and username is None:
@@ -85,7 +88,9 @@ def read_decks(
                 .where(
                     Deck.owner_id == user.id,
                     Card.name.contains(card_name)
-                ).offset(skip).limit(limit)
+                )
+                .order_by(Deck.created.desc())
+                .offset(skip).limit(limit)
         ).all()
         return {'decks': lista}
     if code:
