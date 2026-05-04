@@ -118,13 +118,19 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
+    const cardsByType = {{ stats.cards_by_type|tojson }};
+    const cardsByClan = {{ stats.cards_by_clan|tojson }};
+    const movimentsByMonth = {{ stats.moviments_by_month|tojson }};
+    const cardsByDiscipline = {{ stats.cards_by_discipline|tojson }};
+    const decksByType = {{ stats.decks_by_type|tojson }};
+
     // Cards by Type (Doughnut)
     new Chart(document.getElementById('cardsByTypeChart'), {
         type: 'doughnut',
         data: {
-            labels: {{ stats.cards_by_type|map(attribute='type')|list }},
+            labels: cardsByType.map(x => x.type),
             datasets: [{
-                data: {{ stats.cards_by_type|map(attribute='count')|list }},
+                data: cardsByType.map(x => x.count),
                 backgroundColor: [
                     '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF',
                     '#FF9F40', '#C9CBCF', '#4D5360', '#FF6384', '#36A2EB'
@@ -138,10 +144,10 @@
     new Chart(document.getElementById('cardsByClanChart'), {
         type: 'bar',
         data: {
-            labels: {{ stats.cards_by_clan|map(attribute='clan')|list }},
+            labels: cardsByClan.map(x => x.clan),
             datasets: [{
                 label: 'Cards',
-                data: {{ stats.cards_by_clan|map(attribute='count')|list }},
+                data: cardsByClan.map(x => x.count),
                 backgroundColor: '#36A2EB'
             }]
         },
@@ -152,20 +158,20 @@
         }
     });
 
-    // Moviments by Month (Line + Bar)
+    // Moviments by Month (Bar + Line)
     new Chart(document.getElementById('movimentsChart'), {
         type: 'bar',
         data: {
-            labels: {{ stats.moviments_by_month|map(attribute='month')|list }},
+            labels: movimentsByMonth.map(x => x.month),
             datasets: [{
                 label: 'Moviments',
-                data: {{ stats.moviments_by_month|map(attribute='count')|list }},
+                data: movimentsByMonth.map(x => x.count),
                 backgroundColor: '#4BC0C0',
                 yAxisID: 'y'
             }, {
                 type: 'line',
                 label: 'Value (R$)',
-                data: {{ stats.moviments_by_month|map(attribute='value')|list }},
+                data: movimentsByMonth.map(x => x.value),
                 borderColor: '#FF6384',
                 fill: false,
                 yAxisID: 'y1'
@@ -184,10 +190,10 @@
     new Chart(document.getElementById('cardsByDisciplineChart'), {
         type: 'bar',
         data: {
-            labels: {{ stats.cards_by_discipline|map(attribute='discipline')|list }},
+            labels: cardsByDiscipline.map(x => x.discipline),
             datasets: [{
                 label: 'Cards',
-                data: {{ stats.cards_by_discipline|map(attribute='count')|list }},
+                data: cardsByDiscipline.map(x => x.count),
                 backgroundColor: '#9966FF'
             }]
         },
@@ -201,9 +207,9 @@
     new Chart(document.getElementById('decksByTypeChart'), {
         type: 'pie',
         data: {
-            labels: {{ stats.decks_by_type|map(attribute='type')|list }},
+            labels: decksByType.map(x => x.type),
             datasets: [{
-                data: {{ stats.decks_by_type|map(attribute='count')|list }},
+                data: decksByType.map(x => x.count),
                 backgroundColor: [
                     '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40'
                 ]
