@@ -159,3 +159,35 @@ def missing_cards(deck_id):
             missing = {'cards': cards, 'total': data.get('total', 0)}
 
     return render_template('decks/missing.html', deck=deck, missing=missing)
+
+
+@bp.route('/<int:deck_id>/import', methods=['GET', 'POST'])
+@login_required
+def import_to_moviment(deck_id):
+    response = api_client.get_deck(deck_id)
+    deck = None
+    if response.status_code == 200:
+        deck = response.json()
+
+    if not deck or deck.get('owner_id') != session.get('user_id'):
+        flash('Deck not found or not yours', 'error')
+        return redirect(url_for('decks.my_decks'))
+
+    if request.method == 'POST':
+        date_move = request.form.get('date_move')
+        price = float(request.form.get('price') or 0)
+        owner_id = session.get('user_id')
+        response = api_client.create_moviment_from_deck(
+            deck_id=deck_id,
+            owner_id=owner_id,
+            date_move=date_move,
+            price=price,
+        )
+        if response.status_code == 201:
+            data = response.json()
+            flash(f"Moviment created: {data.get('total_cards')} cards imported", 'success')
+            return redirect(url_for('moviments.list'))
+        flash('Error creating moviment', 'error')
+
+    from datetime import date
+    return render_template('decks/import.html', deck=deck, today=date.today().isoformat())

@@ -223,3 +223,13 @@ def search_joestock_prices(card_name: str, limit: int = 10):
         return {'success': False, 'error': 'API error', 'results': []}
     except Exception as e:
         return {'success': False, 'error': str(e), 'results': []}
+
+
+def create_moviment_from_deck(deck_id, owner_id, date_move, price=0):
+    data = {
+        'deck_id': deck_id,
+        'owner_id': owner_id,
+        'date_move': date_move,
+        'price': price,
+    }
+    return api.post('/stocks/moviments/from-deck', json=data)

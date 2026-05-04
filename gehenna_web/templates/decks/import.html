@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Import Deck to Moviment{% endblock %}
+
+{% block content %}
+{% if deck %}
+<div class="card">
+    <div class="card-header">
+        <h3>Import Deck: {{ deck.name }}</h3>
+    </div>
+    <div class="card-body">
+        <p><strong>Type:</strong> {{ deck.tipo }}</p>
+        <p><strong>Creator:</strong> {{ deck.creator or '-' }}</p>
+        <p><strong>Player:</strong> {{ deck.player or '-' }}</p>
+        <p><strong>Preconstructed:</strong> {{ 'Yes' if deck.preconstructed else 'No' }}</p>
+        {% if deck.description %}
+        <p><strong>Description:</strong> {{ deck.description }}</p>
+        {% endif %}
+
+        <hr>
+
+        <h4>Create Moviment Entry</h4>
+        <form method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="date_move" class="form-label">Date (YYYY-MM-DD)</label>
+                        <input type="text" class="form-control" id="date_move" name="date_move" value="{{ today }}" required>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="price" class="form-label">Total Price (R$)</label>
+                        <input type="number" class="form-control" id="price" name="price" step="0.01" min="0" placeholder="0.00">
+                    </div>
+                </div>
+            </div>
+            <div class="alert alert-info">
+                This will create a moviment entry (E) and import all cards from this deck as items.
+            </div>
+            <button type="submit" class="btn btn-primary">Import to Moviment</button>
+            <a href="{{ url_for('decks.detail', deck_id=deck.id) }}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>
+{% else %}
+<p class="text-muted">Deck not found.</p>
+{% endif %}
+
+<a href="{{ url_for('decks.my_decks') }}" class="btn btn-secondary mt-3">Back to My Decks</a>
+{% endblock %}

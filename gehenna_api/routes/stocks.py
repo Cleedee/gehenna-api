@@ -2,6 +2,9 @@ import datetime
 from typing import Union
 
 from fastapi import APIRouter, Depends
+from pydantic import BaseModel
+
+from gehenna_api.database import get_session
 from fastapi.exceptions import HTTPException
 from sqlalchemy import delete, func, select
 from sqlalchemy.orm import Session
@@ -352,3 +355,64 @@ def read_missing_cards(
             })
 
     return {'cards': missing_cards, 'total': len(missing_cards)}
+
+
+class FromDeckRequest(BaseModel):
+    deck_id: int
+    owner_id: int
+    date_move: str
+    price: float = 0
+
+
+@router.post('/moviments/from-deck', status_code=201)
+def create_moviment_from_deck(
+    request: FromDeckRequest,
+    session: Session = Depends(get_session),
+):
+    from datetime import datetime
+
+    deck_id = request.deck_id
+    owner_id = request.owner_id
+    date_move = datetime.strptime(request.date_move, '%Y-%m-%d').date()
+    price = request.price
+    from gehenna_api.models.deck import Deck
+    from gehenna_api.models.slot import Slot
+
+    deck = session.scalar(select(Deck).where(Deck.id == deck_id))
+    if deck is None:
+        raise HTTPException(status_code=404, detail='Deck not found')
+
+    if deck.owner_id != owner_id:
+        raise HTTPException(status_code=403, detail='Deck does not belong to user')
+
+    db_moviment = Moviment(
+        name=f"Deck: {deck.name}",
+        tipo='E',
+        date_move=date_move,
+        price=round(price, 2),
+        owner_id=owner_id,
+        code=deck.code or 0,
+    )
+    session.add(db_moviment)
+    session.commit()
+    session.refresh(db_moviment)
+
+    slots = session.scalars(select(Slot).where(Slot.deck_id == deck_id)).all()
+
+    for slot in slots:
+        db_item = Item(
+            card_id=slot.card_id,
+            moviment_id=db_moviment.id,
+            quantity=slot.quantity,
+            code=slot.code or 0,
+        )
+        session.add(db_item)
+
+    session.commit()
+
+    return {
+        'moviment_id': db_moviment.id,
+        'name': db_moviment.name,
+        'total_items': len(slots),
+        'total_cards': sum(s.quantity for s in slots),
+    }
