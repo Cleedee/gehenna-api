@@ -32,12 +32,6 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('moviments.statistics') }}">Statistics</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('moviments.list') }}">Moviments</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('moviments.statistics') }}">Statistics</a>
-                    </li>
                     {% if session.user_id == 1 %}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('users.list') }}">Users</a>
