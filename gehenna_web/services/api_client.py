@@ -261,4 +261,4 @@ def import_twda_deck(deck_id, owner_id):
 
 def import_vdb_deck(deck_id, owner_id):
     params = {'deck_id': deck_id, 'owner_id': owner_id}
-    return api.post('/decks/import-vdb', params=params)
+    return api.post('/decks/import-vdb', json=params)
