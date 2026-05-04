@@ -180,6 +180,14 @@ def read_recommendations(
 
     user_id = user.id
 
+    # Map TWDA id (codevdb) -> local card id
+    twda_to_local = {}
+    all_cards = session.scalars(select(Card)).all()
+    for card in all_cards:
+        if card.codevdb:
+            twda_to_local[card.codevdb] = card.id
+
+    # Get owned cards (local card id -> quantity)
     owned_cards = {}
     entradas = (
         select(Item.card_id, func.sum(Item.quantity))
@@ -223,19 +231,24 @@ def read_recommendations(
     gaps = []
     seen = set()
 
-    for card_id, count in top_cards:
-        if card_id in seen:
+    for twda_id, count in top_cards:
+        if twda_id in seen:
             continue
-        seen.add(card_id)
+        seen.add(twda_id)
 
-        owned = owned_cards.get(card_id, 0)
+        # Map TWDA id to local card id
+        local_id = twda_to_local.get(twda_id)
+        if local_id is None:
+            continue
+
+        owned = owned_cards.get(local_id, 0)
         if owned < 3:
             needed = 3 - owned
-            card_data = vtes.get(str(card_id), {})
-            name = card_data.get('name', f'Card {card_id}')
+            card_data = vtes.get(str(twda_id), {})
+            name = card_data.get('name', f'Card {twda_id}')
             recommendations.append(
                 RecommendationCard(
-                    card_id=card_id,
+                    card_id=local_id,
                     name=name,
                     needed=needed,
                     in_trend=True,
@@ -243,7 +256,7 @@ def read_recommendations(
             )
             if owned == 0:
                 gaps.append({
-                    'card_id': card_id,
+                    'card_id': local_id,
                     'name': name,
                     'needed': needed,
                 })
