@@ -3,6 +3,9 @@ from flask import session
 
 from gehenna_web.config import Config
 
+YAMPI_STORE_ID = '1187324'
+YAMPI_SEARCH_URL = 'https://search.yampi.com.br/v1/search/public/products'
+
 
 class APIClient:
     def __init__(self, base_url=None):
@@ -176,3 +179,33 @@ def update_item(item_id, data):
 
 def delete_item(item_id):
     return api.delete(f'/stocks/items/{item_id}')
+
+
+def search_joestock_prices(card_name: str, limit: int = 10):
+    try:
+        params = {
+            'paginate': 'true',
+            'store_id': YAMPI_STORE_ID,
+            'active': 'true',
+            'min_score': '9',
+            'q': card_name,
+            'limit': limit,
+        }
+        response = requests.get(YAMPI_SEARCH_URL, params=params, timeout=10)
+        if response.status_code == 200:
+            data = response.json()
+            results = []
+            for item in data.get('data', {}).get('data', []):
+                content = item.get('content', {})
+                results.append({
+                    'id': item.get('id'),
+                    'name': content.get('name'),
+                    'price': content.get('price'),
+                    'image_url': content.get('image_url'),
+                    'url': f"https://joestock.com.br/{content.get('slug', '')}/p" if content.get('slug') else None,
+                    'attributes': {attr['name']: attr['values'] for attr in content.get('attributes', [])},
+                })
+            return {'success': True, 'results': results}
+        return {'success': False, 'error': 'API error', 'results': []}
+    except Exception as e:
+        return {'success': False, 'error': str(e), 'results': []}

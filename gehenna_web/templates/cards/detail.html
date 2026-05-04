@@ -32,6 +32,55 @@
         {% endif %}
     </div>
 </div>
+
+{% if prices %}
+<div class="card mt-3">
+    <div class="card-header bg-success text-white">
+        <h5 class="mb-0">Prices on JoeStock</h5>
+    </div>
+    <div class="card-body">
+        <table class="table table-sm table-hover">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Type</th>
+                    <th>Price</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in prices %}
+                <tr>
+                    <td>
+                        {% if p.image_url %}
+                        <img src="{{ p.image_url }}" alt="{{ p.name }}" style="width: 30px; height: 40px; object-fit: cover;" class="me-2">
+                        {% endif %}
+                        {{ p.name }}
+                    </td>
+                    <td>
+                        {% if p.attributes.Tipo %}
+                        <span class="badge bg-secondary">{{ p.attributes.Tipo[0] }}</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if p.price %}
+                        <strong>R$ {{ "%.2f"|format(p.price) }}</strong>
+                        {% else %}
+                        -
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if p.url %}
+                        <a href="{{ p.url }}" target="_blank" class="btn btn-sm btn-primary">View</a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
 {% else %}
 <p class="text-muted">Card not found.</p>
 {% endif %}
