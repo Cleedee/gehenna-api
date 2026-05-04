@@ -1,7 +1,7 @@
 from typing import Union
 from datetime import date
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
@@ -194,8 +194,8 @@ VDB_API = 'https://vdb.im/api/deck'
 
 @router.post('/import-vdb')
 def import_vdb_deck(
-    deck_id: str,
-    owner_id: int,
+    deck_id: str = Query(...),
+    owner_id: int = Query(...),
     session: Session = Depends(get_session),
 ):
     from httpx import Client
