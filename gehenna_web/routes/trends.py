@@ -6,6 +6,16 @@ from gehenna_web.services import api_client
 bp = Blueprint('trends', __name__, url_prefix='/trends')
 
 
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'username' not in session:
+            flash('Please login first', 'warning')
+            return redirect(url_for('auth.login'))
+        return f(*args, **kwargs)
+    return decorated_function
+
+
 @bp.route('/deck/<deck_id>')
 def deck_detail(deck_id):
     response = api_client.get_twda_deck(deck_id)
@@ -33,16 +43,6 @@ def import_deck(deck_id):
     else:
         flash('Failed to import deck', 'error')
         return redirect(url_for('trends.deck_detail', deck_id=deck_id))
-
-
-def login_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if 'username' not in session:
-            flash('Please login first', 'warning')
-            return redirect(url_for('auth.login'))
-        return f(*args, **kwargs)
-    return decorated_function
 
 
 @bp.route('/recommendations')
