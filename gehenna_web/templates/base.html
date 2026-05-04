@@ -22,9 +22,15 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('decks.list') }}">Decks</a>
                     </li>
-                    {% if session.username %}
+{% if session.username %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('decks.my_decks') }}">My Decks</a>
+                        <a class="nav-link" href="{{ url_for('moviments.list') }}">Moviments</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('trends.recommendations') }}">Recommendations</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('moviments.statistics') }}">Statistics</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('moviments.list') }}">Moviments</a>

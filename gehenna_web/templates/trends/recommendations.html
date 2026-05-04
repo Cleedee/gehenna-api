@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block title %}Recommendations - Gehenna{% endblock %}
+
+{% block content %}
+<h1>Recommendations for {{ session.username }}</h1>
+
+<p class="text-muted">
+    Cards from tournament winning decks that you may need.
+    Total trending cards: {{ total_trending }}
+</p>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Cards to Get</h5>
+            </div>
+            <div class="card-body">
+                {% if cards %}
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Card ID</th>
+                            <th>Name</th>
+                            <th>Needed</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for card in cards %}
+                        <tr>
+                            <td>{{ card.card_id }}</td>
+                            <td>
+                                <a href="{{ url_for('cards.detail', card_id=card.card_id) }}" target="_blank">
+                                    {{ card.name }}
+                                </a>
+                            </td>
+                            <td>
+                                <span class="badge bg-{{ 'warning' if card.needed == 1 else ('orange' if card.needed == 2 else 'danger') }}">
+                                    {{ card.needed }}
+                                </span>
+                            </td>
+                            <td>
+                                <a href="{{ url_for('cards.detail', card_id=card.card_id) }}" class="btn btn-sm btn-outline-primary" target="_blank">
+                                    View
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p class="text-muted">No recommendations available.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if gaps %}
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card border-danger">
+            <div class="card-header bg-danger text-white">
+                <h5 class="mb-0">Gaps (Cards You Don't Have)</h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Card ID</th>
+                            <th>Name</th>
+                            <th>Needed</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for card in gaps %}
+                        <tr>
+                            <td>{{ card.card_id }}</td>
+                            <td>
+                                <a href="{{ url_for('cards.detail', card_id=card.card_id) }}" target="_blank">
+                                    {{ card.name }}
+                                </a>
+                            </td>
+                            <td>
+                                <span class="badge bg-danger">{{ card.needed }}</span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <a href="{{ url_for('cards.search') }}" class="btn btn-primary">Search Cards</a>
+    </div>
+</div>
+{% endblock %}
