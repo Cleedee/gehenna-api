@@ -1,7 +1,7 @@
 import datetime
 from typing import Optional
 
-from sqlalchemy import ForeignKey
+from sqlalchemy import ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from gehenna_api.models.auth import User
@@ -17,6 +17,7 @@ class Deck(Base):
     creator: Mapped[Optional[str]]
     player: Mapped[Optional[str]]
     tipo: Mapped[str]
+    tags: Mapped[Optional[str]] = mapped_column(String(500), default='')
     created: Mapped[datetime.date]
     updated: Mapped[Optional[datetime.datetime]]
     preconstructed: Mapped[bool] = mapped_column(default=False)

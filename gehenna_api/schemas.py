@@ -121,6 +121,7 @@ class DeckSchema(BaseModel):
     creator: Optional[str] = ''
     player: Optional[str] = ''
     tipo: str
+    tags: Optional[str] = ''
     created: Optional[date] = None
     updated: Optional[datetime] = None
     preconstructed: bool = False
@@ -134,6 +135,7 @@ class DeckUpdateSchema(BaseModel):
     creator: Optional[str] = None
     player: Optional[str] = None
     tipo: Optional[str] = None
+    tags: Optional[str] = None
     created: Optional[date] = None
     preconstructed: Optional[bool] = None
     code: Optional[int] = None

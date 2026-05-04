@@ -23,6 +23,7 @@ def create_deck(deck: DeckSchema, session: Session = Depends(get_session)):
         creator=deck.creator,
         player=deck.player,
         tipo=deck.tipo,
+        tags=deck.tags or '',
         created=deck.created if deck.created else date.today(),
         preconstructed=deck.preconstructed,
         owner_id=deck.owner_id,
@@ -41,6 +42,7 @@ def read_decks(
     card_name: Union[str, None] = None,
     code: Union[str, None] = None,
     preconstructed: Union[bool, None] = None,
+    tag: Union[str, None] = None,
     skip: int = 0,
     limit: int = 100,
     session: Session = Depends(get_session),
@@ -101,6 +103,11 @@ def read_decks(
             return {'decks': [ deck  ]}
     if preconstructed:
         lista = session.scalars(select(Deck).where(Deck.preconstructed == True).offset(skip).limit(limit)).all()
+        return {'decks': lista}
+    if tag:
+        lista = session.scalars(
+            select(Deck).where(Deck.tags.contains(tag)).offset(skip).limit(limit)
+        ).all()
         return {'decks': lista}
     lista = session.scalars(
         select(Deck).offset(skip).limit(limit)

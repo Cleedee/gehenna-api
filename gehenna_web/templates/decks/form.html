@@ -36,9 +36,13 @@
                             {{ form.tipo(class="form-control") }}
                         </div>
                         <div class="col-md-6 mb-3">
-                            {{ form.code.label(class="form-label") }}
-                            {{ form.code(class="form-control") }}
+                            {{ form.tags.label(class="form-label") }}
+                            {{ form.tags(class="form-control") }}
                         </div>
+                    </div>
+                    <div class="mb-3">
+                        {{ form.code.label(class="form-label") }}
+                        {{ form.code(class="form-control") }}
                     </div>
                     <div class="mb-3">
                         {{ form.preconstructed(class="form-check-input") }}

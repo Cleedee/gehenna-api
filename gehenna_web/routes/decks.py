@@ -17,6 +17,7 @@ class DeckForm(FlaskForm):
     creator = StringField('Creator')
     player = StringField('Player')
     tipo = StringField('Type', validators=[DataRequired()])
+    tags = StringField('Tags')
     preconstructed = BooleanField('Preconstructed')
     code = IntegerField('Code')
     submit = SubmitField('Save')
@@ -76,6 +77,7 @@ def create():
             'creator': form.creator.data,
             'player': form.player.data,
             'tipo': form.tipo.data,
+            'tags': form.tags.data or '',
             'preconstructed': form.preconstructed.data,
             'code': form.code.data,
             'owner_id': session.get('user_id'),
@@ -102,6 +104,7 @@ def edit(deck_id):
             form.creator.data = deck.get('creator')
             form.player.data = deck.get('player')
             form.tipo.data = deck.get('tipo')
+            form.tags.data = deck.get('tags', '')
             form.preconstructed.data = deck.get('preconstructed')
             form.code.data = deck.get('code')
 
@@ -112,6 +115,7 @@ def edit(deck_id):
             'creator': form.creator.data,
             'player': form.player.data,
             'tipo': form.tipo.data,
+            'tags': form.tags.data or '',
             'preconstructed': form.preconstructed.data,
             'code': form.code.data,
             'owner_id': session.get('user_id')
