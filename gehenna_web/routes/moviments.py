@@ -25,12 +25,21 @@ class MovimentForm(FlaskForm):
 def list():
     username = session.get('username')
     tipo = request.args.get('tipo')
-    response = api_client.get_moviments(username, tipo=tipo)
+    page = int(request.args.get('page', 1))
+    per_page = 20
+    skip = (page - 1) * per_page
+    response = api_client.get_moviments(username, tipo=tipo, skip=skip, limit=per_page + 1)
     moviments = []
+    has_next = False
     if response.status_code == 200:
         data = response.json()
-        moviments = data.get('moviments', [])
-    return render_template('moviments/list.html', moviments=moviments, username=username)
+        all_moviments = data.get('moviments', [])
+        if len(all_moviments) > per_page:
+            moviments = all_moviments[:per_page]
+            has_next = True
+        else:
+            moviments = all_moviments
+    return render_template('moviments/list.html', moviments=moviments, username=username, page=page, has_next=has_next, tipo=tipo)
 
 
 @bp.route('/create', methods=['GET', 'POST'])
