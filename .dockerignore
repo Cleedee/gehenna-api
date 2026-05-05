@@ -1,0 +1,15 @@
+.venv
+__pycache__
+*.pyc
+*.pyo
+*.db
+htmlcov
+.coverage
+.pytest_cache
+migrations/versions/*.py
+!migrations/versions/*.py_template
+.git
+.gitignore
+.DS_Store
+*.log
+.env

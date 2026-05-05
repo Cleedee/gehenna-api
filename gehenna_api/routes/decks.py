@@ -192,22 +192,30 @@ def read_preconstructed_decks_with_card(
 VDB_API = 'https://vdb.im/api/deck'
 
 
-@router.post('/import-vdb')
+@router.get('/import-vdb')
 def import_vdb_deck(
     deck_id: str = Query(...),
     owner_id: int = Query(...),
     session: Session = Depends(get_session),
 ):
     from httpx import Client
+    import logging
+    logger = logging.getLogger(__name__)
+
+    logger.info(f"Importing VDB deck: {deck_id} for owner: {owner_id}")
 
     try:
-        with Client() as client:
+        with Client(timeout=60.0) as client:
             response = client.get(f'{VDB_API}/{deck_id}')
+            logger.info(f"VDB response status: {response.status_code}")
         if response.status_code != 200:
             raise HTTPException(status_code=404, detail='Deck not found in VDB')
 
         vdb_data = response.json()
+    except HTTPException:
+        raise
     except Exception as e:
+        logger.error(f"Error: {e}")
         raise HTTPException(status_code=400, detail=f'Error fetching deck: {str(e)}')
 
     name = vdb_data.get('name', 'Imported from VDB')
