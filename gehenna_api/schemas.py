@@ -41,6 +41,7 @@ class CardSchema(BaseModel):
 
 class CardPublic(CardSchema):
     id: int
+    image_url: Optional[str] = None
 
 
 class CardSimplePublic(BaseModel):

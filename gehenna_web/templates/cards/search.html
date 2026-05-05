@@ -38,7 +38,12 @@
             <td>{{ card.id }}</td>
             <td>{{ card.code }}</td>
             <td>
-                <a href="{{ url_for('cards.detail', card_id=card.id) }}">{{ card.name }}</a>
+                <a href="{{ url_for('cards.detail', card_id=card.id) }}"
+                   data-card-name="{{ card.name }}"
+                   data-group="{{ card.group }}"
+                   {% if card.advanced %}data-advanced="true"{% endif %}
+                   class="card-link">{{ card.name }}
+                </a>
             </td>
             <td>{{ card.tipo or '-' }}</td>
             <td>

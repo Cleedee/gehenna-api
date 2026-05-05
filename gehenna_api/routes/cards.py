@@ -11,6 +11,8 @@ from gehenna_api.utils.parameters import CommaSeparatedList
 
 router = APIRouter(prefix='/cards', tags=['cards'])
 
+KRCG_BASE = 'https://static.krcg.org/card/'
+
 
 @router.post('/', status_code=201, response_model=CardPublic)
 def create_card(card: CardSchema, session: Session = Depends(get_session)):
@@ -75,7 +77,18 @@ def read_cards(
         ).all()
     else:
         cards = session.scalars(select(Card).offset(skip).limit(limit)).all()
-    return {'cards': cards}
+    for card in cards:
+        card.image_url = _get_card_image_url(card)
+    return {'cards': list(cards)}
+
+
+def _get_card_image_url(card: Card) -> str:
+    name = card.name.lower()
+    name = name.replace(' ', '').replace("'", '').replace('-', '')
+    group = card.group or '2'
+    if card.avancado:
+        return f'{KRCG_BASE}{name}g{group}adv.webp'
+    return f'{KRCG_BASE}{name}g{group}.webp'
 
 
 @router.get('/{card_id}', response_model=CardPublic)
@@ -83,6 +96,7 @@ def read_card_by_id(card_id: int, session: Session = Depends(get_session)):
     card = session.scalar(select(Card).where(Card.id == card_id))
     if card is None:
         raise HTTPException(status_code=404, detail='Card not found')
+    card.image_url = _get_card_image_url(card)
     return card
 
 
