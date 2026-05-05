@@ -114,9 +114,8 @@ def get_stock_card(username, card_id):
     return api.get(f'/stocks/cards/{card_id}/{username}')
 
 
-def get_moviments_in(username, card_id):
-    params = {'skip': 0, 'limit': 20}
-    return api.get(f'/stocks/in/{username}/{card_id}', params=params)
+def get_card_history(username, card_id):
+    return api.get(f'/stocks/card-history/{username}/{card_id}')
 
 
 def create_moviment(data):

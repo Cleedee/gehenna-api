@@ -218,7 +218,7 @@ def detail(card_id):
                 stock_data = stock_resp.json()
                 stock_qty = stock_data.get('quantity', 0)
 
-            mov_resp = api_client.get_moviments_in(username, card_id)
+            mov_resp = api_client.get_card_history(username, card_id)
             if mov_resp.status_code == 200:
                 mov_data = mov_resp.json()
                 moviment_history = mov_data.get('moviments', [])[:10]

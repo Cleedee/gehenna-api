@@ -273,14 +273,18 @@ def read_total_card_in_store(
     return Scalar(quantity=soma)
 
 
-@router.get('/in/{username}/{card_id}', response_model=MovimentList)
-def read_moviments_in_for_card(
+@router.get('/card-history/{username}/{card_id}')
+def read_card_history(
     username: str,
     card_id: int,
     session: Session = Depends(get_session),
 ):
+    import logging
+    logger = logging.getLogger(__name__)
+    logger.warning(f"NEW ENDPOINT: username={username}, card_id={card_id}")
+
     stmt = (
-        select(Moviment)
+        select(Moviment, Item.quantity)
         .join(Item, Item.moviment_id == Moviment.id)
         .join(Moviment.owner)
         .where(
@@ -290,26 +294,22 @@ def read_moviments_in_for_card(
         .order_by(Moviment.date_move.desc())
         .limit(20)
     )
-    moviment_ids = {}
-    for m in session.scalars(stmt).all():
-        moviment_ids[m.id] = m
-
-    items = (
-        select(Item)
-        .where(Item.card_id == card_id, Item.moviment_id.in_(moviment_ids.keys()))
-    ).all()
-
     result = []
-    for item in items:
-        mov = moviment_ids.get(item.moviment_id)
-        if mov:
-            result.append({
-                'id': mov.id,
-                'date': mov.date_move.isoformat() if mov.date_move else None,
-                'tipo': mov.tipo,
-                'quantity': item.quantity,
-                'name': mov.name,
-            })
+    seen = set()
+    query_result = session.execute(stmt).all()
+    logger.warning(f"NEW ENDPOINT: query_result count: {len(query_result)}")
+    for mov, qty in query_result:
+        if mov.id in seen:
+            continue
+        seen.add(mov.id)
+        result.append({
+            'id': mov.id,
+            'date': mov.date_move.isoformat() if mov.date_move else None,
+            'tipo': mov.tipo,
+            'quantity': qty,
+            'name': mov.name,
+        })
+    logger.warning(f"NEW ENDPOINT: result: {result}")
 
     return {'moviments': result}
 
