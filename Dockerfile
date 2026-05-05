@@ -9,10 +9,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 RUN pip install --no-cache-dir uv
 
-COPY pyproject.toml uv.lock ./
-RUN uv sync --frozen
-
 COPY . .
+RUN uv sync
 
 ENV PYTHONPATH=/app
 ENV DATABASE_URL=sqlite:///database.db
