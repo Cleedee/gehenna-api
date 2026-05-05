@@ -23,6 +23,16 @@
             {% endif %}
                 <p><strong>Code:</strong> {{ card.code }}</p>
                 <p><strong>Type:</strong> {{ card.tipo or '-' }}</p>
+                {% if stock_qty is defined %}
+                <p>
+                    <strong>Your Stock:</strong>
+                    {% if stock_qty > 0 %}
+                    <span class="badge bg-success">{{ stock_qty }}</span>
+                    {% else %}
+                    <span class="badge bg-secondary">0</span>
+                    {% endif %}
+                </p>
+                {% endif %}
                 <p>
                     <strong>Clan:</strong>
                     {% if clan_icon_url %}
@@ -70,10 +80,42 @@
         <div class="mt-3">
             <p><strong>Text:</strong></p>
             <p class="card-text">{{ card.text }}</p>
-        </div>
-        {% endif %}
+</div>
+{% endif %}
+
+{% if moviment_history %}
+<div class="card mt-3">
+    <div class="card-header bg-info text-white">
+        <h5 class="mb-0">Moviment History</h5>
+    </div>
+    <div class="card-body">
+        <table class="table table-sm table-hover">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Type</th>
+                    <th>Quantity</th>
+                    <th>Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for mov in moviment_history %}
+                <tr>
+                    <td>{{ mov.date }}</td>
+                    <td>
+                        <span class="badge bg-{{ 'success' if mov.tipo == 'E' else 'danger' }}">
+                            {{ mov.tipo }}
+                        </span>
+                    </td>
+                    <td>{{ mov.quantity }}</td>
+                    <td>{{ mov.name or '-' }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 </div>
+{% endif %}
 
 {% if prices %}
 <div class="card mt-3">

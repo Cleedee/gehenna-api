@@ -272,6 +272,48 @@ def read_total_card_in_store(
     soma = soma_entradas - soma_saidas
     return Scalar(quantity=soma)
 
+
+@router.get('/in/{username}/{card_id}', response_model=MovimentList)
+def read_moviments_in_for_card(
+    username: str,
+    card_id: int,
+    session: Session = Depends(get_session),
+):
+    stmt = (
+        select(Moviment)
+        .join(Item, Item.moviment_id == Moviment.id)
+        .join(Moviment.owner)
+        .where(
+            User.username == username,
+            Item.card_id == card_id,
+        )
+        .order_by(Moviment.date_move.desc())
+        .limit(20)
+    )
+    moviment_ids = {}
+    for m in session.scalars(stmt).all():
+        moviment_ids[m.id] = m
+
+    items = (
+        select(Item)
+        .where(Item.card_id == card_id, Item.moviment_id.in_(moviment_ids.keys()))
+    ).all()
+
+    result = []
+    for item in items:
+        mov = moviment_ids.get(item.moviment_id)
+        if mov:
+            result.append({
+                'id': mov.id,
+                'date': mov.date_move.isoformat() if mov.date_move else None,
+                'tipo': mov.tipo,
+                'quantity': item.quantity,
+                'name': mov.name,
+            })
+
+    return {'moviments': result}
+
+
 @router.get('/{username}/total', response_model=Scalar)
 def read_total_cards(
     username: str, session: Session = Depends(get_session)

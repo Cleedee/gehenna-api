@@ -110,6 +110,15 @@ def get_missing_cards(deck_id, username):
     return api.get(f'/stocks/missing-cards/{deck_id}/{username}')
 
 
+def get_stock_card(username, card_id):
+    return api.get(f'/stocks/cards/{card_id}/{username}')
+
+
+def get_moviments_in(username, card_id):
+    params = {'skip': 0, 'limit': 20}
+    return api.get(f'/stocks/in/{username}/{card_id}', params=params)
+
+
 def create_moviment(data):
     return api.post('/stocks/moviments', json=data)
 

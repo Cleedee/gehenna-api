@@ -194,6 +194,9 @@ def detail(card_id):
     clan_icon_url = None
     discipline_icons = []
     cost_icon = None
+    stock_qty = 0
+    moviment_history = []
+
     if card and card.get('name'):
         card_image_url = api_client.get_card_image_url(
             card['name'], 'webp',
@@ -207,6 +210,19 @@ def detail(card_id):
         discipline_icons = get_discipline_icons(card.get('disciplines'))
         cost_icon = get_cost_icon(card.get('cost'))
 
+        from flask import session
+        username = session.get('username')
+        if username:
+            stock_resp = api_client.get_stock_card(username, card_id)
+            if stock_resp.status_code == 200:
+                stock_data = stock_resp.json()
+                stock_qty = stock_data.get('quantity', 0)
+
+            mov_resp = api_client.get_moviments_in(username, card_id)
+            if mov_resp.status_code == 200:
+                mov_data = mov_resp.json()
+                moviment_history = mov_data.get('moviments', [])[:10]
+
     return render_template(
         'cards/detail.html',
         card=card,
@@ -214,5 +230,7 @@ def detail(card_id):
         card_image_url=card_image_url,
         clan_icon_url=clan_icon_url,
         discipline_icons=discipline_icons,
-        cost_icon=cost_icon
+        cost_icon=cost_icon,
+        stock_qty=stock_qty,
+        moviment_history=moviment_history
     )
