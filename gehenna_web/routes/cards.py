@@ -92,7 +92,7 @@ def get_clan_icon_url(clan: str) -> str | None:
     clan_lower = clan.lower().replace(' ', '').replace("'", '').replace('-', '')
     filename = CLAN_ICONS.get(clan_lower)
     if filename:
-        return f'{KRCG_BASE}/png/{filename}.png'
+        return f'{KRCG_BASE}/png/clan/{filename}.png'
     return None
 
 
