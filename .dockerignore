@@ -13,3 +13,4 @@ migrations/versions/*.py
 .DS_Store
 *.log
 .env
+readme.md

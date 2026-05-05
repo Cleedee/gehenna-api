@@ -4,7 +4,7 @@ version = "0.1.0"
 description = "API Rest para gerenciamento de coleções e decks de V:TES"
 authors = [{ name = "Claudio Torcato", email = "claudiotorcato@gmail.com" }]
 requires-python = ">=3.12,<4"
-readme = "README.md"
+readme = "readme.md"
 classifiers = [
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.12",
