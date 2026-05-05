@@ -110,7 +110,7 @@ def get_discipline_icons(disciplines: str) -> list[dict]:
             icons.append({
                 'name': name.upper(),
                 'superior': superior,
-                'url': f'{KRCG_BASE}/png/{folder}/{name}.png'
+                'url': f'{KRCG_BASE}/png/disc/{folder}/{name}.png'
             })
     return icons
 
