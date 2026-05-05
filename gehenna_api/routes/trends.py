@@ -397,3 +397,163 @@ def import_twda(
         'name': db_deck.name,
         'message': 'Deck imported successfully',
     }
+
+
+class AutoImportRequest(BaseModel):
+    username: str
+    limit_decks: int = 5
+    min_card_overlap: int = 5
+
+
+@router.post('/auto-import')
+def auto_import_recommended_decks(
+    request: AutoImportRequest,
+    session: Session = Depends(get_session),
+):
+    from httpx import Client
+    import logging
+
+    logger = logging.getLogger(__name__)
+    logger.info(f"Auto-import for user: {request.username}")
+
+    user = session.scalar(
+        select(User).where(User.username == request.username)
+    )
+    if user is None:
+        return {'error': 'User not found', 'imported': 0}
+
+    user_id = user.id
+
+    twda_to_local = {}
+    all_cards = session.scalars(select(Card)).all()
+    for card in all_cards:
+        if card.codevdb:
+            twda_to_local[card.codevdb] = card.id
+
+    owned_cards = {}
+    entradas = session.execute(
+        select(Item.card_id, func.sum(Item.quantity))
+        .join(Item.moviment)
+        .where(
+            Moviment.tipo == 'E',
+            Moviment.owner_id == user_id,
+        )
+        .group_by(Item.card_id)
+    ).all()
+    for card_id, qty in entradas:
+        owned_cards[card_id] = qty
+
+    twda = _get_twda_data()
+    twda_decks = [
+        d for d in twda
+        if d.get('tournament_format') in ['2R+F', '3R+F']
+    ][:200]
+
+    scored_decks = []
+    for deck in twda_decks:
+        deck_card_ids = set()
+        crypt_section = deck.get('crypt', {}).get('cards', [])
+        for card in crypt_section:
+            twda_id = card['id']
+            local_id = twda_to_local.get(twda_id)
+            if local_id:
+                deck_card_ids.add(local_id)
+
+        lib_section = deck.get('library', {}).get('cards', [])
+        for lib_section in lib_section:
+            for card in lib_section.get('cards', []):
+                twda_id = card['id']
+                local_id = twda_to_local.get(twda_id)
+                if local_id:
+                    deck_card_ids.add(local_id)
+
+        owned_count = sum(
+            owned_cards.get(cid, 0) for cid in deck_card_ids
+        )
+        missing_count = len(deck_card_ids) - owned_count
+
+        if owned_count >= request.min_card_overlap:
+            scored_decks.append({
+                'deck': deck,
+                'owned': owned_count,
+                'missing': missing_count,
+                'total': len(deck_card_ids),
+                'score': owned_count - (missing_count * 0.5),
+            })
+
+    scored_decks = sorted(scored_decks, key=lambda x: -x['score'])[
+        :request.limit_decks
+    ]
+
+    imported = []
+    for scored in scored_decks:
+        deck = scored['deck']
+        name = deck.get('name', 'Auto-imported')
+        player = deck.get('player', '')
+        event = deck.get('event', '')
+        tipo = deck.get('tournament_format', '2R+F')
+
+        existing = session.scalar(
+            select(Deck).where(
+                Deck.name == name,
+                Deck.player == player,
+            )
+        )
+        if existing:
+            continue
+
+        deck_date = date.today()
+        try:
+            deck_date = datetime.strptime(
+                deck.get('date', ''), '%Y-%m-%d'
+            ).date()
+        except Exception:
+            pass
+
+        db_deck = Deck(
+            name=name,
+            description=f"Event: {event}",
+            creator=player,
+            player=player,
+            tipo=tipo,
+            tags='auto-import',
+            created=deck_date,
+            preconstructed=False,
+            owner_id=user_id,
+            code=0,
+        )
+        session.add(db_deck)
+        session.commit()
+        session.refresh(db_deck)
+
+        all_deck_cards = []
+        for card in deck.get('crypt', {}).get('cards', []):
+            all_deck_cards.append(card)
+        for lib_section in deck.get('library', {}).get('cards', []):
+            for card in lib_section.get('cards', []):
+                all_deck_cards.append(card)
+
+        for card in all_deck_cards:
+            twda_id = card['id']
+            qty = card.get('quantity', 1)
+            local_id = twda_to_local.get(twda_id)
+            if local_id:
+                slot = Slot(
+                    deck_id=db_deck.id,
+                    card_id=local_id,
+                    quantity=qty,
+                )
+                session.add(slot)
+
+        session.commit()
+        imported.append({
+            'deck_id': db_deck.id,
+            'name': name,
+            'cards': scored['total'],
+            'owned': scored['owned'],
+        })
+
+    return {
+        'message': f'Imported {len(imported)} decks',
+        'decks': imported,
+    }
