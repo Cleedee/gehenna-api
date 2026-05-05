@@ -9,8 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Adicionado
 
-- Extração de deck da internet.
 - Atualizar texto de cartas atualizadas.
+
+## 0.3.0
+ - Interface Web UI
+ - Extração de deck da internet.
+ - Estatísticas.
+ - Recomendações.
+ - Cartas faltantes para montar um deck.
+ - Em quais preconstruídos podemos encontrar cartas que faltam.
+ - Configuração para Docker.
 
 ## 0.2.0
 

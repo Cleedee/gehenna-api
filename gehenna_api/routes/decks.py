@@ -221,7 +221,10 @@ def import_vdb_deck(
     name = vdb_data.get('name', 'Imported from VDB')
     description = vdb_data.get('description', '')
     vdb_tags = vdb_data.get('tags', {})
-    tag_list = vdb_tags.get('base', []) + vdb_tags.get('superior', [])
+    if isinstance(vdb_tags, list):
+        tag_list = vdb_tags
+    else:
+        tag_list = vdb_tags.get('base', []) + vdb_tags.get('superior', [])
     tags = ','.join(tag_list)
     tipo = '2R+F'
 

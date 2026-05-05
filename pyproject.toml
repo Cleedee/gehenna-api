@@ -1,7 +1,7 @@
 [project]
 name = "gehenna-api"
-version = "0.1.0"
-description = "API Rest para gerenciamento de coleções e decks de V:TES"
+version = "0.3.0"
+description = "API Rest e Web UI para gerenciamento de coleções e decks de V:TES"
 authors = [{ name = "Claudio Torcato", email = "claudiotorcato@gmail.com" }]
 requires-python = ">=3.12,<4"
 classifiers = [
