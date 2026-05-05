@@ -20,7 +20,7 @@ CLAN_ICONS = {
     'baali': 'baali',
     'caitiff': 'caitiff',
     'giovanni': 'giovanni',
-    'harbinger': 'harbinger',
+    'harbingerofskulls': 'harbinger',
     'lasombra': 'lasombra',
     'ravnos': 'ravnos',
     'sette': 'sette',
@@ -89,7 +89,7 @@ DISCIPLINE_ICONS = {
 def get_clan_icon_url(clan: str) -> str | None:
     if not clan:
         return None
-    clan_lower = clan.lower().replace(' ', '').replace("'", '')
+    clan_lower = clan.lower().replace(' ', '').replace("'", '').replace('-', '')
     filename = CLAN_ICONS.get(clan_lower)
     if filename:
         return f'{KRCG_BASE}/png/{filename}.png'
@@ -130,8 +130,10 @@ def get_cost_icon(cost: str) -> dict | None:
 
 def process_card_icons(card: dict) -> dict:
     card = dict(card)
-    card['clan_icon_url'] = get_clan_icon_url(card.get('clan'))
-    card['discipline_icons'] = get_discipline_icons(card.get('disciplines'))
+    clan = card.get('clan', '')
+    disciplines = card.get('disciplines', '')
+    card['clan_icon_url'] = get_clan_icon_url(clan)
+    card['discipline_icons'] = get_discipline_icons(disciplines)
     return card
 
 
@@ -172,11 +174,10 @@ def search():
         form.tipo.data = request.args.get('form.tipo')
 
     cards = []
-    if name or code or tipo:
-        response = api_client.get_cards(name=name, code=code, tipo=tipo)
-        if response.status_code == 200:
-            data = response.json()
-            cards = [process_card_icons(c) for c in data.get('cards', [])]
+    response = api_client.get_cards(name=name, code=code, tipo=tipo, limit=50)
+    if response.status_code == 200:
+        data = response.json()
+        cards = [process_card_icons(c) for c in data.get('cards', [])]
 
     return render_template('cards/search.html', form=form, cards=cards, name=name, code=code, tipo=tipo)
 
