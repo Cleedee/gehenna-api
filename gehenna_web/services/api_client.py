@@ -261,3 +261,14 @@ def import_twda_deck(deck_id, owner_id):
 
 def import_vdb_deck(deck_id, owner_id):
     return api.get(f'/decks/import-vdb/{deck_id}/{owner_id}')
+
+
+def auto_import_decks(username, limit_decks=5, min_card_overlap=5):
+    return api.post(
+        '/trends/auto-import',
+        json={
+            'username': username,
+            'limit_decks': limit_decks,
+            'min_card_overlap': min_card_overlap
+        }
+    )

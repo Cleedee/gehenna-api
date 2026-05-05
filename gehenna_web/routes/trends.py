@@ -81,3 +81,28 @@ def recommendations():
         format=format,
         year=year
     )
+
+
+@bp.route('/auto-import', methods=['POST'])
+@login_required
+def auto_import():
+    limit_decks = request.form.get('limit_decks', 5, type=int)
+    min_card_overlap = request.form.get('min_card_overlap', 5, type=int)
+
+    username = session.get('username')
+    response = api_client.auto_import_decks(username, limit_decks, min_card_overlap)
+
+    if response.status_code == 200:
+        data = response.json()
+        imported = data.get('decks', [])
+        if imported:
+            msg = f"Imported {len(imported)} decks: " + ", ".join(
+                [d.get('name', '') for d in imported[:3]]
+            )
+            flash(msg, 'success')
+        else:
+            flash("No decks to import (increase min_card_overlap)", 'warning')
+    else:
+        flash('Failed to auto-import decks', 'error')
+
+    return redirect(url_for('decks.my_decks'))

@@ -535,7 +535,7 @@ def auto_import_recommended_decks(
 
         for card in all_deck_cards:
             twda_id = card['id']
-            qty = card.get('quantity', 1)
+            qty = card.get('count') or card.get('quantity') or 1
             local_id = twda_to_local.get(twda_id)
             if local_id:
                 slot = Slot(
