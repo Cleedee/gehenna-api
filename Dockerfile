@@ -17,6 +17,7 @@ RUN pip install --no-cache-dir \
     alembic \
     python-jose \
     "passlib[bcrypt]" \
+    "bcrypt<5" \
     python-multipart \
     tinydb \
     requests \

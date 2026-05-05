@@ -260,5 +260,4 @@ def import_twda_deck(deck_id, owner_id):
 
 
 def import_vdb_deck(deck_id, owner_id):
-    params = {'deck_id': deck_id, 'owner_id': owner_id}
-    return api.get('/decks/import-vdb', params=params)
+    return api.get(f'/decks/import-vdb/{deck_id}/{owner_id}')

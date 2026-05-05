@@ -2,7 +2,6 @@
 __pycache__
 *.pyc
 *.pyo
-*.db
 htmlcov
 .coverage
 .pytest_cache
@@ -12,5 +11,4 @@ migrations/versions/*.py
 .gitignore
 .DS_Store
 *.log
-.env
 readme.md

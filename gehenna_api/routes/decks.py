@@ -192,10 +192,10 @@ def read_preconstructed_decks_with_card(
 VDB_API = 'https://vdb.im/api/deck'
 
 
-@router.get('/import-vdb')
+@router.api_route('/import-vdb/{deck_id}/{owner_id}', methods=['GET', 'POST'])
 def import_vdb_deck(
-    deck_id: str = Query(...),
-    owner_id: int = Query(...),
+    deck_id: str,
+    owner_id: int,
     session: Session = Depends(get_session),
 ):
     from httpx import Client
@@ -220,7 +220,9 @@ def import_vdb_deck(
 
     name = vdb_data.get('name', 'Imported from VDB')
     description = vdb_data.get('description', '')
-    tags = ','.join(vdb_data.get('tags', []))
+    vdb_tags = vdb_data.get('tags', {})
+    tag_list = vdb_tags.get('base', []) + vdb_tags.get('superior', [])
+    tags = ','.join(tag_list)
     tipo = '2R+F'
 
     db_deck = Deck(

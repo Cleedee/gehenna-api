@@ -173,7 +173,7 @@ def import_vdb():
         deck_id = form.deck_id.data
         owner_id = session.get('user_id')
         response = api_client.import_vdb_deck(deck_id, owner_id)
-        if response.status_code == 201:
+        if response.status_code == 200:
             data = response.json()
             flash(f"Deck imported: {data.get('name')} ({data.get('cards_imported')} cards)", 'success')
             return redirect(url_for('decks.my_decks'))
