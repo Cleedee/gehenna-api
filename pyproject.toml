@@ -68,3 +68,4 @@ stop = 'lsof -t -i:8002 | xargs -r kill -9; lsof -t -i:5000 | xargs -r kill -9; 
 pre_test = 'ruff check .'
 test = 'pytest -s -x --cov=gehenna_api -vv'
 post_test = 'coverage html'
+all = 'bash run_all.sh'
