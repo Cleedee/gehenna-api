@@ -19,7 +19,9 @@ class RandomBot(Bot):
         ready = state.ready_minions(player_id)
         if not ready:
             return False
-        return random.random() < 0.3
+        # Always try to block if possible (aggressive defense)
+        # Can be made more sophisticated later
+        return True
 
     def choose_strike(self, state: GameState, combatant_id: str) -> str:
         return 'hand_strike'

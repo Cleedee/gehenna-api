@@ -304,39 +304,173 @@ class PhaseManager:
         return minion.tipo == 'Ally'
 
     def _minion_action(self, minion: CardInstance, player: PlayerState, bot: Bot) -> None:
-        """Have a minion perform an action.
+        """Have a minion perform an action with full action resolution.
         
-        Basic intrinsic actions (no card required):
-        - Bleed: Any ready minion
-        - Hunt: Any ready vampire (mandatory if blood == 0)
-        
-        Action card actions (require card in hand):
-        - Equip, Employ Retainer, Recruit Ally, Political Action, etc.
+        Action resolution steps:
+        1. Announce action (lock minion)
+        2. Block attempts (stealth vs intercept, combat if blocked)
+        3. Resolve action if not blocked
         """
-        # Check if minion has already acted this turn
         if minion.has_acted_this_turn:
             return
 
-        # Bot chooses action type
         action_type = bot.choose_action_type(self.state, player.id, minion.id)
 
-        if action_type == 'bleed':
-            self._resolve_bleed(minion, player)
-        elif action_type == 'hunt':
-            self._resolve_hunt(minion)
-        else:
-            # Try to play an action card
-            self._play_action_card(minion, player, bot)
-
-        # Lock the minion after acting
+        # Step 1: Announce action
+        # Determine action properties
+        action_info = self._get_action_info(action_type, minion, player)
+        
+        self._log_action(player, f'{minion.name} announces {action_info["name"]}')
         minion.lock()
+
+        # Step 2: Resolve block attempts
+        blocked, blocker = self._resolve_block_attempts(
+            minion, player, action_info, bot
+        )
+
+        if blocked:
+            # Action is blocked - enter combat
+            self._log_action(player, f'{action_info["name"]} blocked by {blocker.name}')
+            self._start_combat(minion, blocker)
+            minion.has_acted_this_turn = True
+            return
+
+        # Step 3: Resolve action
+        action_info['resolve'](minion, player, bot)
         minion.has_acted_this_turn = True
 
-    def _resolve_bleed(self, minion: CardInstance, player: PlayerState) -> None:
-        """Resolve a bleed action from a minion.
+    def _get_action_info(self, action_type: str, minion: CardInstance, player: PlayerState) -> dict:
+        """Get action properties for an action type.
+        
+        Returns dict with:
+        - name: Action name for logging
+        - stealth: Base stealth value
+        - directed: Whether action is directed at another Methuselah
+        - resolve: Function to resolve the action
+        """
+        if action_type == 'bleed':
+            prey = self.state.prey_of(player.id)
+            is_directed = prey is not None
+            return {
+                'name': f'bleed' + (f' {prey.username}' if prey else ''),
+                'stealth': minion.stealth,  # Default 0
+                'directed': is_directed,
+                'resolve': lambda m, p, b: self._resolve_bleed_action(m, p),
+            }
+        elif action_type == 'hunt':
+            return {
+                'name': 'hunt',
+                'stealth': 1 + minion.stealth,  # Hunt has inherent +1 stealth
+                'directed': False,
+                'resolve': lambda m, p, b: self._resolve_hunt(m),
+            }
+        else:
+            # Default action card action
+            return {
+                'name': 'action',
+                'stealth': minion.stealth,  # Default 0
+                'directed': False,
+                'resolve': lambda m, p, b: self._play_action_card(m, p, b),
+            }
+
+    def _resolve_block_attempts(
+        self,
+        minion: CardInstance,
+        player: PlayerState,
+        action_info: dict,
+        bot: Bot,
+    ) -> tuple[bool, Optional[CardInstance]]:
+        """Resolve block attempts for an action.
+        
+        Returns (blocked, blocker):
+        - blocked: True if action was blocked
+        - blocker: The CardInstance that blocked (None if not blocked)
+        
+        Rules:
+        - Directed actions: Only target Methuselah can block
+        - Undirected actions: Prey and Predator can block (prey first)
+        - Block succeeds if blocker's intercept >= acting minion's stealth
+        - Blocker must be ready and unlocked
+        """
+        acting_stealth = action_info['stealth']
+        
+        # Determine who can block
+        potential_blockers = []
+        
+        if action_info['directed']:
+            # Directed: only target can block
+            target = self.state.prey_of(player.id)  # For bleed
+            if target:
+                potential_blockers = self._get_blocking_minions(target.id)
+        else:
+            # Undirected: prey first, then predator
+            prey = self.state.prey_of(player.id)
+            predator = self.state.predator_of(player.id)
+            if prey:
+                potential_blockers.extend(self._get_blocking_minions(prey.id))
+            if predator:
+                potential_blockers.extend(self._get_blocking_minions(predator.id))
+        
+        # Check if any potential blocker can intercept
+        for blocker in potential_blockers:
+            blocker_player = self.state.player_by_id(self._player_id_for_minion(blocker))
+            if not blocker_player:
+                continue
+            
+            # Bot decides whether to attempt block
+            should_block = bot.choose_block(
+                self.state, blocker_player.id, minion.id
+            )
+            
+            if not should_block:
+                continue
+            
+            # Calculate intercept (base + modifiers)
+            blocker_intercept = blocker.intercept
+            
+            # Block succeeds if intercept >= stealth
+            if blocker_intercept >= acting_stealth:
+                blocker.lock()
+                return True, blocker
+            else:
+                # Block attempt fails, minion stays locked from announcement
+                self._log_action(
+                    blocker_player,
+                    f'{blocker.name} fails to block {minion.name} '
+                    f'(intercept {blocker_intercept} < stealth {acting_stealth})'
+                )
+        
+        return False, None
+
+    def _get_blocking_minions(self, player_id: int) -> list[CardInstance]:
+        """Get all ready unlocked minions that can block for a player."""
+        prefix = f'p{player_id}_'
+        return [
+            c for c in self.state.cards.values()
+            if c.id.startswith(prefix)
+            and c.is_ready
+        ]
+
+    def _start_combat(self, attacker: CardInstance, defender: CardInstance) -> None:
+        """Start combat between two minions.
+        
+        This is a placeholder for the combat system.
+        Emits a combat_started event.
+        """
+        self.events.emit(
+            GameEvent(
+                type=EventType.combat_started,
+                data={
+                    'attacker': attacker.name,
+                    'defender': defender.name,
+                },
+            )
+        )
+
+    def _resolve_bleed_action(self, minion: CardInstance, player: PlayerState) -> None:
+        """Resolve a bleed action from a minion (after successful block attempt resolution).
         
         Target: prey (directed action)
-        Stealth: 0 (default)
         Effect: Target loses pool equal to bleed amount (intrinsic 1 + card modifier)
         Edge: If bleed is successful against predator, gain the Edge
         """
