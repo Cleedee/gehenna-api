@@ -129,6 +129,21 @@ def _is_master_or_trifle(inst: CardInstance) -> bool:
     return _tipo_key(inst.tipo) in ALL_MASTER_TIPOS
 
 
+def _is_action_modifier(inst: CardInstance) -> bool:
+    """Check if a card is an action modifier."""
+    return _tipo_key(inst.tipo) in (
+        'Action Modifier', 'Action Modifier / Combat', 'Action Modifier/Combat',
+        'Action Modifier / Reaction', 'Action Modifier/Reaction', 'Action / Reaction',
+    )
+
+
+def _is_reaction(inst: CardInstance) -> bool:
+    """Check if a card is a reaction card."""
+    return _tipo_key(inst.tipo) in (
+        'Reaction', 'Reaction/Action Modifier', 'Reaction/Combat', 'Action / Reaction',
+    )
+
+
 def _has_type(hand: list[str], state: GameState, checker) -> list[str]:
     return [c for c in hand if checker(state.card_by_id(c))]
 
@@ -353,38 +368,192 @@ class PhaseManager:
     def _minion_action(self, minion: CardInstance, player: PlayerState, bot: Bot) -> None:
         """Have a minion perform an action with full action resolution.
         
-        Action resolution steps:
-        1. Announce action (lock minion)
-        2. Block attempts (stealth vs intercept, combat if blocked)
-        3. Resolve action if not blocked
+        Action resolution with impulse system:
+        1. Announce action (lock acting minion)
+        2. Action modifier phase (acting minion first)
+        3. Block attempt phase (defender, then prey/predator)
+        4. Reaction phase (defender first, then others)
+        5. Resolve or combat
         """
         if minion.has_acted_this_turn:
             return
 
         action_type = bot.choose_action_type(self.state, player.id, minion.id)
+        action_info = self._get_action_info(action_type, minion, player)
 
         # Step 1: Announce action
-        # Determine action properties
-        action_info = self._get_action_info(action_type, minion, player)
-        
         self._log_action(player, f'{minion.name} announces {action_info["name"]}')
         minion.lock()
 
-        # Step 2: Resolve block attempts
+        # Step 2: Action modifier phase
+        # Acting minion can play action modifiers first
+        modifiers = self._play_action_modifiers(minion, player, action_info, bot)
+        self._apply_modifier_effects(action_info, modifiers)
+
+        # Step 3: Block attempt phase
         blocked, blocker = self._resolve_block_attempts(
             minion, player, action_info, bot
         )
 
         if blocked:
-            # Action is blocked - enter combat
             self._log_action(player, f'{action_info["name"]} blocked by {blocker.name}')
             self._start_combat(minion, blocker)
             minion.has_acted_this_turn = True
             return
 
-        # Step 3: Resolve action
+        # Step 4: Reaction phase (after successful block resolution)
+        # Reactions can be played by other Methuselahs' minions
+        reactions = self._play_reactions(minion, player, action_info, bot)
+        self._apply_reaction_effects(action_info, reactions)
+
+        # Step 5: Resolve action
         action_info['resolve'](minion, player, bot)
         minion.has_acted_this_turn = True
+
+    def _play_action_modifiers(
+        self, minion: CardInstance, player: PlayerState, action_info: dict, bot: Bot
+    ) -> list:
+        """Play action modifiers for an action.
+        
+        Action modifiers are played by the acting minion (or other minions
+        controlled by the same Methuselah for 'other than acting minion' cards).
+        
+        Returns list of modifier cards played.
+        """
+        modifiers = []
+        # Check hand for action modifier cards
+        mod_cards = _has_type(player.hand, self.state, _is_action_modifier)
+        if not mod_cards:
+            return modifiers
+
+        # Bot decides whether to play a modifier (simplified: always play if available)
+        for mod_id in mod_cards:
+            mod_card = self.state.card_by_id(mod_id)
+            if not mod_card:
+                continue
+            # Check if minion can pay the cost
+            cost = mod_card.pool_cost if mod_card.pool_cost > 0 else 0
+            if minion.blood < cost:
+                continue
+            # Play the modifier
+            minion.blood -= cost
+            if mod_card.id in player.hand:
+                player.hand.remove(mod_card.id)
+            mod_card.position = CardPosition.ash_heap
+            modifiers.append(mod_card)
+            self._log_action(
+                player,
+                f'{minion.name} plays {mod_card.name} (action modifier)',
+            )
+            # Only one modifier per action (simplified)
+            break
+
+        return modifiers
+
+    def _apply_modifier_effects(self, action_info: dict, modifiers: list) -> None:
+        """Apply effects of action modifiers to the action."""
+        for mod in modifiers:
+            # Apply stealth bonus
+            action_info['stealth'] = action_info.get('stealth', 0) + mod.stealth
+            # Apply bleed bonus
+            if 'bleed_bonus' not in action_info:
+                action_info['bleed_bonus'] = 0
+            action_info['bleed_bonus'] += mod.bleed
+            # Apply intercept bonus (for reaction-like modifiers)
+            action_info['intercept_bonus'] = action_info.get('intercept_bonus', 0) + mod.intercept
+
+    def _play_reactions(
+        self, minion: CardInstance, player: PlayerState, action_info: dict, bot: Bot
+    ) -> list:
+        """Play reaction cards in response to an action.
+        
+        Reactions are played by ready unlocked minions controlled by
+        other Methuselahs (not the acting minion's controller).
+        
+        Returns list of reaction cards played.
+        """
+        reactions = []
+
+        # Determine who can play reactions
+        # For directed actions: only the target can play reactions
+        # For undirected actions: prey and predator can play reactions
+        reaction_players = self._get_reaction_players(player.id, action_info)
+
+        for rp in reaction_players:
+            if rp.is_ousted:
+                continue
+            rp_bot = None  # Would need bot for this player
+            # Check for reaction cards in hand
+            react_cards = _has_type(rp.hand, self.state, _is_reaction)
+            if not react_cards:
+                continue
+            # Simplified: play first available reaction
+            for react_id in react_cards:
+                react_card = self.state.card_by_id(react_id)
+                if not react_card:
+                    continue
+                # Check cost
+                cost = react_card.pool_cost if react_card.pool_cost > 0 else 0
+                # Find a ready unlocked minion to pay the cost
+                ready_minions = [
+                    c for c in self.state.cards.values()
+                    if c.id.startswith(f'p{rp.id}_') and c.is_ready
+                ]
+                payer = None
+                for rm in ready_minions:
+                    if rm.blood >= cost:
+                        payer = rm
+                        break
+                if not payer:
+                    continue
+                # Play the reaction
+                payer.blood -= cost
+                if react_card.id in rp.hand:
+                    rp.hand.remove(react_card.id)
+                react_card.position = CardPosition.ash_heap
+                reactions.append(react_card)
+                self._log_action(
+                    rp,
+                    f'{payer.name} plays {react_card.name} (reaction)',
+                )
+                # Apply reaction effects
+                self._apply_single_reaction(action_info, react_card)
+                break  # One reaction per player per action
+
+        return reactions
+
+    def _get_reaction_players(self, acting_player_id: int, action_info: dict) -> list:
+        """Get list of players who can react to an action."""
+        players = []
+        acting_player = self.state.player_by_id(acting_player_id)
+
+        if action_info.get('directed'):
+            # Directed: only target can react
+            target = self.state.prey_of(acting_player_id)
+            if target and not target.is_ousted:
+                players.append(target)
+        else:
+            # Undirected: prey first, then predator
+            prey = self.state.prey_of(acting_player_id)
+            predator = self.state.predator_of(acting_player_id)
+            if prey and not prey.is_ousted:
+                players.append(prey)
+            if predator and not predator.is_ousted:
+                players.append(predator)
+
+        return players
+
+    def _apply_single_reaction(self, action_info: dict, react_card: CardInstance) -> None:
+        """Apply effects of a single reaction card."""
+        # Reactions can increase intercept (making block easier)
+        action_info['reaction_intercept'] = action_info.get('reaction_intercept', 0) + react_card.intercept
+        # Reactions can increase stealth (making action harder to block)
+        action_info['reaction_stealth'] = action_info.get('reaction_stealth', 0) + react_card.stealth
+
+    def _apply_reaction_effects(self, action_info: dict, reactions: list) -> None:
+        """Apply effects of all reaction cards."""
+        # Effects already applied in _apply_single_reaction
+        pass
 
     def _get_action_info(self, action_type: str, minion: CardInstance, player: PlayerState) -> dict:
         """Get action properties for an action type."""
@@ -506,8 +675,9 @@ class PhaseManager:
             if not should_block:
                 continue
             
-            # Calculate intercept (base + modifiers)
-            blocker_intercept = blocker.intercept
+            # Calculate intercept (base + reaction bonuses)
+            reaction_bonus = action_info.get('reaction_intercept', 0)
+            blocker_intercept = blocker.intercept + reaction_bonus
             
             # Block succeeds if intercept >= stealth
             if blocker_intercept >= acting_stealth:

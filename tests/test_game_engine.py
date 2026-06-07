@@ -1120,6 +1120,201 @@ class TestVictory:
         assert p2.is_ousted is True
 
 
+# ── Action Modifiers and Reactions Tests ────────────────────────────────────
+
+
+class TestActionModifiers:
+    def _make_modifier_state(self, mod_stealth=1, mod_bleed=1, mod_cost=1, minion_blood=4):
+        state = GameState(game_id="mod")
+        p1 = PlayerState(id=1, username="P1", pool=30)
+        p2 = PlayerState(id=2, username="P2", pool=30)
+        state.players.extend([p1, p2])
+        minion = CardInstance(
+            id="p1_vamp", card_id=1, name="Vampire",
+            position=CardPosition.ready, tipo="Vampire",
+            capacity=5, blood=minion_blood,
+        )
+        state.cards[minion.id] = minion
+        mod = CardInstance(
+            id="p1_mod", card_id=100, name="Bonding",
+            position=CardPosition.hand, tipo="Action Modifier",
+            pool_cost=mod_cost, stealth=mod_stealth, bleed=mod_bleed,
+        )
+        state.cards[mod.id] = mod
+        p1.hand.append(mod.id)
+        return state, minion, mod, p1, p2
+
+    def test_modifier_increases_stealth(self):
+        """Action modifier should increase action stealth."""
+        state, minion, mod, p1, p2 = self._make_modifier_state(mod_stealth=2)
+        engine = GameEngine(state)
+        engine._is_running = True
+        action_info = {'stealth': 0, 'directed': True}
+        modifiers = engine.phases._play_action_modifiers(minion, p1, action_info, RandomBot())
+        engine.phases._apply_modifier_effects(action_info, modifiers)
+        assert action_info['stealth'] == 2
+
+    def test_modifier_increases_bleed(self):
+        """Action modifier should increase bleed amount."""
+        state, minion, mod, p1, p2 = self._make_modifier_state(mod_bleed=2)
+        engine = GameEngine(state)
+        engine._is_running = True
+        action_info = {'stealth': 0, 'directed': True}
+        modifiers = engine.phases._play_action_modifiers(minion, p1, action_info, RandomBot())
+        engine.phases._apply_modifier_effects(action_info, modifiers)
+        assert action_info.get('bleed_bonus', 0) == 2
+
+    def test_modifier_costs_blood(self):
+        """Playing action modifier should cost blood."""
+        state, minion, mod, p1, p2 = self._make_modifier_state(mod_cost=2)
+        engine = GameEngine(state)
+        engine._is_running = True
+        action_info = {'stealth': 0, 'directed': True}
+        modifiers = engine.phases._play_action_modifiers(minion, p1, action_info, RandomBot())
+        assert minion.blood == 2  # 4 - 2
+        assert len(modifiers) == 1
+
+    def test_modifier_insufficient_blood(self):
+        """Cannot play modifier without enough blood."""
+        state, minion, mod, p1, p2 = self._make_modifier_state(mod_cost=3, minion_blood=2)
+        engine = GameEngine(state)
+        engine._is_running = True
+        action_info = {'stealth': 0, 'directed': True}
+        modifiers = engine.phases._play_action_modifiers(minion, p1, action_info, RandomBot())
+        assert len(modifiers) == 0
+        assert minion.blood == 2  # Unchanged
+
+    def test_modifier_removes_from_hand(self):
+        """Playing modifier should remove card from hand."""
+        state, minion, mod, p1, p2 = self._make_modifier_state()
+        engine = GameEngine(state)
+        engine._is_running = True
+        action_info = {'stealth': 0, 'directed': True}
+        modifiers = engine.phases._play_action_modifiers(minion, p1, action_info, RandomBot())
+        assert mod.id not in p1.hand
+        assert mod.position == CardPosition.ash_heap
+
+    def test_no_modifier_in_hand(self):
+        """No modifiers played if none in hand."""
+        state = GameState(game_id="no_mod")
+        p1 = PlayerState(id=1, username="P1", pool=30)
+        state.players.append(p1)
+        minion = CardInstance(
+            id="p1_vamp", card_id=1, name="Vampire",
+            position=CardPosition.ready, tipo="Vampire",
+            capacity=5, blood=4,
+        )
+        state.cards[minion.id] = minion
+        engine = GameEngine(state)
+        engine._is_running = True
+        action_info = {'stealth': 0, 'directed': True}
+        modifiers = engine.phases._play_action_modifiers(minion, p1, action_info, RandomBot())
+        assert len(modifiers) == 0
+
+
+class TestReactions:
+    def _make_reaction_state(self, react_intercept=2, react_cost=1, blocker_blood=3):
+        state = GameState(game_id="react")
+        p1 = PlayerState(id=1, username="P1", pool=30)
+        p2 = PlayerState(id=2, username="P2", pool=30)
+        state.players.extend([p1, p2])
+        # Attacker minion
+        attacker = CardInstance(
+            id="p1_vamp", card_id=1, name="Attacker",
+            position=CardPosition.ready, tipo="Vampire",
+            capacity=5, blood=4,
+        )
+        state.cards[attacker.id] = attacker
+        # Blocker with reaction card
+        blocker = CardInstance(
+            id="p2_vamp", card_id=2, name="Blocker",
+            position=CardPosition.ready, tipo="Vampire",
+            capacity=5, blood=blocker_blood, intercept=0,
+        )
+        state.cards[blocker.id] = blocker
+        # Reaction card in blocker's hand
+        react = CardInstance(
+            id="p2_react", card_id=100, name="Telepathic Misdirection",
+            position=CardPosition.hand, tipo="Reaction",
+            pool_cost=react_cost, intercept=react_intercept,
+        )
+        state.cards[react.id] = react
+        p2.hand.append(react.id)
+        return state, attacker, blocker, react, p1, p2
+
+    def test_reaction_increases_intercept(self):
+        """Reaction should increase blocker's intercept."""
+        state, attacker, blocker, react, p1, p2 = self._make_reaction_state()
+        engine = GameEngine(state)
+        engine._is_running = True
+        action_info = {'stealth': 0, 'directed': True}
+        reactions = engine.phases._play_reactions(attacker, p1, action_info, RandomBot())
+        assert action_info.get('reaction_intercept', 0) == 2
+
+    def test_reaction_costs_blood(self):
+        """Playing reaction should cost blood."""
+        state, attacker, blocker, react, p1, p2 = self._make_reaction_state()
+        engine = GameEngine(state)
+        engine._is_running = True
+        action_info = {'stealth': 0, 'directed': True}
+        engine.phases._play_reactions(attacker, p1, action_info, RandomBot())
+        assert blocker.blood == 2  # 3 - 1
+
+    def test_reaction_removes_from_hand(self):
+        """Playing reaction should remove card from hand."""
+        state, attacker, blocker, react, p1, p2 = self._make_reaction_state()
+        engine = GameEngine(state)
+        engine._is_running = True
+        action_info = {'stealth': 0, 'directed': True}
+        engine.phases._play_reactions(attacker, p1, action_info, RandomBot())
+        assert react.id not in p2.hand
+        assert react.position == CardPosition.ash_heap
+
+    def test_reaction_helps_block(self):
+        """Reaction with intercept bonus should help block."""
+        state, attacker, blocker, react, p1, p2 = self._make_reaction_state(
+            react_intercept=3, blocker_blood=3
+        )
+        engine = GameEngine(state)
+        engine._is_running = True
+        # Attacker has stealth 0, blocker has intercept 0
+        # Without reaction: block succeeds (0 >= 0)
+        # With reaction: block still succeeds (0 + 3 >= 0)
+        action_info = {'stealth': 0, 'directed': True}
+        reactions = engine.phases._play_reactions(attacker, p1, action_info, RandomBot())
+        # Reaction adds intercept bonus
+        assert action_info.get('reaction_intercept', 0) == 3
+
+    def test_no_reaction_without_target(self):
+        """No reactions if no valid target."""
+        state = GameState(game_id="no_react")
+        p1 = PlayerState(id=1, username="P1", pool=30)
+        state.players.append(p1)
+        attacker = CardInstance(
+            id="p1_vamp", card_id=1, name="Attacker",
+            position=CardPosition.ready, tipo="Vampire",
+            capacity=5, blood=4,
+        )
+        state.cards[attacker.id] = attacker
+        engine = GameEngine(state)
+        engine._is_running = True
+        action_info = {'stealth': 0, 'directed': False}
+        reactions = engine.phases._play_reactions(attacker, p1, action_info, RandomBot())
+        assert len(reactions) == 0
+
+    def test_reaction_insufficient_blood(self):
+        """Cannot play reaction without enough blood."""
+        state, attacker, blocker, react, p1, p2 = self._make_reaction_state(
+            react_cost=5, blocker_blood=2
+        )
+        engine = GameEngine(state)
+        engine._is_running = True
+        action_info = {'stealth': 0, 'directed': True}
+        reactions = engine.phases._play_reactions(attacker, p1, action_info, RandomBot())
+        assert len(reactions) == 0
+        assert blocker.blood == 2  # Unchanged
+
+
 # ── Equip / Retainer / Ally Tests ───────────────────────────────────────────
 
 
