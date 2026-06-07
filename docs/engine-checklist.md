@@ -34,6 +34,8 @@
 - ✅ Play master card from hand
 - ✅ Trifles (+1 action if first master played)
 - ✅ Out-of-turn master card penalty (-1 action next turn)
+- ❌ Master locations (permanent locations)
+- ❌ Discipline cards (grant Disciplines to vampires)
 
 ## 5. Minion Phase
 
@@ -48,7 +50,7 @@
 - ✅ Equip (attach equipment, costs blood)
 - ✅ Employ Retainer (attach retainer with life, costs blood)
 - ✅ Recruit Ally (create ally in ready, locked first turn, costs blood)
-- ❌ Political Action (call referendum)
+- ✅ Political Action (call referendum, costs blood)
 
 ### 5.3 Action Resolution
 - ✅ Announce action (lock acting minion)
@@ -69,28 +71,29 @@
 - ✅ Locked/unlocked doesn't matter for combat
 
 ### 6.2 Combat Sequence (7 steps per round)
-- ✅ 1. Before Range (placeholder - no card play yet)
-- ✅ 2. Determine Range (close default)
-- ✅ 3. Before Strikes (placeholder - no card play yet)
-- ✅ 4. Strike (choose and resolve)
-- ✅ 5. Damage Resolution (mend with blood)
-- ✅ 6. Press (simplified - ends after 1 round)
+- ✅ 1. Before Range (placeholder - combat cards pending)
+- ✅ 2. Determine Range (close default, maneuvers change to long)
+- ✅ 3. Before Strikes (placeholder - combat cards pending)
+- ✅ 4. Strike (choose and resolve with first strike order)
+- ✅ 5. Damage Resolution (mend with blood, aggravated damage)
+- ️🔄 6. Press (ends after 1 round - press cards pending)
 - ✅ 7. End of Round (placeholder)
 
 ### 6.3 Strike Effects
 - ✅ Hand Strike (damage = strength, close range only)
-- ✅ Dodge (no damage, protects from opponent's strike, any range)
+- ✅ Dodge (0 damage, protects from opponent's strike, any range)
 - ✅ Combat Ends (ends combat immediately, resolves first, any range)
 - ✅ Steal Blood (transfers blood, not damage, any range)
-- ✅ First Strike (resolves before normal strikes; if only one, may kill before counter)
+- ✅ First Strike (resolves before normal strikes)
 - ✅ Ranged Strike (works at any range)
+- 🔄 Additional Strikes (extra strikes per round - needs cards)
 
 ### 6.4 Combat Cards
-- ✅ Maneuvers (change range close ↔ long, from weapons/attachments)
-- ✅ Press (ends combat after 1 round simplified)
-- ❌ Damage Prevention (prevent damage with cards)
-- ❌ Additional Strikes (extra strikes per round with cards)
 - ✅ Weapons (grant maneuvers via equipment attachments)
+- 🔄 Maneuvers from cards (change range close ↔ long)
+- ❌ Press cards (continue/end combat with cards)
+- ❌ Damage Prevention cards (prevent damage)
+- ❌ Additional Strike cards (extra strikes per round)
 
 ### 6.5 Damage Types
 - ✅ Normal damage (mend with blood)
@@ -105,7 +108,7 @@
 - ❌ Damage prevention cards
 
 ## 7. Influence Phase
-- ✅ Transfers (1 on turn 1, 2 on turn 2, 3 on turn 3, 4 thereafter)
+- ✅ Transfers (1/2/3/4 for first 4 turns, then 4)
 - ✅ Add blood to uncontrolled vampires (1 transfer + 1 pool per blood)
 - ✅ Move vampire from crypt to uncontrolled (4 transfers + 1 pool)
 - ✅ Move vampire to ready when blood >= capacity
@@ -145,33 +148,36 @@
 - ✅ Can increase intercept (help block)
 - ✅ Cost blood from ready minion
 - ✅ Removed from hand to ash heap
-- ❌ Reflex cards (cancel specific card types)
+- ❌ Reflex cards (cancel specific card types as played)
 
 ## 13. Action Modifier Cards
 - ✅ Played by acting minion before resolution
 - ✅ Can increase bleed, stealth
 - ✅ Cost blood from acting minion
 - ✅ Removed from hand to ash heap
-- ❌ Same card cannot be played twice per action (simplified: one per action)
+- 🔄 One per action (simplified)
 
 ## 14. Political System
-- ❌ Political Action cards
-- ❌ Referendums (call, polling, resolve)
-- ❌ Votes (from titles, Edge, cards)
-- ❌ Blood Hunt referendum (after diablerie)
+- ✅ Political Action cards (call referendum)
+- ✅ Referendums (call, polling, resolve)
+- ✅ Votes from titles (Primogen 1, Prince/Baron 2, Justicar 3, Inner Circle 4)
+- ✅ Blood Hunt referendum (after diablerie)
+- ❌ Votes from Edge (burn Edge for 1 vote)
+- ❌ Votes from political action cards (1 vote each)
 
 ## 15. Titles
-- ❌ Primogen (1 vote)
-- ❌ Prince/Baron (2 votes)
-- ❌ Justicar (3 votes)
-- ❌ Inner Circle (4 votes)
+- ✅ Primogen (1 vote)
+- ✅ Prince/Baron (2 votes)
+- ✅ Justicar (3 votes)
+- ✅ Inner Circle (4 votes)
 - ❌ Contested titles (1 blood per unlock phase)
+- ❌ Titled vampires (votes from ready titled minions)
 
 ## 16. Advanced Rules
 - ❌ Advanced vampires (merge with base)
 - ❌ Contested cards (1 pool per unlock phase)
 - ❌ Unique cards/locations
-- ❌ Trifle master cards (already in master phase)
+- ❌ Red List (trophies)
 
 ## 17. Persistence
 - ❌ Save game state to database
@@ -185,7 +191,7 @@
 - ❌ Action selection UI
 
 ## 19. Testing
-- ✅ 115 unit tests passing
+- ✅ 131 unit tests passing
 - ❌ Integration tests (full game simulation)
 - ❌ Edge case tests
 
@@ -198,11 +204,11 @@
 | Game Setup | 7 | 7 | 100% |
 | Turn Sequence | 6 | 6 | 100% |
 | Unlock Phase | 3 | 3 | 100% |
-| Master Phase | 4 | 4 | 100% |
+| Master Phase | 4 | 6 | 67% |
 | Minion Phase (Basic) | 5 | 5 | 100% |
-| Minion Phase (Cards) | 3 | 4 | 75% |
+| Minion Phase (Cards) | 4 | 4 | 100% |
 | Action Resolution | 9 | 9 | 100% |
-| Combat System | 18 | 24 | 75% |
+| Combat System | 19 | 27 | 70% |
 | Influence Phase | 4 | 4 | 100% |
 | Discard Phase | 2 | 2 | 100% |
 | Edge Mechanics | 5 | 6 | 83% |
@@ -210,23 +216,26 @@
 | Ousting/Victory | 8 | 8 | 100% |
 | Reaction Cards | 5 | 6 | 83% |
 | Action Modifiers | 4 | 5 | 80% |
-| Political System | 0 | 4 | 0% |
-| Titles | 0 | 5 | 0% |
+| Political System | 5 | 7 | 71% |
+| Titles | 4 | 6 | 67% |
 | Advanced Rules | 0 | 4 | 0% |
 | Persistence | 0 | 3 | 0% |
 | CLI/Interface | 1 | 4 | 25% |
 | Testing | 1 | 3 | 33% |
 
-**Overall Progress: ~73% (86/118 features)**
+**Overall Progress: ~75% (99/132 features)**
 
 ---
 
 ## Next Steps (Priority Order)
 
-1. ✅ **Combat Cards** - Maneuvers, Press, Weapons (damaged prevention and additional strikes pending)
-2. **Reflex Cards** - Cancel specific card types
-3. **Political System** - Referendums, Blood Hunts
-4. **Titles** - Prince, Baron, Justicar, Inner Circle
-5. **Persistence** - Save/load game state
-6. **CLI/Human Interface** - Human player input
-7. **Integration Tests** - Full game simulation
+1. **Reflex Cards** - Cancel specific card types as played
+2. **Advanced Rules** - Advanced vampires, contested cards, Red List
+3. **Edge for Vote** - Burn Edge for 1 vote in referendum
+4. **Persistence** - Save/load game state
+5. **CLI/Human Interface** - Human player input
+6. **Integration Tests** - Full game simulation
+7. **Damage Prevention Cards** - Combat card subtype
+8. **Additional Strike Cards** - Combat card subtype
+9. **Press Cards** - Combat card subtype
+10. **Master Locations/Disciplines** - Permanent master cards
