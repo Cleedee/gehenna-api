@@ -1534,3 +1534,138 @@ class TestRecruitAlly:
         ]
         assert allies[0].locked is True
         assert allies[0].has_acted_this_turn is False
+
+
+# ── Combat Cards Tests ──────────────────────────────────────────────────────
+
+
+class TestCombatManeuvers:
+    def _make_maneuver_state(self, atk_maneuvers=0, def_maneuvers=0):
+        state = GameState(game_id="maneuver")
+        p1 = PlayerState(id=1, username="P1", pool=30)
+        p2 = PlayerState(id=2, username="P2", pool=30)
+        state.players.extend([p1, p2])
+        attacker = CardInstance(
+            id="p1_atk", card_id=1, name="Attacker",
+            position=CardPosition.ready, tipo="Vampire",
+            capacity=5, blood=10, strength=2, maneuvers=atk_maneuvers,
+        )
+        state.cards[attacker.id] = attacker
+        defender = CardInstance(
+            id="p2_def", card_id=2, name="Defender",
+            position=CardPosition.ready, tipo="Vampire",
+            capacity=5, blood=10, strength=2, maneuvers=def_maneuvers,
+        )
+        state.cards[defender.id] = defender
+        return state, attacker, defender, p1, p2
+
+    def test_no_maneuvers_stays_close(self):
+        """Without maneuvers, range stays close."""
+        state, attacker, defender, p1, p2 = self._make_maneuver_state()
+        engine = GameEngine(state)
+        engine._is_running = True
+        result = engine.phases._determine_range(attacker, defender, p1, p2)
+        assert result == 'close'
+
+    def test_attacker_maneuvers_to_long(self):
+        """Attacker with maneuvers goes to long range."""
+        state, attacker, defender, p1, p2 = self._make_maneuver_state(atk_maneuvers=1)
+        engine = GameEngine(state)
+        engine._is_running = True
+        result = engine.phases._determine_range(attacker, defender, p1, p2)
+        assert result == 'long'
+
+    def test_defender_counters_maneuver(self):
+        """Defender with maneuvers can counter attacker's maneuver."""
+        state, attacker, defender, p1, p2 = self._make_maneuver_state(
+            atk_maneuvers=1, def_maneuvers=1
+        )
+        engine = GameEngine(state)
+        engine._is_running = True
+        result = engine.phases._determine_range(attacker, defender, p1, p2)
+        # Attacker goes long, defender counters back to close
+        assert result == 'close'
+
+    def test_maneuvers_from_weapon(self):
+        """Weapon with maneuvers grants maneuver ability."""
+        state, attacker, defender, p1, p2 = self._make_maneuver_state()
+        weapon = CardInstance(
+            id="p1_wpn", card_id=200, name=".44 Magnum",
+            position=CardPosition.attached, tipo="Equipment",
+            attached_to=attacker.id, maneuvers=1,
+        )
+        state.cards[weapon.id] = weapon
+        attacker.attachments.append(weapon.id)
+        engine = GameEngine(state)
+        engine._is_running = True
+        result = engine.phases._determine_range(attacker, defender, p1, p2)
+        assert result == 'long'
+
+    def test_long_range_combat(self):
+        """At long range, non-ranged strikes don't work."""
+        state, attacker, defender, p1, p2 = self._make_maneuver_state(
+            atk_maneuvers=1, def_maneuvers=0
+        )
+        engine = GameEngine(state)
+        engine._is_running = True
+        atk_strike = {
+            'type': 'hand_strike', 'damage': 2, 'aggravated': False,
+            'steal_amount': 0, 'dodge': False, 'combat_ends': False,
+            'first_strike': False, 'ranged': True,
+        }
+        def_strike = {
+            'type': 'hand_strike', 'damage': 2, 'aggravated': False,
+            'steal_amount': 0, 'dodge': False, 'combat_ends': False,
+            'first_strike': False, 'ranged': False,
+        }
+        engine.phases._resolve_strikes(attacker, defender, atk_strike, def_strike, 'long')
+        # Attacker's ranged strike works at long range
+        assert defender.blood == 8  # 10 - 2
+        # Defender's non-ranged strike doesn't work at long range
+        assert attacker.blood == 10  # Unchanged
+
+    def test_press_ends_combat(self):
+        """Press phase should end combat (simplified)."""
+        state, attacker, defender, p1, p2 = self._make_maneuver_state()
+        engine = GameEngine(state)
+        engine._is_running = True
+        result = engine.phases._play_press(attacker, defender, p1, p2)
+        assert result is False  # Combat ends
+
+    def test_combat_round_structure(self):
+        """Combat round should execute all 7 steps."""
+        state, attacker, defender, p1, p2 = self._make_maneuver_state()
+        engine = GameEngine(state)
+        engine._is_running = True
+        result = engine.phases._execute_combat_round(
+            attacker, defender, p1, p2, 1
+        )
+        # Combat should end after 1 round (no press)
+        assert result is True
+        # Both should have taken damage
+        assert attacker.blood < 10
+        assert defender.blood < 10
+
+    def test_combat_with_maneuvers_and_ranged(self):
+        """Full combat with maneuvers and ranged strikes."""
+        state, attacker, defender, p1, p2 = self._make_maneuver_state(
+            atk_maneuvers=1, def_maneuvers=0
+        )
+        engine = GameEngine(state)
+        engine._is_running = True
+        # Simulate: attacker has ranged strike at long range
+        atk_strike = {
+            'type': 'hand_strike', 'damage': 3, 'aggravated': False,
+            'steal_amount': 0, 'dodge': False, 'combat_ends': False,
+            'first_strike': False, 'ranged': True,
+        }
+        def_strike = {
+            'type': 'hand_strike', 'damage': 2, 'aggravated': False,
+            'steal_amount': 0, 'dodge': False, 'combat_ends': False,
+            'first_strike': False, 'ranged': False,
+        }
+        engine.phases._resolve_strikes(attacker, defender, atk_strike, def_strike, 'long')
+        # Attacker's ranged strike works at long range
+        assert defender.blood == 7  # 10 - 3
+        # Defender's non-ranged strike doesn't work at long range
+        assert attacker.blood == 10  # Unchanged

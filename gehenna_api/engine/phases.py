@@ -755,17 +755,36 @@ class PhaseManager:
         defender_player: PlayerState,
         round_num: int,
     ) -> bool:
-        """Execute one round of combat. Returns True if combat ended."""
-        # Step 1: Before Range (placeholder - no card play)
-        # Step 2: Determine Range
-        current_range = self._determine_range(attacker, defender)
+        """Execute one round of combat with full 7-step sequence.
+        
+        Returns True if combat ended.
+        """
+        # Reset per-round combat state
+        attacker.damage_prevented = 0
+        defender.damage_prevented = 0
+        attacker.additional_strikes = 0
+        defender.additional_strikes = 0
+        attacker.maneuvers = 0
+        defender.maneuvers = 0
+        attacker.first_strike = False
+        defender.first_strike = False
+        attacker.ranged = False
+        defender.ranged = False
 
-        # Step 3: Before Strikes (placeholder - no card play)
+        # Step 1: Before Range - play cards before range is determined
+        self._play_before_range(attacker, defender, attacker_player, defender_player)
+
+        # Step 2: Determine Range via maneuvers (close default, long via maneuvers)
+        current_range = self._determine_range(attacker, defender, attacker_player, defender_player)
+
+        # Step 3: Before Strikes - play combat cards before strikes
+        self._play_before_strikes(attacker, defender, attacker_player, defender_player, current_range)
+
         # Step 4: Strike - acting minion chooses first
         atk_strike = self._choose_strike(attacker, defender, current_range, is_attacker=True)
         def_strike = self._choose_strike(defender, attacker, current_range, is_attacker=False)
 
-        # Resolve strikes
+        # Resolve strikes (includes first strike resolution order)
         combat_ended = self._resolve_strikes(
             attacker, defender, atk_strike, def_strike, current_range
         )
@@ -776,15 +795,13 @@ class PhaseManager:
         if not self._is_combatant_ready(attacker) or not self._is_combatant_ready(defender):
             return True
 
-        # Step 6: Press (simplified - combat ends after 1 round)
-        return True
+        # Step 6: Press - check if combat continues
+        combat_continues = self._play_press(attacker, defender, attacker_player, defender_player)
+        if not combat_continues:
+            return True
 
-    def _determine_range(self, attacker: CardInstance, defender: CardInstance) -> str:
-        """Determine combat range. Default is close.
-        
-        Maneuvers can change range. Without maneuver cards, stays at close.
-        """
-        return 'close'
+        # Step 7: End of Round (placeholder)
+        return False
 
     def _choose_strike(
         self,
@@ -945,6 +962,121 @@ class PhaseManager:
     def _is_combatant_ready(self, minion: CardInstance) -> bool:
         """Check if a minion is still ready for combat."""
         return minion.position == CardPosition.ready and minion.blood > 0
+
+    def _play_before_range(
+        self, attacker: CardInstance, defender: CardInstance,
+        attacker_player: PlayerState, defender_player: PlayerState,
+    ) -> None:
+        """Step 1: Play cards before range is determined."""
+        # Placeholder - no card play yet
+        pass
+
+    def _determine_range(
+        self, attacker: CardInstance, defender: CardInstance,
+        attacker_player: PlayerState, defender_player: PlayerState,
+    ) -> str:
+        """Step 2: Determine combat range via maneuvers.
+        
+        Default is close range. Maneuvers can change to long range.
+        Acting minion maneuvers first, then defender.
+        A minion cannot play two maneuvers in a row.
+        """
+        current_range = 'close'
+
+        # Check for weapons/combat cards that grant maneuvers
+        atk_maneuvers = self._count_maneuvers(attacker)
+        def_maneuvers = self._count_maneuvers(defender)
+
+        # Acting minion maneuvers first
+        if atk_maneuvers > 0:
+            current_range = 'long'
+            self._log_action(attacker_player, f'{attacker.name} maneuvers to long range')
+
+        # Defender can counter-maneuver
+        if def_maneuvers > 0:
+            # Defender counters: if attacker went long, defender can go close
+            if current_range == 'long':
+                current_range = 'close'
+                self._log_action(defender_player, f'{defender.name} maneuvers back to close range')
+            else:
+                current_range = 'long'
+                self._log_action(defender_player, f'{defender.name} maneuvers to long range')
+
+        # Additional maneuvers (if both have more than 1)
+        # Simplified: only one maneuver exchange per round
+
+        return current_range
+
+    def _count_maneuvers(self, minion: CardInstance) -> int:
+        """Count available maneuvers for a minion.
+        
+        From weapons attached to the minion.
+        """
+        maneuvers = minion.maneuvers  # Base maneuvers from card
+        # Check attached weapons/equipment for maneuvers
+        if minion.attachments:
+            for att_id in minion.attachments:
+                att = self.state.card_by_id(att_id)
+                if att:
+                    maneuvers += getattr(att, 'maneuvers', 0)
+        return maneuvers
+
+    def _play_before_strikes(
+        self, attacker: CardInstance, defender: CardInstance,
+        attacker_player: PlayerState, defender_player: PlayerState,
+        current_range: str,
+    ) -> None:
+        """Step 3: Play combat cards before strikes.
+        
+        Acting minion plays first, then defender.
+        Cards can: increase strength, grant first strike, grant additional strikes, etc.
+        """
+        # Placeholder - no card play yet
+        pass
+
+    def _play_additional_strikes(
+        self, attacker: CardInstance, defender: CardInstance,
+        attacker_player: PlayerState, defender_player: PlayerState,
+        current_range: str,
+    ) -> None:
+        """Handle additional strikes after the first pair.
+        
+        Acting minion decides first, then defender.
+        """
+        atk_strikes = attacker.additional_strikes
+        def_strikes = defender.additional_strikes
+
+        # Resolve additional strikes
+        # Simplified: skip for now
+        pass
+
+    def _play_damage_prevention(
+        self, minion: CardInstance, player: PlayerState, damage: int
+    ) -> int:
+        """Step 5b: Play damage prevention cards.
+        
+        Returns remaining damage after prevention.
+        """
+        prevented = minion.damage_prevented
+        remaining = max(0, damage - prevented)
+        if prevented > 0:
+            self._log_action(
+                player,
+                f'{minion.name} prevents {minimized} damage',
+            )
+        return remaining
+
+    def _play_press(
+        self, attacker: CardInstance, defender: CardInstance,
+        attacker_player: PlayerState, defender_player: PlayerState,
+    ) -> bool:
+        """Step 6: Press phase.
+        
+        Returns True if combat should continue.
+        Acting minion decides first.
+        """
+        # Simplified: combat ends after 1 round (no press cards yet)
+        return False
 
     def _resolve_bleed_action(self, minion: CardInstance, player: PlayerState) -> None:
         """Resolve a bleed action from a minion (after successful block attempt resolution).

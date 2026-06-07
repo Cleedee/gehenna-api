@@ -45,6 +45,12 @@ class CardInstance(BaseModel):
     # Track actions performed this turn (reset each unlock phase)
     actions_this_turn: int = 0
     has_acted_this_turn: bool = False
+    # Combat tracking
+    maneuvers: int = 0
+    damage_prevented: int = 0
+    additional_strikes: int = 0
+    first_strike: bool = False
+    ranged: bool = False
 
     def lock(self) -> None:
         self.locked = True
