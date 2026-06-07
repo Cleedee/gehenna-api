@@ -48,8 +48,8 @@ class GameState(BaseModel):
     current_player_index: int = 0
     turn_number: int = 0
     blood_bank: int = 999_999
-    is_finished: bool = False
     edge_uncontrolled: bool = True
+    _is_finished: bool = False
 
     @property
     def current_player(self) -> Optional[PlayerState]:
@@ -96,13 +96,63 @@ class GameState(BaseModel):
     def active_players(self) -> list[PlayerState]:
         return [p for p in self.players if not p.is_ousted]
 
-    def oust_player(self, player_id: int) -> None:
+    def oust_player(self, player_id: int) -> list[str]:
+        """Oust a player from the game.
+        
+        Returns list of card instance IDs that were removed from play.
+        
+        Rules:
+        - Ousted player loses all pool
+        - Predator gains 6 pool and 1 VP
+        - If ousted at same time as prey, still gets VP but no pool
+        - All ousted player's controlled cards are removed from game
+        - Edge returns to uncontrolled if ousted player had it
+        - Prey relationships update
+        """
         player = self.player_by_id(player_id)
-        if player:
-            player.is_ousted = True
-            if player.has_edge:
-                player.has_edge = False
-                self.edge_uncontrolled = True
+        if not player or player.is_ousted:
+            return []
+
+        removed_cards = []
+
+        # Find predator BEFORE marking as ousted (predator_of uses active_players)
+        predator = self.predator_of(player_id)
+
+        # Handle Edge
+        if player.has_edge:
+            player.has_edge = False
+            self.edge_uncontrolled = True
+
+        # Now mark as ousted
+        player.is_ousted = True
+
+        # Award VP + pool to predator
+        if predator and not predator.is_ousted:
+            predator.victory_points += 1
+            predator.pool += 6
+
+        # Remove all cards controlled by ousted player from play
+        prefix = f'p{player.id}_'
+        card_ids_to_remove = [
+            c.id for c in self.cards.values()
+            if c.id.startswith(prefix)
+            and c.position not in (CardPosition.removed,)
+        ]
+        for cid in card_ids_to_remove:
+            inst = self.cards.get(cid)
+            if inst:
+                inst.position = CardPosition.removed
+                removed_cards.append(cid)
+
+        # Clear player's hand, library, crypt, ash_heap
+        player.hand.clear()
+        player.library.clear()
+        player.crypt.clear()
+        player.ash_heap.clear()
+        player.pool = 0
+        player.transfers = 0
+
+        return removed_cards
 
     def predator_of(self, player_id: int) -> Optional[PlayerState]:
         """Return the predator of the given player.
@@ -130,7 +180,40 @@ class GameState(BaseModel):
         return None
 
     def check_winner(self) -> Optional[PlayerState]:
+        """Check if the game has a winner.
+        
+        Rules:
+        - Game ends when only 1 Methuselah remains
+        - Winner is the Methuselah with most VP
+        - Tie = no winner
+        """
         active = self.active_players
-        if len(active) <= 1:
-            return active[0] if active else None
+        if len(active) == 1:
+            return active[0]
         return None
+
+    def award_last_survivor_bonus(self) -> None:
+        """Award +1 VP to the last surviving Methuselah."""
+        active = self.active_players
+        if len(active) == 1:
+            active[0].victory_points += 1
+
+    @property
+    def is_finished(self) -> bool:
+        """Check if the game is finished."""
+        active = self.active_players
+        return len(active) <= 1
+
+    def get_final_scores(self) -> list[dict]:
+        """Get final scores for all players."""
+        scores = []
+        for p in self.players:
+            scores.append({
+                'player_id': p.id,
+                'username': p.username,
+                'victory_points': p.victory_points,
+                'is_ousted': p.is_ousted,
+            })
+        # Sort by VP descending
+        scores.sort(key=lambda x: x['victory_points'], reverse=True)
+        return scores

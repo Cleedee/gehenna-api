@@ -97,8 +97,11 @@ class GameEngine:
 
     @property
     def is_finished(self) -> bool:
-        return self.state.check_winner() is not None
+        return self.state.is_finished
 
     def get_winner(self) -> Optional[int]:
         winner = self.state.check_winner()
-        return winner.id if winner else None
+        if winner:
+            self.state.award_last_survivor_bonus()
+            return winner.id
+        return None

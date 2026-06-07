@@ -776,3 +776,209 @@ class TestDiablerie:
         engine._is_running = True
         engine.phases._resolve_diablerie(diablerist, player, None)
         assert diablerist.blood == 2  # Unchanged
+
+
+# ── Ousting and Victory Tests ───────────────────────────────────────────────
+
+
+class TestOusting:
+    def _make_3p_state(self):
+        """Create a 3-player state."""
+        state = GameState(game_id="oust")
+        state.edge_uncontrolled = True
+        for pid in range(1, 4):
+            p = PlayerState(id=pid, username=f"P{pid}", pool=30)
+            for i in range(6):
+                c = CardInstance(
+                    id=f"p{pid}_crypt_{i}", card_id=i, name=f"Vamp{pid}_{i}",
+                    position=CardPosition.crypt, tipo="Vampire", capacity=5, blood=0,
+                )
+                state.cards[c.id] = c
+                p.crypt.append(c.id)
+            state.players.append(p)
+        return state
+
+    def test_oust_removes_cards(self):
+        """Ousting should remove all controlled cards from play."""
+        state = self._make_3p_state()
+        removed = state.oust_player(3)
+        # All P3 cards should be removed
+        for c in state.cards.values():
+            if c.id.startswith("p3_"):
+                assert c.position == CardPosition.removed
+        assert len(removed) == 6  # 6 crypt cards
+
+    def test_oust_clears_player_state(self):
+        """Ousting should clear player's hand, library, crypt, pool."""
+        state = self._make_3p_state()
+        p3 = state.players[2]
+        # Add some cards to hand
+        p3.hand = ["card1", "card2"]
+        state.oust_player(3)
+        assert p3.is_ousted is True
+        assert p3.pool == 0
+        assert len(p3.hand) == 0
+        assert len(p3.library) == 0
+        assert len(p3.crypt) == 0
+        assert len(p3.ash_heap) == 0
+
+    def test_oust_awards_vp_and_pool_to_predator(self):
+        """Predator should gain 6 pool and 1 VP when prey is ousted."""
+        state = self._make_3p_state()
+        # In 3-player: P1's predator is P2, P2's predator is P3, P3's predator is P1
+        # Oust P3 -> P1 is predator
+        state.oust_player(3)
+        p1 = state.players[0]
+        assert p1.victory_points == 1
+        assert p1.pool == 36  # 30 + 6
+
+    def test_oust_edge_returns_to_uncontrolled(self):
+        """Edge should return to uncontrolled if ousted player had it."""
+        state = self._make_3p_state()
+        p3 = state.players[2]
+        p3.has_edge = True
+        state.edge_uncontrolled = False
+        state.oust_player(3)
+        assert p3.has_edge is False
+        assert state.edge_uncontrolled is True
+
+    def test_oust_already_ousted_player(self):
+        """Ousting an already ousted player should do nothing."""
+        state = self._make_3p_state()
+        state.oust_player(3)
+        p1 = state.players[0]
+        initial_vp = p1.victory_points
+        initial_pool = p1.pool
+        # Try to oust again
+        removed = state.oust_player(3)
+        assert len(removed) == 0
+        assert p1.victory_points == initial_vp
+        assert p1.pool == initial_pool
+
+    def test_oust_updates_prey(self):
+        """Prey relationships should update after ousting."""
+        state = self._make_3p_state()
+        # Before: P1's prey is P3
+        assert state.prey_of(1).id == 3
+        state.oust_player(3)
+        # After: P1's prey should be P2
+        assert state.prey_of(1).id == 2
+
+    def test_oust_updates_predator(self):
+        """Predator relationships should update after ousting."""
+        state = self._make_3p_state()
+        # Before: P1's predator is P2
+        assert state.predator_of(1).id == 2
+        state.oust_player(3)
+        # After: P1's predator should still be P2
+        assert state.predator_of(1).id == 2
+
+
+class TestVictory:
+    def test_winner_last_survivor(self):
+        """Last surviving player should win."""
+        state = GameState(game_id="victory")
+        state.edge_uncontrolled = True
+        for pid in range(1, 4):
+            p = PlayerState(id=pid, username=f"P{pid}", pool=30)
+            state.players.append(p)
+        state.oust_player(2)
+        state.oust_player(3)
+        winner = state.check_winner()
+        assert winner is not None
+        assert winner.id == 1
+        # Award last survivor bonus
+        state.award_last_survivor_bonus()
+        # P1 got VP from ousting P2 (predator) and P3 (predator), plus last survivor
+        assert winner.victory_points >= 1
+
+    def test_winner_with_oust_vp(self):
+        """Winner should have VP from ousting + last survivor."""
+        state = GameState(game_id="victory2")
+        state.edge_uncontrolled = True
+        for pid in range(1, 4):
+            p = PlayerState(id=pid, username=f"P{pid}", pool=30)
+            state.players.append(p)
+        state.oust_player(3)
+        state.oust_player(2)
+        winner = state.check_winner()
+        assert winner is not None
+        assert winner.id == 1
+        # Award last survivor bonus
+        state.award_last_survivor_bonus()
+        assert winner.victory_points == 3  # 2 from ousting + 1 last survivor
+
+    def test_no_winner_multiple_players(self):
+        """No winner when multiple players remain."""
+        state = GameState(game_id="no_win")
+        state.edge_uncontrolled = True
+        for pid in range(1, 4):
+            p = PlayerState(id=pid, username=f"P{pid}", pool=30)
+            state.players.append(p)
+        state.oust_player(3)
+        winner = state.check_winner()
+        assert winner is None
+
+    def test_game_is_finished(self):
+        """Game should be finished when only 1 player remains."""
+        state = GameState(game_id="finished")
+        state.edge_uncontrolled = True
+        for pid in range(1, 3):
+            p = PlayerState(id=pid, username=f"P{pid}", pool=30)
+            state.players.append(p)
+        state.oust_player(2)
+        assert state.is_finished is True
+
+    def test_game_not_finished(self):
+        """Game should not be finished with multiple players."""
+        state = GameState(game_id="not_finished")
+        state.edge_uncontrolled = True
+        for pid in range(1, 3):
+            p = PlayerState(id=pid, username=f"P{pid}", pool=30)
+            state.players.append(p)
+        assert state.is_finished is False
+
+    def test_final_scores(self):
+        """Final scores should be sorted by VP descending."""
+        state = GameState(game_id="scores")
+        state.edge_uncontrolled = True
+        for pid in range(1, 4):
+            p = PlayerState(id=pid, username=f"P{pid}", pool=30)
+            state.players.append(p)
+        state.oust_player(3)
+        state.oust_player(2)
+        # Award last survivor bonus
+        state.award_last_survivor_bonus()
+        scores = state.get_final_scores()
+        assert scores[0]["username"] == "P1"
+        assert scores[0]["victory_points"] == 3
+        assert scores[1]["victory_points"] == 0
+        assert scores[2]["victory_points"] == 0
+
+    def test_two_player_oust(self):
+        """In 2-player game, ousting one player ends the game."""
+        state = GameState(game_id="2p_oust")
+        state.edge_uncontrolled = True
+        for pid in range(1, 3):
+            p = PlayerState(id=pid, username=f"P{pid}", pool=30)
+            state.players.append(p)
+        state.oust_player(2)
+        winner = state.check_winner()
+        assert winner is not None
+        assert winner.id == 1
+        # Award last survivor bonus
+        state.award_last_survivor_bonus()
+        assert winner.victory_points == 2  # 1 from ousting + 1 last survivor
+
+    def test_oust_pool_zero(self):
+        """Player with 0 pool should be ousted."""
+        state = GameState(game_id="pool_zero")
+        state.edge_uncontrolled = True
+        for pid in range(1, 3):
+            p = PlayerState(id=pid, username=f"P{pid}", pool=30)
+            state.players.append(p)
+        p2 = state.players[1]
+        p2.pool = 0
+        # Manually trigger oust
+        state.oust_player(2)
+        assert p2.is_ousted is True
