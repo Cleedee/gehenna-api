@@ -4,7 +4,6 @@
 - ✅ = Implemented
 - 🔄 = Partially implemented
 - ❌ = Not implemented
-- 📝 = Planned
 
 ---
 
@@ -53,10 +52,12 @@
 
 ### 5.3 Action Resolution
 - ✅ Announce action (lock acting minion)
-- ✅ Block attempts (stealth vs intercept)
+- ✅ Action modifier phase (acting minion plays first)
+- ✅ Block attempts (stealth vs intercept + reaction bonus)
 - ✅ Directed actions: only target can block
 - ✅ Undirected actions: prey first, then predator
 - ✅ Block succeeds if intercept >= stealth
+- ✅ Reaction phase (other Methuselahs can react)
 - ✅ Combat on successful block
 - ✅ Resolve action if not blocked
 
@@ -68,12 +69,12 @@
 - ✅ Locked/unlocked doesn't matter for combat
 
 ### 6.2 Combat Sequence (7 steps per round)
-- ✅ 1. Before Range (placeholder)
-- ✅ 2. Determine Range (close default, long via maneuvers)
-- ✅ 3. Before Strikes (placeholder)
+- ✅ 1. Before Range (placeholder - no card play yet)
+- ✅ 2. Determine Range (close default)
+- ✅ 3. Before Strikes (placeholder - no card play yet)
 - ✅ 4. Strike (choose and resolve)
-- ✅ 5. Damage Resolution (prevent and mend)
-- ✅ 6. Press (continue/end combat)
+- ✅ 5. Damage Resolution (mend with blood)
+- ✅ 6. Press (simplified - ends after 1 round)
 - ✅ 7. End of Round (placeholder)
 
 ### 6.3 Strike Effects
@@ -81,13 +82,13 @@
 - ✅ Dodge (no damage, protects from opponent's strike, any range)
 - ✅ Combat Ends (ends combat immediately, resolves first, any range)
 - ✅ Steal Blood (transfers blood, not damage, any range)
-- ❌ First Strike (resolves before normal strikes)
-- ❌ Ranged Strike (works at any range)
+- ✅ First Strike (resolves before normal strikes; if only one, may kill before counter)
+- ✅ Ranged Strike (works at any range)
 
 ### 6.4 Combat Cards
 - ❌ Maneuvers (change range close ↔ long)
-- ❌ Press (continue/end combat)
-- ❌ Damage Prevention (prevent damage)
+- ❌ Press (continue/end combat with cards)
+- ❌ Damage Prevention (prevent damage with cards)
 - ❌ Additional Strikes (extra strikes per round)
 - ❌ Weapons (modify strikes)
 
@@ -111,7 +112,7 @@
 
 ## 8. Discard Phase
 - ✅ Discard down to 7 cards
-- ✅ Event cards (1 per discard phase)
+- ✅ Event cards (1 per discard phase - placeholder)
 
 ## 9. Edge Mechanics
 - ✅ Starts uncontrolled
@@ -119,7 +120,7 @@
 - ✅ +1 pool during unlock
 - ✅ Gained by successful bleed against predator
 - ✅ Returns to uncontrolled on oust
-- ✅ Can be burned for 1 vote (referendum)
+- ❌ Can be burned for 1 vote (referendum)
 
 ## 10. Predator/Prey Relationships
 - ✅ Prey = player to the left (counter-clockwise)
@@ -138,54 +139,55 @@
 - ✅ Final scores sorted by VP
 
 ## 12. Reaction Cards
-- ❌ Played in response to actions
+- ✅ Played in response to actions
 - ✅ Do not lock the minion playing them
-- ❌ Only other Methuselahs' minions can play
-- ❌ Can increase intercept
+- ✅ Only other Methuselahs' minions can play
+- ✅ Can increase intercept (help block)
+- ✅ Cost blood from ready minion
+- ✅ Removed from hand to ash heap
+- ❌ Reflex cards (cancel specific card types)
 
 ## 13. Action Modifier Cards
-- ❌ Played by acting minion before resolution
-- ❌ Can increase bleed, stealth, etc.
-- ❌ Same card cannot be played twice per action
+- ✅ Played by acting minion before resolution
+- ✅ Can increase bleed, stealth
+- ✅ Cost blood from acting minion
+- ✅ Removed from hand to ash heap
+- ❌ Same card cannot be played twice per action (simplified: one per action)
 
-## 14. Reflex Cards
-- ❌ Cancel specific card types as played
-- ❌ Played by target of the card
-
-## 15. Political System
+## 14. Political System
 - ❌ Political Action cards
 - ❌ Referendums (call, polling, resolve)
 - ❌ Votes (from titles, Edge, cards)
 - ❌ Blood Hunt referendum (after diablerie)
 
-## 16. Titles
+## 15. Titles
 - ❌ Primogen (1 vote)
 - ❌ Prince/Baron (2 votes)
 - ❌ Justicar (3 votes)
 - ❌ Inner Circle (4 votes)
 - ❌ Contested titles (1 blood per unlock phase)
 
-## 17. Advanced Rules
+## 16. Advanced Rules
 - ❌ Advanced vampires (merge with base)
 - ❌ Contested cards (1 pool per unlock phase)
 - ❌ Unique cards/locations
-- ❌ Trifle master cards
+- ❌ Trifle master cards (already in master phase)
 
-## 18. Persistence
+## 17. Persistence
 - ❌ Save game state to database
 - ❌ Load game state from database
 - ❌ Turn history log
 
-## 19. CLI / Human Interface
-- ❌ WebSocket endpoint for real-time play
+## 18. CLI / Human Interface
+- ✅ WebSocket endpoint (basic, from server.py)
 - ❌ Human player input handling
 - ❌ Game state visualization
 - ❌ Action selection UI
 
-## 20. Testing
-- ✅ 97 unit tests passing
+## 19. Testing
+- ✅ 115 unit tests passing
 - ❌ Integration tests (full game simulation)
-- ❌ Edge case tests (combat, ousting, etc.)
+- ❌ Edge case tests
 
 ---
 
@@ -193,27 +195,38 @@
 
 | Category | Implemented | Total | Progress |
 |---|---|---|---|
-| Game Setup | 6 | 6 | 100% |
+| Game Setup | 7 | 7 | 100% |
 | Turn Sequence | 6 | 6 | 100% |
 | Unlock Phase | 3 | 3 | 100% |
 | Master Phase | 4 | 4 | 100% |
 | Minion Phase (Basic) | 5 | 5 | 100% |
 | Minion Phase (Cards) | 3 | 4 | 75% |
-| Action Resolution | 7 | 7 | 100% |
-| Combat System | 12 | 21 | 57% |
+| Action Resolution | 9 | 9 | 100% |
+| Combat System | 16 | 24 | 67% |
 | Influence Phase | 4 | 4 | 100% |
 | Discard Phase | 2 | 2 | 100% |
-| Edge Mechanics | 6 | 6 | 100% |
+| Edge Mechanics | 5 | 6 | 83% |
 | Predator/Prey | 4 | 4 | 100% |
 | Ousting/Victory | 8 | 8 | 100% |
-| Reaction Cards | 1 | 4 | 25% |
-| Action Modifiers | 0 | 3 | 0% |
-| Reflex Cards | 0 | 3 | 0% |
+| Reaction Cards | 5 | 6 | 83% |
+| Action Modifiers | 4 | 5 | 80% |
 | Political System | 0 | 4 | 0% |
 | Titles | 0 | 5 | 0% |
 | Advanced Rules | 0 | 4 | 0% |
 | Persistence | 0 | 3 | 0% |
-| CLI/Interface | 0 | 4 | 0% |
+| CLI/Interface | 1 | 4 | 25% |
 | Testing | 1 | 3 | 33% |
 
-**Overall Progress: ~55% (62/114 features)**
+**Overall Progress: ~70% (82/118 features)**
+
+---
+
+## Next Steps (Priority Order)
+
+1. **Combat Cards** - Maneuvers, Press, Damage Prevention, Additional Strikes, Weapons
+2. **Reflex Cards** - Cancel specific card types
+3. **Political System** - Referendums, Blood Hunts
+4. **Titles** - Prince, Baron, Justicar, Inner Circle
+5. **Persistence** - Save/load game state
+6. **CLI/Human Interface** - Human player input
+7. **Integration Tests** - Full game simulation
