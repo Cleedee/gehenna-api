@@ -25,12 +25,13 @@ class Bot(ABC):
             return 'bleed'
 
         is_vampire = minion.tipo in ('Vampire', 'vampire', 'Imbued')
+        player = state.player_by_id(player_id)
 
         # Leave torpor: mandatory if in torpor and have 2+ blood
         if minion.position == CardPosition.torpor:
             if is_vampire and minion.blood >= 2:
                 return 'leave_torpor'
-            return 'action_card'  # Can't act
+            return 'action_card'
 
         # Hunt is mandatory for vampires with no blood
         if is_vampire:
@@ -39,8 +40,12 @@ class Bot(ABC):
             if minion.blood <= 2 and random.random() < 0.3:
                 return 'hunt'
 
+        # Check for action cards in hand
+        has_action_cards = self._has_action_cards(state, player_id)
+        if has_action_cards:
+            return 'action_card'
+
         # Look for rescue/diablerie opportunities
-        player = state.player_by_id(player_id)
         has_torpor_target = self._has_torpor_target(state, player_id)
         if has_torpor_target:
             if random.random() < 0.2:
@@ -50,6 +55,18 @@ class Bot(ABC):
 
         # Default to bleed
         return 'bleed'
+
+    def _has_action_cards(self, state: GameState, player_id: int) -> bool:
+        """Check if player has any minion action cards in hand."""
+        player = state.player_by_id(player_id)
+        for cid in player.hand:
+            card = state.card_by_id(cid)
+            if card and card.tipo.strip().lower() in (
+                'action', 'equipment', 'retainer', 'ally',
+                'political action', 'combat',
+            ):
+                return True
+        return False
 
     def _has_torpor_target(self, state: GameState, player_id: int) -> bool:
         """Check if there's a vampire in torpor that can be targeted."""

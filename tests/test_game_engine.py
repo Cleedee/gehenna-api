@@ -979,6 +979,226 @@ class TestVictory:
             state.players.append(p)
         p2 = state.players[1]
         p2.pool = 0
-        # Manually trigger oust
         state.oust_player(2)
         assert p2.is_ousted is True
+
+
+# ── Equip / Retainer / Ally Tests ───────────────────────────────────────────
+
+
+class TestEquip:
+    def _make_equip_state(self, minion_blood=4, equip_cost=1):
+        state = GameState(game_id="equip")
+        p1 = PlayerState(id=1, username="P1", pool=30)
+        state.players.append(p1)
+        minion = CardInstance(
+            id="p1_vamp", card_id=1, name="Vampire",
+            position=CardPosition.ready, tipo="Vampire",
+            capacity=5, blood=minion_blood,
+        )
+        state.cards[minion.id] = minion
+        equip = CardInstance(
+            id="p1_eq", card_id=100, name="Sword",
+            position=CardPosition.hand, tipo="Equipment",
+            pool_cost=equip_cost,
+        )
+        state.cards[equip.id] = equip
+        p1.hand.append(equip.id)
+        return state, minion, equip, p1
+
+    def test_equip_success(self):
+        """Equip should attach equipment to minion."""
+        state, minion, equip, player = self._make_equip_state()
+        engine = GameEngine(state)
+        engine._is_running = True
+        engine.phases._resolve_equip(minion, player, equip)
+        assert equip.position == CardPosition.attached
+        assert equip.attached_to == minion.id
+        assert minion.blood == 3  # 4 - 1
+        assert equip.id in minion.attachments
+
+    def test_equip_removes_from_hand(self):
+        """Equip should remove card from hand."""
+        state, minion, equip, player = self._make_equip_state()
+        engine = GameEngine(state)
+        engine._is_running = True
+        engine.phases._resolve_equip(minion, player, equip)
+        assert equip.id not in player.hand
+
+    def test_equip_insufficient_blood(self):
+        """Equip should fail if minion doesn't have enough blood."""
+        state, minion, equip, player = self._make_equip_state(minion_blood=0, equip_cost=1)
+        engine = GameEngine(state)
+        engine._is_running = True
+        engine.phases._resolve_equip(minion, player, equip)
+        assert equip.position == CardPosition.hand  # Not equipped
+        assert equip.id in player.hand
+
+    def test_equip_no_cost(self):
+        """Equip with 0 cost should work without blood."""
+        state, minion, equip, player = self._make_equip_state(minion_blood=1, equip_cost=0)
+        engine = GameEngine(state)
+        engine._is_running = True
+        engine.phases._resolve_equip(minion, player, equip)
+        assert equip.position == CardPosition.attached
+        assert minion.blood == 1  # Unchanged
+
+    def test_multiple_equipment(self):
+        """Minion can have multiple equipment."""
+        state, minion, equip1, player = self._make_equip_state()
+        equip2 = CardInstance(
+            id="p1_eq2", card_id=101, name="Shield",
+            position=CardPosition.hand, tipo="Equipment",
+            pool_cost=1,
+        )
+        state.cards[equip2.id] = equip2
+        player.hand.append(equip2.id)
+        engine = GameEngine(state)
+        engine._is_running = True
+        engine.phases._resolve_equip(minion, player, equip1)
+        engine.phases._resolve_equip(minion, player, equip2)
+        assert len(minion.attachments) == 2
+        assert equip1.position == CardPosition.attached
+        assert equip2.position == CardPosition.attached
+
+
+class TestEmployRetainer:
+    def _make_retainer_state(self, minion_blood=4, retainer_cost=1, retainer_cap=2):
+        state = GameState(game_id="retainer")
+        p1 = PlayerState(id=1, username="P1", pool=30)
+        state.players.append(p1)
+        minion = CardInstance(
+            id="p1_vamp", card_id=1, name="Vampire",
+            position=CardPosition.ready, tipo="Vampire",
+            capacity=5, blood=minion_blood,
+        )
+        state.cards[minion.id] = minion
+        retainer = CardInstance(
+            id="p1_ret", card_id=100, name="Guard Dog",
+            position=CardPosition.hand, tipo="Retainer",
+            pool_cost=retainer_cost, capacity=retainer_cap,
+        )
+        state.cards[retainer.id] = retainer
+        p1.hand.append(retainer.id)
+        return state, minion, retainer, p1
+
+    def test_employ_retainer_success(self):
+        """Employ retainer should attach to minion with life."""
+        state, minion, retainer, player = self._make_retainer_state()
+        engine = GameEngine(state)
+        engine._is_running = True
+        engine.phases._resolve_employ_retainer(minion, player, retainer)
+        assert retainer.position == CardPosition.attached
+        assert retainer.attached_to == minion.id
+        assert retainer.life == 2  # capacity as starting life
+        assert minion.blood == 3  # 4 - 1
+
+    def test_employ_retainer_removes_from_hand(self):
+        """Employ retainer should remove card from hand."""
+        state, minion, retainer, player = self._make_retainer_state()
+        engine = GameEngine(state)
+        engine._is_running = True
+        engine.phases._resolve_employ_retainer(minion, player, retainer)
+        assert retainer.id not in player.hand
+
+    def test_employ_retainer_insufficient_blood(self):
+        """Employ retainer should fail if not enough blood."""
+        state, minion, retainer, player = self._make_retainer_state(minion_blood=0)
+        engine = GameEngine(state)
+        engine._is_running = True
+        engine.phases._resolve_employ_retainer(minion, player, retainer)
+        assert retainer.position == CardPosition.hand
+
+    def test_multiple_retainers(self):
+        """Minion can have multiple retainers."""
+        state, minion, ret1, player = self._make_retainer_state()
+        ret2 = CardInstance(
+            id="p1_ret2", card_id=101, name="Wolf",
+            position=CardPosition.hand, tipo="Retainer",
+            pool_cost=1, capacity=3,
+        )
+        state.cards[ret2.id] = ret2
+        player.hand.append(ret2.id)
+        engine = GameEngine(state)
+        engine._is_running = True
+        engine.phases._resolve_employ_retainer(minion, player, ret1)
+        engine.phases._resolve_employ_retainer(minion, player, ret2)
+        assert len(minion.attachments) == 2
+
+
+class TestRecruitAlly:
+    def _make_ally_state(self, minion_blood=4, ally_cost=2, ally_cap=3):
+        state = GameState(game_id="ally")
+        p1 = PlayerState(id=1, username="P1", pool=30)
+        state.players.append(p1)
+        minion = CardInstance(
+            id="p1_vamp", card_id=1, name="Vampire",
+            position=CardPosition.ready, tipo="Vampire",
+            capacity=5, blood=minion_blood,
+        )
+        state.cards[minion.id] = minion
+        ally_card = CardInstance(
+            id="p1_al", card_id=100, name="Mage",
+            position=CardPosition.hand, tipo="Ally",
+            pool_cost=ally_cost, capacity=ally_cap,
+        )
+        state.cards[ally_card.id] = ally_card
+        p1.hand.append(ally_card.id)
+        return state, minion, ally_card, p1
+
+    def test_recruit_ally_success(self):
+        """Recruit ally should create ally in ready region."""
+        state, minion, ally_card, player = self._make_ally_state()
+        engine = GameEngine(state)
+        engine._is_running = True
+        engine.phases._resolve_recruit_ally(minion, player, ally_card)
+        # Ally should be in ready region
+        allies = [
+            c for c in state.cards.values()
+            if c.tipo == 'Ally' and c.position == CardPosition.ready
+        ]
+        assert len(allies) == 1
+        ally = allies[0]
+        assert ally.life == 3  # Full life
+        assert ally.locked is True  # Cannot act this turn
+
+    def test_recruit_ally_costs_blood(self):
+        """Recruit ally should cost blood."""
+        state, minion, ally_card, player = self._make_ally_state()
+        engine = GameEngine(state)
+        engine._is_running = True
+        engine.phases._resolve_recruit_ally(minion, player, ally_card)
+        assert minion.blood == 2  # 4 - 2
+
+    def test_recruit_ally_insufficient_blood(self):
+        """Recruit ally should fail if not enough blood."""
+        state, minion, ally_card, player = self._make_ally_state(minion_blood=1, ally_cost=2)
+        engine = GameEngine(state)
+        engine._is_running = True
+        engine.phases._resolve_recruit_ally(minion, player, ally_card)
+        allies = [
+            c for c in state.cards.values()
+            if c.tipo == 'Ally' and c.position == CardPosition.ready
+        ]
+        assert len(allies) == 0
+
+    def test_recruit_ally_removes_card(self):
+        """Recruit ally should remove card from hand."""
+        state, minion, ally_card, player = self._make_ally_state()
+        engine = GameEngine(state)
+        engine._is_running = True
+        engine.phases._resolve_recruit_ally(minion, player, ally_card)
+        assert ally_card.id not in player.hand
+
+    def test_ally_cannot_act_first_turn(self):
+        """Ally should be locked on first turn."""
+        state, minion, ally_card, player = self._make_ally_state()
+        engine = GameEngine(state)
+        engine._is_running = True
+        engine.phases._resolve_recruit_ally(minion, player, ally_card)
+        allies = [
+            c for c in state.cards.values()
+            if c.tipo == 'Ally' and c.position == CardPosition.ready
+        ]
+        assert allies[0].locked is True
+        assert allies[0].has_acted_this_turn is False

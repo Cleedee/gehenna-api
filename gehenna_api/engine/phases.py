@@ -74,10 +74,19 @@ MINION_TIPOS = {
     'Action Modifier/Reaction',
     'Action/Combat',
     'Reaction/Action Modifier',
-    'Reaction/Combat',
+    # Additional aliases
+    'Equipment ',
+    'Retainer ',
+    'Ally ',
+    'Action/Equipment',
+    'Action/Retainer',
+    'Action/Ally',
+    'Combat',
     'Combat / Action',
     'Combat/Action Modifier',
     'Combat/Reaction',
+    'Ranged',
+    'Reaction/Combat',
 }
 
 COMBAT_ONLY = {'Combat'}
@@ -879,10 +888,12 @@ class PhaseManager:
         return 0
 
     def _play_action_card(self, minion: CardInstance, player: PlayerState, bot: Bot) -> None:
-        """Play an action card from hand for a minion action."""
+        """Play an action card from hand for a minion action.
+        
+        Handles: bleed, equip, employ retainer, recruit ally, political, combat.
+        """
         action_cards = _has_type(player.hand, self.state, _is_minion)
         if not action_cards:
-            # No action card available, default to basic bleed
             self._log_action(player, f'{minion.name} defaults to bleed (no action card)')
             self._resolve_bleed(minion, player)
             return
@@ -896,19 +907,119 @@ class PhaseManager:
         tipo_lower = (inst.tipo or '').lower()
 
         if 'bleed' in tipo_lower:
-            # Enhanced bleed with action card
-            bleed_amount = 1 + inst.bleed
-            target = self.state.prey_of(player.id)
-            if target:
-                target.pool -= bleed_amount
-                self._log_action(player, f'{minion.name} bleeds {target.username} with {inst.name} ({bleed_amount} pool)')
-                self._play_card(player, inst, 'ash_heap')
+            self._resolve_bleed_with_card(minion, player, inst)
+        elif 'equipment' in tipo_lower or 'equip' in tipo_lower:
+            self._resolve_equip(minion, player, inst)
+        elif 'retainer' in tipo_lower:
+            self._resolve_employ_retainer(minion, player, inst)
+        elif 'ally' in tipo_lower:
+            self._resolve_recruit_ally(minion, player, inst)
         elif 'political' in tipo_lower:
             self._log_action(player, f'{minion.name} political: {inst.name}')
             self._play_card(player, inst, 'ash_heap')
         else:
             self._log_action(player, f'{minion.name} action: {inst.name}')
             self._play_card(player, inst, 'ash_heap')
+
+    def _resolve_bleed_with_card(self, minion: CardInstance, player: PlayerState, card: CardInstance) -> None:
+        """Resolve an enhanced bleed using an action card."""
+        bleed_amount = 1 + card.bleed
+        target = self.state.prey_of(player.id)
+        if target:
+            target.pool -= bleed_amount
+            self._log_action(player, f'{minion.name} bleeds {target.username} with {card.name} ({bleed_amount} pool)')
+            self._play_card(player, card, 'ash_heap')
+            # Edge: if bleed is successful against the predator, gain the Edge
+            predator = self.state.predator_of(player.id)
+            if predator and target.id == predator.id:
+                self._grant_edge(player)
+        else:
+            self._log_action(player, f'{minion.name} bleed with {card.name} — no valid target')
+            self._play_card(player, card, 'ash_heap')
+
+    def _resolve_equip(self, minion: CardInstance, player: PlayerState, card: CardInstance) -> None:
+        """Resolve an equip action.
+        
+        Cost: blood cost listed on the equipment card.
+        Effect: Equipment is placed on the acting minion.
+        """
+        # Check blood cost
+        if card.pool_cost > 0:
+            if minion.blood < card.pool_cost:
+                self._log_action(player, f'{minion.name} cannot equip {card.name} (needs {card.pool_cost} blood)')
+                return
+            minion.blood -= card.pool_cost
+
+        # Attach equipment to minion
+        card.position = CardPosition.attached
+        card.attached_to = minion.id
+        if minion.attachments is None:
+            minion.attachments = []
+        minion.attachments.append(card.id)
+        # Remove from hand
+        if card.id in player.hand:
+            player.hand.remove(card.id)
+        self._log_action(player, f'{minion.name} equips {card.name}')
+
+    def _resolve_employ_retainer(self, minion: CardInstance, player: PlayerState, card: CardInstance) -> None:
+        """Resolve an employ retainer action.
+        
+        Cost: blood cost listed on the retainer card.
+        Effect: Retainer is placed on the acting minion with starting life.
+        """
+        # Check blood cost
+        cost = card.pool_cost if card.pool_cost > 0 else 0
+        if cost > 0:
+            if minion.blood < cost:
+                self._log_action(player, f'{minion.name} cannot employ {card.name} (needs {cost} blood)')
+                return
+            minion.blood -= cost
+
+        # Attach retainer to minion with starting life
+        card.position = CardPosition.attached
+        card.attached_to = minion.id
+        card.life = card.capacity  # Use capacity as starting life for retainers
+        if minion.attachments is None:
+            minion.attachments = []
+        minion.attachments.append(card.id)
+        # Remove from hand
+        if card.id in player.hand:
+            player.hand.remove(card.id)
+        self._log_action(player, f'{minion.name} employs {card.name}')
+
+    def _resolve_recruit_ally(self, minion: CardInstance, player: PlayerState, card: CardInstance) -> None:
+        """Resolve a recruit ally action.
+        
+        Cost: blood cost listed on the ally card.
+        Effect: Ally is placed in ready region, cannot act this turn.
+        """
+        # Check blood cost
+        cost = card.pool_cost if card.pool_cost > 0 else 0
+        if cost > 0:
+            if minion.blood < cost:
+                self._log_action(player, f'{minion.name} cannot recruit {card.name} (needs {cost} blood)')
+                return
+            minion.blood -= cost
+
+        # Place ally in ready region with starting life
+        ally_id = f'p{player.id}_ally_{card.card_id}'
+        ally = CardInstance(
+            id=ally_id,
+            card_id=card.card_id,
+            name=card.name,
+            position=CardPosition.ready,
+            tipo='Ally',
+            capacity=card.capacity,
+            life=card.capacity,  # Start with full life
+            blood=0,
+            locked=True,  # Cannot act this turn
+            strength=card.strength if card.strength > 0 else 1,
+        )
+        self.state.cards[ally_id] = ally
+        # Remove card from hand
+        if card.id in player.hand:
+            player.hand.remove(card.id)
+        self._log_action(player, f'{minion.name} recruits {card.name}')
 
     def _grant_edge(self, player: PlayerState) -> None:
         """Grant the Edge to the specified player.
