@@ -1120,6 +1120,114 @@ class TestVictory:
         assert p2.is_ousted is True
 
 
+# ── Political System Tests ──────────────────────────────────────────────────
+
+
+class TestPoliticalAction:
+    def _make_political_state(self):
+        state = GameState(game_id="political")
+        for pid in range(1, 4):
+            p = PlayerState(id=pid, username=f"P{pid}", pool=30)
+            state.players.append(p)
+        # Add ready vampire for P1
+        vamp = CardInstance(
+            id="p1_vamp", card_id=1, name="Vampire",
+            position=CardPosition.ready, tipo="Vampire",
+            capacity=5, blood=3,
+        )
+        state.cards[vamp.id] = vamp
+        # Political action card in P1's hand
+        pol = CardInstance(
+            id="p1_pol", card_id=100, name="Political Action",
+            position=CardPosition.hand, tipo="Political Action",
+            pool_cost=1,
+        )
+        state.cards[pol.id] = pol
+        state.players[0].hand.append(pol.id)
+        # Set votes
+        state.players[0].votes = 2
+        state.players[1].votes = 1
+        state.players[2].votes = 1
+        return state, vamp, pol
+
+    def test_political_action_costs_blood(self):
+        """Political action should cost blood."""
+        state, vamp, pol = self._make_political_state()
+        engine = GameEngine(state)
+        engine._is_running = True
+        engine.phases._resolve_political_action(vamp, state.players[0])
+        assert vamp.blood == 2  # 3 - 1
+
+    def test_political_action_marks_used(self):
+        """Political action should mark player as used."""
+        state, vamp, pol = self._make_political_state()
+        engine = GameEngine(state)
+        engine._is_running = True
+        engine.phases._resolve_political_action(vamp, state.players[0])
+        assert state.players[0].political_action_used is True
+
+    def test_referendum_passes_with_more_votes(self):
+        """Referendum should pass when caller has more votes."""
+        state, vamp, pol = self._make_political_state()
+        engine = GameEngine(state)
+        engine._is_running = True
+        result = engine.phases._call_referendum(state.players[0], vamp)
+        # P1 has 2 votes, P2 and P3 have 1 each (vote against)
+        assert result['votes_for'] == 2
+        assert result['votes_against'] == 2  # 1 + 1
+        # Tie = fails
+        assert result['passed'] is False
+
+    def test_referendum_fails_with_fewer_votes(self):
+        """Referendum should fail when caller has fewer votes."""
+        state, vamp, pol = self._make_political_state()
+        state.players[0].votes = 1
+        state.players[1].votes = 3
+        state.players[2].votes = 3
+        engine = GameEngine(state)
+        engine._is_running = True
+        result = engine.phases._call_referendum(state.players[0], vamp)
+        assert result['passed'] is False
+
+    def test_blood_hunt_passes(self):
+        """Blood hunt should pass when majority votes for."""
+        state, vamp, pol = self._make_political_state()
+        # P1 is diablerist with 1 vote, P2 and P3 have 3 each (vote for blood hunt)
+        state.players[0].votes = 1
+        state.players[1].votes = 3
+        state.players[2].votes = 3
+        engine = GameEngine(state)
+        engine._is_running = True
+        result = engine.phases._call_blood_hunt(1)
+        assert result is True  # Blood hunt passes (6 for vs 1 against)
+
+    def test_burn_player_removes_cards(self):
+        """Burning a player should remove all their cards."""
+        state, vamp, pol = self._make_political_state()
+        engine = GameEngine(state)
+        engine._is_running = True
+        engine.phases._burn_player(1)
+        assert state.players[0].is_ousted is True
+        assert state.players[0].pool == 0
+
+    def test_count_votes(self):
+        """Vote counting should include base votes."""
+        state, vamp, pol = self._make_political_state()
+        engine = GameEngine(state)
+        engine._is_running = True
+        votes = engine.phases._count_votes(state.players[0])
+        assert votes == 2  # Base votes
+
+    def test_count_votes_with_title(self):
+        """Vote counting should include title votes."""
+        state, vamp, pol = self._make_political_state()
+        state.players[0].has_title = 'prince'
+        engine = GameEngine(state)
+        engine._is_running = True
+        votes = engine.phases._count_votes(state.players[0])
+        assert votes == 4  # 2 base + 2 for prince
+
+
 # ── Action Modifiers and Reactions Tests ────────────────────────────────────
 
 

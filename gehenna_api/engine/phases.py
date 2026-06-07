@@ -600,6 +600,13 @@ class PhaseManager:
                 'directed': is_directed,
                 'resolve': lambda m, p, b: self._resolve_diablerie(m, p, target),
             }
+        elif action_type == 'political':
+            return {
+                'name': 'political action',
+                'stealth': 1 + minion.stealth,
+                'directed': False,
+                'resolve': lambda m, p, b: self._resolve_political_action(m, p),
+            }
         else:
             return {
                 'name': 'action',
@@ -1232,6 +1239,206 @@ class PhaseManager:
                 player,
                 f'{minion.name} grows stronger (capacity {minion.capacity - 1} -> {minion.capacity})',
             )
+
+        # Blood hunt referendum after diablerie
+        self._call_blood_hunt(player.id)
+
+    def _resolve_political_action(
+        self, minion: CardInstance, player: PlayerState
+    ) -> None:
+        """Resolve a political action.
+        
+        Cost: blood cost listed on the political action card.
+        Effect: Call a referendum.
+        
+        Rules:
+        - Only one political action per turn per vampire
+        - Undirected action (can be blocked by prey/predator)
+        - If successful, a referendum is called
+        - Terms of referendum chosen after action succeeds
+        """
+        # Mark political action as used
+        player.political_action_used = True
+
+        # Find and pay for political action card in hand
+        pol_card_id = None
+        for cid in player.hand:
+            card = self.state.card_by_id(cid)
+            if card and card.tipo.strip().lower() == 'political action':
+                pol_card_id = cid
+                # Pay blood cost
+                cost = card.pool_cost if card.pool_cost > 0 else 0
+                minion.blood -= cost
+                # Remove from hand and burn
+                player.hand.remove(cid)
+                card.position = CardPosition.ash_heap
+                break
+
+        if pol_card_id is None:
+            self._log_action(player, f'{minion.name} has no political action card')
+            return
+
+        # Create and conduct referendum
+        referendum = self._call_referendum(player, minion)
+
+        if referendum['passed']:
+            self._log_action(
+                player,
+                f'{minion.name} calls referendum: {referendum["name"]} - PASSED',
+            )
+            self._resolve_referendum_effects(referendum, player)
+        else:
+            self._log_action(
+                player,
+                f'{minion.name} calls referendum: {referendum["name"]} - FAILED',
+            )
+
+    def _call_referendum(
+        self, player: PlayerState, minion: CardInstance
+    ) -> dict:
+        """Conduct a referendum.
+        
+        Steps:
+        1. Polling - cards usable before votes are cast
+        2. Votes - all Methuselahs cast votes
+        3. Resolve - if more for than against, passes
+        
+        Returns dict with referendum results.
+        """
+        # Gather votes from all players
+        votes_for = 0
+        votes_against = 0
+        vote_log = []
+
+        for p in self.state.active_players:
+            player_votes = self._count_votes(p)
+            # Simplified: acting player votes for, others vote against
+            if p.id == player.id:
+                votes_for += player_votes
+                vote_log.append(f'{p.username}: +{player_votes} for')
+            else:
+                # Other players vote against (simplified)
+                votes_against += player_votes
+                vote_log.append(f'{p.username}: +{player_votes} against')
+
+        passed = votes_for > votes_against
+
+        return {
+            'name': 'Referendum',
+            'caller': player.username,
+            'votes_for': votes_for,
+            'votes_against': votes_against,
+            'passed': passed,
+            'vote_log': vote_log,
+        }
+
+    def _count_votes(self, player: PlayerState) -> int:
+        """Count votes for a player.
+        
+        Sources:
+        - Political action cards (1 vote each, max 1 per player)
+        - Titles: Primogen (1), Prince/Baron (2), Justicar (3), Inner Circle (4)
+        - Edge (1 vote if burned)
+        - Ready titled vampires
+        """
+        votes = player.votes
+
+        # Add title votes
+        if player.has_title:
+            title_votes = {
+                'primogen': 1,
+                'prince': 2,
+                'baron': 2,
+                'justicar': 3,
+                'inner_circle': 4,
+            }
+            votes += title_votes.get(player.has_title.lower(), 0)
+
+        # Count ready titled minions
+        prefix = f'p{player.id}_'
+        for c in self.state.cards.values():
+            if c.id.startswith(prefix) and c.is_ready and c.tipo in ('Vampire', 'vampire', 'Imbued'):
+                # Check if vampire has a title (simplified)
+                if hasattr(c, 'title') and c.title:
+                    votes += title_votes.get(c.title.lower(), 0)
+
+        return votes
+
+    def _resolve_referendum_effects(self, referendum: dict, caller: PlayerState) -> None:
+        """Resolve the effects of a passed referendum.
+        
+        Simplified: just log the result.
+        Full implementation would apply specific referendum effects.
+        """
+        # Placeholder for specific referendum effects
+        pass
+
+    def _call_blood_hunt(self, diablerist_id: int) -> bool:
+        """Call a blood hunt referendum after diablerie.
+        
+        Automatic referendum (not an action, cannot be blocked).
+        If passed, the diablerist is burned.
+        
+        Returns True if blood hunt passes (diablerist is burned).
+        """
+        diablerist = self.state.player_by_id(diablerist_id)
+        if not diablerist:
+            return False
+
+        # Blood hunt: all players vote
+        # Simplified: blood hunt passes if majority votes for
+        votes_for = 0
+        votes_against = 0
+
+        for p in self.state.active_players:
+            if p.id == diablerist_id:
+                # Diablerist votes against their own blood hunt
+                votes_against += self._count_votes(p)
+            else:
+                # Others vote for (simplified)
+                votes_for += self._count_votes(p)
+
+        passed = votes_for > votes_against
+
+        if passed:
+            self._log_action(
+                diablerist,
+                f'Blood hunt called on {diablerist.username} - PASSED',
+            )
+            # Burn the diablerist
+            self._burn_player(diablerist_id)
+        else:
+            self._log_action(
+                diablerist,
+                f'Blood hunt called on {diablerist.username} - FAILED',
+            )
+
+        return passed
+
+    def _burn_player(self, player_id: int) -> None:
+        """Burn a player (blood hunt execution).
+        
+        All cards controlled by the player are burned.
+        Player is ousted.
+        """
+        player = self.state.player_by_id(player_id)
+        if not player:
+            return
+
+        # Burn all controlled cards
+        prefix = f'p{player_id}_'
+        for c in self.state.cards.values():
+            if c.id.startswith(prefix):
+                c.position = CardPosition.ash_heap
+                c.blood = 0
+                c.life = 0
+
+        # Oust the player
+        player.is_ousted = True
+        player.pool = 0
+        player.blood_hunt_active = False
+
+        self._log_action(player, f'{player.username} is burned by blood hunt')
 
     def _player_id_for_minion(self, minion: CardInstance) -> int:
         """Get the player ID that controls a minion."""

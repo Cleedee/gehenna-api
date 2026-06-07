@@ -31,6 +31,12 @@ class PlayerState(BaseModel):
     master_actions: int = 0
     out_of_turn_master_played: bool = False
     trifle_played_this_phase: bool = False
+    # Political system
+    votes: int = 0
+    political_action_used: bool = False
+    has_title: str = ''
+    is_red_list: bool = False
+    blood_hunt_active: bool = False
 
     def mark_out_of_turn_master(self) -> None:
         """Mark that this player played an out-of-turn master card.
@@ -50,6 +56,9 @@ class GameState(BaseModel):
     blood_bank: int = 999_999
     edge_uncontrolled: bool = True
     _is_finished: bool = False
+    # Political system
+    current_referendum: Optional[dict] = None
+    referendum_results: dict = Field(default_factory=dict)
 
     @property
     def current_player(self) -> Optional[PlayerState]:

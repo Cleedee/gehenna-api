@@ -43,6 +43,10 @@ class Bot(ABC):
         # Check for action cards in hand
         has_action_cards = self._has_action_cards(state, player_id)
         if has_action_cards:
+            # Check if there's a political action card
+            if self._has_political_card(state, player_id) and is_vampire:
+                if not player.political_action_used and random.random() < 0.15:
+                    return 'political'
             return 'action_card'
 
         # Look for rescue/diablerie opportunities
@@ -55,6 +59,15 @@ class Bot(ABC):
 
         # Default to bleed
         return 'bleed'
+
+    def _has_political_card(self, state: GameState, player_id: int) -> bool:
+        """Check if player has a political action card in hand."""
+        player = state.player_by_id(player_id)
+        for cid in player.hand:
+            card = state.card_by_id(cid)
+            if card and card.tipo.strip().lower() == 'political action':
+                return True
+        return False
 
     def _has_action_cards(self, state: GameState, player_id: int) -> bool:
         """Check if player has any minion action cards in hand."""
