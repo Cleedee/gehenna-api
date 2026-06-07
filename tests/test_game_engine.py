@@ -612,6 +612,143 @@ class TestCombat:
         engine.phases._start_combat(attacker, defender)
         assert (10 - defender.blood) > (10 - attacker.blood)
 
+    def test_first_strike_kills_before_counter(self):
+        """First strike should resolve before normal strike."""
+        state, attacker, defender = self._make_combat_state(
+            p1_blood=10, p1_str=5, p2_blood=3, p2_str=5
+        )
+        engine = GameEngine(state)
+        engine._is_running = True
+        # Simulate attacker using first strike
+        atk_strike = {
+            'type': 'hand_strike', 'damage': 5, 'aggravated': False,
+            'steal_amount': 0, 'dodge': False, 'combat_ends': False,
+            'first_strike': True, 'ranged': False,
+        }
+        def_strike = {
+            'type': 'hand_strike', 'damage': 5, 'aggravated': False,
+            'steal_amount': 0, 'dodge': False, 'combat_ends': False,
+            'first_strike': False, 'ranged': False,
+        }
+        engine.phases._resolve_strikes(attacker, defender, atk_strike, def_strike, 'close')
+        # Defender should be in torpor (took 5 damage, only had 3 blood)
+        # and shouldn't have struck back
+        assert defender.position == CardPosition.torpor
+        assert attacker.blood == 10  # No damage from defender (killed before counter)
+
+    def test_dodge_protects_from_first_strike(self):
+        """Dodge should protect from first strike."""
+        state, attacker, defender = self._make_combat_state(
+            p1_blood=10, p1_str=5, p2_blood=10, p2_str=1
+        )
+        engine = GameEngine(state)
+        engine._is_running = True
+        # Attacker uses first strike, defender dodges
+        atk_strike = {
+            'type': 'hand_strike', 'damage': 5, 'aggravated': False,
+            'steal_amount': 0, 'dodge': False, 'combat_ends': False,
+            'first_strike': True, 'ranged': False,
+        }
+        def_strike = {
+            'type': 'hand_strike', 'damage': 0, 'aggravated': False,
+            'steal_amount': 0, 'dodge': True, 'combat_ends': False,
+            'first_strike': False, 'ranged': False,
+        }
+        engine.phases._resolve_strikes(attacker, defender, atk_strike, def_strike, 'close')
+        # Defender should be unharmed (dodged)
+        assert defender.blood == 10
+
+    def test_combat_ends_resolves_first(self):
+        """Combat ends should resolve before first strike."""
+        state, attacker, defender = self._make_combat_state(
+            p1_blood=10, p1_str=5, p2_blood=10, p2_str=5
+        )
+        engine = GameEngine(state)
+        engine._is_running = True
+        # Attacker plays combat ends, defender plays first strike
+        atk_strike = {
+            'type': 'hand_strike', 'damage': 0, 'aggravated': False,
+            'steal_amount': 0, 'dodge': False, 'combat_ends': True,
+            'first_strike': False, 'ranged': False,
+        }
+        def_strike = {
+            'type': 'hand_strike', 'damage': 5, 'aggravated': False,
+            'steal_amount': 0, 'dodge': False, 'combat_ends': False,
+            'first_strike': True, 'ranged': False,
+        }
+        result = engine.phases._resolve_strikes(attacker, defender, atk_strike, def_strike, 'close')
+        assert result is True  # Combat ended
+        assert defender.blood == 10  # No damage
+        assert attacker.blood == 10  # No damage
+
+    def test_both_first_strike_simultaneous(self):
+        """When both use first strike, resolve simultaneously."""
+        state, attacker, defender = self._make_combat_state(
+            p1_blood=10, p1_str=3, p2_blood=10, p2_str=3
+        )
+        engine = GameEngine(state)
+        engine._is_running = True
+        atk_strike = {
+            'type': 'hand_strike', 'damage': 3, 'aggravated': False,
+            'steal_amount': 0, 'dodge': False, 'combat_ends': False,
+            'first_strike': True, 'ranged': False,
+        }
+        def_strike = {
+            'type': 'hand_strike', 'damage': 3, 'aggravated': False,
+            'steal_amount': 0, 'dodge': False, 'combat_ends': False,
+            'first_strike': True, 'ranged': False,
+        }
+        engine.phases._resolve_strikes(attacker, defender, atk_strike, def_strike, 'close')
+        # Both should take damage (simultaneous resolution)
+        assert attacker.blood == 7  # 10 - 3
+        assert defender.blood == 7  # 10 - 3
+
+    def test_ranged_strike_works_at_long_range(self):
+        """Ranged strikes should work at any range."""
+        state, attacker, defender = self._make_combat_state(
+            p1_blood=10, p1_str=3, p2_blood=10, p2_str=3
+        )
+        engine = GameEngine(state)
+        engine._is_running = True
+        atk_strike = {
+            'type': 'hand_strike', 'damage': 3, 'aggravated': False,
+            'steal_amount': 0, 'dodge': False, 'combat_ends': False,
+            'first_strike': False, 'ranged': True,
+        }
+        def_strike = {
+            'type': 'hand_strike', 'damage': 3, 'aggravated': False,
+            'steal_amount': 0, 'dodge': False, 'combat_ends': False,
+            'first_strike': False, 'ranged': False,
+        }
+        # At long range, only ranged strikes work
+        engine.phases._resolve_strikes(attacker, defender, atk_strike, def_strike, 'long')
+        # Defender took damage (attacker's ranged strike worked)
+        assert defender.blood == 7
+        # Attacker didn't take damage (defender's non-ranged strike doesn't work at long)
+        assert attacker.blood == 10
+
+    def test_aggravated_damage(self):
+        """Aggravated damage cannot be mended with blood."""
+        state, attacker, defender = self._make_combat_state(
+            p1_blood=10, p1_str=3, p2_blood=10, p2_str=1
+        )
+        engine = GameEngine(state)
+        engine._is_running = True
+        atk_strike = {
+            'type': 'hand_strike', 'damage': 2, 'aggravated': True,
+            'steal_amount': 0, 'dodge': False, 'combat_ends': False,
+            'first_strike': False, 'ranged': False,
+        }
+        def_strike = {
+            'type': 'hand_strike', 'damage': 1, 'aggravated': False,
+            'steal_amount': 0, 'dodge': False, 'combat_ends': False,
+            'first_strike': False, 'ranged': False,
+        }
+        engine.phases._resolve_strikes(attacker, defender, atk_strike, def_strike, 'close')
+        # Defender: 2 aggravated damage -> cannot mend -> goes to torpor
+        assert defender.position == CardPosition.torpor
+        assert defender.blood == 10  # Blood not burned for aggravated
+
 
 # ── Leave Torpor / Rescue / Diablerie Tests ─────────────────────────────────
 
