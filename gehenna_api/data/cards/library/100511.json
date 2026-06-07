@@ -1,0 +1,35 @@
+{
+  "codevdb": 100511,
+  "name": "Decapitate",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "pot"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.strike",
+          "params": {
+            "damage": 2,
+            "damage_type": "normal"
+          },
+          "text": "Strike: hand strike or use a melee weapon strike. This strike is at +2 damage."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "POT"
+      ],
+      "context": "COMBAT",
+      "effects": []
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

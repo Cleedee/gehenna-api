@@ -1,0 +1,51 @@
+{
+  "codevdb": 101801,
+  "name": "Slaughtering the Herd",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "dom"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "modifier.bleed",
+          "params": {
+            "value": 2
+          },
+          "text": "+2 bleed"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "DOM"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "action.equip",
+          "params": {
+            "attachment": "self"
+          },
+          "text": "put this card on this vampire"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "burn 4 blood during their minion phase to burn this card"
+          },
+          "text": "burn 4 blood during their minion phase to burn this card"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "bleed": 2
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

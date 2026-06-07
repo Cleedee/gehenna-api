@@ -1,0 +1,41 @@
+{
+  "codevdb": 101894,
+  "name": "Succulent Vitae",
+  "tipo": "action_modifier",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "qui"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "action.equip",
+          "params": {
+            "attachment": "self"
+          },
+          "text": "put this card on this vampire"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "burn this card to reduce the cost of a card requiring Quietus [qui] they play by 1 blood"
+          },
+          "text": "burn this card to reduce the cost of a card requiring Quietus [qui] they play by 1 blood"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "QUI"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": []
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

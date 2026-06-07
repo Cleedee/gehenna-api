@@ -1,0 +1,20 @@
+{
+  "codevdb": 102181,
+  "name": "Wildebeest, The",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "strength": 1,
+    "stealth": 2
+  },
+  "default_strike": [
+    {
+      "function": "combat.maneuver",
+      "params": {},
+      "text": "+1 stealth action.\nPut this card on the acting Ahrimane. This Ahrimane gets +1 strength and -1 stealth and gets an optional maneuver each combat. He or she cannot use equipment and cannot have retainers (any retainers on this vampire are burned). A vampire can have only one The Wildebeest."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

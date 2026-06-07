@@ -1,0 +1,26 @@
+{
+  "codevdb": 100604,
+  "name": "Earthshock",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "pot"
+      ],
+      "context": "COMBAT",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "POT"
+      ],
+      "context": "COMBAT",
+      "effects": []
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

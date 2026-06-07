@@ -1,0 +1,36 @@
+{
+  "codevdb": 101593,
+  "name": "Release of the Shackled Soul",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "nec"
+      ],
+      "context": "ACTION",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "NEC"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 stealth"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

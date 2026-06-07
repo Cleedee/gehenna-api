@@ -1,0 +1,35 @@
+{
+  "codevdb": 102191,
+  "name": "Wolf Companion",
+  "tipo": "retainer",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "ani"
+      ],
+      "context": "RETAINER",
+      "effects": [
+        {
+          "function": "combat.strike",
+          "params": {
+            "damage": 1,
+            "damage_type": "normal"
+          },
+          "text": "When the minion with this retainer is in combat, the opposing minion takes 1 damage during strike resolution (if the range is close)."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "ANI"
+      ],
+      "context": "RETAINER",
+      "effects": []
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

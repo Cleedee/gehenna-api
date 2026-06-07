@@ -1,0 +1,83 @@
+{
+  "codevdb": 102255,
+  "name": "Obedient Flesh",
+  "tipo": "action_modifier/combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "dom",
+        "pro"
+      ],
+      "context": "ACTION MODIFIER/COMBAT",
+      "effects": [
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 stealth"
+        },
+        {
+          "function": "card.restrict_use",
+          "params": {
+            "timing": "before_range"
+          },
+          "text": "Only usable before range is determined."
+        },
+        {
+          "function": "modifier.intercept",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 intercept"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "DOM",
+        "PRO"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.strike",
+          "params": {
+            "damage": 1,
+            "damage_type": "normal",
+            "strength_based": true
+          },
+          "text": "Strike: strength+1 damage"
+        },
+        {
+          "function": "combat.prevent_damage",
+          "params": {
+            "amount": 1
+          },
+          "text": "Prevent 1 damage"
+        },
+        {
+          "function": "combat.maneuver",
+          "params": {},
+          "text": "Maneuver"
+        },
+        {
+          "function": "card.restrict_use",
+          "params": {
+            "max_per_round": 1
+          },
+          "text": "A vampire can play only one Obedient Flesh each round."
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 1,
+    "intercept": 1,
+    "strength": 1
+  },
+  "default_strike": null,
+  "needs_review": false,
+  "notes": "[dom/pro] +1stealth +1intercept, before range. [DOM/PRO] strength+1 damage, prevent 1, maneuver, once per round."
+}

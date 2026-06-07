@@ -1,0 +1,26 @@
+{
+  "codevdb": 100704,
+  "name": "Fast Hands",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "cel"
+      ],
+      "context": "COMBAT",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "CEL"
+      ],
+      "context": "COMBAT",
+      "effects": []
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

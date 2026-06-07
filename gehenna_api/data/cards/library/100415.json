@@ -1,0 +1,59 @@
+{
+  "codevdb": 100415,
+  "name": "Consignment to Duat",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "ser"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "combat.steal_blood",
+          "params": {
+            "amount": 1
+          },
+          "text": "(D) Steal 1 blood or life (becoming blood) from a ready minion."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "SER"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "action.equip",
+          "params": {
+            "attachment": "self"
+          },
+          "text": "put this card on this vampire"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "they go to torpor",
+            "condition": "they cannot"
+          },
+          "text": "If they cannot, they go to torpor."
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "have only one Consignment to Duat"
+          },
+          "text": "have only one Consignment to Duat"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

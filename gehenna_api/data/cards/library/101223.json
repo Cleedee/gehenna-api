@@ -1,0 +1,45 @@
+{
+  "codevdb": 101223,
+  "name": "Mirror Walk",
+  "tipo": "action_modifier",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "tha"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 stealth"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "THA"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "lock the blocking minion and end the action before block resolution",
+            "condition": "this action is blocked"
+          },
+          "text": "if this action is blocked, lock the blocking minion and end the action before block resolution."
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

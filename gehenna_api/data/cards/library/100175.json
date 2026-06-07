@@ -1,0 +1,25 @@
+{
+  "codevdb": 100175,
+  "name": "Blade of Bellona",
+  "tipo": "equipment",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.maneuver",
+      "params": {},
+      "text": "Melee weapon.\nStrike: strength+1 damage, with 1 optional maneuver each combat, only usable to get to close range."
+    },
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 1,
+        "damage_type": "normal"
+      },
+      "text": "Melee weapon.\nStrike: strength+1 damage, with 1 optional maneuver each combat, only usable to get to close range."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

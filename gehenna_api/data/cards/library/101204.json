@@ -1,0 +1,17 @@
+{
+  "codevdb": 101204,
+  "name": "Mercy for the Weak",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.end",
+      "params": {},
+      "text": "Strike: combat ends. Only usable if this vampire has more blood than the opposing vampire. Opposing vampire gains 1 blood (even at long range)."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

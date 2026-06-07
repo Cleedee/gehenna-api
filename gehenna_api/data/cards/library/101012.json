@@ -1,0 +1,17 @@
+{
+  "codevdb": 101012,
+  "name": "Ishtarri Warlord",
+  "tipo": "master",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.maneuver",
+      "params": {},
+      "text": "Master.\nPut this card on an Ishtarri you control. This Ishtarri gets an optional maneuver or press each combat. A minion can have only one Ishtarri Warlord."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

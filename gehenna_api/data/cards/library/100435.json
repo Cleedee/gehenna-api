@@ -1,0 +1,11 @@
+{
+  "codevdb": 100435,
+  "name": "Coven, The",
+  "tipo": "master",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": false,
+  "notes": "master - plain text [Juliet]"
+}

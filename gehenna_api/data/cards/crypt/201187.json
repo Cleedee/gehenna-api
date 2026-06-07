@@ -1,0 +1,13 @@
+{
+  "codevdb": 201187,
+  "name": "Richter, The Templar of Du Mont",
+  "tipo": "vampire",
+  "source": "cardbase_crypt.json",
+  "abilities": [],
+  "modifiers": {
+    "strength": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

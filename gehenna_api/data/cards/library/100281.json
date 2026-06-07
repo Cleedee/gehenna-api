@@ -1,0 +1,42 @@
+{
+  "codevdb": 100281,
+  "name": "Call the Lamprey",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "obt"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.steal_blood",
+          "params": {
+            "amount": 1
+          },
+          "text": "Strike: steal 1 blood from the opposing ally. Only usable during combat with an ally."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "OBT"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.steal_blood",
+          "params": {
+            "amount": 1
+          },
+          "text": "Strike: steal 1 blood from the opposing minion."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

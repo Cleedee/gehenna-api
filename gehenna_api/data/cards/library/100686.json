@@ -1,0 +1,32 @@
+{
+  "codevdb": 100686,
+  "name": "Eyes of the Serpent",
+  "tipo": "action_modifier/combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "ser"
+      ],
+      "context": "ACTION MODIFIER/COMBAT",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "SER"
+      ],
+      "context": "ACTION MODIFIER/COMBAT",
+      "effects": [
+        {
+          "function": "combat.end",
+          "params": {},
+          "text": "Strike: combat ends. Only usable in combat with an ally."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

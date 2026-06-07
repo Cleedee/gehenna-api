@@ -1,0 +1,58 @@
+{
+  "codevdb": 100894,
+  "name": "Haunting, The",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "dem"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "action.equip",
+          "params": {
+            "attachment": "self"
+          },
+          "text": "put this card on this vampire"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "burn this card as an action"
+          },
+          "text": "burn this card as an action"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "have only one The Haunting"
+          },
+          "text": "have only one The Haunting"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "DEM"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 stealth"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

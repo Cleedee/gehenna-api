@@ -1,0 +1,22 @@
+{
+  "codevdb": 101556,
+  "name": "Razor Bat",
+  "tipo": "retainer",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "intercept": 1
+  },
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 1,
+        "damage_type": "ranged"
+      },
+      "text": "Gargoyle creature with 2 life.\nThe Gargoyle with this retainer gets +1 intercept. When the Gargoyle with this retainer is in combat, the opposing minion takes 1R damage during the initial strike resolution phase of each round, at long or close range."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

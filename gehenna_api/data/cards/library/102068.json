@@ -1,0 +1,39 @@
+{
+  "codevdb": 102068,
+  "name": "Undying Tenacity",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "for"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "be burned by aggravated damage"
+          },
+          "text": "be burned by aggravated damage"
+        },
+        {
+          "function": "combat.end",
+          "params": {},
+          "text": "Only usable when this vampire should go to torpor. This vampire will not go to torpor until after combat ends (although he or she is still wounded and can be burned by aggravated damage)."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "FOR"
+      ],
+      "context": "COMBAT",
+      "effects": []
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,13 @@
+{
+  "codevdb": 100325,
+  "name": "Changeling Skin Mask",
+  "tipo": "equipment",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "intercept": 2
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

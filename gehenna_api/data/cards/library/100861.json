@@ -1,0 +1,17 @@
+{
+  "codevdb": 100861,
+  "name": "Groundfighting",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.maneuver",
+      "params": {},
+      "text": "Requires a ready anarch. Do not replace until after combat.\nManeuver or press or burn 1 blood to cancel a combat card played by the opposing minion that would restrict this anarch's choice of strikes this round as it is played."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

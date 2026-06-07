@@ -1,0 +1,65 @@
+{
+  "codevdb": 101796,
+  "name": "Skullduggery",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "obf"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 stealth"
+        },
+        {
+          "function": "combat.maneuver",
+          "params": {},
+          "text": "(D) Bleed at +1 stealth, with an optional maneuver in the resulting combat if the action is blocked."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "pre"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "modifier.bleed",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 bleed"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "pro"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 stealth"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 2,
+    "bleed": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

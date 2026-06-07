@@ -1,0 +1,11 @@
+{
+  "codevdb": 101470,
+  "name": "Praxis Seizure: Stockholm",
+  "tipo": "political_action",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

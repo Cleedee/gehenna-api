@@ -1,0 +1,58 @@
+{
+  "codevdb": 100578,
+  "name": "Draba",
+  "tipo": "action/reaction",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "chi"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 stealth"
+        },
+        {
+          "function": "action.equip",
+          "params": {
+            "attachment": "self"
+          },
+          "text": "put this card on this vampire"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "still increase their stealth"
+          },
+          "text": "still increase their stealth"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "CHI"
+      ],
+      "context": "REACTION",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "still increase their stealth"
+          },
+          "text": "still increase their stealth"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

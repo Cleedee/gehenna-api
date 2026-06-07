@@ -1,0 +1,51 @@
+{
+  "codevdb": 101531,
+  "name": "Quicken Sight",
+  "tipo": "reaction",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "aus",
+        "cel"
+      ],
+      "context": "REACTION",
+      "effects": [
+        {
+          "function": "modifier.intercept",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 intercept"
+        },
+        {
+          "function": "combat.maneuver",
+          "params": {},
+          "text": "+1 intercept, with an optional maneuver in the resulting combat if this vampire successfully blocks."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "AUS",
+        "CEL"
+      ],
+      "context": "REACTION",
+      "effects": [
+        {
+          "function": "modifier.intercept",
+          "params": {
+            "value": 2
+          },
+          "text": "+2 intercept"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "intercept": 3
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

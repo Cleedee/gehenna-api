@@ -1,0 +1,41 @@
+{
+  "codevdb": 100608,
+  "name": "Echo of Harmonies",
+  "tipo": "action_modifier",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "pre"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "mel"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "MEL"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "play it as if from your hand (requirements and cost apply as normal"
+          },
+          "text": "play it as if from your hand (requirements and cost apply as normal"
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,61 @@
+{
+  "codevdb": 100584,
+  "name": "Draught of the Soul",
+  "tipo": "action_modifier/combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "qui"
+      ],
+      "context": "ACTION MODIFIER/COMBAT",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "aus",
+        "qui"
+      ],
+      "context": "ACTION MODIFIER/COMBAT",
+      "effects": [
+        {
+          "function": "modifier.intercept",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 intercept"
+        },
+        {
+          "function": "action.equip",
+          "params": {
+            "attachment": "self"
+          },
+          "text": "put this card on this vampire"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "AUS",
+        "QUI"
+      ],
+      "context": "ACTION MODIFIER/COMBAT",
+      "effects": [
+        {
+          "function": "modifier.bleed",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 bleed"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "intercept": 1,
+    "bleed": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

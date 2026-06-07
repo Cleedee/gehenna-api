@@ -1,0 +1,11 @@
+{
+  "codevdb": 102133,
+  "name": "Vox Senis",
+  "tipo": "master",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,34 @@
+{
+  "codevdb": 102120,
+  "name": "Vigilance",
+  "tipo": "power",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "ACTIONMODIFIER"
+      ],
+      "context": "POWER",
+      "effects": [
+        {
+          "function": "card.restrict_use",
+          "params": {
+            "condition": "only usable at the end of a successful action (after resolving the action)"
+          },
+          "text": "Only usable at the end of a successful action (after resolving the action)"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "REACTION"
+      ],
+      "context": "POWER",
+      "effects": []
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

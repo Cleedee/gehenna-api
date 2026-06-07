@@ -1,0 +1,37 @@
+{
+  "codevdb": 101255,
+  "name": "Muricia's Call",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "ani"
+      ],
+      "context": "ACTION",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "ani",
+        "spi"
+      ],
+      "context": "ACTION",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "ANI",
+        "SPI"
+      ],
+      "context": "ACTION",
+      "effects": []
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

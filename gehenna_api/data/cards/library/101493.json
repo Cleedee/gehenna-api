@@ -1,0 +1,35 @@
+{
+  "codevdb": 101493,
+  "name": "Projectile",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "cel"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.strike",
+          "params": {
+            "damage": 1,
+            "damage_type": "ranged"
+          },
+          "text": "Strike: 1R damage or use a ranged weapon strike. This strike cannot be dodged."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "CEL"
+      ],
+      "context": "COMBAT",
+      "effects": []
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

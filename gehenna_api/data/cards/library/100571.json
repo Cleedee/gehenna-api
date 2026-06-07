@@ -1,0 +1,67 @@
+{
+  "codevdb": 100571,
+  "name": "Domain of Evernight",
+  "tipo": "action_modifier",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "obf"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 stealth"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "tem"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "combat.set_damage_type",
+          "params": {
+            "damage_type": "aggravated"
+          },
+          "text": "Damage is aggravated"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "all damage done to vampires in the resulting combat is aggravated",
+            "condition": "this action is blocked"
+          },
+          "text": "If this action is blocked, all damage done to vampires in the resulting combat is aggravated."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "TEM"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "play only one Domain of Evernight at superior each turn"
+          },
+          "text": "play only one Domain of Evernight at superior each turn"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,11 @@
+{
+  "codevdb": 101503,
+  "name": "Provision of the Silsila",
+  "tipo": "action_modifier/reaction",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

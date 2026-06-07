@@ -1,0 +1,51 @@
+{
+  "codevdb": 100907,
+  "name": "Heaven's Gate",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "nec"
+      ],
+      "context": "COMBAT",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "obe"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "they gain 1 life if they have no life, and they cannot enter (or be involved in) combat, perform actions, or block this turn; end combat",
+            "condition": "an ally would be burned in combat. Instead"
+          },
+          "text": "if an ally would be burned in combat. Instead, they gain 1 life if they have no life, and they cannot enter (or be involved in) combat, perform actions, or block this turn; end combat."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "OBE"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "not to exceed their starting life",
+            "condition": "they have no life"
+          },
+          "text": "if they have no life, not to exceed their starting life."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

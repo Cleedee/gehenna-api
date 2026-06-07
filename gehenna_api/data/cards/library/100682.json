@@ -1,0 +1,44 @@
+{
+  "codevdb": 100682,
+  "name": "Eyes of Chaos",
+  "tipo": "action_modifier",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "dem"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "modifier.bleed",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 bleed"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "DEM"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "modifier.bleed",
+          "params": {
+            "value": 2
+          },
+          "text": "+2 bleed"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "bleed": 3
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

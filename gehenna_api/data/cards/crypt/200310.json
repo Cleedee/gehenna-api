@@ -1,0 +1,11 @@
+{
+  "codevdb": 200310,
+  "name": "Damaskenos, Herald of Leandro",
+  "tipo": "vampire",
+  "source": "cardbase_crypt.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,58 @@
+{
+  "codevdb": 100669,
+  "name": "Ex Nihilo",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "nec"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 stealth"
+        },
+        {
+          "function": "action.equip",
+          "params": {
+            "attachment": "self"
+          },
+          "text": "put this card on this vampire"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "burn this card during your unlock phase"
+          },
+          "text": "burn this card during your unlock phase"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "NEC"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "burn this card during any Methuselah's unlock phase"
+          },
+          "text": "burn this card during any Methuselah's unlock phase"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 2
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

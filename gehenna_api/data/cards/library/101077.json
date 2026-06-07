@@ -1,0 +1,59 @@
+{
+  "codevdb": 101077,
+  "name": "Lead Fist",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "tha"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.strike",
+          "params": {
+            "damage": 1,
+            "damage_type": "normal"
+          },
+          "text": "Strike: hand strike at +1 damage."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "vis"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "burn 1 blood to get 1 press, only usable to continue combat"
+          },
+          "text": "burn 1 blood to get 1 press, only usable to continue combat"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "VIS"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.strike",
+          "params": {
+            "damage": 2,
+            "damage_type": "normal"
+          },
+          "text": "As [vis] above, but at +2 damage."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,50 @@
+{
+  "codevdb": 100542,
+  "name": "Diabolic Lure",
+  "tipo": "reaction",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "aus"
+      ],
+      "context": "REACTION",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "dai"
+      ],
+      "context": "REACTION",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "before block resolution",
+            "condition": "this vampire blocks"
+          },
+          "text": "if this vampire blocks, before block resolution."
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "burn those counters to make them infernal",
+            "condition": "the number of pact counters equals or exceeds their capacity or cost"
+          },
+          "text": "if the number of pact counters equals or exceeds their capacity or cost, burn those counters to make them infernal."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "DAI"
+      ],
+      "context": "REACTION",
+      "effects": []
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,17 @@
+{
+  "codevdb": 100674,
+  "name": "Expiate",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.end",
+      "params": {},
+      "text": "Requires an imbued with 5 conviction [5CONVICTION]. Only usable before range is determined on the first round.\nIf two consecutive rounds of combat occur at close range and this imbued remains ready, this imbued burns 5 conviction [5CONVICTION] during the press step of that second round to burn himself or herself and the opposing monster. Otherwise, this imbued burns 1 conviction [1CONVICTION] when combat ends."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

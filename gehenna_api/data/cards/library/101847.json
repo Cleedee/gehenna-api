@@ -1,0 +1,73 @@
+{
+  "codevdb": 101847,
+  "name": "Spirit Claws",
+  "tipo": "action/combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "pro"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.set_damage_type",
+          "params": {
+            "damage_type": "aggravated"
+          },
+          "text": "Damage is aggravated"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "pro",
+        "spi"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.maneuver",
+          "params": {},
+          "text": "Maneuver and as [pro] above."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "PRO",
+        "SPI"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 stealth"
+        },
+        {
+          "function": "action.equip",
+          "params": {
+            "attachment": "self"
+          },
+          "text": "put this card on this vampire"
+        },
+        {
+          "function": "combat.set_damage_type",
+          "params": {
+            "damage_type": "aggravated"
+          },
+          "text": "Damage is aggravated"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

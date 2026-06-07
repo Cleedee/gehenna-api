@@ -1,0 +1,58 @@
+{
+  "codevdb": 100238,
+  "name": "Bonecraft",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "vic"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 stealth"
+        },
+        {
+          "function": "action.equip",
+          "params": {
+            "attachment": "self"
+          },
+          "text": "put this card on this vampire"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "burn this card as a +1 stealth action that costs 2 blood (allies cannot pay blood costs"
+          },
+          "text": "burn this card as a +1 stealth action that costs 2 blood (allies cannot pay blood costs"
+        },
+        {
+          "function": "combat.strike",
+          "params": {
+            "damage": 1,
+            "damage_type": "normal"
+          },
+          "text": "Strike: 1 damage and put this card on the opposing minion. The attached minion gets -1 strength (after the current strike resolution step). The attached minion can burn this card as a +1 stealth action that costs 2 blood (allies cannot pay blood costs)."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "VIC"
+      ],
+      "context": "COMBAT",
+      "effects": []
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

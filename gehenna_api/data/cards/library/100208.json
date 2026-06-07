@@ -1,0 +1,35 @@
+{
+  "codevdb": 100208,
+  "name": "Blood Rage",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "tha"
+      ],
+      "context": "COMBAT",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "THA"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.strike",
+          "params": {
+            "damage": 1,
+            "damage_type": "normal"
+          },
+          "text": "As above, and this hand strike is at +1 damage."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

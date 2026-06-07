@@ -1,0 +1,33 @@
+{
+  "codevdb": 101761,
+  "name": "Shattering Crescendo",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "pro"
+      ],
+      "context": "ACTION",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "mel"
+      ],
+      "context": "ACTION",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "MEL"
+      ],
+      "context": "ACTION",
+      "effects": []
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

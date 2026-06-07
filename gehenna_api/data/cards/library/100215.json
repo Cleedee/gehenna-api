@@ -1,0 +1,11 @@
+{
+  "codevdb": 100215,
+  "name": "Blood Trade",
+  "tipo": "event",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

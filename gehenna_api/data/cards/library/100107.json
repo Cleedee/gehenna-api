@@ -1,0 +1,25 @@
+{
+  "codevdb": 100107,
+  "name": "Assault Rifle",
+  "tipo": "equipment",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.maneuver",
+      "params": {},
+      "text": "Weapon: gun.\nStrike: 4R damage, with an optional maneuver each combat."
+    },
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 4,
+        "damage_type": "ranged"
+      },
+      "text": "Weapon: gun.\nStrike: 4R damage, with an optional maneuver each combat."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

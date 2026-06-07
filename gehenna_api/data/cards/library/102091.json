@@ -1,0 +1,35 @@
+{
+  "codevdb": 102091,
+  "name": "Vascular Explosion",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "qui"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "this strike inflicts +1 unpreventable damage",
+            "condition": "the opposing minion is an ally"
+          },
+          "text": "If the opposing minion is an ally, this strike inflicts +1 unpreventable damage."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "QUI"
+      ],
+      "context": "COMBAT",
+      "effects": []
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

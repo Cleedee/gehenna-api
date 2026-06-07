@@ -1,0 +1,11 @@
+{
+  "codevdb": 200996,
+  "name": "Misrak",
+  "tipo": "vampire",
+  "source": "cardbase_crypt.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,63 @@
+{
+  "codevdb": 101281,
+  "name": "New Moon Sigil",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "spi"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "action.equip",
+          "params": {
+            "attachment": "self"
+          },
+          "text": "put this card on this vampire"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "have only one New Moon Sigil"
+          },
+          "text": "have only one New Moon Sigil"
+        },
+        {
+          "function": "combat.maneuver",
+          "params": {},
+          "text": "Put this card on a vampire you control. The attached vampire gets 1 optional maneuver each combat. A vampire can have only one New Moon Sigil."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "SPI"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 stealth"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "burn 2 blood to get +1 stealth"
+          },
+          "text": "burn 2 blood to get +1 stealth"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 2
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

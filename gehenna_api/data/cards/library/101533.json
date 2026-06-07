@@ -1,0 +1,69 @@
+{
+  "codevdb": 101533,
+  "name": "Quicksilver Contemplation",
+  "tipo": "action_modifier/reaction",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "aus"
+      ],
+      "context": "REACTION",
+      "effects": [
+        {
+          "function": "modifier.intercept",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 intercept"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "tem"
+      ],
+      "context": "REACTION",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "aus",
+        "tem"
+      ],
+      "context": "ACTION MODIFIER/REACTION",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "cancel that vampire's votes and ballots"
+          },
+          "text": "cancel that vampire's votes and ballots"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "AUS",
+        "TEM"
+      ],
+      "context": "ACTION MODIFIER/REACTION",
+      "effects": [
+        {
+          "function": "modifier.bleed",
+          "params": {
+            "value": 2
+          },
+          "text": "+2 bleed"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "intercept": 1,
+    "bleed": 2
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

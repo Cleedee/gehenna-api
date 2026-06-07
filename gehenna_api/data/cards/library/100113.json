@@ -1,0 +1,34 @@
+{
+  "codevdb": 100113,
+  "name": "Aura Reading",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "aus"
+      ],
+      "context": "COMBAT",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "AUS"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "play only one Aura Reading at superior each combat"
+          },
+          "text": "play only one Aura Reading at superior each combat"
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,35 @@
+{
+  "codevdb": 100412,
+  "name": "Conscripted Statue",
+  "tipo": "action_modifier",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "vis"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "combat.strike",
+          "params": {
+            "damage": 1,
+            "damage_type": "normal"
+          },
+          "text": "The opposing minion takes 1 damage during strike resolution each round of the resulting combat when the range is close."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "VIS"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": []
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

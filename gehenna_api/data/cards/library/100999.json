@@ -1,0 +1,44 @@
+{
+  "codevdb": 100999,
+  "name": "Intimidation",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "pre"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "modifier.bleed",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 bleed"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "PRE"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "modifier.bleed",
+          "params": {
+            "value": 2
+          },
+          "text": "+2 bleed"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "bleed": 3
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

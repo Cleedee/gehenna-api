@@ -1,0 +1,371 @@
+{
+  "deck_id": 242,
+  "name": "Me chame pelo meu nome (Call me by my name)",
+  "creator": "Pedro Santana de Araújo Filho",
+  "date": "2026-05-05",
+  "format": "2R+F",
+  "description": "Date: 2024-12-01\nPlayers: 12\nEvent: Valei-me! tá acabando o pool!\nLocation: Teresina, Brazil\n\nDescription: BLEEED!!!!! com +2 de percepção!!!!!???\nE desemborca o homi.\n",
+  "all_reviewed": true,
+  "cards": [
+    {
+      "codevdb": 100031,
+      "name": "Aire of Elation",
+      "tipo": "Action Modifier",
+      "quantity": 5,
+      "needs_review": false,
+      "notes": "Action Modifier: [aus]+1stealth [AUS] +2stealth vs older",
+      "card_path": "gehenna_api/data/cards/library/100031.json"
+    },
+    {
+      "codevdb": 100362,
+      "name": "Cloak the Gathering",
+      "tipo": "Action Modifier",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "Action Modifier: [obf] +1stealth",
+      "card_path": "gehenna_api/data/cards/library/100362.json"
+    },
+    {
+      "codevdb": 100519,
+      "name": "Delaying Tactics",
+      "tipo": "Reaction",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "Reaction - plain text",
+      "card_path": "gehenna_api/data/cards/library/100519.json"
+    },
+    {
+      "codevdb": 100588,
+      "name": "Dreams of the Sphinx",
+      "tipo": "Master",
+      "quantity": 3,
+      "needs_review": false,
+      "notes": "Master - plain text, draw engine",
+      "card_path": "gehenna_api/data/cards/library/100588.json"
+    },
+    {
+      "codevdb": 100601,
+      "name": "Earth Meld",
+      "tipo": "Combat",
+      "quantity": 7,
+      "needs_review": false,
+      "notes": "Earth Meld: [pro]combat.end [PRO]unlock+combat.end",
+      "card_path": "gehenna_api/data/cards/library/100601.json"
+    },
+    {
+      "codevdb": 100617,
+      "name": "Elder Impersonation",
+      "tipo": "Action Modifier",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "Action Modifier: [dom] +1stealth",
+      "card_path": "gehenna_api/data/cards/library/100617.json"
+    },
+    {
+      "codevdb": 100640,
+      "name": "Enchant Kindred",
+      "tipo": "Action",
+      "quantity": 2,
+      "needs_review": false,
+      "notes": "Action: [pre]+1stealth [PRE] +3bleed",
+      "card_path": "gehenna_api/data/cards/library/100640.json"
+    },
+    {
+      "codevdb": 100645,
+      "name": "Enkil Cog",
+      "tipo": "Action Modifier",
+      "quantity": 3,
+      "needs_review": false,
+      "notes": "Action Modifier - text: unlock vampire (no brackets)",
+      "card_path": "gehenna_api/data/cards/library/100645.json"
+    },
+    {
+      "codevdb": 100687,
+      "name": "Faceless Night",
+      "tipo": "Action Modifier",
+      "quantity": 2,
+      "needs_review": false,
+      "notes": "Action Modifier: [obf] +1stealth [OBF] +2stealth",
+      "card_path": "gehenna_api/data/cards/library/100687.json"
+    },
+    {
+      "codevdb": 100752,
+      "name": "Flurry of Action",
+      "tipo": "Action",
+      "quantity": 5,
+      "needs_review": false,
+      "notes": "[cel] (D) bleed + draw 2 discard. [CEL] (D) bleed + unlock.",
+      "card_path": "gehenna_api/data/cards/library/100752.json"
+    },
+    {
+      "codevdb": 100771,
+      "name": "Form of Mist",
+      "tipo": "Combat",
+      "quantity": 5,
+      "needs_review": false,
+      "notes": "[pro] dodge. [PRO] combat ends + continue action after block (complex, verify).",
+      "card_path": "gehenna_api/data/cards/library/100771.json"
+    },
+    {
+      "codevdb": 100824,
+      "name": "Giant's Blood",
+      "tipo": "Master",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "Master - plain text",
+      "card_path": "gehenna_api/data/cards/library/100824.json"
+    },
+    {
+      "codevdb": 100842,
+      "name": "Golconda: Inner Peace",
+      "tipo": "Master",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "Master - plain text",
+      "card_path": "gehenna_api/data/cards/library/100842.json"
+    },
+    {
+      "codevdb": 100932,
+      "name": "Homunculus",
+      "tipo": "Retainer",
+      "quantity": 3,
+      "needs_review": false,
+      "notes": "[pro] burn 1 blood to unlock during unlock phase. [PRO] 2 life.",
+      "card_path": "gehenna_api/data/cards/library/100932.json"
+    },
+    {
+      "codevdb": 100947,
+      "name": "I am Legion",
+      "tipo": "Action Modifier",
+      "quantity": 3,
+      "needs_review": false,
+      "notes": "Action Modifier: [cel] +1stealth [CEL] +1stealth unlock",
+      "card_path": "gehenna_api/data/cards/library/100947.json"
+    },
+    {
+      "codevdb": 100981,
+      "name": "Infernal Servitor",
+      "tipo": "Ally",
+      "quantity": 2,
+      "needs_review": false,
+      "notes": "Ally: act same turn, remove if no infernal. [DAI] can use basic dai/obf.",
+      "card_path": "gehenna_api/data/cards/library/100981.json"
+    },
+    {
+      "codevdb": 100994,
+      "name": "Instantaneous Transformation",
+      "tipo": "Action Modifier",
+      "quantity": 7,
+      "needs_review": false,
+      "notes": "[cel][pro] +1stealth. [CEL][PRO] unlock, once per turn.",
+      "card_path": "gehenna_api/data/cards/library/100994.json"
+    },
+    {
+      "codevdb": 101089,
+      "name": "Legal Manipulations",
+      "tipo": "Action",
+      "quantity": 2,
+      "needs_review": false,
+      "notes": "Action: [dom](D)+2bleed [DOM] +1stealth+3blood",
+      "card_path": "gehenna_api/data/cards/library/101089.json"
+    },
+    {
+      "codevdb": 101125,
+      "name": "Lost in Crowds",
+      "tipo": "Action Modifier",
+      "quantity": 4,
+      "needs_review": false,
+      "notes": "Action Modifier: [obf]+1stealth [OBF]+2stealth vs older",
+      "card_path": "gehenna_api/data/cards/library/101125.json"
+    },
+    {
+      "codevdb": 101238,
+      "name": "Monastery of Shadows",
+      "tipo": "Master",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "Master - plain text",
+      "card_path": "gehenna_api/data/cards/library/101238.json"
+    },
+    {
+      "codevdb": 101265,
+      "name": "Narrow Minds",
+      "tipo": "Event",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "Event - plain text event",
+      "card_path": "gehenna_api/data/cards/library/101265.json"
+    },
+    {
+      "codevdb": 101321,
+      "name": "On the Qui Vive",
+      "tipo": "Reaction",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "Reaction - plain text",
+      "card_path": "gehenna_api/data/cards/library/101321.json"
+    },
+    {
+      "codevdb": 101654,
+      "name": "Rötschreck",
+      "tipo": "Master",
+      "quantity": 2,
+      "needs_review": false,
+      "notes": "Master - plain text",
+      "card_path": "gehenna_api/data/cards/library/101654.json"
+    },
+    {
+      "codevdb": 101659,
+      "name": "Ruins of Charizel",
+      "tipo": "Master",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "Master - plain text",
+      "card_path": "gehenna_api/data/cards/library/101659.json"
+    },
+    {
+      "codevdb": 101718,
+      "name": "Sense the Sin",
+      "tipo": "Reaction/Action Modifier",
+      "quantity": 4,
+      "needs_review": false,
+      "notes": "Reaction/Modifier: [aus] +1intercept [AUS] +1intercept",
+      "card_path": "gehenna_api/data/cards/library/101718.json"
+    },
+    {
+      "codevdb": 101857,
+      "name": "Spying Mission",
+      "tipo": "Action Modifier",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "[obf] +1stealth. [OBF] cancel bleed + store for next +2bleed.",
+      "card_path": "gehenna_api/data/cards/library/101857.json"
+    },
+    {
+      "codevdb": 101896,
+      "name": "Sudden Reversal",
+      "tipo": "Master",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "Master - plain text",
+      "card_path": "gehenna_api/data/cards/library/101896.json"
+    },
+    {
+      "codevdb": 101913,
+      "name": "Swallowed by the Night",
+      "tipo": "Combo",
+      "quantity": 3,
+      "needs_review": false,
+      "notes": "Combat: [obf] dodge [OBF] combat ends",
+      "card_path": "gehenna_api/data/cards/library/101913.json"
+    },
+    {
+      "codevdb": 101956,
+      "name": "Tend the Flock",
+      "tipo": "Master",
+      "quantity": 4,
+      "needs_review": false,
+      "notes": "Master - plain text",
+      "card_path": "gehenna_api/data/cards/library/101956.json"
+    },
+    {
+      "codevdb": 102041,
+      "name": "True Love's Face",
+      "tipo": "Action Modifier",
+      "quantity": 3,
+      "needs_review": false,
+      "notes": "[obf][pre] +1bleed limited. [OBF][PRE] cancel block, opponent may burn 1 pool to cancel.",
+      "card_path": "gehenna_api/data/cards/library/102041.json"
+    },
+    {
+      "codevdb": 102076,
+      "name": "Unleash Hell's Fury",
+      "tipo": "Action",
+      "quantity": 3,
+      "needs_review": false,
+      "notes": "Complex: put in play as blocking 9-cap infernal. [DAI] also unlock.",
+      "card_path": "gehenna_api/data/cards/library/102076.json"
+    },
+    {
+      "codevdb": 102103,
+      "name": "Veneficti",
+      "tipo": "Ally",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "Ally - plain text ally",
+      "card_path": "gehenna_api/data/cards/library/102103.json"
+    },
+    {
+      "codevdb": 102113,
+      "name": "Vessel",
+      "tipo": "Master",
+      "quantity": 3,
+      "needs_review": false,
+      "notes": "Master - plain text",
+      "card_path": "gehenna_api/data/cards/library/102113.json"
+    },
+    {
+      "codevdb": 102121,
+      "name": "Villein",
+      "tipo": "Master",
+      "quantity": 2,
+      "needs_review": false,
+      "notes": "Master - plain text, blood management",
+      "card_path": "gehenna_api/data/cards/library/102121.json"
+    },
+    {
+      "codevdb": 102180,
+      "name": "Wider View",
+      "tipo": "Master",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "Master - plain text",
+      "card_path": "gehenna_api/data/cards/library/102180.json"
+    },
+    {
+      "codevdb": 200076,
+      "name": "Anarch Convert",
+      "tipo": "Vampire",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "Vampire - plain text",
+      "card_path": "gehenna_api/data/cards/crypt/200076.json"
+    },
+    {
+      "codevdb": 200136,
+      "name": "Arishat",
+      "tipo": "Vampire",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "Vampire - plain text",
+      "card_path": "gehenna_api/data/cards/crypt/200136.json"
+    },
+    {
+      "codevdb": 200605,
+      "name": "Horde, The",
+      "tipo": "Vampire",
+      "quantity": 4,
+      "needs_review": false,
+      "notes": "Vampire - plain text",
+      "card_path": "gehenna_api/data/cards/crypt/200605.json"
+    },
+    {
+      "codevdb": 201411,
+      "name": "unnamed, The",
+      "tipo": "Vampire",
+      "quantity": 5,
+      "needs_review": false,
+      "notes": "Vampire - plain text",
+      "card_path": "gehenna_api/data/cards/crypt/201411.json"
+    },
+    {
+      "codevdb": 201480,
+      "name": "Xeper, Sultan of Lepers",
+      "tipo": "Vampire",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "Vampire - plain text",
+      "card_path": "gehenna_api/data/cards/crypt/201480.json"
+    }
+  ]
+}

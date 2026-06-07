@@ -1,0 +1,11 @@
+{
+  "codevdb": 101198,
+  "name": "Memories of Mortality",
+  "tipo": "master",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

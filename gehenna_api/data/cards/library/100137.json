@@ -1,0 +1,20 @@
+{
+  "codevdb": 100137,
+  "name": "Baseball Bat",
+  "tipo": "equipment",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 1,
+        "damage_type": "normal"
+      },
+      "text": "Melee weapon. Do not replace until after this action.\nStrength+1 damage each strike. If the action to equip with the Baseball Bat is successful, unlock the acting minion at the end of the turn."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

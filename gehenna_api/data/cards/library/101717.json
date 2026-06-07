@@ -1,0 +1,36 @@
+{
+  "codevdb": 101717,
+  "name": "Sense the Savage Way",
+  "tipo": "reaction",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "ani"
+      ],
+      "context": "REACTION",
+      "effects": [
+        {
+          "function": "modifier.intercept",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 intercept"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "ANI"
+      ],
+      "context": "REACTION",
+      "effects": []
+    }
+  ],
+  "modifiers": {
+    "intercept": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

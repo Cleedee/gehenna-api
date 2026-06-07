@@ -1,0 +1,43 @@
+{
+  "codevdb": 101395,
+  "name": "Personal Scourge",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "dem"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "he or she does no damage",
+            "condition": "the opposing vampire attempts to strike with a weapon this round"
+          },
+          "text": "If the opposing vampire attempts to strike with a weapon this round, he or she does no damage."
+        },
+        {
+          "function": "combat.strike",
+          "params": {
+            "damage": 1,
+            "damage_type": "normal"
+          },
+          "text": "Strike: 1 damage. This damage cannot be prevented by equipment or cards that require Fortitude [for]. If the opposing vampire attempts to strike with a weapon this round, he or she does no damage."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "DEM"
+      ],
+      "context": "COMBAT",
+      "effects": []
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

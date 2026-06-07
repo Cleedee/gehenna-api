@@ -1,0 +1,36 @@
+{
+  "codevdb": 100948,
+  "name": "Ignis Fatuus",
+  "tipo": "reaction",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "chi"
+      ],
+      "context": "REACTION",
+      "effects": [
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 stealth"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "CHI"
+      ],
+      "context": "REACTION",
+      "effects": []
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

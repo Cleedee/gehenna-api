@@ -1,0 +1,42 @@
+{
+  "codevdb": 100076,
+  "name": "Apparition",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "chi"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "prevent 1 damage each round this combat"
+          },
+          "text": "prevent 1 damage each round this combat"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "CHI"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "prevent 2 damage each round this combat"
+          },
+          "text": "prevent 2 damage each round this combat"
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

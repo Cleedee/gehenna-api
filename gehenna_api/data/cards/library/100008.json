@@ -1,0 +1,51 @@
+{
+  "codevdb": 100008,
+  "name": "Ablative Skin",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "for"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "action.equip",
+          "params": {
+            "attachment": "self"
+          },
+          "text": "put this card on this vampire"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "remove any number of ablative counters from this card to prevent that amount of non-aggravated damage"
+          },
+          "text": "remove any number of ablative counters from this card to prevent that amount of non-aggravated damage"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "FOR"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "also prevent aggravated damage in combat in this way"
+          },
+          "text": "also prevent aggravated damage in combat in this way"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

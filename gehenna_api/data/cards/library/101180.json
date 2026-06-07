@@ -1,0 +1,43 @@
+{
+  "codevdb": 101180,
+  "name": "Masochism",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "for"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "action.equip",
+          "params": {
+            "attachment": "self"
+          },
+          "text": "put this card on this vampire"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "remove X rush counters from this card to reduce that card's blood cost by X"
+          },
+          "text": "remove X rush counters from this card to reduce that card's blood cost by X"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "FOR"
+      ],
+      "context": "ACTION",
+      "effects": []
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

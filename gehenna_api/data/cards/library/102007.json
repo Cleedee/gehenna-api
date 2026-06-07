@@ -1,0 +1,43 @@
+{
+  "codevdb": 102007,
+  "name": "Trainer",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "ani"
+      ],
+      "context": "ACTION",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "ANI"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "action.equip",
+          "params": {
+            "attachment": "self"
+          },
+          "text": "put this card on this vampire"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "have only one Trainer"
+          },
+          "text": "have only one Trainer"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

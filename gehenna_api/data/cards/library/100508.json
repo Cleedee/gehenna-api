@@ -1,0 +1,59 @@
+{
+  "codevdb": 100508,
+  "name": "Death of the Drum",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "cel"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.strike",
+          "params": {
+            "damage": 1,
+            "damage_type": "ranged"
+          },
+          "text": ": Strike: 1R damage."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "mel"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.strike",
+          "params": {
+            "damage": 2,
+            "damage_type": "ranged"
+          },
+          "text": ": Strike: 2R damage, only preventable by cards requiring Fortitude [for] or Visceratika [vis]."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "MEL"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.set_damage_type",
+          "params": {
+            "damage_type": "aggravated"
+          },
+          "text": "Damage is aggravated"
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

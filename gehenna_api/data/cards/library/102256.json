@@ -1,0 +1,52 @@
+{
+  "codevdb": 102256,
+  "name": "One With the Land",
+  "tipo": "reaction",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "pro"
+      ],
+      "context": "REACTION",
+      "effects": [
+        {
+          "function": "modifier.intercept",
+          "params": {
+            "value": 2
+          },
+          "text": "+2 intercept"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "PRO"
+      ],
+      "context": "REACTION",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "neither combatant can strike during the first round of the resulting combat",
+            "condition": "they block"
+          },
+          "text": "If they block, neither combatant can strike during the first round of the resulting combat."
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "strike during the first round of the resulting combat"
+          },
+          "text": "strike during the first round of the resulting combat"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "intercept": 2
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

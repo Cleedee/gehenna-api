@@ -1,0 +1,36 @@
+{
+  "codevdb": 101286,
+  "name": "Nightshades",
+  "tipo": "action_modifier",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "obt"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "modifier.intercept",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 intercept"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "OBT"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": []
+    }
+  ],
+  "modifiers": {
+    "intercept": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

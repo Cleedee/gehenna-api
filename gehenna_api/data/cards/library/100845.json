@@ -1,0 +1,45 @@
+{
+  "codevdb": 100845,
+  "name": "Govern the Unaligned",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "dom"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "modifier.bleed",
+          "params": {
+            "value": 2
+          },
+          "text": "+2 bleed"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "DOM"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 stealth"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "bleed": 2,
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": false,
+  "notes": "Govern the Unaligned: [dom](D)+2bleed [DOM]+1stealth+3blood"
+}

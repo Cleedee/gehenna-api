@@ -1,0 +1,20 @@
+{
+  "codevdb": 100086,
+  "name": "Argent Baton",
+  "tipo": "equipment",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 1,
+        "damage_type": "ranged"
+      },
+      "text": "Unique melee weapon.\nStrike: strength+1 damage. If the opposing minion is a werewolf, the bearer can make a ranged strike to burn 4 life from that werewolf."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

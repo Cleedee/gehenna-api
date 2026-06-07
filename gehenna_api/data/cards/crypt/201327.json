@@ -1,0 +1,13 @@
+{
+  "codevdb": 201327,
+  "name": "Sutekh, The Dark God",
+  "tipo": "vampire",
+  "source": "cardbase_crypt.json",
+  "abilities": [],
+  "modifiers": {
+    "bleed": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,61 @@
+{
+  "codevdb": 100439,
+  "name": "Crawling Chamber",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "tha"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.maneuver",
+          "params": {},
+          "text": "Maneuver, only usable to go to long range."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "vis"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.maneuver",
+          "params": {},
+          "text": "Maneuver or press."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "VIS"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "play only one Crawling Chamber at superior each combat"
+          },
+          "text": "play only one Crawling Chamber at superior each combat"
+        },
+        {
+          "function": "combat.strike",
+          "params": {
+            "damage": 1,
+            "damage_type": "ranged"
+          },
+          "text": "Only usable before range is determined. Opposing minion takes 1R damage each round of combat during the press step. A vampire can play only one Crawling Chamber at superior each combat."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

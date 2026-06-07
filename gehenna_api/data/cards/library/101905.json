@@ -1,0 +1,34 @@
+{
+  "codevdb": 101905,
+  "name": "Superior Mettle",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "for"
+      ],
+      "context": "COMBAT",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "FOR"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "burn 1 blood to prevent all damage from the opposing minion's initial strike for that round"
+          },
+          "text": "burn 1 blood to prevent all damage from the opposing minion's initial strike for that round"
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

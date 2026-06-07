@@ -1,0 +1,38 @@
+{
+  "codevdb": 100497,
+  "name": "Darkness Within",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "obt"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.end",
+          "params": {},
+          "text": "Put this card in play. Move 1 blood or life from the opposing minion to this card even at long range each round this combat during normal strike resolution. After combat ends, move half the blood rounded up from this card to this vampire and burn this card."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "OBT"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.maneuver",
+          "params": {},
+          "text": "As above, with 1 optional maneuver."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,13 @@
+{
+  "codevdb": 100338,
+  "name": "Childling Muse",
+  "tipo": "retainer",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "bleed": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

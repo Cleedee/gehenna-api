@@ -1,0 +1,25 @@
+{
+  "codevdb": 101752,
+  "name": "Shame",
+  "tipo": "power",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "COMBAT"
+      ],
+      "context": "POWER",
+      "effects": []
+    }
+  ],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.end",
+      "params": {},
+      "text": "Burn this card. The opposing monster takes an amount of damage equal to his or her strength, then combat ends. Not usable on an infernal minion, a vampire with capacity above 7, nor a vampire who has Memories of Mortality or Humanitas."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

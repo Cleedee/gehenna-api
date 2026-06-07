@@ -1,0 +1,32 @@
+{
+  "codevdb": 102275,
+  "name": "Arms of Ahriman",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "obl"
+      ],
+      "context": "COMBAT",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "OBL"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.dodge",
+          "params": {},
+          "text": "Strike: dodge, with 1 additional strike (limited)."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

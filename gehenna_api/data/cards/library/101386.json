@@ -1,0 +1,26 @@
+{
+  "codevdb": 101386,
+  "name": "Perfect Clarity",
+  "tipo": "action_modifier",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "tha"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "THA"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": []
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

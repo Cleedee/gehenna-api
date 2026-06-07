@@ -1,0 +1,45 @@
+{
+  "codevdb": 100417,
+  "name": "Consume the Dead",
+  "tipo": "action/reaction",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "ACTION"
+      ],
+      "context": "ACTION/REACTION",
+      "effects": [
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 stealth"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "REACTION"
+      ],
+      "context": "ACTION/REACTION",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "where X is the blood or pool cost of that ally or retainer",
+            "condition": "the minion was a vampire or gains X+1 blood"
+          },
+          "text": "if the minion was a vampire or gains X+1 blood, where X is the blood or pool cost of that ally or retainer."
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,42 @@
+{
+  "codevdb": 100915,
+  "name": "Hexe",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "dai"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.strike",
+          "params": {
+            "damage": 2,
+            "damage_type": "ranged"
+          },
+          "text": "Strike: 2R damage."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "str"
+      ],
+      "context": "COMBAT",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "STR"
+      ],
+      "context": "COMBAT",
+      "effects": []
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

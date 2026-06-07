@@ -1,0 +1,44 @@
+{
+  "codevdb": 100201,
+  "name": "Blood Fury",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "tha"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.strike",
+          "params": {
+            "damage": 1,
+            "damage_type": "normal"
+          },
+          "text": "Strike: hand strike at +1 damage. Damage from this strike cannot be prevented by cards requiring Fortitude [for]. The opposing vampire's strikes with weapons inflict no damage this round."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "THA"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.strike",
+          "params": {
+            "damage": 2,
+            "damage_type": "normal"
+          },
+          "text": "As above, but at +2 damage."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

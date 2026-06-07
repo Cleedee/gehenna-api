@@ -1,0 +1,20 @@
+{
+  "codevdb": 100233,
+  "name": "Bomb",
+  "tipo": "equipment",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 5,
+        "damage_type": "ranged"
+      },
+      "text": "Weapon.\nStrike: 5R damage. If the bomb is used in combat, the bearer takes 5 damage as well. The minion with this weapon may burn a location as a (D) action. Burn the Bomb after use."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

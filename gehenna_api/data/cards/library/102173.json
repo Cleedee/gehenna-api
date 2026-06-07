@@ -1,0 +1,25 @@
+{
+  "codevdb": 102173,
+  "name": "Wendell Delburton",
+  "tipo": "ally",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.maneuver",
+      "params": {},
+      "text": "Unique mortal with 3 life. 0 strength, 0 bleed.\nWendell can strike: 2R damage. He inflicts +2 damage with melee weapons. He gets 1 optional maneuver each combat. He can enter combat with any minion as a (D) action. If Wendell has 2 or less life during your unlock phase, he gains 1 life. During your unlock phase, Wendell inflicts 2 unpreventable damage on a ready vampire you control."
+    },
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 2,
+        "damage_type": "ranged"
+      },
+      "text": "Unique mortal with 3 life. 0 strength, 0 bleed.\nWendell can strike: 2R damage. He inflicts +2 damage with melee weapons. He gets 1 optional maneuver each combat. He can enter combat with any minion as a (D) action. If Wendell has 2 or less life during your unlock phase, he gains 1 life. During your unlock phase, Wendell inflicts 2 unpreventable damage on a ready vampire you control."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

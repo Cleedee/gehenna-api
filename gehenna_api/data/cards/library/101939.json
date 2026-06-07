@@ -1,0 +1,20 @@
+{
+  "codevdb": 101939,
+  "name": "Target Head",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 2,
+        "damage_type": "normal"
+      },
+      "text": "Aim. Play when choosing a strike.\nThe strike does +2 damage. The opposing minion may discard a combat card [COMBAT] to cancel this card. If any damage from this strike is successfully inflicted on the opposing minion, he or she cannot use any additional strikes or presses this round, and you may set the range for the next round. A minion may play only one aim each strike."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

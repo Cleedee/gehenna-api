@@ -1,0 +1,11 @@
+{
+  "codevdb": 101367,
+  "name": "Path of Retribution, The",
+  "tipo": "master",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

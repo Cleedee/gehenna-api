@@ -1,0 +1,42 @@
+{
+  "codevdb": 102171,
+  "name": "Well-Aimed Car",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "pot"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "card.restrict_use",
+          "params": {
+            "condition": "only usable at long range"
+          },
+          "text": "only usable at long range"
+        },
+        {
+          "function": "combat.strike",
+          "params": {
+            "damage": 4,
+            "damage_type": "ranged"
+          },
+          "text": "Strike: 4R damage; only usable at long range. Not usable first round of combat."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "POT"
+      ],
+      "context": "COMBAT",
+      "effects": []
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": false,
+  "notes": "Juliet's Dream deck"
+}

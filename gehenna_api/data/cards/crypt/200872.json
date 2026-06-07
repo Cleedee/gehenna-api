@@ -1,0 +1,13 @@
+{
+  "codevdb": 200872,
+  "name": "Lucina",
+  "tipo": "vampire",
+  "source": "cardbase_crypt.json",
+  "abilities": [],
+  "modifiers": {
+    "strength": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

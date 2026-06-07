@@ -1,0 +1,52 @@
+{
+  "codevdb": 101508,
+  "name": "Psychic Assault",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "aus"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "the damage from this strike is unpreventable",
+            "condition": "this striking vampire is Black Hand"
+          },
+          "text": "If this striking vampire is Black Hand, the damage from this strike is unpreventable."
+        },
+        {
+          "function": "combat.strike",
+          "params": {
+            "damage": 1,
+            "damage_type": "ranged"
+          },
+          "text": "Strike: 1R damage. Any effect which would make damage from this strike aggravated leaves the damage normal instead. If this striking vampire is Black Hand, the damage from this strike is unpreventable."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "AUS"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.strike",
+          "params": {
+            "damage": 2,
+            "damage_type": "ranged"
+          },
+          "text": "As above, but for 2R damage."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,38 @@
+{
+  "codevdb": 100788,
+  "name": "Freak Drive",
+  "tipo": "action_modifier",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "for"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "action.unlock",
+          "params": {},
+          "text": "unlock this vampire"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "FOR"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "action.unlock",
+          "params": {},
+          "text": "unlock this vampire"
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

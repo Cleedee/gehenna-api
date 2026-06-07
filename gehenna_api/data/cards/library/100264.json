@@ -1,0 +1,44 @@
+{
+  "codevdb": 100264,
+  "name": "Brute Force",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "pot"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.strike",
+          "params": {
+            "damage": 1,
+            "damage_type": "normal"
+          },
+          "text": "Strike: hand strike at +1 damage or use a melee weapon strike at +2 damage."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "POT"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.strike",
+          "params": {
+            "damage": 2,
+            "damage_type": "normal"
+          },
+          "text": "Strike: hand strike at +2 damage or use a melee weapon strike at +3 damage."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

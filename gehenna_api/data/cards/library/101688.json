@@ -1,0 +1,43 @@
+{
+  "codevdb": 101688,
+  "name": "Scarlet Lore",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "nec"
+      ],
+      "context": "ACTION",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "myt"
+      ],
+      "context": "ACTION",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "MYT"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 stealth"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 2
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

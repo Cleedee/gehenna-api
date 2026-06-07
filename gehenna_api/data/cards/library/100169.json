@@ -1,0 +1,48 @@
+{
+  "codevdb": 100169,
+  "name": "Black Metamorphosis",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "obt"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "action.equip",
+          "params": {
+            "attachment": "self"
+          },
+          "text": "put this card on this vampire"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "have only one Black Metamorphosis"
+          },
+          "text": "have only one Black Metamorphosis"
+        },
+        {
+          "function": "combat.additional_strike",
+          "params": {},
+          "text": "Put this card on this vampire. This vampire gets 1 optional additional strike (limited) each round. A vampire can have only one Black Metamorphosis."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "OBT"
+      ],
+      "context": "ACTION",
+      "effects": []
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

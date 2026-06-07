@@ -1,0 +1,35 @@
+{
+  "codevdb": 100089,
+  "name": "Armor of Vitality",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "for"
+      ],
+      "context": "COMBAT",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "FOR"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "that weapon is destroyed",
+            "condition": "any of the damage was from the opposing minion's melee weapon"
+          },
+          "text": "if any of the damage was from the opposing minion's melee weapon, that weapon is destroyed."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

@@ -112,7 +112,7 @@ def read_decks(
     lista = session.scalars(
         select(Deck).offset(skip).limit(limit)
     ).all()
-    return {'decks': []}
+    return {'decks': lista}
 
 @router.get('/{id}', response_model=DeckPublic)
 def read_deck_by_id(id, session: Session = Depends(get_session)):
@@ -274,4 +274,108 @@ def import_vdb_deck(
         'name': db_deck.name,
         'message': 'Deck imported from VDB',
         'cards_imported': sum(1 for q in vdb_cards.values() if q > 0),
+    }
+
+
+ARCHETYPE_KEYWORDS = {
+    'bleed': ['bleed', 'bleeds', 'bleeding', 'steal pool', 'pool theft', 'gain pool'],
+    'vote': ['vote', 'votes', 'election', 'ballot', 'titled vampire', 'priscus', 'justicar'],
+    'combat': ['strike', 'damage', 'combat', 'maneuver', 'aggravated', 'weapons', 'armor'],
+    'toolbox': ['search', 'bring', 'library', 'tutor', 'recruit', 'diablerie', 'embrace'],
+    'wall': ['prevent', 'damage', 'intercept', 'avoid', 'dodge', 'fortitude', 'shadow'],
+    'rush': ['rush', 'parry', 'enter combat', 'additional'],
+    'multi': ['master', 'action', 'equipment', 'retainer', 'reformation'],
+}
+
+ARCHETYPE_CARDS = {
+    'bleed': ['ashur tablets', 'voting machine', 'direct influence', 'conditioned to feed',
+              'the家园', 'anarchist', 'kine资源', 'treasury'],
+    'vote': ['yule frost', 'ventrue richmond', 'tremere antitribu', 'justicar', 'priscus',
+             'political spring', 'parliament', 'ventrue crusade'],
+    'combat': ['immortal grapple', 'canine familiars', '9 lives', 'form of the wolf',
+              'claw', 'claw', 'martial', 'grand'],
+    'toolbox': ['pentatonic', 'deep song', 'zAD', 'sadadmtes', 'villein', 'blood fury'],
+    'wall': ['fortitude', 'shadow body', 'predator', 'narrow minds', 'backwoods'],
+}
+
+
+def _classify_deck(slots: list, cards: dict[int, Card]) -> tuple[str, dict]:
+    card_counts = {}
+    for slot in slots:
+        card_counts[slot.card_id] = card_counts.get(slot.card_id, 0) + slot.quantity
+
+    scores = {arch: 0 for arch in ARCHETYPE_KEYWORDS}
+    crypt_scores = {'weenie': 0, 'big_cap': 0, 'mid': 0}
+
+    for card_id, qty in card_counts.items():
+        card = cards.get(card_id)
+        if not card:
+            continue
+
+        card_text = (card.text or '').lower()
+        card_name = (card.name or '').lower()
+        card_type = (card.tipo or '').lower()
+
+        for archetype, keywords in ARCHETYPE_KEYWORDS.items():
+            for kw in keywords:
+                if kw in card_text or kw in card_name:
+                    scores[archetype] += qty
+                    break
+
+        for archetype, indicator_cards in ARCHETYPE_CARDS.items():
+            for indicator in indicator_cards:
+                if indicator in card_name:
+                    scores[archetype] += qty * 2
+                    break
+
+        if card_type == 'vampire':
+            try:
+                cap = int(card.capacity or 0)
+                if cap <= 3:
+                    crypt_scores['weenie'] += qty
+                elif cap >= 7:
+                    crypt_scores['big_cap'] += qty
+                else:
+                    crypt_scores['mid'] += qty
+            except (ValueError, TypeError):
+                pass
+
+    if crypt_scores['weenie'] >= 5:
+        scores['bleed'] += crypt_scores['weenie'] * 2
+    if crypt_scores['big_cap'] >= 3:
+        scores['wall'] += crypt_scores['big_cap']
+
+    top_archetype = max(scores, key=scores.get)
+    confidence = scores[top_archetype] if scores[top_archetype] > 0 else 0
+
+    return top_archetype, {'scores': scores, 'confidence': confidence}
+
+
+@router.get('/classify/{deck_id}')
+def classify_deck(
+    deck_id: int,
+    session: Session = Depends(get_session),
+):
+    deck = session.scalar(select(Deck).where(Deck.id == deck_id))
+    if deck is None:
+        raise HTTPException(status_code=404, detail='Deck not found')
+
+    slots = session.scalars(select(Slot).where(Slot.deck_id == deck_id)).all()
+
+    all_card_ids = [s.card_id for s in slots]
+    cards_map = {}
+    if all_card_ids:
+        card_rows = session.scalars(
+            select(Card).where(Card.id.in_(all_card_ids))
+        ).all()
+        cards_map = {c.id: c for c in card_rows}
+
+    archetype, details = _classify_deck(slots, cards_map)
+
+    return {
+        'deck_id': deck_id,
+        'deck_name': deck.name,
+        'archetype': archetype,
+        'scores': details['scores'],
+        'confidence': details['confidence'],
     }

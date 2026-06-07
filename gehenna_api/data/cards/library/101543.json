@@ -1,0 +1,52 @@
+{
+  "codevdb": 101543,
+  "name": "Rapid Healing",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "for"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "there is no combat",
+            "condition": "the vampire is blocked"
+          },
+          "text": "If the vampire is blocked, there is no combat."
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "that vampire may diablerize the acting vampire",
+            "condition": "the blocking minion is a vampire who can commit diablerie"
+          },
+          "text": "If the blocking minion is a vampire who can commit diablerie, that vampire may diablerize the acting vampire."
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "commit diablerie, that vampire may diablerize the acting vampire"
+          },
+          "text": "commit diablerie, that vampire may diablerize the acting vampire"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "FOR"
+      ],
+      "context": "ACTION",
+      "effects": []
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

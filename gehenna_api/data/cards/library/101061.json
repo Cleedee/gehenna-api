@@ -1,0 +1,44 @@
+{
+  "codevdb": 101061,
+  "name": "Kiss of Lachesis",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "ser"
+      ],
+      "context": "ACTION",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "tem"
+      ],
+      "context": "ACTION",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "TEM"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "pay half the cost rounded down, otherwise pay no cost",
+            "condition": "the equipment card comes from your ash heap"
+          },
+          "text": "If the equipment card comes from your ash heap, pay half the cost rounded down, otherwise pay no cost."
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

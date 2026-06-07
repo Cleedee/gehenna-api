@@ -1,0 +1,60 @@
+{
+  "codevdb": 101611,
+  "name": "Respire",
+  "tipo": "power",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "ACTION"
+      ],
+      "context": "POWER",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "you may move 1 conviction [1CONVICTION] from your hand or ash heap to this imbued",
+            "condition": "this action is successful"
+          },
+          "text": "If this action is successful, you may move 1 conviction [1CONVICTION] from your hand or ash heap to this imbued."
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "move 1 conviction [1CONVICTION] from your hand or ash heap to this imbued"
+          },
+          "text": "move 1 conviction [1CONVICTION] from your hand or ash heap to this imbued"
+        },
+        {
+          "function": "combat.strike",
+          "params": {
+            "damage": 1,
+            "damage_type": "normal"
+          },
+          "text": "(D) Inflict 1 damage on a vampire with capacity less than 6. If this action is successful, you may move 1 conviction [1CONVICTION] from your hand or ash heap to this imbued."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "ACTION"
+      ],
+      "context": "POWER",
+      "effects": [
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 stealth"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

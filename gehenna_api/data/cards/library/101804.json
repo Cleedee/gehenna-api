@@ -1,0 +1,41 @@
+{
+  "codevdb": 101804,
+  "name": "Sleep Unseen",
+  "tipo": "action_modifier",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "obf"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "action.equip",
+          "params": {
+            "attachment": "self"
+          },
+          "text": "put this card on this vampire"
+        },
+        {
+          "function": "card.restrict_use",
+          "params": {
+            "condition": "only usable at the end of a successful action (after resolving the action)"
+          },
+          "text": "Only usable at the end of a successful action (after resolving the action)"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "OBF"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": []
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

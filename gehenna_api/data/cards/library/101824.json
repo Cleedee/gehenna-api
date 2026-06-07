@@ -1,0 +1,44 @@
+{
+  "codevdb": 101824,
+  "name": "Sonar",
+  "tipo": "reaction",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "pro"
+      ],
+      "context": "REACTION",
+      "effects": [
+        {
+          "function": "modifier.intercept",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 intercept"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "PRO"
+      ],
+      "context": "REACTION",
+      "effects": [
+        {
+          "function": "modifier.intercept",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 intercept"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "intercept": 2
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

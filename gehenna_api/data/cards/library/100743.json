@@ -1,0 +1,11 @@
+{
+  "codevdb": 100743,
+  "name": "Flaming Candle",
+  "tipo": "equipment",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,34 @@
+{
+  "codevdb": 100384,
+  "name": "Command the Legion",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "dom"
+      ],
+      "context": "ACTION",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "DOM"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "be the same age or older"
+          },
+          "text": "be the same age or older"
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

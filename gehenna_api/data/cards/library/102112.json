@@ -1,0 +1,13 @@
+{
+  "codevdb": 102112,
+  "name": "Vermin Channel",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "stealth": 3
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,47 @@
+{
+  "codevdb": 102060,
+  "name": "Undead Persistence",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "for"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "combat ends",
+            "condition": "three rounds of combat pass with no cards played"
+          },
+          "text": "If three rounds of combat pass with no cards played, combat ends."
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "be burned as normal"
+          },
+          "text": "be burned as normal"
+        },
+        {
+          "function": "combat.end",
+          "params": {},
+          "text": "Only usable when this vampire should go into torpor. Instead, this vampire gets an optional press,  will not go to torpor until combat ends but is still considered wounded and can be burned as normal. If three rounds of combat pass with no cards played, combat ends. This vampire is sent into torpor after combat."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "FOR"
+      ],
+      "context": "COMBAT",
+      "effects": []
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

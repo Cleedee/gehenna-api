@@ -1,0 +1,20 @@
+{
+  "codevdb": 100487,
+  "name": "Dagger",
+  "tipo": "equipment",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 1,
+        "damage_type": "aggravated"
+      },
+      "text": "Melee weapon.\nYou can put a second Dagger from your hand or ash heap on this minion after they equip this Dagger from your hand. Damage inflicted on a Kiasyd by this weapon is aggravated. Strike: strength+1 damage. Alternatively, ranged strike: strength damage and, after strike resolution, put this weapon out of play until the end of the action. Burn this weapon if any damage from it is prevented."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

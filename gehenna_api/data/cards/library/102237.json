@@ -1,0 +1,25 @@
+{
+  "codevdb": 102237,
+  "name": "ECTU Operative",
+  "tipo": "ally",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.maneuver",
+      "params": {},
+      "text": "Mortal with 3 life. 1 strength, 0 bleed. Operation Antigen.\nECTU Operative can strike: 1R damage. He gets 1 optional maneuver each combat. He can burn a vampire in torpor as a (D) action."
+    },
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 1,
+        "damage_type": "ranged"
+      },
+      "text": "Mortal with 3 life. 1 strength, 0 bleed. Operation Antigen.\nECTU Operative can strike: 1R damage. He gets 1 optional maneuver each combat. He can burn a vampire in torpor as a (D) action."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

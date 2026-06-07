@@ -1,0 +1,35 @@
+{
+  "codevdb": 100290,
+  "name": "Canine Horde",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "ani"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.strike",
+          "params": {
+            "damage": 1,
+            "damage_type": "ranged"
+          },
+          "text": "Strike: 1R damage."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "ANI"
+      ],
+      "context": "COMBAT",
+      "effects": []
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

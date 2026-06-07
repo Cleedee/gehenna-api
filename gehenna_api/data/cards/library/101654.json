@@ -1,0 +1,17 @@
+{
+  "codevdb": 101654,
+  "name": "Rötschreck",
+  "tipo": "master",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.end",
+      "params": {},
+      "text": "Master: out-of-turn. Frenzy.\nPut this card on a vampire when an opposing minion attempts to inflict aggravated damage on him or her, whether the damage would be successfully inflicted or not. Combat ends. This vampire is locked and sent to torpor. This vampire does not unlock as normal. During this vampire's next unlock phase, burn this card."
+    }
+  ],
+  "needs_review": false,
+  "notes": "Master - plain text"
+}

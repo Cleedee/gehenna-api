@@ -1,0 +1,44 @@
+{
+  "codevdb": 101742,
+  "name": "Shadow Parasite",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "obt"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.strike",
+          "params": {
+            "damage": 3,
+            "damage_type": "ranged"
+          },
+          "text": "Strike: 3R damage."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "OBT"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.strike",
+          "params": {
+            "damage": 4,
+            "damage_type": "ranged"
+          },
+          "text": "Strike: 4R damage."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,20 @@
+{
+  "codevdb": 101941,
+  "name": "Target Retainer",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 1,
+        "damage_type": "normal"
+      },
+      "text": "Aim. Only usable as this minion chooses a strike. A minion can play only one aim each strike.\nYou can target a retainer on the opposing minion with this strike (instead of the opposing minion). Or you can target the opposing minion directly as usual, but if any damage from this strike is successfully inflicted, this strike inflicts +1 damage. The opposing minion can discard two combat cards to cancel this card as it is played."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,14 @@
+{
+  "codevdb": 100041,
+  "name": "Alvusia",
+  "tipo": "master",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "bleed": 1,
+    "strength": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

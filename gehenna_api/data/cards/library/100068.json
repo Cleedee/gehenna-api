@@ -1,0 +1,68 @@
+{
+  "codevdb": 100068,
+  "name": "Anima Gathering",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "aus"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "modifier.intercept",
+          "params": {
+            "value": 2
+          },
+          "text": "+2 intercept"
+        },
+        {
+          "function": "action.equip",
+          "params": {
+            "attachment": "self"
+          },
+          "text": "put this card on this vampire"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "you may choose not to unlock this minion as normal",
+            "condition": "this minion unlocks. During your unlock phase"
+          },
+          "text": "if this minion unlocks. During your unlock phase, you may choose not to unlock this minion as normal."
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "choose not to unlock this minion as normal"
+          },
+          "text": "choose not to unlock this minion as normal"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "AUS"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "modifier.bleed",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 bleed"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 1,
+    "intercept": 2,
+    "bleed": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

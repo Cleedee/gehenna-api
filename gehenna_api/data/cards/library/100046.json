@@ -1,0 +1,17 @@
+{
+  "codevdb": 100046,
+  "name": "Ambush",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.maneuver",
+      "params": {},
+      "text": "(D) Enter combat with a locked minion. This acting minion gets 1 optional maneuver during that combat."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

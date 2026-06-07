@@ -1,0 +1,48 @@
+{
+  "codevdb": 100585,
+  "name": "Drawing Out the Beast",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "ani"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "modifier.strength",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 strength"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "play only one Drawing Out the Beast each combat"
+          },
+          "text": "play only one Drawing Out the Beast each combat"
+        },
+        {
+          "function": "combat.maneuver",
+          "params": {},
+          "text": "During this combat, opposing vampire gets +1 strength, but he or she cannot use maneuvers to maneuver to long range, cannot use presses to end combat and cannot use equipment. A vampire may play only one Drawing Out the Beast each combat."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "ANI"
+      ],
+      "context": "COMBAT",
+      "effects": []
+    }
+  ],
+  "modifiers": {
+    "strength": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

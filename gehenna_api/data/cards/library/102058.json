@@ -1,0 +1,44 @@
+{
+  "codevdb": 102058,
+  "name": "Uncontrollable Rage",
+  "tipo": "action_modifier",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "pro"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "combat.strike",
+          "params": {
+            "damage": 1,
+            "damage_type": "aggravated"
+          },
+          "text": "This vampire's hand strikes inflict +1 damage, aggravated, until the end of the action."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "PRO"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "combat.strike",
+          "params": {
+            "damage": 2,
+            "damage_type": "aggravated"
+          },
+          "text": "As above, but the hand strikes inflict +2 damage, aggravated."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

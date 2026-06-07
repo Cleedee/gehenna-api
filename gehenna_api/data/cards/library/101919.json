@@ -1,0 +1,25 @@
+{
+  "codevdb": 101919,
+  "name": "Sword of Judgment",
+  "tipo": "equipment",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 1,
+        "damage_type": "normal"
+      },
+      "text": "Unique melee weapon.\nStrength+1 damage each strike, with an optional additional strike (limited) each round. Only usable by Brujah antitribu."
+    },
+    {
+      "function": "combat.additional_strike",
+      "params": {},
+      "text": "Unique melee weapon.\nStrength+1 damage each strike, with an optional additional strike (limited) each round. Only usable by Brujah antitribu."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,35 @@
+{
+  "codevdb": 100850,
+  "name": "Grasp of the Python",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "ser"
+      ],
+      "context": "COMBAT",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "SER"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "that round is at close range (skip the determine range step for that round) and strikes that are not hand strikes cannot be used that round (by either combatant)",
+            "condition": "another round of combat occurs"
+          },
+          "text": "if another round of combat occurs, that round is at close range (skip the determine range step for that round) and strikes that are not hand strikes cannot be used that round (by either combatant)."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

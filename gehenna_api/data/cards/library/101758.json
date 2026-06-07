@@ -1,0 +1,48 @@
+{
+  "codevdb": 101758,
+  "name": "Shattered Mirror",
+  "tipo": "reaction",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "dem"
+      ],
+      "context": "REACTION",
+      "effects": [
+        {
+          "function": "action.equip",
+          "params": {
+            "attachment": "self"
+          },
+          "text": "put this card on this vampire"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "burn it as an action that costs 1 blood"
+          },
+          "text": "burn it as an action that costs 1 blood"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "have only one Shattered Mirror"
+          },
+          "text": "have only one Shattered Mirror"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "DEM"
+      ],
+      "context": "REACTION",
+      "effects": []
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

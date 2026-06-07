@@ -1,0 +1,11 @@
+{
+  "codevdb": 100842,
+  "name": "Golconda: Inner Peace",
+  "tipo": "master",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": false,
+  "notes": "Master - plain text"
+}

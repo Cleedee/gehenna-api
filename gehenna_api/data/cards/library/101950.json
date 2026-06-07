@@ -1,0 +1,49 @@
+{
+  "codevdb": 101950,
+  "name": "Telepathic Tracking",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "aus"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "this vampire gets 1 optional maneuver that round",
+            "condition": "another round of combat occurs"
+          },
+          "text": "If another round of combat occurs, this vampire gets 1 optional maneuver that round."
+        },
+        {
+          "function": "combat.maneuver",
+          "params": {},
+          "text": "Press, only usable to continue combat. If another round of combat occurs, this vampire gets 1 optional maneuver that round."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "AUS"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "start a new round",
+            "condition": "both combatants are still ready and combat would end. Instead"
+          },
+          "text": "if both combatants are still ready and combat would end. Instead, start a new round."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

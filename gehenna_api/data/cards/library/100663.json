@@ -1,0 +1,52 @@
+{
+  "codevdb": 100663,
+  "name": "Esprit de Corps",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "pot",
+        "pre"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "modifier.strength",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 strength"
+        },
+        {
+          "function": "action.unlock",
+          "params": {},
+          "text": "unlock this vampire"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "POT",
+        "PRE"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "burn this card to cancel an action card requiring Dementation [dem], Dominate [dom] or Presence [pre] that would target you (or a card you control) as it is played"
+          },
+          "text": "burn this card to cancel an action card requiring Dementation [dem], Dominate [dom] or Presence [pre] that would target you (or a card you control) as it is played"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 1,
+    "strength": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

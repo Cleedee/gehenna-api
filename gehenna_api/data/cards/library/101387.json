@@ -1,0 +1,36 @@
+{
+  "codevdb": 101387,
+  "name": "Perfect Paragon",
+  "tipo": "action_modifier",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "pre"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "PRE"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "modifier.intercept",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 intercept"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "intercept": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

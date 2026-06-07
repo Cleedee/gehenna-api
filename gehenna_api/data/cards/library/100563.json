@@ -1,0 +1,46 @@
+{
+  "codevdb": 100563,
+  "name": "Diversion",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "cel"
+      ],
+      "context": "COMBAT",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "for"
+      ],
+      "context": "COMBAT",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "tha"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.maneuver",
+          "params": {},
+          "text": "Strike, ranged: steal 1 blood or life (becoming blood), with 1 optional maneuver."
+        },
+        {
+          "function": "combat.steal_blood",
+          "params": {
+            "amount": 1
+          },
+          "text": "Strike, ranged: steal 1 blood or life (becoming blood), with 1 optional maneuver."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

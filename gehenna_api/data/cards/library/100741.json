@@ -1,0 +1,41 @@
+{
+  "codevdb": 100741,
+  "name": "Flames of the Netherworld",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "tha"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "card.restrict_use",
+          "params": {
+            "condition": "only usable at long range"
+          },
+          "text": "Only usable at long range"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "dai"
+      ],
+      "context": "COMBAT",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "DAI"
+      ],
+      "context": "COMBAT",
+      "effects": []
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

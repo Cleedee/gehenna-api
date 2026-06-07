@@ -1,0 +1,53 @@
+{
+  "codevdb": 102026,
+  "name": "Trochomancy",
+  "tipo": "action_modifier",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "nec"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "modifier.bleed",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 bleed"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "aus",
+        "nec"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "AUS",
+        "NEC"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "modifier.bleed",
+          "params": {
+            "value": 2
+          },
+          "text": "+2 bleed"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "bleed": 3
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

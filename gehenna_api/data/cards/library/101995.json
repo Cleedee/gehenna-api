@@ -1,0 +1,40 @@
+{
+  "codevdb": 101995,
+  "name": "Torrent",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "cel"
+      ],
+      "context": "COMBAT",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "CEL"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "the action continues as if unblocked",
+            "condition": "this vampire was blocked while performing an action"
+          },
+          "text": "If this vampire was blocked while performing an action, the action continues as if unblocked."
+        },
+        {
+          "function": "combat.end",
+          "params": {},
+          "text": "Strike: combat ends. If this vampire was blocked while performing an action, the action continues as if unblocked."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,56 @@
+{
+  "codevdb": 101954,
+  "name": "Temptation",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "ser"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "action.equip",
+          "params": {
+            "attachment": "self"
+          },
+          "text": "put this card on this vampire"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "you can burn the counters to unlock and take control of them until the end of the turn",
+            "condition": "the number of counters on this card equals or exceeds the amount of blood on the attached vampire"
+          },
+          "text": "if the number of counters on this card equals or exceeds the amount of blood on the attached vampire, you can burn the counters to unlock and take control of them until the end of the turn."
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "add 1 counter to this card"
+          },
+          "text": "add 1 counter to this card"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "burn the counters to unlock and take control of them until the end of the turn"
+          },
+          "text": "burn the counters to unlock and take control of them until the end of the turn"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "SER"
+      ],
+      "context": "ACTION",
+      "effects": []
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

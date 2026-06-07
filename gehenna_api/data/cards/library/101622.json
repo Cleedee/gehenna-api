@@ -1,0 +1,44 @@
+{
+  "codevdb": 101622,
+  "name": "Revelation of Desire",
+  "tipo": "action_modifier",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "ser"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "modifier.bleed",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 bleed"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "SER"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "modifier.bleed",
+          "params": {
+            "value": 3
+          },
+          "text": "+3 bleed"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "bleed": 4
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

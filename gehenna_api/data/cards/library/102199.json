@@ -1,0 +1,20 @@
+{
+  "codevdb": 102199,
+  "name": "Yawp Court",
+  "tipo": "master",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 2,
+        "damage_type": "normal"
+      },
+      "text": "Master: unique location. Requires a ready Sabbat vampire.\nWhen a political action is successful, before the referendum, lock this card and a ready unlocked Sabbat vampire you control to have that vampire enter combat with the acting vampire. If the acting vampire is still ready at the end of combat, the Sabbat vampire takes 2 damage, and the referendum is conducted as normal."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

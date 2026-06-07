@@ -1,0 +1,54 @@
+{
+  "codevdb": 100905,
+  "name": "Heart's Desire",
+  "tipo": "action_modifier",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "aus",
+        "chi"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "modifier.bleed",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 bleed"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "that attempt fails and the blocking minion cannot attempt to block this action again",
+            "condition": "an ally or younger vampire is currently attempting to block this action"
+          },
+          "text": "If an ally or younger vampire is currently attempting to block this action, that attempt fails and the blocking minion cannot attempt to block this action again."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "AUS",
+        "CHI"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "modifier.bleed",
+          "params": {
+            "value": 2
+          },
+          "text": "+2 bleed"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "bleed": 3
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,49 @@
+{
+  "codevdb": 102011,
+  "name": "Transfusion",
+  "tipo": "action_modifier",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "nec"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "thn"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "THN"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "burn them to steal the opposing minion",
+            "condition": "this vampire is still ready and successfully inflicted any damage on the opposing minion during that combat. Put 1 transfusion counter on the opposing minion. If the opposing minion has 3 of your transfusion counters"
+          },
+          "text": "if this vampire is still ready and successfully inflicted any damage on the opposing minion during that combat. Put 1 transfusion counter on the opposing minion. If the opposing minion has 3 of your transfusion counters, burn them to steal the opposing minion."
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "be played at superior each turn"
+          },
+          "text": "be played at superior each turn"
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

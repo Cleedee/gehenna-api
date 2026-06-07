@@ -1,0 +1,43 @@
+{
+  "codevdb": 100978,
+  "name": "Infernal Familiar",
+  "tipo": "retainer",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "tha"
+      ],
+      "context": "RETAINER",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "place an investment counter on the Infernal Familiar",
+            "condition": "he or she had the basic level of that Discipline; if he or she does so"
+          },
+          "text": "if he or she had the basic level of that Discipline; if he or she does so, place an investment counter on the Infernal Familiar."
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "burn this vampire",
+            "condition": "the number of investment counters on the Familiar is greater than this vampire's capacity"
+          },
+          "text": "If the number of investment counters on the Familiar is greater than this vampire's capacity, burn this vampire."
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "play a card that requires a Discipline he or she does not have as if he or she had the basic level of that Discipline; if he or she does so, place an investment counter on the Infernal Familiar"
+          },
+          "text": "play a card that requires a Discipline he or she does not have as if he or she had the basic level of that Discipline; if he or she does so, place an investment counter on the Infernal Familiar"
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

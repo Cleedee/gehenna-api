@@ -1,0 +1,26 @@
+{
+  "codevdb": 100171,
+  "name": "Black Sunrise",
+  "tipo": "reaction",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "qui"
+      ],
+      "context": "REACTION",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "QUI"
+      ],
+      "context": "REACTION",
+      "effects": []
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

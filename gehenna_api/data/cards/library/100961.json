@@ -1,0 +1,13 @@
+{
+  "codevdb": 100961,
+  "name": "Imperial Decree",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "stealth": 2
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

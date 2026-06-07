@@ -1,0 +1,46 @@
+{
+  "codevdb": 101540,
+  "name": "Random Patterns",
+  "tipo": "action_modifier/reaction",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "aus",
+        "dem"
+      ],
+      "context": "ACTION MODIFIER/REACTION",
+      "effects": [
+        {
+          "function": "modifier.intercept",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 intercept"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "AUS",
+        "DEM"
+      ],
+      "context": "ACTION MODIFIER/REACTION",
+      "effects": [
+        {
+          "function": "modifier.intercept",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 intercept"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "intercept": 2
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

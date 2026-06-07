@@ -1,0 +1,25 @@
+{
+  "codevdb": 100152,
+  "name": "Beretta 9mm",
+  "tipo": "equipment",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.maneuver",
+      "params": {},
+      "text": "Weapon, gun.\nStrike: 1R damage. Or, if bearer has another Beretta 9mm, strike: 2R damage, with an optional maneuver each combat (a minion may use only one Beretta 9mm to maneuver each round)."
+    },
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 1,
+        "damage_type": "ranged"
+      },
+      "text": "Weapon, gun.\nStrike: 1R damage. Or, if bearer has another Beretta 9mm, strike: 2R damage, with an optional maneuver each combat (a minion may use only one Beretta 9mm to maneuver each round)."
+    }
+  ],
+  "needs_review": false,
+  "notes": "Juliet's Dream deck"
+}

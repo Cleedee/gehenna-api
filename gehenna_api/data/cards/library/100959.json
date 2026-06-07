@@ -1,0 +1,35 @@
+{
+  "codevdb": 100959,
+  "name": "Immortal Grapple",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "pot"
+      ],
+      "context": "COMBAT",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "POT"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "that round is at close range (skip the determine range step for that round)",
+            "condition": "another round of combat occurs"
+          },
+          "text": "If another round of combat occurs, that round is at close range (skip the determine range step for that round)."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

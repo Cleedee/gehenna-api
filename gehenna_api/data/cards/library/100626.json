@@ -1,0 +1,20 @@
+{
+  "codevdb": 100626,
+  "name": "Elephant Guardian",
+  "tipo": "retainer",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 2,
+        "damage_type": "normal"
+      },
+      "text": "Animal with 3 life. Requires a ready Laibon.\nWhen this minion is in combat with an acting minion, the acting minion takes 2 damage during strike resolution each round if the range is close. A minion can have only one Elephant Guardian."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

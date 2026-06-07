@@ -1,0 +1,48 @@
+{
+  "codevdb": 100932,
+  "name": "Homunculus",
+  "tipo": "retainer",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "pro"
+      ],
+      "context": "RETAINER",
+      "effects": [
+        {
+          "function": "action.unlock",
+          "params": {
+            "cost": {
+              "blood": 1
+            },
+            "cost_paid_by": "employer"
+          },
+          "text": "During any Methuselah unlock phase, the employer can burn 1 blood to unlock."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "PRO"
+      ],
+      "context": "RETAINER",
+      "effects": [
+        {
+          "function": "action.unlock",
+          "params": {
+            "cost": {
+              "blood": 1
+            },
+            "cost_paid_by": "employer"
+          },
+          "text": "During any Methuselah unlock phase, the employer can burn 1 blood to unlock."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": false,
+  "notes": "[pro] burn 1 blood to unlock during unlock phase. [PRO] 2 life."
+}

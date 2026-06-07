@@ -1,0 +1,36 @@
+{
+  "codevdb": 101193,
+  "name": "Media Influence",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "pre"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "modifier.bleed",
+          "params": {
+            "value": 2
+          },
+          "text": "+2 bleed"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "PRE"
+      ],
+      "context": "ACTION",
+      "effects": []
+    }
+  ],
+  "modifiers": {
+    "bleed": 2
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

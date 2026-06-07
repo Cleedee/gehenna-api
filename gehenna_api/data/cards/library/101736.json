@@ -1,0 +1,34 @@
+{
+  "codevdb": 101736,
+  "name": "Shadow Boxing",
+  "tipo": "action_modifier/combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "obf",
+        "pot"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.maneuver",
+          "params": {},
+          "text": "Maneuver, only usable to get to close range, or press, only usable to continue combat."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "OBF",
+        "POT"
+      ],
+      "context": "ACTION MODIFIER/COMBAT",
+      "effects": []
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

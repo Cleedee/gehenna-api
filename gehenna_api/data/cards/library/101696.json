@@ -1,0 +1,51 @@
+{
+  "codevdb": 101696,
+  "name": "Scourge of Alecto",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "cel",
+        "pre"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "ignore the excess",
+            "condition": "more than 4 damage is inflicted with this strike"
+          },
+          "text": "If more than 4 damage is inflicted with this strike, ignore the excess."
+        },
+        {
+          "function": "combat.strike",
+          "params": {
+            "damage": 4,
+            "damage_type": "ranged"
+          },
+          "text": "Strike: X-2 ranged damage, where X is this vampire's capacity minus the target's capacity or cost. If more than 4 damage is inflicted with this strike, ignore the excess."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "CEL",
+        "PRE"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.maneuver",
+          "params": {},
+          "text": "As above, with an optional maneuver."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

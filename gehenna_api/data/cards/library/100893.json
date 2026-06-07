@@ -1,0 +1,50 @@
+{
+  "codevdb": 100893,
+  "name": "Haunt",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "nec"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "action.equip",
+          "params": {
+            "attachment": "self"
+          },
+          "text": "put this card on this vampire"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "burn this card to have an action directed at the attached location fail"
+          },
+          "text": "burn this card to have an action directed at the attached location fail"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "have only one Haunt"
+          },
+          "text": "have only one Haunt"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "NEC"
+      ],
+      "context": "ACTION",
+      "effects": []
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

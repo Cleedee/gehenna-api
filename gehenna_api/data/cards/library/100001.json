@@ -1,0 +1,25 @@
+{
+  "codevdb": 100001,
+  "name": ".44 Magnum",
+  "tipo": "equipment",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.maneuver",
+      "params": {},
+      "text": "Weapon: gun.\nStrike: 2R damage, with 1 optional maneuver each combat."
+    },
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 2,
+        "damage_type": "ranged"
+      },
+      "text": "Weapon: gun.\nStrike: 2R damage, with 1 optional maneuver each combat."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

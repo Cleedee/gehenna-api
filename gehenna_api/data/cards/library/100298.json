@@ -1,0 +1,27 @@
+{
+  "codevdb": 100298,
+  "name": "Carlton Van Wyk",
+  "tipo": "ally",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "intercept": 1
+  },
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 1,
+        "damage_type": "ranged"
+      },
+      "text": "Unique mortal with 2 life. 0 strength, 0 bleed.\nCarlton can strike: 1R damage. Once each combat, he can strike: dodge. Carlton gets +1 intercept against vampires. During your discard phase, you can burn Carlton to burn a vampire who has committed diablerie since your last turn."
+    },
+    {
+      "function": "combat.dodge",
+      "params": {},
+      "text": "Unique mortal with 2 life. 0 strength, 0 bleed.\nCarlton can strike: 1R damage. Once each combat, he can strike: dodge. Carlton gets +1 intercept against vampires. During your discard phase, you can burn Carlton to burn a vampire who has committed diablerie since your last turn."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

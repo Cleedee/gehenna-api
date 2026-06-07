@@ -1,0 +1,44 @@
+{
+  "codevdb": 101616,
+  "name": "Resume the Coil",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "nec"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "there is no combat and if the blocking minion can commit diablerie, they can diablerize this acting vampire",
+            "condition": "this action is blocked"
+          },
+          "text": "If this action is blocked, there is no combat and if the blocking minion can commit diablerie, they can diablerize this acting vampire."
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "commit diablerie, they can diablerize this acting vampire"
+          },
+          "text": "commit diablerie, they can diablerize this acting vampire"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "NEC"
+      ],
+      "context": "ACTION",
+      "effects": []
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

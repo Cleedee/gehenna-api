@@ -1,0 +1,13 @@
+{
+  "codevdb": 201153,
+  "name": "Raful al-Zarqa",
+  "tipo": "vampire",
+  "source": "cardbase_crypt.json",
+  "abilities": [],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

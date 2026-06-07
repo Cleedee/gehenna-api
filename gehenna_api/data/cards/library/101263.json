@@ -1,0 +1,52 @@
+{
+  "codevdb": 101263,
+  "name": "Name Forgotten, The",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "tha"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "action.equip",
+          "params": {
+            "attachment": "self"
+          },
+          "text": "put this card on this vampire"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "he or she is removed from the game instead, and all Methuselahs remove all other vampires with the same name in their crypts, uncontrolled regions and ash heaps from the game as well (shuffle all crypts afterward)",
+            "condition": "the vampire with this card is burned"
+          },
+          "text": "If the vampire with this card is burned, he or she is removed from the game instead, and all Methuselahs remove all other vampires with the same name in their crypts, uncontrolled regions and ash heaps from the game as well (shuffle all crypts afterward)."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "THA"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 stealth"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

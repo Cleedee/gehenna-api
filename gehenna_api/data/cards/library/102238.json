@@ -1,0 +1,11 @@
+{
+  "codevdb": 102238,
+  "name": "Enhanced Coagulant",
+  "tipo": "equipment",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

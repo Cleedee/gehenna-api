@@ -1,0 +1,50 @@
+{
+  "codevdb": 101222,
+  "name": "Mirror Image",
+  "tipo": "action_modifier/combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "chi"
+      ],
+      "context": "ACTION MODIFIER/COMBAT",
+      "effects": [
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 stealth"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "CHI"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "the action continues as if unblocked",
+            "condition": "this vampire was blocked while performing a non-bleed action"
+          },
+          "text": "If this vampire was blocked while performing a non-bleed action, the action continues as if unblocked."
+        },
+        {
+          "function": "combat.end",
+          "params": {},
+          "text": "Strike: combat ends. If this vampire was blocked while performing a non-bleed action, the action continues as if unblocked."
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

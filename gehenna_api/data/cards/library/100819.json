@@ -1,0 +1,20 @@
+{
+  "codevdb": 100819,
+  "name": "Ghoul Retainer",
+  "tipo": "retainer",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 1,
+        "damage_type": "normal"
+      },
+      "text": "Ghoul with 2 life. 1 strength.\nDuring the initial strike resolution each round, the Ghoul Retainer inflicts 1 damage or may use a weapon not used by the employing minion (or another retainer) that round (either before or after). This is not a strike, although it does count as \"using\" the weapon."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

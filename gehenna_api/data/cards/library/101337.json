@@ -1,0 +1,25 @@
+{
+  "codevdb": 101337,
+  "name": "Outcast Mage",
+  "tipo": "ally",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.maneuver",
+      "params": {},
+      "text": "Mage with 2 life. 0 strength, 1 bleed.\nOutcast Mage may strike for 2R damage. Outcast Mage gets one optional maneuver each combat."
+    },
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 2,
+        "damage_type": "ranged"
+      },
+      "text": "Mage with 2 life. 0 strength, 1 bleed.\nOutcast Mage may strike for 2R damage. Outcast Mage gets one optional maneuver each combat."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,25 @@
+{
+  "codevdb": 101682,
+  "name": "Saturday-Night Special",
+  "tipo": "equipment",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.maneuver",
+      "params": {},
+      "text": "Weapon, gun.\n1R damage each strike, with an optional maneuver each combat."
+    },
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 1,
+        "damage_type": "ranged"
+      },
+      "text": "Weapon, gun.\n1R damage each strike, with an optional maneuver each combat."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,20 @@
+{
+  "codevdb": 101190,
+  "name": "Meat Cleaver",
+  "tipo": "equipment",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 1,
+        "damage_type": "normal"
+      },
+      "text": "Melee weapon.\nStrength+1 damage each strike."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

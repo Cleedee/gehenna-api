@@ -1,0 +1,34 @@
+{
+  "codevdb": 101507,
+  "name": "Psyche!",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "cel"
+      ],
+      "context": "COMBAT",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "CEL"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "card.restrict_use",
+          "params": {
+            "condition": "only usable at the end of a round when both combatants are still ready and combat is about to end"
+          },
+          "text": "Only usable at the end of a round when both combatants are still ready and combat is about to end"
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

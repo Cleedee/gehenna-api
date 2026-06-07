@@ -1,0 +1,45 @@
+{
+  "codevdb": 100596,
+  "name": "Dust to Dust",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "obf"
+      ],
+      "context": "COMBAT",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "thn"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.dodge",
+          "params": {},
+          "text": "Strike: dodge, with an optional press."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "THN"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.maneuver",
+          "params": {},
+          "text": "As [thn] above, with an optional maneuver."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

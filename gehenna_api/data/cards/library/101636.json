@@ -1,0 +1,46 @@
+{
+  "codevdb": 101636,
+  "name": "Rigor Mortis",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "pre"
+      ],
+      "context": "COMBAT",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "thn"
+      ],
+      "context": "COMBAT",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "THN"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "cancel a maneuver used by the opposing minion"
+          },
+          "text": "cancel a maneuver used by the opposing minion"
+        },
+        {
+          "function": "combat.maneuver",
+          "params": {},
+          "text": "As [thn] above, and once each round this combat, you may cancel a maneuver used by the opposing minion."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,11 @@
+{
+  "codevdb": 101444,
+  "name": "Powerbase: Washington, D.C.",
+  "tipo": "master",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

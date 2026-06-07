@@ -1,0 +1,43 @@
+{
+  "codevdb": 101486,
+  "name": "Principia Discordia",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "aus"
+      ],
+      "context": "ACTION",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "qui"
+      ],
+      "context": "ACTION",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "ser"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "combat.steal_blood",
+          "params": {
+            "amount": 1
+          },
+          "text": "(D) Steal 1 blood from a ready vampire."
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

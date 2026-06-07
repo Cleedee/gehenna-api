@@ -1,0 +1,42 @@
+{
+  "codevdb": 100518,
+  "name": "Deflection",
+  "tipo": "reaction",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "dom"
+      ],
+      "context": "REACTION",
+      "effects": [
+        {
+          "function": "reaction.redirect_bleed",
+          "params": {
+            "lock": true
+          },
+          "text": "Lock this reacting vampire. Change the target of the bleed to another Methuselah other than the acting minion controller."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "DOM"
+      ],
+      "context": "REACTION",
+      "effects": [
+        {
+          "function": "reaction.redirect_bleed",
+          "params": {
+            "lock": false
+          },
+          "text": "As above, but do not lock this vampire."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": false,
+  "notes": "[dom] redirect bleed + lock. [DOM] redirect bleed no lock."
+}

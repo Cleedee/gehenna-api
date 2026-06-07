@@ -1,0 +1,42 @@
+{
+  "codevdb": 101610,
+  "name": "Resist Earth's Grasp",
+  "tipo": "action_modifier/combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "cel"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.maneuver",
+          "params": {},
+          "text": "Press, or maneuver with 1 optional press."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "CEL"
+      ],
+      "context": "ACTION MODIFIER/COMBAT",
+      "effects": [
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 stealth"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

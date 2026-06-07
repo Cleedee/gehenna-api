@@ -1,0 +1,11 @@
+{
+  "codevdb": 200654,
+  "name": "Jack Dawson",
+  "tipo": "vampire",
+  "source": "cardbase_crypt.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

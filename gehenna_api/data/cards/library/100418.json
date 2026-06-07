@@ -1,0 +1,52 @@
+{
+  "codevdb": 100418,
+  "name": "Contagion",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "dai"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "action.equip",
+          "params": {
+            "attachment": "self"
+          },
+          "text": "put this card on this vampire"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "DAI"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "you can burn those counters to steal the opposing minion after the resolution of this strike (ending combat)",
+            "condition": "the number of your corruption counters on the minion equals or exceeds their capacity or cost"
+          },
+          "text": "if the number of your corruption counters on the minion equals or exceeds their capacity or cost, you can burn those counters to steal the opposing minion after the resolution of this strike (ending combat)."
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "strike: put 1 corruption counter on the opposing minion; if the number of your corruption counters on the minion equals or exceeds their capacity or cost, you can burn those counters to steal the opposing minion after the resolution of this strike (ending combat"
+          },
+          "text": "strike: put 1 corruption counter on the opposing minion; if the number of your corruption counters on the minion equals or exceeds their capacity or cost, you can burn those counters to steal the opposing minion after the resolution of this strike (ending combat"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

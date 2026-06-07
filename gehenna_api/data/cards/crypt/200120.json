@@ -1,0 +1,11 @@
+{
+  "codevdb": 200120,
+  "name": "Anvil",
+  "tipo": "vampire",
+  "source": "cardbase_crypt.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

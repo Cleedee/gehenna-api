@@ -1,0 +1,68 @@
+{
+  "codevdb": 100270,
+  "name": "Burning Touch",
+  "tipo": "action_modifier/combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "tha"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.strike",
+          "params": {
+            "damage": 1,
+            "damage_type": "normal"
+          },
+          "text": "Strike: 1 damage. This damage cannot be prevented by cards that require Fortitude [for]."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "val"
+      ],
+      "context": "ACTION MODIFIER/COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "the blocking minion burns one blood or life before combat begins",
+            "condition": "this action is blocked"
+          },
+          "text": "If this action is blocked, the blocking minion burns one blood or life before combat begins."
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "now choose not to block"
+          },
+          "text": "now choose not to block"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "VAL"
+      ],
+      "context": "ACTION MODIFIER/COMBAT",
+      "effects": [
+        {
+          "function": "modifier.bleed",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 bleed"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "bleed": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

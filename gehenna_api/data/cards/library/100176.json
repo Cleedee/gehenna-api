@@ -1,0 +1,20 @@
+{
+  "codevdb": 100176,
+  "name": "Blade of Enoch",
+  "tipo": "equipment",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 1,
+        "damage_type": "aggravated"
+      },
+      "text": "Unique melee weapon.\nStrike: strength+1 damage, only usable by a vampire with capacity above 5. Damage inflicted by this weapon on a Brujah or Brujah antitribu is aggravated. This vampire with capacity above 5 is immune to the effects of Frenzy cards."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

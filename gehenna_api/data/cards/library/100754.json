@@ -1,0 +1,30 @@
+{
+  "codevdb": 100754,
+  "name": "Foldable Machine Gun",
+  "tipo": "equipment",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.maneuver",
+      "params": {},
+      "text": "Weapon: gun.\nStrike: 1R damage, with 1 optional maneuver each combat. This maneuver cannot be used during the first round. Once each round, if the bearer strikes with this gun, they get 1 optional additional strike (limited) this round, only usable to strike with this gun."
+    },
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 1,
+        "damage_type": "ranged"
+      },
+      "text": "Weapon: gun.\nStrike: 1R damage, with 1 optional maneuver each combat. This maneuver cannot be used during the first round. Once each round, if the bearer strikes with this gun, they get 1 optional additional strike (limited) this round, only usable to strike with this gun."
+    },
+    {
+      "function": "combat.additional_strike",
+      "params": {},
+      "text": "Weapon: gun.\nStrike: 1R damage, with 1 optional maneuver each combat. This maneuver cannot be used during the first round. Once each round, if the bearer strikes with this gun, they get 1 optional additional strike (limited) this round, only usable to strike with this gun."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

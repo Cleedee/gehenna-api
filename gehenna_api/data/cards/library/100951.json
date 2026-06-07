@@ -1,0 +1,20 @@
+{
+  "codevdb": 100951,
+  "name": "Illegal Search and Seizure",
+  "tipo": "master",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 3,
+        "damage_type": "aggravated"
+      },
+      "text": "Master.\nBurn a weapon that costs more than 2 pool or inflicts (with a regular strike) aggravated damage or more than 3 damage. The bearer of the weapon takes 1 damage. This damage cannot be prevented."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

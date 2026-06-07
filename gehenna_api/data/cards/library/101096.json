@@ -1,0 +1,36 @@
+{
+  "codevdb": 101096,
+  "name": "Lessons in the Steel",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "aus",
+        "for"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "play only one Lessons in the Steel each round"
+          },
+          "text": "play only one Lessons in the Steel each round"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "AUS",
+        "FOR"
+      ],
+      "context": "COMBAT",
+      "effects": []
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,44 @@
+{
+  "codevdb": 101651,
+  "name": "Rooftop Shadow",
+  "tipo": "reaction",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "cel"
+      ],
+      "context": "REACTION",
+      "effects": [
+        {
+          "function": "modifier.intercept",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 intercept"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "CEL"
+      ],
+      "context": "REACTION",
+      "effects": [
+        {
+          "function": "modifier.intercept",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 intercept"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "intercept": 2
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

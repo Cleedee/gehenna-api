@@ -1,0 +1,52 @@
+{
+  "codevdb": 101213,
+  "name": "Mind of a Killer",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "dem"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "modifier.strength",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 strength"
+        },
+        {
+          "function": "action.equip",
+          "params": {
+            "attachment": "self"
+          },
+          "text": "put this card on this vampire"
+        },
+        {
+          "function": "combat.strike",
+          "params": {
+            "damage": 2,
+            "damage_type": "normal"
+          },
+          "text": "(D) Put this card on a ready minion. This minion gets +1 strength. Burn this card when a combat involving this minion ends. During this minion's discard phase, burn this card, and this minion's controller must inflict 2 damage on another ready minion he or she controls."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "DEM"
+      ],
+      "context": "ACTION",
+      "effects": []
+    }
+  ],
+  "modifiers": {
+    "stealth": 1,
+    "strength": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,60 @@
+{
+  "codevdb": 100022,
+  "name": "Adhocracy",
+  "tipo": "action_modifier",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "ani"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "modifier.bleed",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 bleed"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "chi"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "pot"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "modifier.strength",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 strength"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "they get +1 strength during the resulting combat",
+            "condition": "this Anarch is blocked"
+          },
+          "text": "If this Anarch is blocked, they get +1 strength during the resulting combat."
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "bleed": 1,
+    "strength": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

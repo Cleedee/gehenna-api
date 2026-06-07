@@ -1,0 +1,11 @@
+{
+  "codevdb": 100326,
+  "name": "Chanjelin Ward",
+  "tipo": "master",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

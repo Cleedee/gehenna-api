@@ -1,0 +1,26 @@
+{
+  "codevdb": 101998,
+  "name": "Touch of Clarity",
+  "tipo": "action_modifier/reaction",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "dem"
+      ],
+      "context": "ACTION MODIFIER/REACTION",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "DEM"
+      ],
+      "context": "ACTION MODIFIER/REACTION",
+      "effects": []
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

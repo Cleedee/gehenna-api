@@ -1,0 +1,42 @@
+{
+  "codevdb": 101402,
+  "name": "Plasmic Form",
+  "tipo": "action_modifier/combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "vic"
+      ],
+      "context": "ACTION MODIFIER/COMBAT",
+      "effects": [
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 stealth"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "VIC"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.dodge",
+          "params": {},
+          "text": "Strike: dodge."
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

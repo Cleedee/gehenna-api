@@ -1,0 +1,43 @@
+{
+  "codevdb": 101182,
+  "name": "Masquer",
+  "tipo": "retainer",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "nec"
+      ],
+      "context": "RETAINER",
+      "effects": [
+        {
+          "function": "modifier.intercept",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 intercept"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "burn this retainer to give any minion +1 intercept"
+          },
+          "text": "burn this retainer to give any minion +1 intercept"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "NEC"
+      ],
+      "context": "RETAINER",
+      "effects": []
+    }
+  ],
+  "modifiers": {
+    "intercept": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

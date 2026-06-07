@@ -1,0 +1,11 @@
+{
+  "codevdb": 101002,
+  "name": "Inveraray, Scotland",
+  "tipo": "equipment",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

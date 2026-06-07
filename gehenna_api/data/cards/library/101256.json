@@ -1,0 +1,52 @@
+{
+  "codevdb": 101256,
+  "name": "Murmur of the False Will",
+  "tipo": "action_modifier/reaction",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "dom"
+      ],
+      "context": "ACTION MODIFIER/REACTION",
+      "effects": [
+        {
+          "function": "modifier.bleed",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 bleed"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "DOM"
+      ],
+      "context": "REACTION",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "after blocks are declined",
+            "condition": "a younger vampire is bleeding you"
+          },
+          "text": "if a younger vampire is bleeding you, after blocks are declined."
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "attempt to block"
+          },
+          "text": "attempt to block"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "bleed": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

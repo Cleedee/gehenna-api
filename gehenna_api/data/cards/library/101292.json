@@ -1,0 +1,45 @@
+{
+  "codevdb": 101292,
+  "name": "No Trace",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "obf"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "card.restrict_use",
+          "params": {
+            "condition": "only usable at long range"
+          },
+          "text": "Only usable at long range"
+        },
+        {
+          "function": "combat.end",
+          "params": {},
+          "text": "Only usable at long range. Strike: combat ends."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "OBF"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.end",
+          "params": {},
+          "text": "Strike: combat ends."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

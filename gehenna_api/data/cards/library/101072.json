@@ -1,0 +1,49 @@
+{
+  "codevdb": 101072,
+  "name": "Lapse",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "pot"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "modifier.strength",
+          "params": {
+            "value": 2
+          },
+          "text": "+2 strength"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "tem"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.maneuver",
+          "params": {},
+          "text": "The opposing minion cannot maneuver this round."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "TEM"
+      ],
+      "context": "COMBAT",
+      "effects": []
+    }
+  ],
+  "modifiers": {
+    "strength": 2
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

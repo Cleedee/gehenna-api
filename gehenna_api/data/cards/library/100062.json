@@ -1,0 +1,36 @@
+{
+  "codevdb": 100062,
+  "name": "Ancestor's Insight",
+  "tipo": "action_modifier/reaction",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "aus"
+      ],
+      "context": "REACTION",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "AUS"
+      ],
+      "context": "ACTION MODIFIER/REACTION",
+      "effects": [
+        {
+          "function": "modifier.bleed",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 bleed"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "bleed": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,53 @@
+{
+  "codevdb": 100751,
+  "name": "Flow Within the Mountain",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "tha"
+      ],
+      "context": "COMBAT",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "vis"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.end",
+          "params": {},
+          "text": "Strike: combat ends."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "VIS"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "the action continues as if unblocked",
+            "condition": "this vampire was blocked while performing an action"
+          },
+          "text": "If this vampire was blocked while performing an action, the action continues as if unblocked."
+        },
+        {
+          "function": "combat.end",
+          "params": {},
+          "text": "Strike: combat ends. If this vampire was blocked while performing an action, the action continues as if unblocked."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

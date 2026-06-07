@@ -1,0 +1,42 @@
+{
+  "codevdb": 101934,
+  "name": "Taming the Beast",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "abo"
+      ],
+      "context": "COMBAT",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "abo"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.strike",
+          "params": {
+            "damage": 1,
+            "damage_type": "normal"
+          },
+          "text": "Strike: hand strike at +1 damage. This combat, this minion cannot cancel frenzy cards nor press to end."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "ABO"
+      ],
+      "context": "COMBAT",
+      "effects": []
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

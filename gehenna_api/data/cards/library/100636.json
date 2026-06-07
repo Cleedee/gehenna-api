@@ -1,0 +1,11 @@
+{
+  "codevdb": 100636,
+  "name": "Emergency Preparations",
+  "tipo": "master",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

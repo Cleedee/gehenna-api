@@ -1,0 +1,51 @@
+{
+  "codevdb": 100153,
+  "name": "Bestial Vengeance",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "ani"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "play only one Bestial Vengeance each combat"
+          },
+          "text": "play only one Bestial Vengeance each combat"
+        },
+        {
+          "function": "combat.strike",
+          "params": {
+            "damage": 1,
+            "damage_type": "normal"
+          },
+          "text": "Only usable before range is determined. Choose a retainer on this Laibon. This combat, this Laibon is immune to frenzy cards and the opposing minion takes 1 damage during strike resolution if the retainer is ready. A vampire can play only one Bestial Vengeance each combat."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "ANI"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.strike",
+          "params": {
+            "damage": 2,
+            "damage_type": "normal"
+          },
+          "text": "As above, but for 2 damage."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

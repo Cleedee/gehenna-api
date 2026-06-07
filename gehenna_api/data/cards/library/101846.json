@@ -1,0 +1,20 @@
+{
+  "codevdb": 101846,
+  "name": "Spike-Thrower",
+  "tipo": "equipment",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 1,
+        "damage_type": "ranged"
+      },
+      "text": "Weapon.\n1R damage each strike. Only usable at long range. Only usable once each round. If any damage from this strike is successfully inflicted on an opposing vampire, that vampire does not unlock as normal on his or her next unlock phase."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

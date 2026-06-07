@@ -1,0 +1,38 @@
+{
+  "codevdb": 100149,
+  "name": "Behind You!",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "obf"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.maneuver",
+          "params": {},
+          "text": "Maneuver."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "OBF"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.dodge",
+          "params": {},
+          "text": "Strike: dodge."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

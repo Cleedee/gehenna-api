@@ -1,0 +1,45 @@
+{
+  "codevdb": 100652,
+  "name": "Entrancement",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "pre"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "modifier.bleed",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 bleed"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "PRE"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 stealth"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "bleed": 1,
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": false,
+  "notes": "action - abilities parsed OK [Ministry]"
+}

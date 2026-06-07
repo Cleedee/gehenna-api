@@ -1,0 +1,42 @@
+{
+  "codevdb": 101702,
+  "name": "Scrying of Secrets",
+  "tipo": "action_modifier",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "aus"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "AUS"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "that Methuselah discards your choice of one of those cards",
+            "condition": "any of those cards are action cards that can be used to bleed"
+          },
+          "text": "if any of those cards are action cards that can be used to bleed, that Methuselah discards your choice of one of those cards."
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "be used to bleed, that Methuselah discards your choice of one of those cards"
+          },
+          "text": "be used to bleed, that Methuselah discards your choice of one of those cards"
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

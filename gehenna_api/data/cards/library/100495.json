@@ -1,0 +1,34 @@
+{
+  "codevdb": 100495,
+  "name": "Dark Steel",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "obt",
+        "pot"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.maneuver",
+          "params": {},
+          "text": "The opposing minion takes 1 environmental damage each round of combat during normal strike resolution at close range. This vampire gets 1 optional maneuver this round, only usable to get to close range."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "OBT",
+        "POT"
+      ],
+      "context": "COMBAT",
+      "effects": []
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

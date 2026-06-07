@@ -1,0 +1,66 @@
+{
+  "codevdb": 101399,
+  "name": "Phobia",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "ser"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "action.equip",
+          "params": {
+            "attachment": "self"
+          },
+          "text": "put this card on this vampire"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "you can burn 5 phobia counters from this card before range is determined to end combat",
+            "condition": "a minion you control blocks the attached vampire"
+          },
+          "text": "If a minion you control blocks the attached vampire, you can burn 5 phobia counters from this card before range is determined to end combat."
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "put 1 phobia counter on this card"
+          },
+          "text": "put 1 phobia counter on this card"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "burn 5 phobia counters from this card before range is determined to end combat"
+          },
+          "text": "burn 5 phobia counters from this card before range is determined to end combat"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "SER"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 stealth"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

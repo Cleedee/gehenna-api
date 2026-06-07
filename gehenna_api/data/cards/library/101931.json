@@ -1,0 +1,22 @@
+{
+  "codevdb": 101931,
+  "name": "Talbot's Chainsaw",
+  "tipo": "equipment",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 3,
+        "damage_type": "normal"
+      },
+      "text": "Unique weapon.\nStrike: 3 damage. If the bearer is ready during your unlock phase, this weapon inflicts 3 unpreventable damage on a ready minion you control. The bearer cannot hunt. The bearer can enter combat with a minion as a +1 stealth (D) action. The bearer gets 1 press (mandatory), only usable to continue combat during the first round, and can prevent 1 damage each combat."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

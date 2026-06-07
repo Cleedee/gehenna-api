@@ -1,0 +1,49 @@
+{
+  "codevdb": 100162,
+  "name": "Biothaumaturgic Experiment",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "tha"
+      ],
+      "context": "ACTION",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "THA"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "modifier.strength",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 strength"
+        },
+        {
+          "function": "action.equip",
+          "params": {
+            "attachment": "self"
+          },
+          "text": "put this card on this vampire"
+        },
+        {
+          "function": "combat.maneuver",
+          "params": {},
+          "text": "Put this card on a minion you control. The attached minion gets 1 optional maneuver each combat and +1 strength."
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 1,
+    "strength": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

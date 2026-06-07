@@ -1,0 +1,43 @@
+{
+  "codevdb": 101746,
+  "name": "Shadow Twin",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "obt"
+      ],
+      "context": "ACTION",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "OBT"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 stealth"
+        },
+        {
+          "function": "action.equip",
+          "params": {
+            "attachment": "self"
+          },
+          "text": "put this card on this vampire"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 2
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

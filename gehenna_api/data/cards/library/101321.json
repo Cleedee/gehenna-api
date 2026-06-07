@@ -1,0 +1,11 @@
+{
+  "codevdb": 101321,
+  "name": "On the Qui Vive",
+  "tipo": "reaction",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": false,
+  "notes": "Reaction - plain text"
+}

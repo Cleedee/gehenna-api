@@ -1,0 +1,59 @@
+{
+  "codevdb": 100398,
+  "name": "Condemnation: Doomed",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "obf"
+      ],
+      "context": "ACTION",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "dai"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 stealth"
+        },
+        {
+          "function": "action.equip",
+          "params": {
+            "attachment": "self"
+          },
+          "text": "put this card on this vampire"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "DAI"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "their controller burns 1 pool before block resolution",
+            "condition": "the attached minion is blocked"
+          },
+          "text": "if the attached minion is blocked, their controller burns 1 pool before block resolution."
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 2
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

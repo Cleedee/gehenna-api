@@ -1,0 +1,27 @@
+{
+  "codevdb": 101650,
+  "name": "Rom Gypsy",
+  "tipo": "ally",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": [
+    {
+      "function": "combat.maneuver",
+      "params": {},
+      "text": "Mortal with 2 life. 0 strength, 0 bleed.\nRom Gypsy may strike for 1R damage. Rom Gypsy gets one optional maneuver each combat. Lock to give a Ravnos you control +1 stealth."
+    },
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 1,
+        "damage_type": "ranged"
+      },
+      "text": "Mortal with 2 life. 0 strength, 0 bleed.\nRom Gypsy may strike for 1R damage. Rom Gypsy gets one optional maneuver each combat. Lock to give a Ravnos you control +1 stealth."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

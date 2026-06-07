@@ -1,0 +1,82 @@
+{
+  "codevdb": 102076,
+  "name": "Unleash Hell's Fury",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "dai"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "card.put_in_play",
+          "params": {},
+          "text": "Put this card in play."
+        },
+        {
+          "function": "combat.attempt_block",
+          "params": {
+            "capacity": 9,
+            "intercept": 2,
+            "infernal": true
+          },
+          "text": "This card can attempt to block an action directed at you (or a card you control) and is considered a 9-capacity infernal vampire with +2 intercept during that attempt."
+        },
+        {
+          "function": "combat.deal_damage",
+          "params": {
+            "amount": 1,
+            "damage_type": "aggravated",
+            "unpreventable": true
+          },
+          "text": "If successful, the acting minion takes 1 unpreventable environmental aggravated damage and this card is burned."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "DAI"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "card.put_in_play",
+          "params": {},
+          "text": "Put this card in play."
+        },
+        {
+          "function": "combat.attempt_block",
+          "params": {
+            "capacity": 9,
+            "intercept": 2,
+            "infernal": true
+          },
+          "text": "This card can attempt to block an action directed at you (or a card you control) and is considered a 9-capacity infernal vampire with +2 intercept during that attempt."
+        },
+        {
+          "function": "combat.deal_damage",
+          "params": {
+            "amount": 1,
+            "damage_type": "aggravated",
+            "unpreventable": true
+          },
+          "text": "If successful, the acting minion takes 1 unpreventable environmental aggravated damage and this card is burned."
+        },
+        {
+          "function": "action.unlock",
+          "params": {},
+          "text": "Unlock this vampire."
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 1,
+    "intercept": 2
+  },
+  "default_strike": null,
+  "needs_review": false,
+  "notes": "Complex: put in play as blocking 9-cap infernal. [DAI] also unlock."
+}

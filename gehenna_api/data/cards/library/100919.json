@@ -1,0 +1,36 @@
+{
+  "codevdb": 100919,
+  "name": "Hide",
+  "tipo": "power",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "ACTIONMODIFIER"
+      ],
+      "context": "POWER",
+      "effects": [
+        {
+          "function": "modifier.intercept",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 intercept"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "REACTION"
+      ],
+      "context": "POWER",
+      "effects": []
+    }
+  ],
+  "modifiers": {
+    "intercept": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

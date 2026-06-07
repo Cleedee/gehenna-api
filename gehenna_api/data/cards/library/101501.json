@@ -1,0 +1,13 @@
+{
+  "codevdb": 101501,
+  "name": "Protection Racket",
+  "tipo": "reaction",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "intercept": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

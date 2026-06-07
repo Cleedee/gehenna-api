@@ -1,0 +1,51 @@
+{
+  "codevdb": 101479,
+  "name": "Predator's Transformation",
+  "tipo": "action_modifier/combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "abo"
+      ],
+      "context": "ACTION MODIFIER/COMBAT",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "abo"
+      ],
+      "context": "ACTION MODIFIER/COMBAT",
+      "effects": [
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 stealth"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "ABO"
+      ],
+      "context": "ACTION MODIFIER/COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "play only one Predator's Transformation at superior each action"
+          },
+          "text": "play only one Predator's Transformation at superior each action"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

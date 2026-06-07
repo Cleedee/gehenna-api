@@ -1,0 +1,19 @@
+{
+  "codevdb": 101357,
+  "name": "Patagia: Flaps Allowing Limited Flight",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": [
+    {
+      "function": "combat.maneuver",
+      "params": {},
+      "text": "+1 stealth action.\nPut this card on the acting Nosferatu. This vampire gets an optional maneuver each combat. Once each combat, this vampire may burn 1 blood to gain flight [FLIGHT] for the remainder of the round. A vampire may have only 1 Patagia card."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

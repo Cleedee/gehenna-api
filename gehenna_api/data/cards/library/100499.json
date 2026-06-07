@@ -1,0 +1,13 @@
+{
+  "codevdb": 100499,
+  "name": "Dartmoor, England",
+  "tipo": "equipment",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

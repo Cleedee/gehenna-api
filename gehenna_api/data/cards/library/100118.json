@@ -1,0 +1,57 @@
+{
+  "codevdb": 100118,
+  "name": "Aversion",
+  "tipo": "reaction",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "cel"
+      ],
+      "context": "REACTION",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "val"
+      ],
+      "context": "REACTION",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "VAL"
+      ],
+      "context": "REACTION",
+      "effects": [
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 stealth"
+        },
+        {
+          "function": "action.equip",
+          "params": {
+            "attachment": "self"
+          },
+          "text": "put this card on this vampire"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "burn this card as a +1 stealth (D) action"
+          },
+          "text": "burn this card as a +1 stealth (D) action"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

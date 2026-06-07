@@ -1,0 +1,60 @@
+{
+  "codevdb": 100145,
+  "name": "Bear's Skin",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "ani",
+        "pro"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "modifier.strength",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 strength"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "prevent 1 damage"
+          },
+          "text": "prevent 1 damage"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "ANI",
+        "PRO"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "modifier.strength",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 strength"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "prevent 1 damage each round"
+          },
+          "text": "prevent 1 damage each round"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "strength": 2
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

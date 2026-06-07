@@ -1,0 +1,35 @@
+{
+  "codevdb": 101594,
+  "name": "Relentless Pursuit",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "pot"
+      ],
+      "context": "COMBAT",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "POT"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "you get +2 hand size for the remainder of combat",
+            "condition": "another round of combat starts"
+          },
+          "text": "if another round of combat starts, you get +2 hand size for the remainder of combat."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

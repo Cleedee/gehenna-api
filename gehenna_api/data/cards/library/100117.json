@@ -1,0 +1,32 @@
+{
+  "codevdb": 100117,
+  "name": "Autonomic Mastery",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "dom"
+      ],
+      "context": "COMBAT",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "DOM"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.end",
+          "params": {},
+          "text": "Strike: hand strike. Damage from this strike is reduced to zero. Combat ends immediately after this strike resolves, unless it is dodged. Only usable in combat with a non-wraith ally or a younger vampire."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

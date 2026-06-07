@@ -1,0 +1,54 @@
+{
+  "codevdb": 102186,
+  "name": "Winged Second",
+  "tipo": "reaction",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "FLIGHT"
+      ],
+      "context": "REACTION",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "and damage prevention effects can treat this as a strike from an opposing minion",
+            "condition": "at close range). Dodge will avoid this strike"
+          },
+          "text": "if at close range). Dodge will avoid this strike, and damage prevention effects can treat this as a strike from an opposing minion."
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "make a hand or melee weapon strike (with or without a strike card) on the opposing minion during normal strike resolution (as if at close range"
+          },
+          "text": "make a hand or melee weapon strike (with or without a strike card) on the opposing minion during normal strike resolution (as if at close range"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "treat this as a strike from an opposing minion"
+          },
+          "text": "treat this as a strike from an opposing minion"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "be the target of effects that inflict damage or steal blood as a retainer could be"
+          },
+          "text": "be the target of effects that inflict damage or steal blood as a retainer could be"
+        },
+        {
+          "function": "combat.dodge",
+          "params": {},
+          "text": "Only usable when another minion you control enters combat with a minion without flight. Lock this minion. In that combat, this minion may make a hand or melee weapon strike (with or without a strike card) on the opposing minion during normal strike resolution (as if at close range). Dodge will avoid this strike, and damage prevention effects can treat this as a strike from an opposing minion. This minion may be the target of effects that inflict damage or steal blood as a retainer could be."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": false,
+  "notes": "Juliet's Dream deck"
+}

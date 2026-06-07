@@ -1,0 +1,17 @@
+{
+  "codevdb": 100963,
+  "name": "Imprison",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.maneuver",
+      "params": {},
+      "text": "Only usable before range is determined.\nFor the remainder of combat, the opposing monster cannot maneuver or press to continue, and strikes other than strikes to end combat cost the opposing monster an additional blood or life."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

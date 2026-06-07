@@ -1,0 +1,72 @@
+{
+  "codevdb": 101606,
+  "name": "Repulsion",
+  "tipo": "action_modifier",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "pre"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "this vampire gets 1 optional maneuver, only usable to get to long range, during the resulting combat",
+            "condition": "this action is blocked"
+          },
+          "text": "If this action is blocked, this vampire gets 1 optional maneuver, only usable to get to long range, during the resulting combat."
+        },
+        {
+          "function": "combat.maneuver",
+          "params": {},
+          "text": "Only usable as the action is announced. If this action is blocked, this vampire gets 1 optional maneuver, only usable to get to long range, during the resulting combat."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "obe"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 stealth"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "OBE"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 stealth"
+        },
+        {
+          "function": "action.equip",
+          "params": {
+            "attachment": "self"
+          },
+          "text": "put this card on this vampire"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 2
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

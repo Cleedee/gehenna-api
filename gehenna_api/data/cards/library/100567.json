@@ -1,0 +1,17 @@
+{
+  "codevdb": 100567,
+  "name": "Dodge",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.dodge",
+      "params": {},
+      "text": "Do not replace until after combat.\nStrike: dodge."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,34 @@
+{
+  "codevdb": 101806,
+  "name": "Sleight of Hand",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "chi"
+      ],
+      "context": "ACTION",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "CHI"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "put one of the non-location equipment cards discarded on this vampire (ignore requirements and cost"
+          },
+          "text": "put one of the non-location equipment cards discarded on this vampire (ignore requirements and cost"
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

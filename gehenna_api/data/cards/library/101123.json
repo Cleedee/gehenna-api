@@ -1,0 +1,73 @@
+{
+  "codevdb": 101123,
+  "name": "Lord of Serenity",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "for"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "ignore the normal prey, predator or target restrictions for blocking this action"
+          },
+          "text": "ignore the normal prey, predator or target restrictions for blocking this action"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "obe"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "action.equip",
+          "params": {
+            "attachment": "self"
+          },
+          "text": "put this card on this vampire"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "gain 1 blood"
+          },
+          "text": "gain 1 blood"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "burn this card as a (D) action"
+          },
+          "text": "burn this card as a (D) action"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "OBE"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "gain 2 blood"
+          },
+          "text": "gain 2 blood"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

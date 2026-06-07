@@ -1,0 +1,44 @@
+{
+  "codevdb": 100359,
+  "name": "Clio's Kiss",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "dom"
+      ],
+      "context": "ACTION",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "tem"
+      ],
+      "context": "ACTION",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "TEM"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "place your copy of the vampire face up in your controlled region, unlocked",
+            "condition": "there are no other Methuselahs contesting the vampire"
+          },
+          "text": "If there are no other Methuselahs contesting the vampire, place your copy of the vampire face up in your controlled region, unlocked."
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

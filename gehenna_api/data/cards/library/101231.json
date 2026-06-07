@@ -1,0 +1,22 @@
+{
+  "codevdb": 101231,
+  "name": "Moise Kasavubu",
+  "tipo": "ally",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 2,
+        "damage_type": "ranged"
+      },
+      "text": "Unique mortal with 1 life. 0 strength, 0 bleed. Requires a ready imbued.\nMoise may strike for 2R damage. He may take a +1 stealth action to search your library (shuffle afterward) or hand for an equipment and move it to any ready imbued you control (that imbued must meet the requirements and pay the cost as normal)."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,48 @@
+{
+  "codevdb": 101111,
+  "name": "Liquefy the Mortal Coil",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "vic"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "combat ends",
+            "condition": "the opposing vampire has no blood after the resolution of this strike"
+          },
+          "text": "If the opposing vampire has no blood after the resolution of this strike, combat ends."
+        },
+        {
+          "function": "combat.end",
+          "params": {},
+          "text": "Strike: burn the opposing ally or burn 3 blood from the opposing younger vampire. If the opposing vampire has no blood after the resolution of this strike, combat ends."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "VIC"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "strike: diablerize the opposing younger vampire"
+          },
+          "text": "strike: diablerize the opposing younger vampire"
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

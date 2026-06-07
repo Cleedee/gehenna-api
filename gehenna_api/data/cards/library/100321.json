@@ -1,0 +1,66 @@
+{
+  "codevdb": 100321,
+  "name": "Chameleon's Colors",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "ani"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.maneuver",
+          "params": {},
+          "text": "Maneuver."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "spi"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.maneuver",
+          "params": {},
+          "text": "Press, or maneuver with an optional press."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "SPI"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "card.restrict_use",
+          "params": {
+            "condition": "only usable at long range"
+          },
+          "text": "Only usable at long range"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "the action continues as if unblocked",
+            "condition": "this vampire was blocked while performing an action other than bleeding"
+          },
+          "text": "If this vampire was blocked while performing an action other than bleeding, the action continues as if unblocked."
+        },
+        {
+          "function": "combat.end",
+          "params": {},
+          "text": "Only usable at long range. Strike: combat ends. If this vampire was blocked while performing an action other than bleeding, the action continues as if unblocked."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

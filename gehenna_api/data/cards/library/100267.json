@@ -1,0 +1,20 @@
+{
+  "codevdb": 100267,
+  "name": "Bundi",
+  "tipo": "equipment",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 1,
+        "damage_type": "normal"
+      },
+      "text": "Melee weapon.\nStrike: hand strike at +1 damage. (This strike is both a hand strike and a melee weapon strike). Bearer may prevent 1 damage from each melee weapon strike made against him or her."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,17 @@
+{
+  "codevdb": 102048,
+  "name": "Tutu the Doubly Evil One",
+  "tipo": "ally",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.dodge",
+      "params": {},
+      "text": "Unique mummy with 3 life. 2 strength, 1 bleed.\nOnce each combat, Tutu can strike: dodge. During your minion phase, Tutu can unlock. Tutu can steal an equipment from a vampire in torpor as a (D) action. If Tutu is burned, shuffle him into his owner's library."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

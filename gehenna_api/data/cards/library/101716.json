@@ -1,0 +1,41 @@
+{
+  "codevdb": 101716,
+  "name": "Sense Death",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "ani"
+      ],
+      "context": "ACTION",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "val"
+      ],
+      "context": "ACTION",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "VAL"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "combat.maneuver",
+          "params": {},
+          "text": "As [val] above, and this acting vampire gets an optional maneuver during this combat."
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

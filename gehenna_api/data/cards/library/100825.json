@@ -1,0 +1,42 @@
+{
+  "codevdb": 100825,
+  "name": "Gift of Bellona",
+  "tipo": "action_modifier",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "aus"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "your hand size is one card larger during the resulting combat",
+            "condition": "this action is blocked"
+          },
+          "text": "If this action is blocked, your hand size is one card larger during the resulting combat."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "val"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "VAL"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": []
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

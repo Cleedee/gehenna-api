@@ -1,0 +1,86 @@
+{
+  "codevdb": 101525,
+  "name": "Putrefaction",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "pre"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.end",
+          "params": {},
+          "text": "Strike: combat ends."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "thn"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 stealth"
+        },
+        {
+          "function": "action.equip",
+          "params": {
+            "attachment": "self"
+          },
+          "text": "put this card on this vampire"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "choose not to unlock as normal and burn this card during his or her unlock phase"
+          },
+          "text": "choose not to unlock as normal and burn this card during his or her unlock phase"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "have only one Putrefaction"
+          },
+          "text": "have only one Putrefaction"
+        },
+        {
+          "function": "combat.strike",
+          "params": {
+            "damage": 1,
+            "damage_type": "normal"
+          },
+          "text": "Strike: 1 damage. Put this card on the opposing minion. The minion with this card has -1 stealth. He or she may choose not to unlock as normal and burn this card during his or her unlock phase. A minion may have only one Putrefaction."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "THN"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "choose not to strike during the Choose Strike step of combat"
+          },
+          "text": "choose not to strike during the Choose Strike step of combat"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

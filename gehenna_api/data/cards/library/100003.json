@@ -1,0 +1,11 @@
+{
+  "codevdb": 100003,
+  "name": "Aaron's Feeding Razor",
+  "tipo": "equipment",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

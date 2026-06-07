@@ -1,0 +1,65 @@
+{
+  "codevdb": 101921,
+  "name": "Sword of the Righteous",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "ani"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "play only one Sword of the Righteous each combat"
+          },
+          "text": "play only one Sword of the Righteous each combat"
+        },
+        {
+          "function": "combat.strike",
+          "params": {
+            "damage": 1,
+            "damage_type": "normal"
+          },
+          "text": "Choose one of this vampire's melee weapons. For the remainder of combat, this vampire inflicts +1 damage each strike with that weapon. A vampire can play only one Sword of the Righteous each combat."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "val"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.set_damage_type",
+          "params": {
+            "damage_type": "aggravated"
+          },
+          "text": "Damage is aggravated"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "VAL"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "prevent 1 damage this round"
+          },
+          "text": "prevent 1 damage this round"
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

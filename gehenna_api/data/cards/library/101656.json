@@ -1,0 +1,20 @@
+{
+  "codevdb": 101656,
+  "name": "RPG Launcher",
+  "tipo": "equipment",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 6,
+        "damage_type": "ranged"
+      },
+      "text": "Weapon.\n6R damage each strike; only usable after the first round of combat; only usable at long range."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

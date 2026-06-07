@@ -1,0 +1,42 @@
+{
+  "codevdb": 100624,
+  "name": "Eldritch Glimmer",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "tha"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "burn X blood to get +X (ranged) damage"
+          },
+          "text": "burn X blood to get +X (ranged) damage"
+        },
+        {
+          "function": "combat.strike",
+          "params": {
+            "damage": 2,
+            "damage_type": "ranged"
+          },
+          "text": "Strike: 2R damage, and this vampire can burn X blood to get +X (ranged) damage. Not usable on the first round of combat."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "THA"
+      ],
+      "context": "COMBAT",
+      "effects": []
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

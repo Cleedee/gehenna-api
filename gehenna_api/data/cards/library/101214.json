@@ -1,0 +1,57 @@
+{
+  "codevdb": 101214,
+  "name": "Mind of the Wilds",
+  "tipo": "action_modifier",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "ani",
+        "aus"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "this vampire gets 1 optional maneuver during the first round of the resulting combat and the blocking minion cannot strike: combat ends",
+            "condition": "this action is blocked"
+          },
+          "text": "If this action is blocked, this vampire gets 1 optional maneuver during the first round of the resulting combat and the blocking minion cannot strike: combat ends."
+        },
+        {
+          "function": "combat.maneuver",
+          "params": {},
+          "text": "If this action is blocked, this vampire gets 1 optional maneuver during the first round of the resulting combat and the blocking minion cannot strike: combat ends."
+        },
+        {
+          "function": "combat.end",
+          "params": {},
+          "text": "If this action is blocked, this vampire gets 1 optional maneuver during the first round of the resulting combat and the blocking minion cannot strike: combat ends."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "ANI",
+        "AUS"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 stealth"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,21 @@
+{
+  "codevdb": 100855,
+  "name": "Gregory Winter",
+  "tipo": "ally",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": [
+    {
+      "function": "combat.steal_blood",
+      "params": {
+        "amount": 1
+      },
+      "text": "Unique ghoul with 4 life. 1 strength, 1 bleed.\nGregory can steal 1 blood (becoming life) from a vampire controlled by another Methuselah as a +1 stealth (D) action. He can burn a vampire in torpor to gain 2 life as a (D) action. During your unlock phase, Gregory burns 1 life."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

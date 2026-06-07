@@ -1,0 +1,42 @@
+{
+  "codevdb": 101389,
+  "name": "Permanency",
+  "tipo": "action_modifier",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "chi"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "CHI"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "action.equip",
+          "params": {
+            "attachment": "self"
+          },
+          "text": "put this card on this vampire"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "instead return it to your hand (discard down afterward)",
+            "condition": "an action card requiring Chimerstry is put in play. Put this card on the action card. If the attached card would be burned"
+          },
+          "text": "if an action card requiring Chimerstry is put in play. Put this card on the action card. If the attached card would be burned, instead return it to your hand (discard down afterward)."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

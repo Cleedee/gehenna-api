@@ -1,0 +1,34 @@
+{
+  "codevdb": 100189,
+  "name": "Bliss",
+  "tipo": "combat/reaction",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "dom",
+        "pre"
+      ],
+      "context": "COMBAT",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "DOM",
+        "PRE"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.end",
+          "params": {},
+          "text": "Strike: combat ends."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": false,
+  "notes": "Juliet's Dream deck"
+}

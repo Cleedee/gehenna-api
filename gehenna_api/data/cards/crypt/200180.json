@@ -1,0 +1,11 @@
+{
+  "codevdb": 200180,
+  "name": "Béatrice L'Angou",
+  "tipo": "vampire",
+  "source": "cardbase_crypt.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

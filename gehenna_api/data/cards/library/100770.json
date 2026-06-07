@@ -1,0 +1,64 @@
+{
+  "codevdb": 100770,
+  "name": "Form of Corruption",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "ser"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "you can add 1 counter to this card",
+            "condition": "your prey gets the Edge anew"
+          },
+          "text": "If your prey gets the Edge anew, you can add 1 counter to this card."
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "you can burn this card to steal that vampire",
+            "condition": "the number of counters on this card equals or exceeds the amount of blood on a vampire controlled by your prey during your master phase"
+          },
+          "text": "If the number of counters on this card equals or exceeds the amount of blood on a vampire controlled by your prey during your master phase, you can burn this card to steal that vampire."
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "add 1 counter to this card"
+          },
+          "text": "add 1 counter to this card"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "burn this card to steal that vampire"
+          },
+          "text": "burn this card to steal that vampire"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "have only one Form of Corruption"
+          },
+          "text": "have only one Form of Corruption"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "SER"
+      ],
+      "context": "ACTION",
+      "effects": []
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

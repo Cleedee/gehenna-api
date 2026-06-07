@@ -1,0 +1,44 @@
+{
+  "codevdb": 100250,
+  "name": "Breath of the Dragon",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "vic"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "this striking vampire also takes 1 environmental aggravated damage",
+            "condition": "this strike is used at close range"
+          },
+          "text": "If this strike is used at close range, this striking vampire also takes 1 environmental aggravated damage."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "VIC"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "this striking vampire also takes 2 environmental aggravated damage",
+            "condition": "this strike is used at close range"
+          },
+          "text": "If this strike is used at close range, this striking vampire also takes 2 environmental aggravated damage."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

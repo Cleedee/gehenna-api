@@ -1,0 +1,39 @@
+{
+  "codevdb": 102071,
+  "name": "Unflinching Persistence",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "for"
+      ],
+      "context": "COMBAT",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "FOR"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "prevent 1 damage later this round"
+          },
+          "text": "prevent 1 damage later this round"
+        },
+        {
+          "function": "combat.maneuver",
+          "params": {},
+          "text": "Maneuver, and this vampire can prevent 1 damage later this round."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

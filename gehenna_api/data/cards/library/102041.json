@@ -1,0 +1,55 @@
+{
+  "codevdb": 102041,
+  "name": "True Love's Face",
+  "tipo": "action_modifier",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "obf",
+        "pre"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "modifier.bleed",
+          "params": {
+            "value": 1,
+            "limited": true
+          },
+          "text": "+1 bleed (limited)."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "OBF",
+        "PRE"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "action.cancel_block",
+          "params": {},
+          "text": "That attempt fails and the blocking minion cannot attempt to block this action again."
+        },
+        {
+          "function": "action.cost",
+          "params": {
+            "cost_type": "pool",
+            "amount": 1,
+            "paid_by": "blocker_controller",
+            "cancel_on_pay": true
+          },
+          "text": "The blocking minion controller can burn 1 pool to cancel this card as it is played."
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "bleed": 1
+  },
+  "default_strike": null,
+  "needs_review": false,
+  "notes": "[obf][pre] +1bleed limited. [OBF][PRE] cancel block, opponent may burn 1 pool to cancel."
+}

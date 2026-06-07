@@ -1,0 +1,11 @@
+{
+  "codevdb": 200316,
+  "name": "Danielle Diron",
+  "tipo": "vampire",
+  "source": "cardbase_crypt.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

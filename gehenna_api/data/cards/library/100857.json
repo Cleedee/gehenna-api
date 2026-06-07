@@ -1,0 +1,20 @@
+{
+  "codevdb": 100857,
+  "name": "Grenade",
+  "tipo": "equipment",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 3,
+        "damage_type": "ranged"
+      },
+      "text": "Weapon.\n3R damage as a strike. If Grenade is used at close range, the minion with this weapon takes 1 damage. Burn after use."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

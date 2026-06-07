@@ -1,0 +1,51 @@
+{
+  "codevdb": 101349,
+  "name": "Pandora's Whisper",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "nec"
+      ],
+      "context": "ACTION",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "myt"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "draw 2 cards"
+          },
+          "text": "draw 2 cards"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "MYT"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "put any of the cards you discard on the top of your library instead of in your ash heap"
+          },
+          "text": "put any of the cards you discard on the top of your library instead of in your ash heap"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,13 @@
+{
+  "codevdb": 101662,
+  "name": "Rumor Mill, Tabloid Newspaper, The",
+  "tipo": "master",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "intercept": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

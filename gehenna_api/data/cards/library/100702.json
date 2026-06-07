@@ -1,0 +1,42 @@
+{
+  "codevdb": 100702,
+  "name": "Far Fatuus",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "chi"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "card.restrict_use",
+          "params": {
+            "condition": "only usable at long range"
+          },
+          "text": "only usable at long range"
+        },
+        {
+          "function": "combat.strike",
+          "params": {
+            "damage": 2,
+            "damage_type": "ranged"
+          },
+          "text": "Strike: 2R damage; only usable at long range."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "CHI"
+      ],
+      "context": "COMBAT",
+      "effects": []
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

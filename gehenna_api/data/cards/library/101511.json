@@ -1,0 +1,39 @@
+{
+  "codevdb": 101511,
+  "name": "Psychomachia",
+  "tipo": "action_modifier",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "pre"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "action.unlock",
+          "params": {},
+          "text": "unlock this vampire"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "dai"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "DAI"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": []
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

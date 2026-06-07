@@ -1,0 +1,11 @@
+{
+  "codevdb": 201236,
+  "name": "Saqqaf, Keeper of the Grand Temple of Set",
+  "tipo": "vampire",
+  "source": "cardbase_crypt.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

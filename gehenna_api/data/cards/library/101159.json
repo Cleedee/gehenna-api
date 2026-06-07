@@ -1,0 +1,35 @@
+{
+  "codevdb": 101159,
+  "name": "Malleable Visage",
+  "tipo": "action_modifier",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "vic"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "before block resolution",
+            "condition": "an ally you control is blocked"
+          },
+          "text": "if an ally you control is blocked, before block resolution."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "VIC"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": []
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

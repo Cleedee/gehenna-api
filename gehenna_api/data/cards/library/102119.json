@@ -1,0 +1,13 @@
+{
+  "codevdb": 102119,
+  "name": "Vigil: The Thin Line",
+  "tipo": "master",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "intercept": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

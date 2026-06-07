@@ -1,0 +1,17 @@
+{
+  "codevdb": 100247,
+  "name": "Bravo",
+  "tipo": "master",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.end",
+      "params": {},
+      "text": "Master: archetype.\nPut this card on a vampire you control. Once per turn, when this vampire successfully performs an action to enter combat with another, he or she gains 1 blood from the blood bank when the combat ends, if he or she is still ready. A vampire can have only one archetype."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

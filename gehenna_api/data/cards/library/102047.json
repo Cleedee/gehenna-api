@@ -1,0 +1,22 @@
+{
+  "codevdb": 102047,
+  "name": "Tunnel Runner",
+  "tipo": "ally",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 1,
+        "damage_type": "normal"
+      },
+      "text": "Werewolf with 3 life. 1 strength, 1 bleed.\nThe Runner may play cards that require Animalism [ani] as a vampire and may burn 1 life to get +1 stealth. If he successfully bleeds, you may look at the target Methuselah's hand. A vampire stealing life from the Runner takes 1 damage for each point stolen. If the Runner has 2 or fewer life during your unlock phase, he gains 1 life."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

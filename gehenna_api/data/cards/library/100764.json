@@ -1,0 +1,35 @@
+{
+  "codevdb": 100764,
+  "name": "Foresee",
+  "tipo": "power",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "COMBAT"
+      ],
+      "context": "POWER",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "and this imbued was blocking, the action continues as if unblocked",
+            "condition": "you do"
+          },
+          "text": "If you do, and this imbued was blocking, the action continues as if unblocked."
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "then choose to cancel combat"
+          },
+          "text": "then choose to cancel combat"
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

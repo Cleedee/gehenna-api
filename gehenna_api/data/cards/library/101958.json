@@ -1,0 +1,11 @@
+{
+  "codevdb": 101958,
+  "name": "Tension in the Ranks",
+  "tipo": "master",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

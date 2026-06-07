@@ -1,0 +1,28 @@
+{
+  "codevdb": 101686,
+  "name": "Scalpel Tongue",
+  "tipo": "action_modifier/reaction",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "cel",
+        "pre"
+      ],
+      "context": "ACTION MODIFIER/REACTION",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "CEL",
+        "PRE"
+      ],
+      "context": "ACTION MODIFIER/REACTION",
+      "effects": []
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

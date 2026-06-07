@@ -1,0 +1,51 @@
+{
+  "codevdb": 100142,
+  "name": "Bauble",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "vic"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "action.equip",
+          "params": {
+            "attachment": "self"
+          },
+          "text": "put this card on this vampire"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "burn this card and the chosen equipment during your unlock phase or after the minion with the chosen equipment leaves the controlled region"
+          },
+          "text": "burn this card and the chosen equipment during your unlock phase or after the minion with the chosen equipment leaves the controlled region"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "VIC"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "burn this card and the chosen equipment at any time"
+          },
+          "text": "burn this card and the chosen equipment at any time"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

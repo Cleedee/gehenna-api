@@ -1,0 +1,55 @@
+{
+  "codevdb": 102221,
+  "name": "Enchanting Gaze",
+  "tipo": "action_modifier",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "pre",
+        "pro"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 stealth"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "PRE",
+        "PRO"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 stealth"
+        },
+        {
+          "function": "action.cancel_block",
+          "params": {
+            "cost": {
+              "corruption_counter": 1
+            }
+          },
+          "text": "Burn 1 corruption counter from a blocking minion to have their block attempt fail."
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": false,
+  "notes": "[pre][pro] +1stealth. [PRE][PRO] burn 1 corruption to cancel block [Ministry]"
+}

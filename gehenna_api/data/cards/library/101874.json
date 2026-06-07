@@ -1,0 +1,70 @@
+{
+  "codevdb": 101874,
+  "name": "Stone Quills",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "tha"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.strike",
+          "params": {
+            "damage": 2,
+            "damage_type": "ranged"
+          },
+          "text": "Strike: 2R damage."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "vis"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.maneuver",
+          "params": {},
+          "text": "Strike: 2R damage, with an optional maneuver."
+        },
+        {
+          "function": "combat.strike",
+          "params": {
+            "damage": 2,
+            "damage_type": "ranged"
+          },
+          "text": "Strike: 2R damage, with an optional maneuver."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "VIS"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.maneuver",
+          "params": {},
+          "text": "Strike: 3R damage, with an optional maneuver."
+        },
+        {
+          "function": "combat.strike",
+          "params": {
+            "damage": 3,
+            "damage_type": "ranged"
+          },
+          "text": "Strike: 3R damage, with an optional maneuver."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

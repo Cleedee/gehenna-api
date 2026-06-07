@@ -1,0 +1,17 @@
+{
+  "codevdb": 101658,
+  "name": "Ruins of Ceoris",
+  "tipo": "equipment",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.maneuver",
+      "params": {},
+      "text": "This equipment card represents a location and does not count as equipment while in play. Unique.\nThe Tremere antitribu with this location gets an optional maneuver or press each combat."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

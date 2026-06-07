@@ -1,0 +1,27 @@
+{
+  "codevdb": 102234,
+  "name": "City Star Taxi",
+  "tipo": "ally",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": [
+    {
+      "function": "combat.maneuver",
+      "params": {},
+      "text": "Mortal with 2 life. 0 strength, 0 bleed.\nThis ally can strike: 1R damage. This ally gets 1 optional maneuver each combat. This ally can lock to give a Ravnos you control +1 stealth."
+    },
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 1,
+        "damage_type": "ranged"
+      },
+      "text": "Mortal with 2 life. 0 strength, 0 bleed.\nThis ally can strike: 1R damage. This ally gets 1 optional maneuver each combat. This ally can lock to give a Ravnos you control +1 stealth."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

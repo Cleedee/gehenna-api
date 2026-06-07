@@ -1,0 +1,13 @@
+{
+  "codevdb": 101114,
+  "name": "Living Manse",
+  "tipo": "equipment",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "bleed": 1
+  },
+  "default_strike": null,
+  "needs_review": false,
+  "notes": "Equipment - plain text, bleed modifier"
+}

@@ -1,0 +1,57 @@
+{
+  "codevdb": 100592,
+  "name": "Dual Form",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "pro"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "action.unlock",
+          "params": {},
+          "text": "unlock this vampire"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "unlock this vampire again"
+          },
+          "text": "unlock this vampire again"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "PRO"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "the other is burned",
+            "condition": "either minion leaves the ready region"
+          },
+          "text": "If either minion leaves the ready region, the other is burned."
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "move up to 2 blood from the acting vampire to this vampire"
+          },
+          "text": "move up to 2 blood from the acting vampire to this vampire"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

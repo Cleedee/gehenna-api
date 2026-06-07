@@ -1,0 +1,17 @@
+{
+  "codevdb": 100304,
+  "name": "Caseless Rounds",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.additional_strike",
+      "params": {},
+      "text": "Ammo.\nOnly usable before resolution of a gun's strike. For the remainder of combat, once each round when the bearer strikes with this gun, the bearer gets an optional additional strike (limited), only usable to strike with this gun. No more than one ammo card can be used on a gun each combat."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

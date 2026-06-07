@@ -1,0 +1,19 @@
+{
+  "codevdb": 100051,
+  "name": "Ananasi Vampirephile",
+  "tipo": "ally",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": [
+    {
+      "function": "combat.maneuver",
+      "params": {},
+      "text": "Werewolf with 4 life. 2 strength, 1 bleed.\nAnanasi gets an optional maneuver each combat. Once each combat, she can burn a life during the press step to get a press and set the range in the next round of that combat, if any. She can gain a life as a +1 stealth action. Once each turn, she may play a card that requires basic Animalism [ani] as a vampire."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

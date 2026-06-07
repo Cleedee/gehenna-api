@@ -1,0 +1,20 @@
+{
+  "codevdb": 100317,
+  "name": "Chainsaw",
+  "tipo": "equipment",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 3,
+        "damage_type": "normal"
+      },
+      "text": "Weapon.\n3 damage as a strike, only usable once each combat."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

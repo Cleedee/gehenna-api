@@ -1,0 +1,11 @@
+{
+  "codevdb": 201040,
+  "name": "Nedal, The Careless",
+  "tipo": "vampire",
+  "source": "cardbase_crypt.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

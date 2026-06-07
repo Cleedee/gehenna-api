@@ -1,0 +1,11 @@
+{
+  "codevdb": 100801,
+  "name": "Games of Instinct",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

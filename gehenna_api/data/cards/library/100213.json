@@ -1,0 +1,74 @@
+{
+  "codevdb": 100213,
+  "name": "Blood Tempering",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "for",
+        "qui"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "action.equip",
+          "params": {
+            "attachment": "self"
+          },
+          "text": "put this card on this vampire"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "it can prevent 1 additional point",
+            "condition": "this equipment prevents damage in combat"
+          },
+          "text": "If this equipment prevents damage in combat, it can prevent 1 additional point."
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "prevent 1 additional point"
+          },
+          "text": "prevent 1 additional point"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "have only one Blood Tempering"
+          },
+          "text": "have only one Blood Tempering"
+        },
+        {
+          "function": "combat.strike",
+          "params": {
+            "damage": 1,
+            "damage_type": "normal"
+          },
+          "text": "Put this card on an equipment. This melee weapon inflicts +1 damage each strike. If this equipment prevents damage in combat, it can prevent 1 additional point. An equipment can have only one Blood Tempering."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "FOR",
+        "QUI"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "action.unlock",
+          "params": {},
+          "text": "unlock this vampire"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,17 @@
+{
+  "codevdb": 101940,
+  "name": "Target Leg",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.maneuver",
+      "params": {},
+      "text": "Aim. Play when choosing a strike.\nThe opposing minion may discard two combat cards [COMBAT] to cancel this card. If any damage from this strike is successfully inflicted on the opposing minion, he or she may use maneuvers or presses only if they require Obfuscate [obf] , Blood Sorcery [tha] or Flight [FLIGHT] this action. A minion may play only one aim each strike."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

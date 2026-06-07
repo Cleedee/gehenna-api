@@ -1,0 +1,20 @@
+{
+  "codevdb": 101025,
+  "name": "Joumlon's Axe",
+  "tipo": "equipment",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 1,
+        "damage_type": "aggravated"
+      },
+      "text": "Unique melee weapon.\nStrike: strength+1 damage. Damage inflicted on a Kiasyd by this weapon is aggravated. Once each combat, the bearer can cancel a grapple card played by the opposing minion as it is played, its cost is not paid, and the bearer's initial strike this round must be or have been with this weapon (not usable otherwise)."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

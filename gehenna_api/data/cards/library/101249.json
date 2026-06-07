@@ -1,0 +1,13 @@
+{
+  "codevdb": 101249,
+  "name": "Mr. Winthrop",
+  "tipo": "retainer",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "intercept": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

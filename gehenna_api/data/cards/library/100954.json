@@ -1,0 +1,32 @@
+{
+  "codevdb": 100954,
+  "name": "Illusions of the Kindred",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "chi"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.end",
+          "params": {},
+          "text": "Combat ends. Move the bottom card from your crypt to your ready region. That minion does not contest any other minions or titles in play. That vampire gains blood equal to half their capacity rounded down. That vampire and the opposing minion enter combat. Remove that minion from the game at the end of combat (if they are still in play)."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "CHI"
+      ],
+      "context": "COMBAT",
+      "effects": []
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

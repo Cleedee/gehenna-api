@@ -1,0 +1,13 @@
+{
+  "codevdb": 100099,
+  "name": "Art Scam",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,11 @@
+{
+  "codevdb": 201034,
+  "name": "Nakova, Advocate of Golconda",
+  "tipo": "vampire",
+  "source": "cardbase_crypt.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

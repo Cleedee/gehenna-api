@@ -1,0 +1,45 @@
+{
+  "codevdb": 102248,
+  "name": "Feast of the Soul's Secrets",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "dom"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "modifier.bleed",
+          "params": {
+            "value": 2
+          },
+          "text": "+2 bleed"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "DOM"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "add 2 blood to a younger vampire you control or in your uncontrolled region",
+            "condition": "the bleed is successful"
+          },
+          "text": "if the bleed is successful, add 2 blood to a younger vampire you control or in your uncontrolled region."
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "bleed": 2
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

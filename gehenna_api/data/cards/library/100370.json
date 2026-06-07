@@ -1,0 +1,44 @@
+{
+  "codevdb": 100370,
+  "name": "Cobra Fangs",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "ser"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "burn that ally after action resolution",
+            "condition": "any damage from this strike is successfully inflicted on an opposing ally"
+          },
+          "text": "If any damage from this strike is successfully inflicted on an opposing ally, burn that ally after action resolution."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "SER"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "the opposing vampire goes to torpor during their next unlock phase",
+            "condition": "any damage from this strike is successfully inflicted on an opposing vampire"
+          },
+          "text": "if any damage from this strike is successfully inflicted on an opposing vampire, the opposing vampire goes to torpor during their next unlock phase."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

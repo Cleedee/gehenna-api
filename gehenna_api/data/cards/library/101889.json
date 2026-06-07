@@ -1,0 +1,53 @@
+{
+  "codevdb": 101889,
+  "name": "Stutter-Step",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "cel"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.dodge",
+          "params": {},
+          "text": "Strike: dodge."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "CEL"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "card.restrict_use",
+          "params": {
+            "condition": "only usable at close range"
+          },
+          "text": "Only usable at close range"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "and this vampire cannot use any additional strikes this round",
+            "condition": "both strike: hand strike and strike: dodges could be chosen (individually). Only usable at close range. Not usable as an additional strike"
+          },
+          "text": "if both strike: hand strike and strike: dodges could be chosen (individually). Only usable at close range. Not usable as an additional strike, and this vampire cannot use any additional strikes this round."
+        },
+        {
+          "function": "combat.dodge",
+          "params": {},
+          "text": "Strike: hand strike and dodge. Only usable if both strike: hand strike and strike: dodges could be chosen (individually). Only usable at close range. Not usable as an additional strike, and this vampire cannot use any additional strikes this round."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

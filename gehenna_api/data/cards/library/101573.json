@@ -1,0 +1,40 @@
+{
+  "codevdb": 101573,
+  "name": "Red Herring",
+  "tipo": "action_modifier",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "chi"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "action.unlock",
+          "params": {},
+          "text": "unlock this vampire"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "return it to its owner's hand (discard down afterward)",
+            "condition": "an action card was used to perform the action"
+          },
+          "text": "If an action card was used to perform the action, return it to its owner's hand (discard down afterward)."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "CHI"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": []
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

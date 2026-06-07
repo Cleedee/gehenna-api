@@ -1,0 +1,17 @@
+{
+  "codevdb": 101007,
+  "name": "IR Goggles",
+  "tipo": "equipment",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.maneuver",
+      "params": {},
+      "text": "Electronic equipment.\nThis minion gets an optional maneuver each combat."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,19 @@
+{
+  "codevdb": 101322,
+  "name": "Open Dossier",
+  "tipo": "reaction",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "intercept": 2
+  },
+  "default_strike": [
+    {
+      "function": "combat.maneuver",
+      "params": {},
+      "text": "Only usable by a vampire who has been chosen for a contract on the acting minion. This vampire attempts to block with +2 intercept and gets an optional maneuver in the resulting combat if successful. Usable by a locked vampire even if intercept is not yet needed."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

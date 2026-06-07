@@ -1,0 +1,57 @@
+{
+  "codevdb": 101177,
+  "name": "Masca",
+  "tipo": "action_modifier",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "obf"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 stealth"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "str"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "combat.additional_strike",
+          "params": {},
+          "text": "This acting vampire gets an optional additional strike (limited) each round of combat until the end of this action. [str] is not a Discipline."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "STR"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 2
+          },
+          "text": "+2 stealth"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 3
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

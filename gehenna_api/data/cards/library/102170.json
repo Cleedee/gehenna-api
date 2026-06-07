@@ -1,0 +1,11 @@
+{
+  "codevdb": 102170,
+  "name": "Weirding Stone",
+  "tipo": "equipment",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

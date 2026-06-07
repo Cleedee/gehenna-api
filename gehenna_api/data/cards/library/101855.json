@@ -1,0 +1,11 @@
+{
+  "codevdb": 101855,
+  "name": "Spontaneous Power",
+  "tipo": "master",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

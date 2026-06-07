@@ -1,0 +1,11 @@
+{
+  "codevdb": 200912,
+  "name": "Marcia Felicia Licinia",
+  "tipo": "vampire",
+  "source": "cardbase_crypt.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

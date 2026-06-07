@@ -1,0 +1,13 @@
+{
+  "codevdb": 100039,
+  "name": "Alia, God's Messenger",
+  "tipo": "ally",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

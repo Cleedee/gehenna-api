@@ -1,0 +1,317 @@
+{
+  "deck_id": 241,
+  "name": "Museu Vivo no Inferno  (Living museum in hell)",
+  "creator": "Cláudio Torcato",
+  "date": "2026-05-05",
+  "format": "2R+F",
+  "description": "Date: 2025-04-27\nPlayers: 10\nEvent: Acidente no Laboratório\nLocation: Teresina, Brazil\n",
+  "all_reviewed": true,
+  "cards": [
+    {
+      "codevdb": 100297,
+      "name": "Carfax Abbey",
+      "tipo": "Master",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "Master - plain text, no discipline abilities",
+      "card_path": "gehenna_api/data/cards/library/100297.json"
+    },
+    {
+      "codevdb": 100401,
+      "name": "Conditioning",
+      "tipo": "Action Modifier",
+      "quantity": 2,
+      "needs_review": false,
+      "notes": "Conditioning: [dom]+2bleed [DOM]+3bleed",
+      "card_path": "gehenna_api/data/cards/library/100401.json"
+    },
+    {
+      "codevdb": 100422,
+      "name": "Cooler",
+      "tipo": "Equipment",
+      "quantity": 2,
+      "needs_review": false,
+      "notes": "Equipment - plain text, blood counter management",
+      "card_path": "gehenna_api/data/cards/library/100422.json"
+    },
+    {
+      "codevdb": 100518,
+      "name": "Deflection",
+      "tipo": "Reaction",
+      "quantity": 6,
+      "needs_review": false,
+      "notes": "[dom] redirect bleed + lock. [DOM] redirect bleed no lock.",
+      "card_path": "gehenna_api/data/cards/library/100518.json"
+    },
+    {
+      "codevdb": 100588,
+      "name": "Dreams of the Sphinx",
+      "tipo": "Master",
+      "quantity": 2,
+      "needs_review": false,
+      "notes": "Master - plain text, draw engine",
+      "card_path": "gehenna_api/data/cards/library/100588.json"
+    },
+    {
+      "codevdb": 100600,
+      "name": "Earth Control",
+      "tipo": "Action Modifier",
+      "quantity": 6,
+      "needs_review": false,
+      "notes": "Earth Control: [pro]+1stealth [PRO]+2stealth",
+      "card_path": "gehenna_api/data/cards/library/100600.json"
+    },
+    {
+      "codevdb": 100601,
+      "name": "Earth Meld",
+      "tipo": "Combat",
+      "quantity": 4,
+      "needs_review": false,
+      "notes": "Earth Meld: [pro]combat.end [PRO]unlock+combat.end",
+      "card_path": "gehenna_api/data/cards/library/100601.json"
+    },
+    {
+      "codevdb": 100605,
+      "name": "Eat the Rich",
+      "tipo": "Political Action",
+      "quantity": 2,
+      "needs_review": false,
+      "notes": "Political Action - no discipline brackets",
+      "card_path": "gehenna_api/data/cards/library/100605.json"
+    },
+    {
+      "codevdb": 100765,
+      "name": "Foreshadowing Destruction",
+      "tipo": "Action Modifier",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "Foreshadowing Destruction: [dom]+1bleed [DOM]+3bleed",
+      "card_path": "gehenna_api/data/cards/library/100765.json"
+    },
+    {
+      "codevdb": 100771,
+      "name": "Form of Mist",
+      "tipo": "Combat",
+      "quantity": 4,
+      "needs_review": false,
+      "notes": "[pro] dodge. [PRO] combat ends + continue action after block (complex, verify).",
+      "card_path": "gehenna_api/data/cards/library/100771.json"
+    },
+    {
+      "codevdb": 100809,
+      "name": "Garibaldi-Meucci Museum",
+      "tipo": "Master",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "Master - plain text, location ability",
+      "card_path": "gehenna_api/data/cards/library/100809.json"
+    },
+    {
+      "codevdb": 100845,
+      "name": "Govern the Unaligned",
+      "tipo": "Action",
+      "quantity": 8,
+      "needs_review": false,
+      "notes": "Govern the Unaligned: [dom](D)+2bleed [DOM]+1stealth+3blood",
+      "card_path": "gehenna_api/data/cards/library/100845.json"
+    },
+    {
+      "codevdb": 100863,
+      "name": "Guard Dogs",
+      "tipo": "Reaction",
+      "quantity": 4,
+      "needs_review": false,
+      "notes": "Guard Dogs: [ani]unlock [ANI]unlock+maneuver",
+      "card_path": "gehenna_api/data/cards/library/100863.json"
+    },
+    {
+      "codevdb": 100903,
+      "name": "Heart of Nizchetus",
+      "tipo": "Equipment",
+      "quantity": 2,
+      "needs_review": false,
+      "notes": "Equipment - plain text, draw ability",
+      "card_path": "gehenna_api/data/cards/library/100903.json"
+    },
+    {
+      "codevdb": 100908,
+      "name": "Heidelberg Castle, Germany",
+      "tipo": "Master",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "Master - plain text, location",
+      "card_path": "gehenna_api/data/cards/library/100908.json"
+    },
+    {
+      "codevdb": 100972,
+      "name": "Incriminating Videotape",
+      "tipo": "Equipment",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "Equipment - plain text",
+      "card_path": "gehenna_api/data/cards/library/100972.json"
+    },
+    {
+      "codevdb": 101114,
+      "name": "Living Manse",
+      "tipo": "Equipment",
+      "quantity": 6,
+      "needs_review": false,
+      "notes": "Equipment - plain text, bleed modifier",
+      "card_path": "gehenna_api/data/cards/library/101114.json"
+    },
+    {
+      "codevdb": 101781,
+      "name": "Signet of King Saul, The",
+      "tipo": "Equipment",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "Equipment - plain text",
+      "card_path": "gehenna_api/data/cards/library/101781.json"
+    },
+    {
+      "codevdb": 102052,
+      "name": "Two Wrongs",
+      "tipo": "Master",
+      "quantity": 2,
+      "needs_review": false,
+      "notes": "Master - plain text",
+      "card_path": "gehenna_api/data/cards/library/102052.json"
+    },
+    {
+      "codevdb": 102121,
+      "name": "Villein",
+      "tipo": "Master",
+      "quantity": 3,
+      "needs_review": false,
+      "notes": "Master - plain text, blood management",
+      "card_path": "gehenna_api/data/cards/library/102121.json"
+    },
+    {
+      "codevdb": 102180,
+      "name": "Wider View",
+      "tipo": "Master",
+      "quantity": 2,
+      "needs_review": false,
+      "notes": "Master - plain text",
+      "card_path": "gehenna_api/data/cards/library/102180.json"
+    },
+    {
+      "codevdb": 102218,
+      "name": "Bait and Switch",
+      "tipo": "Reaction",
+      "quantity": 4,
+      "needs_review": false,
+      "notes": "Reaction - plain text",
+      "card_path": "gehenna_api/data/cards/library/102218.json"
+    },
+    {
+      "codevdb": 102219,
+      "name": "Deep Ecology",
+      "tipo": "Reaction",
+      "quantity": 4,
+      "needs_review": false,
+      "notes": "Deep Ecology: [ani]+1intercept [for] [pro]",
+      "card_path": "gehenna_api/data/cards/library/102219.json"
+    },
+    {
+      "codevdb": 102223,
+      "name": "Form of the Bat",
+      "tipo": "Action Modifier/Reaction",
+      "quantity": 4,
+      "needs_review": false,
+      "notes": "Complex conditional effects simplified. [pro] -1intercept on blocker + maneuver if blocked. [PRO] +1intercept when blocking + maneuver if blocked.",
+      "card_path": "gehenna_api/data/cards/library/102223.json"
+    },
+    {
+      "codevdb": 102236,
+      "name": "British Museum, London, The",
+      "tipo": "Master",
+      "quantity": 5,
+      "needs_review": false,
+      "notes": "Master - plain text, location",
+      "card_path": "gehenna_api/data/cards/library/102236.json"
+    },
+    {
+      "codevdb": 102255,
+      "name": "Obedient Flesh",
+      "tipo": "Action Modifier/Combat",
+      "quantity": 2,
+      "needs_review": false,
+      "notes": "[dom/pro] +1stealth +1intercept, before range. [DOM/PRO] strength+1 damage, prevent 1, maneuver, once per round.",
+      "card_path": "gehenna_api/data/cards/library/102255.json"
+    },
+    {
+      "codevdb": 201664,
+      "name": "Adrino Manauara",
+      "tipo": "Vampire",
+      "quantity": 2,
+      "needs_review": false,
+      "notes": "Vampire - plain text, no bracket abilities",
+      "card_path": "gehenna_api/data/cards/crypt/201664.json"
+    },
+    {
+      "codevdb": 201665,
+      "name": "Ángel Guerrero",
+      "tipo": "Vampire",
+      "quantity": 2,
+      "needs_review": false,
+      "notes": "Vampire - plain text, no bracket abilities",
+      "card_path": "gehenna_api/data/cards/crypt/201665.json"
+    },
+    {
+      "codevdb": 201667,
+      "name": "Branimira",
+      "tipo": "Vampire",
+      "quantity": 2,
+      "needs_review": false,
+      "notes": "Vampire - plain text, intercept +1",
+      "card_path": "gehenna_api/data/cards/crypt/201667.json"
+    },
+    {
+      "codevdb": 201669,
+      "name": "Clara Hjortshøj",
+      "tipo": "Vampire",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "Vampire - plain text, no bracket abilities",
+      "card_path": "gehenna_api/data/cards/crypt/201669.json"
+    },
+    {
+      "codevdb": 201677,
+      "name": "Marialena",
+      "tipo": "Vampire",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "Vampire - plain text, no bracket abilities",
+      "card_path": "gehenna_api/data/cards/crypt/201677.json"
+    },
+    {
+      "codevdb": 201678,
+      "name": "Neserian",
+      "tipo": "Vampire",
+      "quantity": 2,
+      "needs_review": false,
+      "notes": "Vampire - plain text, no bracket abilities",
+      "card_path": "gehenna_api/data/cards/crypt/201678.json"
+    },
+    {
+      "codevdb": 201682,
+      "name": "Prentis Derby",
+      "tipo": "Vampire",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "Vampire - plain text, no bracket abilities",
+      "card_path": "gehenna_api/data/cards/crypt/201682.json"
+    },
+    {
+      "codevdb": 201690,
+      "name": "Whisper",
+      "tipo": "Vampire",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "Vampire - plain text, no bracket abilities",
+      "card_path": "gehenna_api/data/cards/crypt/201690.json"
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "codevdb": 100014,
+  "name": "Abyssal Hunter",
+  "tipo": "ally",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 1,
+        "damage_type": "ranged"
+      },
+      "text": "Demon with 4 life. 3 strength, 0 bleed.\nAbyssal Hunter can inflict 1 damage on any minion as a (D) action. During your unlock phase, Abyssal Hunter inflicts 1 damage on a ready vampire you control. Burn Abyssal Hunter if any ranged aggravated damage is inflicted on it (even if prevented)."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

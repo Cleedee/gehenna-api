@@ -1,0 +1,52 @@
+{
+  "codevdb": 101017,
+  "name": "Jackal",
+  "tipo": "retainer",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "ani"
+      ],
+      "context": "RETAINER",
+      "effects": [
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 stealth"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "the minion with this retainer gets +1 stealth",
+            "condition": "your prey controls a ready Minister or Banu Haqim"
+          },
+          "text": "If your prey controls a ready Minister or Banu Haqim, the minion with this retainer gets +1 stealth."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "ANI"
+      ],
+      "context": "RETAINER",
+      "effects": [
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 2
+          },
+          "text": "+2 stealth"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 3
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

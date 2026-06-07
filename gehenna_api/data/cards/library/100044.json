@@ -1,0 +1,11 @@
+{
+  "codevdb": 100044,
+  "name": "Ambrosius, The Ferryman",
+  "tipo": "ally",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

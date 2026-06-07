@@ -1,0 +1,20 @@
+{
+  "codevdb": 101287,
+  "name": "Nightstick",
+  "tipo": "equipment",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 1,
+        "damage_type": "normal"
+      },
+      "text": "Melee weapon.\nStrike: strength+1 damage. Or strike: prevent 3 damage to this striking minion from the opposing minion's next hand or melee weapon strike this round (including any currently-resolving hand or melee weapon strike). Only usable once each round."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

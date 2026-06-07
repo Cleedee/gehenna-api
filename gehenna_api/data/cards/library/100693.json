@@ -1,0 +1,17 @@
+{
+  "codevdb": 100693,
+  "name": "Fake Out",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.maneuver",
+      "params": {},
+      "text": "Do not replace until after combat.\nManeuver."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

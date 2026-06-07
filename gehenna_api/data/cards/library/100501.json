@@ -1,0 +1,49 @@
+{
+  "codevdb": 100501,
+  "name": "Dawn Operation",
+  "tipo": "action_modifier",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "for"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "combat.set_damage_type",
+          "params": {
+            "damage_type": "aggravated"
+          },
+          "text": "Damage is aggravated"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "all damage inflicted to vampires in the resulting combat is aggravated",
+            "condition": "this action is blocked"
+          },
+          "text": "If this action is blocked, all damage inflicted to vampires in the resulting combat is aggravated."
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "now choose not to block"
+          },
+          "text": "now choose not to block"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "FOR"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": []
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

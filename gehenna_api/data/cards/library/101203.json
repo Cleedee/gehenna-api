@@ -1,0 +1,67 @@
+{
+  "codevdb": 101203,
+  "name": "Mercy for Seth",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "nec"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 stealth"
+        },
+        {
+          "function": "action.equip",
+          "params": {
+            "attachment": "self"
+          },
+          "text": "put this card on this vampire"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "they are burned",
+            "condition": "the attached minion is a mortal"
+          },
+          "text": "If the attached minion is a mortal, they are burned."
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "burn this card as a +1 stealth action"
+          },
+          "text": "burn this card as a +1 stealth action"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "NEC"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.strike",
+          "params": {
+            "damage": 1,
+            "damage_type": "normal"
+          },
+          "text": "As above, and this strike inflicts 1 damage on the opposing minion."
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

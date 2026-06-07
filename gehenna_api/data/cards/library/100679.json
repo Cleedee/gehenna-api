@@ -1,0 +1,37 @@
+{
+  "codevdb": 100679,
+  "name": "Eye of Unforgiving Heaven",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "aus",
+        "val"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "you gain 2 pool",
+            "condition": "this striking vampire is burned during the resolution of this strike"
+          },
+          "text": "If this striking vampire is burned during the resolution of this strike, you gain 2 pool."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "AUS",
+        "VAL"
+      ],
+      "context": "COMBAT",
+      "effects": []
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

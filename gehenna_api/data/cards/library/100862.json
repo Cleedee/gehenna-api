@@ -1,0 +1,44 @@
+{
+  "codevdb": 100862,
+  "name": "Growing Fury",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "pot"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.strike",
+          "params": {
+            "damage": 2,
+            "damage_type": "normal"
+          },
+          "text": "Strike: hand strike or use a melee weapon strike. This strike is at +2 damage. Not usable first round of combat."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "POT"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.strike",
+          "params": {
+            "damage": 3,
+            "damage_type": "normal"
+          },
+          "text": "Strike: hand or use a melee weapon strike. This strike is at +3 damage. Not usable first round of combat."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

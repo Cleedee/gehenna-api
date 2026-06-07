@@ -1,0 +1,20 @@
+{
+  "codevdb": 100811,
+  "name": "Gas-Powered Chainsaw",
+  "tipo": "equipment",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 3,
+        "damage_type": "normal"
+      },
+      "text": "Melee weapon.\n3 damage each strike. This weapon is only usable once each combat."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

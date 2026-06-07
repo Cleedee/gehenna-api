@@ -1,0 +1,36 @@
+{
+  "codevdb": 100835,
+  "name": "Glare of Lies",
+  "tipo": "reaction",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "aus",
+        "obe"
+      ],
+      "context": "REACTION",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "look at the acting minion's controller's hand"
+          },
+          "text": "look at the acting minion's controller's hand"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "AUS",
+        "OBE"
+      ],
+      "context": "REACTION",
+      "effects": []
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,11 @@
+{
+  "codevdb": 102137,
+  "name": "Wake with Evening's Freshness",
+  "tipo": "reaction",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

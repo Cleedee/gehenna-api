@@ -1,0 +1,34 @@
+{
+  "codevdb": 100700,
+  "name": "Fanfare for Elysium",
+  "tipo": "political_action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "mel"
+      ],
+      "context": "POLITICAL ACTION",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "MEL"
+      ],
+      "context": "POLITICAL ACTION",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "burn this card before range is determined to end a combat"
+          },
+          "text": "burn this card before range is determined to end a combat"
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

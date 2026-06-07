@@ -1,0 +1,57 @@
+{
+  "codevdb": 100683,
+  "name": "Eyes of the Beast",
+  "tipo": "reaction",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "pro"
+      ],
+      "context": "REACTION",
+      "effects": [
+        {
+          "function": "modifier.intercept",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 intercept"
+        },
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 stealth"
+        },
+        {
+          "function": "action.equip",
+          "params": {
+            "attachment": "self"
+          },
+          "text": "put this card on this vampire"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "PRO"
+      ],
+      "context": "REACTION",
+      "effects": [
+        {
+          "function": "combat.maneuver",
+          "params": {},
+          "text": "As above, with 1 optional maneuver during the first round of the resulting combat if this vampire blocks."
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "intercept": 1,
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

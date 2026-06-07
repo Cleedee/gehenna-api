@@ -1,0 +1,20 @@
+{
+  "codevdb": 101942,
+  "name": "Target Vitals",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 2,
+        "damage_type": "normal"
+      },
+      "text": "Aim. Only usable as this minion chooses a strike. A minion can play only one aim each strike.\nIf any damage from this strike is successfully inflicted on the opposing minion, they take +2 damage from this strike, and they cannot press this round. They can discard two combat cards to cancel this card as it is played."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

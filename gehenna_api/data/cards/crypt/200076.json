@@ -1,0 +1,11 @@
+{
+  "codevdb": 200076,
+  "name": "Anarch Convert",
+  "tipo": "vampire",
+  "source": "cardbase_crypt.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": false,
+  "notes": "Vampire - plain text"
+}

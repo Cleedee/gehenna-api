@@ -1,0 +1,43 @@
+{
+  "codevdb": 100955,
+  "name": "Illusory Resources",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "chi"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "move 1 blood to this card"
+          },
+          "text": "move 1 blood to this card"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "burn X counters from this card to reduce a bleed against you by X"
+          },
+          "text": "burn X counters from this card to reduce a bleed against you by X"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "CHI"
+      ],
+      "context": "ACTION",
+      "effects": []
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

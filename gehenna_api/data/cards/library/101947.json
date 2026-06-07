@@ -1,0 +1,41 @@
+{
+  "codevdb": 101947,
+  "name": "Taunt the Caged Beast",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "ani"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "combat.maneuver",
+          "params": {},
+          "text": "(D) Enter combat with any vampire, with an optional maneuver in that combat."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "ANI"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "he or she gains 4 blood",
+            "condition": "only one is ready at the end of that combat"
+          },
+          "text": "If only one is ready at the end of that combat, he or she gains 4 blood."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

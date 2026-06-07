@@ -1,0 +1,45 @@
+{
+  "codevdb": 102177,
+  "name": "Whistling Up the Beast",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "abo"
+      ],
+      "context": "COMBAT",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "abo"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.maneuver",
+          "params": {},
+          "text": "Frenzy. Only usable before range is determined on the first round. During this combat, the opposing vampire cannot use maneuvers to maneuver to close range and cannot use presses to continue combat."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "ABO"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.maneuver",
+          "params": {},
+          "text": "As above, and this vampire gets an optional maneuver this round."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

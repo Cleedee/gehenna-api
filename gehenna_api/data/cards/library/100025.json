@@ -1,0 +1,11 @@
+{
+  "codevdb": 100025,
+  "name": "Agent of Power",
+  "tipo": "master",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

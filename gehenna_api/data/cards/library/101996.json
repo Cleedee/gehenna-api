@@ -1,0 +1,17 @@
+{
+  "codevdb": 101996,
+  "name": "Tortured Confession",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.end",
+      "params": {},
+      "text": "Only usable when the opposing vampire goes into torpor. Not usable by a vampire being burned or going to torpor.\nCombat ends. You may look at the opposing vampire's controller's hand."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

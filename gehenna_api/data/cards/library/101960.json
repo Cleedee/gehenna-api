@@ -1,0 +1,40 @@
+{
+  "codevdb": 101960,
+  "name": "Terror Frenzy",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "ani"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.maneuver",
+          "params": {},
+          "text": "Only usable before range is determined on the first round. During this combat, the opposing minion cannot use maneuvers to maneuver to close range, cannot use presses to continue combat and cannot use equipment."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "ANI"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "play only one Terror Frenzy at superior each combat"
+          },
+          "text": "play only one Terror Frenzy at superior each combat"
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

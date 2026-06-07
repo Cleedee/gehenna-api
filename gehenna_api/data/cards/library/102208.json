@@ -1,0 +1,25 @@
+{
+  "codevdb": 102208,
+  "name": "Zip Gun",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.maneuver",
+      "params": {},
+      "text": "Before range is determined, put this card on this minion. This card represents an equipment card and doesn't count as a combat card while in play. This equipment is a weapon, gun. Ammo cards cannot be used with this gun. It does 1R damage each strike, with an optional maneuver each combat. Bearer takes 1 damage during strike resolution when striking with this gun, but only once each combat. This card is kept as normal equipment and is not discarded after combat."
+    },
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 1,
+        "damage_type": "ranged"
+      },
+      "text": "Before range is determined, put this card on this minion. This card represents an equipment card and doesn't count as a combat card while in play. This equipment is a weapon, gun. Ammo cards cannot be used with this gun. It does 1R damage each strike, with an optional maneuver each combat. Bearer takes 1 damage during strike resolution when striking with this gun, but only once each combat. This card is kept as normal equipment and is not discarded after combat."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

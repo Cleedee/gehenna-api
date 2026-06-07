@@ -1,0 +1,13 @@
+{
+  "codevdb": 101352,
+  "name": "Paris Opera House",
+  "tipo": "master",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

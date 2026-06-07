@@ -1,0 +1,51 @@
+{
+  "codevdb": 100994,
+  "name": "Instantaneous Transformation",
+  "tipo": "action_modifier",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "cel",
+        "pro"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 stealth"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "CEL",
+        "PRO"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "action.unlock",
+          "params": {},
+          "text": "Unlock this vampire."
+        },
+        {
+          "function": "card.restrict_use",
+          "params": {
+            "max_per_turn": 1
+          },
+          "text": "A vampire can play only one Instantaneous Transformation at superior each turn."
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": false,
+  "notes": "[cel][pro] +1stealth. [CEL][PRO] unlock, once per turn."
+}

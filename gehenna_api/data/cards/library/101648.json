@@ -1,0 +1,47 @@
+{
+  "codevdb": 101648,
+  "name": "Roll",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "FLIGHT"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "you may move this card from your ash heap to your hand instead",
+            "condition": "this minion is still ready when you would draw to replace this card"
+          },
+          "text": "If this minion is still ready when you would draw to replace this card, you may move this card from your ash heap to your hand instead."
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "play only one Roll each round"
+          },
+          "text": "play only one Roll each round"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "move this card from your ash heap to your hand instead"
+          },
+          "text": "move this card from your ash heap to your hand instead"
+        },
+        {
+          "function": "combat.maneuver",
+          "params": {},
+          "text": "Maneuver. A minion may play only one Roll each round. If this minion is still ready when you would draw to replace this card, you may move this card from your ash heap to your hand instead."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

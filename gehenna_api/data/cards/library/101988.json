@@ -1,0 +1,42 @@
+{
+  "codevdb": 101988,
+  "name": "Tongue of the Serpent",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "ser"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.steal_blood",
+          "params": {
+            "amount": 1
+          },
+          "text": "Strike: steal 1 blood or life (becoming blood)."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "SER"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.steal_blood",
+          "params": {
+            "amount": 2
+          },
+          "text": "Strike: steal 2 blood or life (becoming blood)."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

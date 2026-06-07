@@ -1,0 +1,44 @@
+{
+  "codevdb": 100401,
+  "name": "Conditioning",
+  "tipo": "action_modifier",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "dom"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "modifier.bleed",
+          "params": {
+            "value": 2
+          },
+          "text": "+2 bleed"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "DOM"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "modifier.bleed",
+          "params": {
+            "value": 3
+          },
+          "text": "+3 bleed"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "bleed": 5
+  },
+  "default_strike": null,
+  "needs_review": false,
+  "notes": "Conditioning: [dom]+2bleed [DOM]+3bleed"
+}

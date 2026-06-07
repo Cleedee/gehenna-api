@@ -1,0 +1,43 @@
+{
+  "codevdb": 100601,
+  "name": "Earth Meld",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "pro"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.end",
+          "params": {},
+          "text": "Strike: combat ends."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "PRO"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "action.unlock",
+          "params": {},
+          "text": "unlock this vampire"
+        },
+        {
+          "function": "combat.end",
+          "params": {},
+          "text": "As above, and unlock this vampire before combat ends."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": false,
+  "notes": "Earth Meld: [pro]combat.end [PRO]unlock+combat.end"
+}

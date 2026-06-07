@@ -1,0 +1,50 @@
+{
+  "codevdb": 101727,
+  "name": "Serpent's Numbing Kiss",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "pre",
+        "ser"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.end",
+          "params": {},
+          "text": "Strike: combat ends."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "PRE",
+        "SER"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "action.equip",
+          "params": {
+            "attachment": "self"
+          },
+          "text": "put this card on this vampire"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "this vampire burns 1 blood to put this card on the opposing minion and lock them",
+            "condition": "the range is close"
+          },
+          "text": "if the range is close, this vampire burns 1 blood to put this card on the opposing minion and lock them."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

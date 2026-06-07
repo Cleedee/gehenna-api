@@ -1,0 +1,46 @@
+{
+  "codevdb": 101923,
+  "name": "Sympathetic Agony",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "chi",
+        "for"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "the opposing minion cannot press that round",
+            "condition": "any damage is successfully inflicted on this vampire in a round"
+          },
+          "text": "if any damage is successfully inflicted on this vampire in a round, the opposing minion cannot press that round."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "CHI",
+        "FOR"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "the opposing minion cannot use additional strikes that round",
+            "condition": "any damage is successfully inflicted on this vampire in a round"
+          },
+          "text": "if any damage is successfully inflicted on this vampire in a round, the opposing minion cannot use additional strikes that round."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

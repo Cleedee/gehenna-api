@@ -1,0 +1,20 @@
+{
+  "codevdb": 100246,
+  "name": "Brass Knuckles",
+  "tipo": "equipment",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 1,
+        "damage_type": "normal"
+      },
+      "text": "Melee weapon.\nStrength+1 damage each strike, only usable once each combat."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,11 @@
+{
+  "codevdb": 201542,
+  "name": "Chrysanthemum",
+  "tipo": "vampire",
+  "source": "cardbase_crypt.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

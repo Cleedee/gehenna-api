@@ -1,0 +1,46 @@
+{
+  "codevdb": 101740,
+  "name": "Shadow of the Beast",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "pro"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "action.equip",
+          "params": {
+            "attachment": "self"
+          },
+          "text": "put this card on this vampire"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "have only one Shadow of the Beast"
+          },
+          "text": "have only one Shadow of the Beast"
+        },
+        {
+          "function": "combat.maneuver",
+          "params": {},
+          "text": "Put this card on the acting vampire. The vampire with this card gets an optional maneuver each combat. A vampire may have only one Shadow of the Beast."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "PRO"
+      ],
+      "context": "ACTION",
+      "effects": []
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

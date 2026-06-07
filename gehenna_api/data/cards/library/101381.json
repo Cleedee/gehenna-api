@@ -1,0 +1,42 @@
+{
+  "codevdb": 101381,
+  "name": "Peacemaker",
+  "tipo": "reaction",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "pre"
+      ],
+      "context": "REACTION",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "all minions get -1 bleed and -1 strength",
+            "condition": "unblocked. This action"
+          },
+          "text": "if unblocked. This action, all minions get -1 bleed and -1 strength."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "obe"
+      ],
+      "context": "REACTION",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "OBE"
+      ],
+      "context": "REACTION",
+      "effects": []
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

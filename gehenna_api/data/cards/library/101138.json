@@ -1,0 +1,68 @@
+{
+  "codevdb": 101138,
+  "name": "Madman's Quill",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "aus",
+        "dem"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "modifier.bleed",
+          "params": {
+            "value": 2
+          },
+          "text": "+2 bleed"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "AUS",
+        "DEM"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "modifier.bleed",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 bleed"
+        },
+        {
+          "function": "action.equip",
+          "params": {
+            "attachment": "self"
+          },
+          "text": "put this card on this vampire"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "that acting vampire gets +1 bleed",
+            "condition": "a Madman's Quill is already on any of your prey's minions. When a vampire with Dementation [dem] bleeds this minion's controller"
+          },
+          "text": "if a Madman's Quill is already on any of your prey's minions. When a vampire with Dementation [dem] bleeds this minion's controller, that acting vampire gets +1 bleed."
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "burn this card as an action that costs 2 blood"
+          },
+          "text": "burn this card as an action that costs 2 blood"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "bleed": 3
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

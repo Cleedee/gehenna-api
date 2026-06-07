@@ -1,0 +1,55 @@
+{
+  "codevdb": 100771,
+  "name": "Form of Mist",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "pro"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.dodge",
+          "params": {},
+          "text": "Strike: dodge."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "PRO"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.end",
+          "params": {},
+          "text": "Strike: combat ends."
+        },
+        {
+          "function": "action.continue_after_combat",
+          "params": {
+            "blood_cost": 1,
+            "stealth": 1
+          },
+          "text": "After combat ends, if this vampire was blocked while performing an action, they can burn 1 blood to continue the action with +1 stealth as if unblocked, even if stealth is not yet needed."
+        },
+        {
+          "function": "card.restrict_use",
+          "params": {
+            "max_per_action": 1
+          },
+          "text": "A vampire can play only one Form of Mist at superior each action."
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": false,
+  "notes": "[pro] dodge. [PRO] combat ends + continue action after block (complex, verify)."
+}

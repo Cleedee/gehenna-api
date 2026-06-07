@@ -1,0 +1,19 @@
+{
+  "codevdb": 100260,
+  "name": "Brujah Debate",
+  "tipo": "master",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "strength": 1
+  },
+  "default_strike": [
+    {
+      "function": "combat.maneuver",
+      "params": {},
+      "text": "Put this card in play. During each Methuselah's master phase, that Methuselah locks one of the oldest Brujah they control (if any). Brujah get +1 strength and 1 optional maneuver each combat. Non-Ventrue minions can burn this card as a (D) action."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

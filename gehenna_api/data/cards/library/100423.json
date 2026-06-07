@@ -1,0 +1,48 @@
+{
+  "codevdb": 100423,
+  "name": "Coordinate Attacks",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "san"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "card.restrict_use",
+          "params": {
+            "condition": "only usable at the end of a round if the minion opposing the blood brother you control is still ready and combat is about to end"
+          },
+          "text": "Only usable at the end of a round if the minion opposing the Blood Brother you control is still ready and combat is about to end"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "this Blood Brother locks and enters combat with the opposing minion",
+            "condition": "the minion opposing the Blood Brother you control is still ready and combat is about to end. After this round"
+          },
+          "text": "if the minion opposing the Blood Brother you control is still ready and combat is about to end. After this round, this Blood Brother locks and enters combat with the opposing minion."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "SAN"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.maneuver",
+          "params": {},
+          "text": "As [san] above, and this Blood Brother gets an optional maneuver on the first round of combat."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

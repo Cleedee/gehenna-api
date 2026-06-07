@@ -1,0 +1,20 @@
+{
+  "codevdb": 101689,
+  "name": "Scattershot",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 2,
+        "damage_type": "normal"
+      },
+      "text": "Ammo.\nOnly usable before resolution of a gun's strike. This gun inflicts +2 damage at close range and -2 damage at long range each strike for the remainder of this combat. No more than one ammo card can be used on a gun each combat."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,22 @@
+{
+  "codevdb": 100335,
+  "name": "Charnas the Imp",
+  "tipo": "retainer",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 1,
+        "damage_type": "normal"
+      },
+      "text": "Unique demon with 1 life.\nPut Charnas on any minion (this is a +1 stealth (D) action if that target minion is controlled by another Methuselah). Charnas inflicts 1 damage on the employer during their unlock phase. Charnas is immune to damage from the employer. If the employer is about to be burned, their controller can put Charnas on any other minion."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

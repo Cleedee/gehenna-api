@@ -1,0 +1,11 @@
+{
+  "codevdb": 101625,
+  "name": "Revelation of the Sire",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

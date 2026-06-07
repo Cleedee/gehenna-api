@@ -1,0 +1,20 @@
+{
+  "codevdb": 100448,
+  "name": "Crimson Sentinel, The",
+  "tipo": "equipment",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 1,
+        "damage_type": "normal"
+      },
+      "text": "Unique melee weapon.\nStrength+1 damage as a strike. If this weapon successfully inflicts damage on an opponent in combat, add a soul counter to it at the end of that round. This weapon does one additional point of damage each strike for each soul counter on this card. Remove all soul counters from this card if another minion gains control of it."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

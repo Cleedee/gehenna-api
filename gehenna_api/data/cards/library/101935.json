@@ -1,0 +1,58 @@
+{
+  "codevdb": 101935,
+  "name": "Tangle Atropos' Hand",
+  "tipo": "action_modifier",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "pot"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "action.unlock",
+          "params": {},
+          "text": "unlock this vampire"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "tem"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "back in your hand (discard down afterward)",
+            "condition": "any"
+          },
+          "text": "if any, back in your hand (discard down afterward)."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "TEM"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 stealth"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

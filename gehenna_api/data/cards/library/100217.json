@@ -1,0 +1,11 @@
+{
+  "codevdb": 100217,
+  "name": "Blood Weakens",
+  "tipo": "event",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

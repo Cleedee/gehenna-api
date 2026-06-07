@@ -1,0 +1,11 @@
+{
+  "codevdb": 101583,
+  "name": "Regaining the Upper Hand",
+  "tipo": "political_action",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": false,
+  "notes": "Juliet's Dream deck"
+}

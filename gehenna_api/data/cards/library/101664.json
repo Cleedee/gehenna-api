@@ -1,0 +1,58 @@
+{
+  "codevdb": 101664,
+  "name": "Rutor's Hand",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "tha"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "action.equip",
+          "params": {
+            "attachment": "self"
+          },
+          "text": "put this card on this vampire"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "unlock during your minion phase"
+          },
+          "text": "unlock during your minion phase"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "have only one Rutor's Hand"
+          },
+          "text": "have only one Rutor's Hand"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "THA"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "burn 3 blood to be immune to this aggravated damage"
+          },
+          "text": "burn 3 blood to be immune to this aggravated damage"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,42 @@
+{
+  "codevdb": 100333,
+  "name": "Charismatic Aura",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "aus",
+        "pre"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "play only one Charismatic Aura at basic each round"
+          },
+          "text": "play only one Charismatic Aura at basic each round"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "AUS",
+        "PRE"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.end",
+          "params": {},
+          "text": "Strike: combat ends."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

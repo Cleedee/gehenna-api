@@ -1,0 +1,13 @@
+{
+  "codevdb": 201146,
+  "name": "Quira, The Bitch Queen",
+  "tipo": "vampire",
+  "source": "cardbase_crypt.json",
+  "abilities": [],
+  "modifiers": {
+    "bleed": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

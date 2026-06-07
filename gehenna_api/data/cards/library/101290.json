@@ -1,0 +1,11 @@
+{
+  "codevdb": 101290,
+  "name": "No Confidence",
+  "tipo": "action_modifier",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,14 @@
+{
+  "codevdb": 201001,
+  "name": "Mithras",
+  "tipo": "vampire",
+  "source": "cardbase_crypt.json",
+  "abilities": [],
+  "modifiers": {
+    "bleed": 2,
+    "strength": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

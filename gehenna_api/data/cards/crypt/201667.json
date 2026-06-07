@@ -1,0 +1,13 @@
+{
+  "codevdb": 201667,
+  "name": "Branimira",
+  "tipo": "vampire",
+  "source": "cardbase_crypt.json",
+  "abilities": [],
+  "modifiers": {
+    "intercept": 1
+  },
+  "default_strike": null,
+  "needs_review": false,
+  "notes": "Vampire - plain text, intercept +1"
+}

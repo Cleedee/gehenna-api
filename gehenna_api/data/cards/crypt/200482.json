@@ -1,0 +1,13 @@
+{
+  "codevdb": 200482,
+  "name": "Freddy Gage",
+  "tipo": "vampire",
+  "source": "cardbase_crypt.json",
+  "abilities": [],
+  "modifiers": {
+    "bleed": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

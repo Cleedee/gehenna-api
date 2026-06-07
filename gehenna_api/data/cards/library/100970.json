@@ -1,0 +1,11 @@
+{
+  "codevdb": 100970,
+  "name": "Inconnu Tutelage",
+  "tipo": "event",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

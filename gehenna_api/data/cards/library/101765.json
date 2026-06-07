@@ -1,0 +1,37 @@
+{
+  "codevdb": 101765,
+  "name": "Shepherd's Innocence",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "ani"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "place it on any vampire you control",
+            "condition": "it is an equipment or retainer card"
+          },
+          "text": "If it is an equipment or retainer card, place it on any vampire you control."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "ANI"
+      ],
+      "context": "ACTION",
+      "effects": []
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

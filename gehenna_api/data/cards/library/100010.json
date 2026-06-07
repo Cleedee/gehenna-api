@@ -1,0 +1,20 @@
+{
+  "codevdb": 100010,
+  "name": "Abomination",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "strength": 1,
+    "stealth": 1
+  },
+  "default_strike": [
+    {
+      "function": "combat.maneuver",
+      "params": {},
+      "text": "+1 stealth action. Requires a ready non-sterile vampire.\nBurn a ready unlocked werewolf ally you control to put this card in play. It becomes a unique Independent Abomination with 4 capacity, superior Protean [PRO] and +1 strength. Move up to 4 blood from the acting vampire to this vampire. This vampire gets an additional strike (limited) each round and an optional maneuver each combat. He may enter combat with a ready minion as a (D) action."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

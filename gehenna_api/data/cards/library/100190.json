@@ -1,0 +1,63 @@
+{
+  "codevdb": 100190,
+  "name": "Blissful Agony",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "ani"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.strike",
+          "params": {
+            "damage": 1,
+            "damage_type": "normal"
+          },
+          "text": "Strike: hand strike at +1 damage."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "val"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "card.restrict_use",
+          "params": {
+            "condition": "only usable at close range before strikes are chosen"
+          },
+          "text": "Only usable at close range before strikes are chosen"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "play only one Blissful Agony at [val] each combat"
+          },
+          "text": "play only one Blissful Agony at [val] each combat"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "VAL"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.end",
+          "params": {},
+          "text": "Strike: combat ends. Choose a minion controlled by a Methuselah other than the opposing vampire's controller. The opposing vampire enters combat with that minion."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

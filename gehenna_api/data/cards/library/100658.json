@@ -1,0 +1,58 @@
+{
+  "codevdb": 100658,
+  "name": "Erosion",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "qui"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 stealth"
+        },
+        {
+          "function": "action.equip",
+          "params": {
+            "attachment": "self"
+          },
+          "text": "put this card on this vampire"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "burn this card as a +1 stealth action"
+          },
+          "text": "burn this card as a +1 stealth action"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "QUI"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 stealth"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 3
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,44 @@
+{
+  "codevdb": 100005,
+  "name": "Abandoning the Flesh",
+  "tipo": "combat/reaction",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "dem"
+      ],
+      "context": "COMBAT/REACTION",
+      "effects": [
+        {
+          "function": "modifier.bleed",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 bleed"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "is still successful), and put this card into play",
+            "condition": "any"
+          },
+          "text": "if any, is still successful), and put this card into play."
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "not play this card if you already have an Abandoning the Flesh in play"
+          },
+          "text": "not play this card if you already have an Abandoning the Flesh in play"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "bleed": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

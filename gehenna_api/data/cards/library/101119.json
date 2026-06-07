@@ -1,0 +1,65 @@
+{
+  "codevdb": 101119,
+  "name": "Loki's Gift",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "pro"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 stealth"
+        },
+        {
+          "function": "action.equip",
+          "params": {
+            "attachment": "self"
+          },
+          "text": "put this card on this vampire"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "burn this card and 1 blood to get +1 stealth"
+          },
+          "text": "burn this card and 1 blood to get +1 stealth"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "have only one Loki's Gift"
+          },
+          "text": "have only one Loki's Gift"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "PRO"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "burn this card as above, or can burn it during the polling step of any referendum to get +2 votes"
+          },
+          "text": "burn this card as above, or can burn it during the polling step of any referendum to get +2 votes"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 2
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

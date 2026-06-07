@@ -1,0 +1,60 @@
+{
+  "codevdb": 101618,
+  "name": "Retain the Quick Blood",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "cel",
+        "qui"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "action.equip",
+          "params": {
+            "attachment": "self"
+          },
+          "text": "put this card on this vampire"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "be put on this card instead of returning to the blood bank"
+          },
+          "text": "be put on this card instead of returning to the blood bank"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "move 1 blood from this card to this vampire"
+          },
+          "text": "move 1 blood from this card to this vampire"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "CEL",
+        "QUI"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "move 2 blood"
+          },
+          "text": "move 2 blood"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

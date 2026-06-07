@@ -1,0 +1,11 @@
+{
+  "codevdb": 102148,
+  "name": "Warrant",
+  "tipo": "political_action",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

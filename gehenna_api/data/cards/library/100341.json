@@ -1,0 +1,50 @@
+{
+  "codevdb": 100341,
+  "name": "Chill of Oblivion",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "nec"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "action.equip",
+          "params": {
+            "attachment": "self"
+          },
+          "text": "put this card on this vampire"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "burn this card in combat to treat aggravated damage as normal damage until the end of combat"
+          },
+          "text": "burn this card in combat to treat aggravated damage as normal damage until the end of combat"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "have only one Chill of Oblivion"
+          },
+          "text": "have only one Chill of Oblivion"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "NEC"
+      ],
+      "context": "ACTION",
+      "effects": []
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

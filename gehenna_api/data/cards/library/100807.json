@@ -1,0 +1,13 @@
+{
+  "codevdb": 100807,
+  "name": "Gangrel Revel",
+  "tipo": "master",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "strength": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

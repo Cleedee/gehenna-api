@@ -1,0 +1,53 @@
+{
+  "codevdb": 101991,
+  "name": "Toreador's Bane",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "pre"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.end",
+          "params": {},
+          "text": "Strike: combat ends."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "mel"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "the action continues as if unblocked",
+            "condition": "this vampire was blocked while performing a non-bleed non-political action"
+          },
+          "text": "if this vampire was blocked while performing a non-bleed non-political action, the action continues as if unblocked."
+        },
+        {
+          "function": "combat.end",
+          "params": {},
+          "text": "Strike: combat ends. After combat ends, if this vampire was blocked while performing a non-bleed non-political action, the action continues as if unblocked."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "MEL"
+      ],
+      "context": "COMBAT",
+      "effects": []
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,13 @@
+{
+  "codevdb": 101067,
+  "name": "KRCG News Radio",
+  "tipo": "master",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "intercept": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

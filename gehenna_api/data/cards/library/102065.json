@@ -1,0 +1,41 @@
+{
+  "codevdb": 102065,
+  "name": "Underbridge Stray",
+  "tipo": "ally",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "ani"
+      ],
+      "context": "ALLY",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "burn 1 life to give a minion you control 1 press"
+          },
+          "text": "burn 1 life to give a minion you control 1 press"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "burn this ally if it is not blocking to unlock a ready minion you control"
+          },
+          "text": "burn this ally if it is not blocking to unlock a ready minion you control"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "ANI"
+      ],
+      "context": "ALLY",
+      "effects": []
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

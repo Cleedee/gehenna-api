@@ -1,0 +1,11 @@
+{
+  "codevdb": 201422,
+  "name": "Valerius Maior, Hell's Fool",
+  "tipo": "vampire",
+  "source": "cardbase_crypt.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,52 @@
+{
+  "codevdb": 101925,
+  "name": "Tainted Spring",
+  "tipo": "action_modifier",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "ani"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "modifier.strength",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 strength"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "the animal gets +1 strength (for an ally) or inflicts +1 damage (for damage-dealing retainers)",
+            "condition": "this action is successful"
+          },
+          "text": "If this action is successful, the animal gets +1 strength (for an ally) or inflicts +1 damage (for damage-dealing retainers)."
+        },
+        {
+          "function": "combat.strike",
+          "params": {
+            "damage": 1,
+            "damage_type": "normal"
+          },
+          "text": "If this action is successful, the animal gets +1 strength (for an ally) or inflicts +1 damage (for damage-dealing retainers)."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "ANI"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": []
+    }
+  ],
+  "modifiers": {
+    "strength": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

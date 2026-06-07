@@ -1,0 +1,19 @@
+{
+  "codevdb": 101261,
+  "name": "Mylan Horseed",
+  "tipo": "ally",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": [
+    {
+      "function": "combat.dodge",
+      "params": {},
+      "text": "Unique changeling with 1 life. 0 strength, 1 bleed.\nOnce each combat, Mylan can strike: dodge. He can unlock a ready non-Camarilla vampire with capacity 8 or more as a +1 stealth action. Mylan cannot block vampires."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

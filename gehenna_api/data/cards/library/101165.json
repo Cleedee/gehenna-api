@@ -1,0 +1,20 @@
+{
+  "codevdb": 101165,
+  "name": "Marijava Thuggee",
+  "tipo": "ally",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 1,
+        "damage_type": "normal"
+      },
+      "text": "Ghoul with 3 life. 1 strength, 1 bleed. Requires a ready Black Hand vampire.\nThe thuggee can play cards requiring basic Obfuscate [obf] as a vampire. He can inflict 1 damage on a ready vampire as a (D) action. During your unlock phase, if the number of thuggees you control is greater than the number of Black Hand vampires you control, lock all the thuggees you control."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

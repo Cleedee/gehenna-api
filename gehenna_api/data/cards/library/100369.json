@@ -1,0 +1,43 @@
+{
+  "codevdb": 100369,
+  "name": "Coagulated Entity",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "san"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "each chosen vampire must move 1 blood to the acting vampire or this action is canceled",
+            "condition": "this action if successful). Before the combat begins"
+          },
+          "text": "if this action if successful). Before the combat begins, each chosen vampire must move 1 blood to the acting vampire or this action is canceled."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "SAN"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "prevent up to X damage during that combat"
+          },
+          "text": "prevent up to X damage during that combat"
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

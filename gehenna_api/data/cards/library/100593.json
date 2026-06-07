@@ -1,0 +1,20 @@
+{
+  "codevdb": 100593,
+  "name": "Duma Rafiki",
+  "tipo": "retainer",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 1,
+        "damage_type": "normal"
+      },
+      "text": "Animal with 2 life.\nDuring strike resolution, if the range is close, this retainer burns a weapon controlled by the opposing minion or inflicts 1 damage on the opposing minion."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

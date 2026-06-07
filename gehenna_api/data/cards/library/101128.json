@@ -1,0 +1,61 @@
+{
+  "codevdb": 101128,
+  "name": "Loving Agony",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "ani"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.strike",
+          "params": {
+            "damage": 1,
+            "damage_type": "normal"
+          },
+          "text": "Strike: hand strike at +1 damage."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "val"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.end",
+          "params": {},
+          "text": "Strike: combat ends, and inflict 1 unpreventable damage on the opposing minion after combat ends."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "VAL"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "burn 1 blood to unlock before combat ends"
+          },
+          "text": "burn 1 blood to unlock before combat ends"
+        },
+        {
+          "function": "combat.end",
+          "params": {},
+          "text": "As [val] above, and this vampire can burn 1 blood to unlock before combat ends."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,11 @@
+{
+  "codevdb": 100049,
+  "name": "Amusement Park Hunting Ground",
+  "tipo": "master",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": false,
+  "notes": "Juliet's Dream deck"
+}

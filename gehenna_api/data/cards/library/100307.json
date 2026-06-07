@@ -1,0 +1,46 @@
+{
+  "codevdb": 100307,
+  "name": "Catatonic Fear",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "pre"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.end",
+          "params": {},
+          "text": "Strike: combat ends."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "PRE"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.strike",
+          "params": {
+            "damage": 1,
+            "damage_type": "normal"
+          },
+          "text": "As above, and inflict 1 damage to the opposing minion once combat ends if the range is close."
+        },
+        {
+          "function": "combat.end",
+          "params": {},
+          "text": "As above, and inflict 1 damage to the opposing minion once combat ends if the range is close."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

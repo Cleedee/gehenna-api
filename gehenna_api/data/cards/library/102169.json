@@ -1,0 +1,20 @@
+{
+  "codevdb": 102169,
+  "name": "Weighted Walking Stick",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 1,
+        "damage_type": "normal"
+      },
+      "text": "Only usable before range is determined during the first round.\nPut this card with 5 counters on it on this minion; it becomes a melee weapon equipment that can strike: strength+1 damage. For each damage inflicted by this strike (even if prevented), burn 1 counter from this card. Burn this card if it has no counters. A minion can have only one Weighted Walking Stick."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

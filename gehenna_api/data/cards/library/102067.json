@@ -1,0 +1,53 @@
+{
+  "codevdb": 102067,
+  "name": "Undue Influence",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "chi"
+      ],
+      "context": "ACTION",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "pre"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "add 1 blood to the chosen vampire",
+            "condition": "the bleed is successful"
+          },
+          "text": "If the bleed is successful, add 1 blood to the chosen vampire."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "qui"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "move them to your ready region",
+            "condition": "the amount of blood equals or exceeds their capacity"
+          },
+          "text": "If the amount of blood equals or exceeds their capacity, move them to your ready region."
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

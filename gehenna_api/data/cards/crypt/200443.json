@@ -1,0 +1,13 @@
+{
+  "codevdb": 200443,
+  "name": "Eurayle Gelasia Mylonas",
+  "tipo": "vampire",
+  "source": "cardbase_crypt.json",
+  "abilities": [],
+  "modifiers": {
+    "stealth": 2
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

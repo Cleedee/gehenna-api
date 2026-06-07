@@ -1,0 +1,46 @@
+{
+  "codevdb": 100992,
+  "name": "Inspire Greatness",
+  "tipo": "action_modifier",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "pot",
+        "pre"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "modifier.strength",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 strength"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "POT",
+        "PRE"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "modifier.strength",
+          "params": {
+            "value": 2
+          },
+          "text": "+2 strength"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "strength": 3
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

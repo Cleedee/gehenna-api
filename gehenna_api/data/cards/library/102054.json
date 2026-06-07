@@ -1,0 +1,53 @@
+{
+  "codevdb": 102054,
+  "name": "Typhonic Beast",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "ser"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "modifier.strength",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 strength"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "pot",
+        "ser"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "prevent 1 damage each round"
+          },
+          "text": "prevent 1 damage each round"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "POT",
+        "SER"
+      ],
+      "context": "COMBAT",
+      "effects": []
+    }
+  ],
+  "modifiers": {
+    "strength": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,13 @@
+{
+  "codevdb": 101562,
+  "name": "Realm of the Black Sun, The",
+  "tipo": "master",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

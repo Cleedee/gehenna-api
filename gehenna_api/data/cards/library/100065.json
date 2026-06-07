@@ -1,0 +1,11 @@
+{
+  "codevdb": 100065,
+  "name": "Ancilla Empowerment",
+  "tipo": "political_action",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": false,
+  "notes": "political_action - plain text [Juliet]"
+}

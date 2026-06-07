@@ -1,0 +1,11 @@
+{
+  "codevdb": 101156,
+  "name": "Malkavian Rider Clause",
+  "tipo": "reaction",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,17 @@
+{
+  "codevdb": 100591,
+  "name": "Drum of Xipe Totec",
+  "tipo": "equipment",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.maneuver",
+      "params": {},
+      "text": "Unique equipment.\nThe vampire with this equipment has superior Celerity [CEL]. This vampire gets one optional maneuver each combat."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

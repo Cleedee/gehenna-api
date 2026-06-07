@@ -1,0 +1,20 @@
+{
+  "codevdb": 101839,
+  "name": "Spawning Pool, The",
+  "tipo": "master",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 1,
+        "damage_type": "normal"
+      },
+      "text": "Master: unique location.\nDuring your unlock phase, you may move 1 blood from a ready Nosferatu you control to this card. If a minion you control blocks a bleed against you, you may lock this card during the second round of the resulting combat to inflict 1 damage to the acting minion for each blood on the Spawning Pool. This damage cannot be prevented."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

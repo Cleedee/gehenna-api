@@ -1,0 +1,63 @@
+{
+  "codevdb": 100981,
+  "name": "Infernal Servitor",
+  "tipo": "ally",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "dai"
+      ],
+      "context": "ALLY",
+      "effects": [
+        {
+          "function": "ally.act_same_turn",
+          "params": {},
+          "text": "Infernal Servitor can perform actions the turn it is recruited."
+        },
+        {
+          "function": "ally.remove_condition",
+          "params": {
+            "condition": "no_infernal_controller"
+          },
+          "text": "Remove it from the game if you control no infernal vampires, or after it performs a successful action."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "DAI"
+      ],
+      "context": "ALLY",
+      "effects": [
+        {
+          "function": "ally.act_same_turn",
+          "params": {},
+          "text": "Infernal Servitor can perform actions the turn it is recruited."
+        },
+        {
+          "function": "ally.remove_condition",
+          "params": {
+            "condition": "no_infernal_controller"
+          },
+          "text": "Remove it from the game if you control no infernal vampires, or after it performs a successful action."
+        },
+        {
+          "function": "ally.use_disciplines",
+          "params": {
+            "disciplines": [
+              "dai",
+              "obf"
+            ],
+            "level": "basic"
+          },
+          "text": "Infernal Servitor can play cards requiring basic Daimoinon and/or basic Obfuscate as a vampire."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": false,
+  "notes": "Ally: act same turn, remove if no infernal. [DAI] can use basic dai/obf."
+}

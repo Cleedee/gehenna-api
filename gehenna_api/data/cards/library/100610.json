@@ -1,0 +1,35 @@
+{
+  "codevdb": 100610,
+  "name": "Ecstasy",
+  "tipo": "reaction",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "ser"
+      ],
+      "context": "REACTION",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "SER"
+      ],
+      "context": "REACTION",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "the acting minion burns 1 blood or life",
+            "condition": "the bleed resolved for 0 (or less)"
+          },
+          "text": "if the bleed resolved for 0 (or less), the acting minion burns 1 blood or life."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

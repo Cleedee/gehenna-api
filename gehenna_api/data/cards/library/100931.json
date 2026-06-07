@@ -1,0 +1,36 @@
+{
+  "codevdb": 100931,
+  "name": "Hive Mind",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "san"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "be played at [san] each turn"
+          },
+          "text": "be played at [san] each turn"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "SAN"
+      ],
+      "context": "ACTION",
+      "effects": []
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

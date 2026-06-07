@@ -1,0 +1,20 @@
+{
+  "codevdb": 101131,
+  "name": "Lucky Blow",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 1,
+        "damage_type": "normal"
+      },
+      "text": "Do not replace until after combat.\nStrike: hand strike or use a melee weapon strike. This strike is at +1 damage."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

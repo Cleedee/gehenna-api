@@ -1,0 +1,45 @@
+{
+  "codevdb": 101530,
+  "name": "Quick Meld",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "pro"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.maneuver",
+          "params": {},
+          "text": "Maneuver."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "PRO"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "burn 1 blood for an additional maneuver"
+          },
+          "text": "burn 1 blood for an additional maneuver"
+        },
+        {
+          "function": "combat.maneuver",
+          "params": {},
+          "text": "As above, and once this round, this vampire may burn 1 blood for an additional maneuver."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

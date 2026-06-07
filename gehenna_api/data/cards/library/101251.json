@@ -1,0 +1,47 @@
+{
+  "codevdb": 101251,
+  "name": "Mummify",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "ser"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "action.equip",
+          "params": {
+            "attachment": "self"
+          },
+          "text": "put this card on this vampire"
+        },
+        {
+          "function": "combat.end",
+          "params": {},
+          "text": "Strike: combat ends. This vampire unlocks and goes into torpor; put this card on the vampire. This vampire cannot attempt a leave torpor action. Burn this card if the vampire leaves torpor."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "SER"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "attempt a leave torpor action"
+          },
+          "text": "attempt a leave torpor action"
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

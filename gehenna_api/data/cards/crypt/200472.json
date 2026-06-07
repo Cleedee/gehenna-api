@@ -1,0 +1,11 @@
+{
+  "codevdb": 200472,
+  "name": "Fode Kourouma",
+  "tipo": "vampire",
+  "source": "cardbase_crypt.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

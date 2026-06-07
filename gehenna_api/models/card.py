@@ -1,5 +1,6 @@
 from typing import Optional
 
+from sqlalchemy import Boolean, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column
 
 from gehenna_api.models.base import Base
@@ -23,6 +24,22 @@ class Card(Base):
     sect: Mapped[Optional[str]] = mapped_column(default='')
     codevdb: Mapped[Optional[int]]
     avancado: Mapped[Optional[bool]] = mapped_column(default=False)
+
+    # --- novos campos para motor de jogo ---
+    blood: Mapped[Optional[int]] = mapped_column(Integer, default=0)
+    pool: Mapped[Optional[int]] = mapped_column(Integer, default=0)
+    conviction: Mapped[Optional[int]] = mapped_column(Integer, default=0)
+    burn: Mapped[Optional[str]] = mapped_column(String, default='')
+    requirement: Mapped[Optional[str]] = mapped_column(String, default='')
+    ascii: Mapped[Optional[str]] = mapped_column(String, default='')
+    artist: Mapped[Optional[str]] = mapped_column(String, default='')
+    banned: Mapped[Optional[str]] = mapped_column(String, default='')
+    twd: Mapped[Optional[int]] = mapped_column(Integer, default=0)
+    set_info: Mapped[Optional[str]] = mapped_column(String, default='')
+    path: Mapped[Optional[str]] = mapped_column(String, default='')
+    trifle: Mapped[Optional[bool]] = mapped_column(Boolean, default=False)
+    rulings: Mapped[Optional[str]] = mapped_column(String, default='')
+    aka: Mapped[Optional[str]] = mapped_column(String, default='')
 
     def __repr__(self):
         return (

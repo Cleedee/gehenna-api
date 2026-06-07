@@ -1,0 +1,22 @@
+{
+  "codevdb": 102158,
+  "name": "Watchtower: The Wolves Feed",
+  "tipo": "master",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 2,
+        "damage_type": "ranged"
+      },
+      "text": "Master: watchtower. Requires at least one Gehenna card in play and a ready Seraph.\nPut this card in play. Black Hand vampires get +1 stealth and may strike for 2R damage. A ready Black Hand vampire you control may lock to cancel a Gehenna card as it is played. During your unlock phase, burn X pool or burn this card, where X is the number of Gehenna cards in play (minimum of 1). Burn this card if another watchtower enters play."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

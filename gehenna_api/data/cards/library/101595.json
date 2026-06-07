@@ -1,0 +1,42 @@
+{
+  "codevdb": 101595,
+  "name": "Relentless Reaper",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "for"
+      ],
+      "context": "COMBAT",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "thn"
+      ],
+      "context": "COMBAT",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "THN"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "burn 1 blood to start a new round",
+            "condition": "both combatants are still ready and combat would end. Instead"
+          },
+          "text": "if both combatants are still ready and combat would end. Instead, burn 1 blood to start a new round."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

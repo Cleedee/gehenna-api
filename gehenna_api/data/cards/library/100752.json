@@ -1,0 +1,51 @@
+{
+  "codevdb": 100752,
+  "name": "Flurry of Action",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "cel"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "action.bleed",
+          "params": {},
+          "text": "(D) Bleed."
+        },
+        {
+          "function": "action.draw_cards",
+          "params": {
+            "count": 2,
+            "discard_after": true
+          },
+          "text": "If the bleed is successful, draw two cards (discard afterward)."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "CEL"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "action.bleed",
+          "params": {},
+          "text": "(D) Bleed."
+        },
+        {
+          "function": "action.unlock",
+          "params": {},
+          "text": "If the bleed is successful, this vampire unlocks."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": false,
+  "notes": "[cel] (D) bleed + draw 2 discard. [CEL] (D) bleed + unlock."
+}

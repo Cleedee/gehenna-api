@@ -1,0 +1,13 @@
+{
+  "codevdb": 100079,
+  "name": "Aranthebes, The Immortal",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "stealth": 2
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

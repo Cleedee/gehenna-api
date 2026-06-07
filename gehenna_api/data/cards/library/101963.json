@@ -1,0 +1,27 @@
+{
+  "codevdb": 101963,
+  "name": "Thadius Zho",
+  "tipo": "ally",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": [
+    {
+      "function": "combat.maneuver",
+      "params": {},
+      "text": "Unique mage with 2 life. 0 strength, 2 bleed.\nThadius Zho can strike: 2R damage. He gets 1 optional maneuver each combat. He can burn 1 blood from any vampire as a +1 stealth (D) action."
+    },
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 2,
+        "damage_type": "ranged"
+      },
+      "text": "Unique mage with 2 life. 0 strength, 2 bleed.\nThadius Zho can strike: 2R damage. He gets 1 optional maneuver each combat. He can burn 1 blood from any vampire as a +1 stealth (D) action."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

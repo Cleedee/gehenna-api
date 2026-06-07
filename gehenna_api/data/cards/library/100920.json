@@ -1,0 +1,41 @@
+{
+  "codevdb": 100920,
+  "name": "Hide the Heart",
+  "tipo": "reaction",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "aus"
+      ],
+      "context": "REACTION",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "val"
+      ],
+      "context": "REACTION",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "be played at [val] each action"
+          },
+          "text": "be played at [val] each action"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "VAL"
+      ],
+      "context": "REACTION",
+      "effects": []
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

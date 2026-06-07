@@ -1,0 +1,36 @@
+{
+  "codevdb": 100155,
+  "name": "Bestow Vigor",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "for"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "play combat cards that require Fortitude [for] as a vampire with basic Fortitude"
+          },
+          "text": "play combat cards that require Fortitude [for] as a vampire with basic Fortitude"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "FOR"
+      ],
+      "context": "ACTION",
+      "effects": []
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": false,
+  "notes": "Juliet's Dream deck"
+}

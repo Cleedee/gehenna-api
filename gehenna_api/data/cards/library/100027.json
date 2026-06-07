@@ -1,0 +1,35 @@
+{
+  "codevdb": 100027,
+  "name": "Ahriman's Demesne",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "obt"
+      ],
+      "context": "COMBAT",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "OBT"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "instead they are burned",
+            "condition": "the opposing vampire would go to torpor during the resolution of this strike"
+          },
+          "text": "if the opposing vampire would go to torpor during the resolution of this strike, instead they are burned."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

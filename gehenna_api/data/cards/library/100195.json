@@ -1,0 +1,20 @@
+{
+  "codevdb": 100195,
+  "name": "Blood Brother Ambush",
+  "tipo": "action_modifier",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 2,
+        "damage_type": "ranged"
+      },
+      "text": "Only usable when an action is blocked.\nCombat does not occur. Put this card into play. While in play, this card represents an ally with 3 life and 2 strength who can strike for 2R damage; this ally enters combat with the blocking minion. Blood Brother Ambush may play cards requiring basic Potence [pot] as a vampire with a capacity of 3. If a card would give them blood, give them life instead. Burn this card at the end of combat or if the combat is canceled."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

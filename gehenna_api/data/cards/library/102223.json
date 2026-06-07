@@ -1,0 +1,72 @@
+{
+  "codevdb": 102223,
+  "name": "Form of the Bat",
+  "tipo": "action_modifier/reaction",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "pro"
+      ],
+      "context": "ACTION MODIFIER/REACTION",
+      "effects": [
+        {
+          "function": "modifier.intercept",
+          "params": {
+            "value": 1
+          },
+          "text": "-1 intercept on blocker"
+        },
+        {
+          "function": "combat.maneuver",
+          "params": {
+            "optional": true
+          },
+          "text": "1 optional maneuver if blocked"
+        },
+        {
+          "function": "card.restrict_use",
+          "params": {
+            "no_equipment": true
+          },
+          "text": "Cannot use equipment during resulting combat"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "PRO"
+      ],
+      "context": "REACTION",
+      "effects": [
+        {
+          "function": "modifier.intercept",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 intercept when blocking"
+        },
+        {
+          "function": "combat.maneuver",
+          "params": {
+            "optional": true
+          },
+          "text": "1 optional maneuver if blocked"
+        },
+        {
+          "function": "card.restrict_use",
+          "params": {
+            "no_equipment": true
+          },
+          "text": "Cannot use equipment during resulting combat"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "intercept": 2
+  },
+  "default_strike": null,
+  "needs_review": false,
+  "notes": "Complex conditional effects simplified. [pro] -1intercept on blocker + maneuver if blocked. [PRO] +1intercept when blocking + maneuver if blocked."
+}

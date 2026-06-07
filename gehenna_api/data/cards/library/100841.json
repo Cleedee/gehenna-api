@@ -1,0 +1,59 @@
+{
+  "codevdb": 100841,
+  "name": "Goblinism",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "pot"
+      ],
+      "context": "ACTION",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "myt"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 stealth"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "MYT"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "you may put it on this vampire instead (requirements and cost, if any, must be met and paid as normal)",
+            "condition": "the location or equipment is a haven"
+          },
+          "text": "if the location or equipment is a haven, you may put it on this vampire instead (requirements and cost, if any, must be met and paid as normal)."
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "put it on this vampire instead (requirements and cost, if any, must be met and paid as normal"
+          },
+          "text": "put it on this vampire instead (requirements and cost, if any, must be met and paid as normal"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

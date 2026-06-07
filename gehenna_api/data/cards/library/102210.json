@@ -1,0 +1,22 @@
+{
+  "codevdb": 102210,
+  "name": "Zombie",
+  "tipo": "retainer",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 1,
+        "damage_type": "normal"
+      },
+      "text": "Zombie with 2 life.\nZombie inflicts 1 damage on the opposing minion each round of combat during normal strike resolution at close range. This vampire can burn this retainer to gain 2 blood as a +1 stealth action."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

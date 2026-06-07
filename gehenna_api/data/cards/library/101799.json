@@ -1,0 +1,20 @@
+{
+  "codevdb": 101799,
+  "name": "Slashers, The",
+  "tipo": "ally",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 1,
+        "damage_type": "ranged"
+      },
+      "text": "Unique mortal with 3 life. 0 strength, 0 bleed.\nThe Slashers may strike for 1R damage."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

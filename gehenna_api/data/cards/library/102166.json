@@ -1,0 +1,23 @@
+{
+  "codevdb": 102166,
+  "name": "Week of Nightmares",
+  "tipo": "master",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "bleed": 1,
+    "strength": 1,
+    "stealth": 1
+  },
+  "default_strike": [
+    {
+      "function": "combat.steal_blood",
+      "params": {
+        "amount": 1
+      },
+      "text": "Only one Week of Nightmares can be played in a game.\nPut this card in play with 10 nightmare counters. Ravnos get +1 bleed and +1 strength and do not hunt as normal. Any Ravnos can steal 1 blood from another Ravnos as a +1 stealth hunt action. During each Methuselah's unlock phase, that Methuselah can move 1 nightmare counter from this card to a Ravnos. If this card has no counters, each Ravnos burns 1 blood for each nightmare counter on them or is burned, then burn this card and the nightmare counters."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,43 @@
+{
+  "codevdb": 100528,
+  "name": "Descent into Darkness",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "obt"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "action.equip",
+          "params": {
+            "attachment": "self"
+          },
+          "text": "put this card on this vampire"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "gain 2 blood and you can choose to burn this card to return the vampire to play (in the same region as they were before), locked"
+          },
+          "text": "gain 2 blood and you can choose to burn this card to return the vampire to play (in the same region as they were before), locked"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "OBT"
+      ],
+      "context": "ACTION",
+      "effects": []
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

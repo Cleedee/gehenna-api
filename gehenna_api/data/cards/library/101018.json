@@ -1,0 +1,17 @@
+{
+  "codevdb": 101018,
+  "name": "Jackie Therman",
+  "tipo": "retainer",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.maneuver",
+      "params": {},
+      "text": "Unique mortal with 1 life.\nThis minion gets an optional maneuver each combat."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

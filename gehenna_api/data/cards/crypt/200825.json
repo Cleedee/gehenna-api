@@ -1,0 +1,11 @@
+{
+  "codevdb": 200825,
+  "name": "Leaf \"Potter116\" Pankowski",
+  "tipo": "vampire",
+  "source": "cardbase_crypt.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

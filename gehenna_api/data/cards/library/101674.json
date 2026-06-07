@@ -1,0 +1,11 @@
+{
+  "codevdb": 101674,
+  "name": "Salt of Thoth",
+  "tipo": "reaction",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

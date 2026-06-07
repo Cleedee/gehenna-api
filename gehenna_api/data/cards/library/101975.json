@@ -1,0 +1,11 @@
+{
+  "codevdb": 101975,
+  "name": "Those Who Endure Judge",
+  "tipo": "action_modifier",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

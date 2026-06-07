@@ -1,0 +1,44 @@
+{
+  "codevdb": 101617,
+  "name": "Resurrection",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "val"
+      ],
+      "context": "ACTION",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "obe"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "use the basic level",
+            "condition": "it requires a Discipline"
+          },
+          "text": "If it requires a Discipline, use the basic level."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "OBE"
+      ],
+      "context": "ACTION",
+      "effects": []
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

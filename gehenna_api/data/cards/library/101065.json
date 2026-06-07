@@ -1,0 +1,30 @@
+{
+  "codevdb": 101065,
+  "name": "Kpist m/45",
+  "tipo": "equipment",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.maneuver",
+      "params": {},
+      "text": "Weapon. Gun.\n1R damage each strike, with an optional maneuver each combat. When bearer strikes with this gun, he or she gets an optional additional strike (limited) this round, only usable to strike with this gun."
+    },
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 1,
+        "damage_type": "ranged"
+      },
+      "text": "Weapon. Gun.\n1R damage each strike, with an optional maneuver each combat. When bearer strikes with this gun, he or she gets an optional additional strike (limited) this round, only usable to strike with this gun."
+    },
+    {
+      "function": "combat.additional_strike",
+      "params": {},
+      "text": "Weapon. Gun.\n1R damage each strike, with an optional maneuver each combat. When bearer strikes with this gun, he or she gets an optional additional strike (limited) this round, only usable to strike with this gun."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

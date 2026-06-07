@@ -1,0 +1,20 @@
+{
+  "codevdb": 100821,
+  "name": "Ghouled Street Thug",
+  "tipo": "ally",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 1,
+        "damage_type": "ranged"
+      },
+      "text": "Ghoul with 2 life. 1 strength, 0 bleed.\nThis ally can strike: 1R damage. This ally can play cards requiring basic Potence [pot] as a 2-capacity vampire."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

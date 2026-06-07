@@ -1,0 +1,11 @@
+{
+  "codevdb": 101639,
+  "name": "Rise of the Nephtali",
+  "tipo": "event",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,11 @@
+{
+  "codevdb": 100820,
+  "name": "Ghouled",
+  "tipo": "action_modifier",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

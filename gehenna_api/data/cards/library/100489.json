@@ -1,0 +1,43 @@
+{
+  "codevdb": 100489,
+  "name": "Dam the Heart's River",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "qui"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.strike",
+          "params": {
+            "damage": 1,
+            "damage_type": "normal"
+          },
+          "text": "This combat, each strike or damaging effect made against the opposing minion inflicts +1 damage."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "QUI"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "choose not to strike"
+          },
+          "text": "choose not to strike"
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

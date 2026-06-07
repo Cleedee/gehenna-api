@@ -1,0 +1,44 @@
+{
+  "codevdb": 101887,
+  "name": "Strix",
+  "tipo": "reaction",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "str"
+      ],
+      "context": "REACTION",
+      "effects": [
+        {
+          "function": "modifier.intercept",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 intercept"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "he or she unlocks at the end of the action",
+            "condition": "intercept is not yet needed. If this vampire successfully blocks this action"
+          },
+          "text": "if intercept is not yet needed. If this vampire successfully blocks this action, he or she unlocks at the end of the action."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "STR"
+      ],
+      "context": "REACTION",
+      "effects": []
+    }
+  ],
+  "modifiers": {
+    "intercept": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

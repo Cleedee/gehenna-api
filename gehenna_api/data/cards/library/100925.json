@@ -1,0 +1,17 @@
+{
+  "codevdb": 100925,
+  "name": "High Ground",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.maneuver",
+      "params": {},
+      "text": "Maneuver, only usable to go to long range. If this minion has flight [FLIGHT] and the opposing minion does not, play before range is determined to set the range for the round to long. A minion may play only one High Ground each round."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

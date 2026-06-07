@@ -1,0 +1,11 @@
+{
+  "codevdb": 101232,
+  "name": "Mokolé Blood",
+  "tipo": "equipment",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

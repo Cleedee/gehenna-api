@@ -1,0 +1,58 @@
+{
+  "codevdb": 101224,
+  "name": "Mirror's Visage",
+  "tipo": "action_modifier",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "chi"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "action.unlock",
+          "params": {},
+          "text": "unlock this vampire"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "before block resolution",
+            "condition": "this vampire is blocked"
+          },
+          "text": "if this vampire is blocked, before block resolution."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "CHI"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 2
+          },
+          "text": "+2 stealth"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "otherwise +1 stealth",
+            "condition": "this is an undirected action"
+          },
+          "text": "if this is an undirected action, otherwise +1 stealth."
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 2
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

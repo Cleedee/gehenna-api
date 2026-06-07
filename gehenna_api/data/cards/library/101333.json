@@ -1,0 +1,19 @@
+{
+  "codevdb": 101333,
+  "name": "Ossian",
+  "tipo": "ally",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": [
+    {
+      "function": "combat.maneuver",
+      "params": {},
+      "text": "Unique werewolf with 4 life. 2 strength, 0 bleed. Red List.\nOssian may enter combat with any vampire as a +1 stealth (D) action. In the first round of combat with a vampire who has played a card that requires Auspex [aus] during this action, that vampire cannot use any maneuvers or strikes. Ossian gains 1 life at the end of each round for each blood the opposing vampire used to heal damage or prevent destruction that round."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

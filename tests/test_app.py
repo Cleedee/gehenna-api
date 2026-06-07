@@ -63,6 +63,21 @@ def test_create_card(client):
         'sect': '',
         'advanced': False,
         'codevdb': 0,
+        'blood': 0,
+        'pool': 0,
+        'conviction': 0,
+        'burn': '',
+        'requirement': '',
+        'ascii': '',
+        'artist': '',
+        'banned': '',
+        'twd': 0,
+        'set_info': '',
+        'path': '',
+        'trifle': False,
+        'rulings': '',
+        'aka': '',
+        'image_url': None,
         'id': 1,
     }
 
@@ -75,6 +90,9 @@ def test_read_cards(client):
 
 def test_read_cards_with_cards(client, card):
     card_schema = CardPublic.model_validate(card).model_dump()
+    card_schema['image_url'] = (
+        'https://static.krcg.org/card/testeg2.webp'
+    )
     response = client.get('/cards')
     assert response.json() == {'cards': [card_schema]}
 
@@ -116,6 +134,21 @@ def test_update_card(client, card):
         'sect': '',
         'advanced': False,
         'codevdb': 0,
+        'blood': 0,
+        'pool': 0,
+        'conviction': 0,
+        'burn': '',
+        'requirement': '',
+        'ascii': '',
+        'artist': '',
+        'banned': '',
+        'twd': 0,
+        'set_info': '',
+        'path': '',
+        'trifle': False,
+        'rulings': '',
+        'aka': '',
+        'image_url': None,
         'id': 1,
     }
 

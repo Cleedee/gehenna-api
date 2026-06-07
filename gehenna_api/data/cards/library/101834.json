@@ -1,0 +1,68 @@
+{
+  "codevdb": 101834,
+  "name": "Soul Painting",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "aus",
+        "pre"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "modifier.intercept",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 intercept"
+        },
+        {
+          "function": "action.equip",
+          "params": {
+            "attachment": "self"
+          },
+          "text": "put this card on this vampire"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "burn this card as an action that costs 1 blood"
+          },
+          "text": "burn this card as an action that costs 1 blood"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "have only one Soul Painting"
+          },
+          "text": "have only one Soul Painting"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "AUS",
+        "PRE"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "modifier.intercept",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 intercept"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 1,
+    "intercept": 2
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

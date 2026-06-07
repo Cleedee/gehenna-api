@@ -1,0 +1,21 @@
+{
+  "codevdb": 101784,
+  "name": "Siphon",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": [
+    {
+      "function": "combat.steal_blood",
+      "params": {
+        "amount": 1
+      },
+      "text": "+1 stealth action. Requires a vampire. Only one Siphon can be played each turn.\nChoose one or more vampires in torpor, who must be younger if there are no Gehenna events in play. Steal 1 blood from each chosen vampire. If this acting vampire is Giovanni, you can also move one card from your ash heap to your hand for each blood stolen (discard down afterward)."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

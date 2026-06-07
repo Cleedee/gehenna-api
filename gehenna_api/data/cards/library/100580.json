@@ -1,0 +1,11 @@
+{
+  "codevdb": 100580,
+  "name": "Dragon's Breath Rounds",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

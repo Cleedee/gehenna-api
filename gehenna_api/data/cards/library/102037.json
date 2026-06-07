@@ -1,0 +1,13 @@
+{
+  "codevdb": 102037,
+  "name": "Trophy: Revered",
+  "tipo": "master",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "bleed": 2
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

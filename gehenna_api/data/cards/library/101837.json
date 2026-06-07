@@ -1,0 +1,53 @@
+{
+  "codevdb": 101837,
+  "name": "Sound of a Breaking Oath",
+  "tipo": "action/reaction",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "aus",
+        "dom"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 stealth"
+        },
+        {
+          "function": "action.equip",
+          "params": {
+            "attachment": "self"
+          },
+          "text": "put this card on this vampire"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "this minion is burned instead and the acting minion takes 1 unpreventable damage",
+            "condition": "an action to steal the minion with this card is successful"
+          },
+          "text": "If an action to steal the minion with this card is successful, this minion is burned instead and the acting minion takes 1 unpreventable damage."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "AUS",
+        "DOM"
+      ],
+      "context": "REACTION",
+      "effects": []
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

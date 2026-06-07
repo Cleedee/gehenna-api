@@ -1,0 +1,58 @@
+{
+  "codevdb": 101392,
+  "name": "Persistent Echo",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "aus"
+      ],
+      "context": "ACTION",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "mel"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "look at the card at any time"
+          },
+          "text": "look at the card at any time"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "burn this card to play the card on it as if from your hand and as if they had basic Melpominee"
+          },
+          "text": "burn this card to play the card on it as if from your hand and as if they had basic Melpominee"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "MEL"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "play the card as if they had superior Melpominee"
+          },
+          "text": "play the card as if they had superior Melpominee"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

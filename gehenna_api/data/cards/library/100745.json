@@ -1,0 +1,17 @@
+{
+  "codevdb": 100745,
+  "name": "Flash Grenade",
+  "tipo": "equipment",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.end",
+      "params": {},
+      "text": "Weapon.\nStrike: combat ends. Ranged: if the opposing minion is a vampire, he or she is locked and does not unlock as normal on his or her next unlock phase. If the bearer is a vampire and the grenade is used at close range, the bearer is also locked and does not unlock as normal on his or her next unlock phase. Burn this weapon after use."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

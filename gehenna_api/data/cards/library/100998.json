@@ -1,0 +1,49 @@
+{
+  "codevdb": 100998,
+  "name": "Internal Recursion",
+  "tipo": "reaction",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "pre"
+      ],
+      "context": "REACTION",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "this blocking vampire unlocks",
+            "condition": "he or she does so and the acting minion is an ally or a younger vampire"
+          },
+          "text": "If he or she does so and the acting minion is an ally or a younger vampire, this blocking vampire unlocks."
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "end combat as a strike during the resulting combat"
+          },
+          "text": "end combat as a strike during the resulting combat"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "tem"
+      ],
+      "context": "REACTION",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "TEM"
+      ],
+      "context": "REACTION",
+      "effects": []
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

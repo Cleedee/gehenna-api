@@ -1,0 +1,17 @@
+{
+  "codevdb": 100125,
+  "name": "Backstep",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.maneuver",
+      "params": {},
+      "text": "Maneuver, only usable to go to long range. If the opposing minion's strike successfully inflicts any damage on this minion this round, the opposing minion gets an optional press."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,13 @@
+{
+  "codevdb": 200946,
+  "name": "Mary Anne Blaire",
+  "tipo": "vampire",
+  "source": "cardbase_crypt.json",
+  "abilities": [],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

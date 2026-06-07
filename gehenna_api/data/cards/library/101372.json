@@ -1,0 +1,22 @@
+{
+  "codevdb": 101372,
+  "name": "Path of the Void",
+  "tipo": "master",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 1,
+        "damage_type": "normal"
+      },
+      "text": "Unique master. Path.\nPut this card on a vampire you control. This vampire gets +1 stealth, -1 bleed, and can inflict 1 damage on any minion as a (D) action. During this vampire's unlock phase, his or her controller must discard a master card or lock this vampire. Burn this card if this vampire commits diablerie. A vampire can have only one path."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

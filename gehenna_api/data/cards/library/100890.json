@@ -1,0 +1,19 @@
+{
+  "codevdb": 100890,
+  "name": "Harzomatuili",
+  "tipo": "ally",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "intercept": 1
+  },
+  "default_strike": [
+    {
+      "function": "combat.maneuver",
+      "params": {},
+      "text": "Requires a ready cardinal or regent. Unique werewolf with 4 life. 2 strength, 0 bleed.\nHarzomatuili gets one optional maneuver each combat. Damage from his hand strikes is aggravated. Once during a directed action, he can burn 1 life to get +1 intercept. If Harzomatuili has fewer than 4 life during your unlock phase, he gains 1 life from the blood bank."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

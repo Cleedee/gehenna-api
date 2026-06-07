@@ -1,0 +1,20 @@
+{
+  "codevdb": 101408,
+  "name": "Poker",
+  "tipo": "equipment",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 1,
+        "damage_type": "aggravated"
+      },
+      "text": "Melee weapon.\nStrength+1 damage each strike. Damage inflicted on a Kiasyd by this weapon is aggravated. If all of the damage done by this strike is prevented by a card or cards that require Fortitude [for], burn this weapon after strike resolution."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

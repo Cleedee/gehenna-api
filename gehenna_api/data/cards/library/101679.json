@@ -1,0 +1,40 @@
+{
+  "codevdb": 101679,
+  "name": "Sanguine Entrapment",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "cel",
+        "qui"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.dodge",
+          "params": {},
+          "text": "The opposing minion cannot strike: dodge this round."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "CEL",
+        "QUI"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.end",
+          "params": {},
+          "text": "The opposing minion cannot strike: combat ends this round."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

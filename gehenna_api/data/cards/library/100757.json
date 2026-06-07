@@ -1,0 +1,17 @@
+{
+  "codevdb": 100757,
+  "name": "Follow the Blood",
+  "tipo": "reaction",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.maneuver",
+      "params": {},
+      "text": "Requires a Black Hand vampire. Only usable when a hunt action is successful, after resolution.\nLock this Black Hand vampire. He or she enters combat with the acting vampire. This reacting vampire gets an optional maneuver or press in that combat."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

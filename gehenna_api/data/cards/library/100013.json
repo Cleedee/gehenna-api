@@ -1,0 +1,55 @@
+{
+  "codevdb": 100013,
+  "name": "Absorb the Mind",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "dom"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.dodge",
+          "params": {},
+          "text": "Strike: dodge."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "myt"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.steal_blood",
+          "params": {
+            "amount": 1
+          },
+          "text": "Strike: ranged. Steal 1 blood."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "MYT"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.steal_blood",
+          "params": {
+            "amount": 1
+          },
+          "text": "Strike: ranged. Steal 1 blood and steal 1 master: Discipline card from the opposing vampire (put it on this striking vampire)."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

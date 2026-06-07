@@ -1,0 +1,17 @@
+{
+  "codevdb": 100349,
+  "name": "Circle",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.maneuver",
+      "params": {},
+      "text": "Requires a ready minion with flight.\nPress. If another round of combat occurs, this minion gets an optional maneuver during that round."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,35 @@
+{
+  "codevdb": 100406,
+  "name": "Confusion of the Eye",
+  "tipo": "reaction",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "obf"
+      ],
+      "context": "REACTION",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "OBF"
+      ],
+      "context": "REACTION",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "the referendum fails",
+            "condition": "the referendum requires a titled vampire"
+          },
+          "text": "If the referendum requires a titled vampire, the referendum fails."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

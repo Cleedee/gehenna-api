@@ -1,0 +1,339 @@
+{
+  "deck_id": 244,
+  "name": "Juliet's Dream",
+  "creator": "Otso Saariluoma",
+  "date": "2026-05-05",
+  "format": "2R+F",
+  "description": "Campeão finlandês 2026\r\n\r\nShout-out to Otso who is the mastermind behind this deck. Honorable mention also goes to Ivan Marin-Rivas, who originally gave Otso the idea for the deck based on the collaboration between Juliet Parr and Modius.",
+  "all_reviewed": true,
+  "cards": [
+    {
+      "codevdb": 100059,
+      "name": "Anarchist Uprising",
+      "tipo": "Political Action",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "political_action - plain text [Juliet]"
+    },
+    {
+      "codevdb": 100065,
+      "name": "Ancilla Empowerment",
+      "tipo": "Political Action",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "political_action - plain text [Juliet]"
+    },
+    {
+      "codevdb": 100085,
+      "name": "Archon Investigation",
+      "tipo": "Master",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "master - plain text [Juliet]"
+    },
+    {
+      "codevdb": 100106,
+      "name": "Ashur Tablets",
+      "tipo": "Master",
+      "quantity": 6,
+      "needs_review": false,
+      "notes": "master - plain text [Juliet]"
+    },
+    {
+      "codevdb": 100131,
+      "name": "Banishment",
+      "tipo": "Political Action",
+      "quantity": 2,
+      "needs_review": false,
+      "notes": "political_action - plain text [Juliet]"
+    },
+    {
+      "codevdb": 100163,
+      "name": "Bitter and Sweet Story, The",
+      "tipo": "Event",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "event - plain text [Juliet]"
+    },
+    {
+      "codevdb": 100178,
+      "name": "Bleeding the Vine",
+      "tipo": "Master",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "master - plain text [Juliet]"
+    },
+    {
+      "codevdb": 100435,
+      "name": "Coven, The",
+      "tipo": "Master",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "master - plain text [Juliet]"
+    },
+    {
+      "codevdb": 100545,
+      "name": "Direct Intervention",
+      "tipo": "Master",
+      "quantity": 2,
+      "needs_review": false,
+      "notes": "master - plain text [Juliet]"
+    },
+    {
+      "codevdb": 100588,
+      "name": "Dreams of the Sphinx",
+      "tipo": "Master",
+      "quantity": 2,
+      "needs_review": false,
+      "notes": "Master - plain text, draw engine"
+    },
+    {
+      "codevdb": 100632,
+      "name": "Elysium: The Palace of Versailles",
+      "tipo": "Master",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "master - plain text [Juliet]"
+    },
+    {
+      "codevdb": 100680,
+      "name": "Eyes of Argus",
+      "tipo": "Reaction",
+      "quantity": 2,
+      "needs_review": false,
+      "notes": "reaction - abilities parsed OK [Juliet]"
+    },
+    {
+      "codevdb": 100687,
+      "name": "Faceless Night",
+      "tipo": "Action Modifier",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "Action Modifier: [obf] +1stealth [OBF] +2stealth"
+    },
+    {
+      "codevdb": 100769,
+      "name": "Forgotten Labyrinth",
+      "tipo": "Action Modifier",
+      "quantity": 5,
+      "needs_review": false,
+      "notes": "action_modifier - abilities parsed OK [Juliet]"
+    },
+    {
+      "codevdb": 100824,
+      "name": "Giant's Blood",
+      "tipo": "Master",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "Master - plain text"
+    },
+    {
+      "codevdb": 100903,
+      "name": "Heart of Nizchetus",
+      "tipo": "Equipment",
+      "quantity": 2,
+      "needs_review": false,
+      "notes": "Equipment - plain text, draw ability"
+    },
+    {
+      "codevdb": 100984,
+      "name": "Information Highway",
+      "tipo": "Master",
+      "quantity": 3,
+      "needs_review": false,
+      "notes": "master - plain text [Juliet]"
+    },
+    {
+      "codevdb": 101036,
+      "name": "Kaymakli Nightmares",
+      "tipo": "Master",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "master - plain text [Juliet]"
+    },
+    {
+      "codevdb": 101056,
+      "name": "Kine Resources Contested",
+      "tipo": "Political Action",
+      "quantity": 4,
+      "needs_review": false,
+      "notes": "political_action - plain text [Juliet]"
+    },
+    {
+      "codevdb": 101125,
+      "name": "Lost in Crowds",
+      "tipo": "Action Modifier",
+      "quantity": 5,
+      "needs_review": false,
+      "notes": "Action Modifier: [obf]+1stealth [OBF]+2stealth vs older"
+    },
+    {
+      "codevdb": 101238,
+      "name": "Monastery of Shadows",
+      "tipo": "Master",
+      "quantity": 2,
+      "needs_review": false,
+      "notes": "Master - plain text"
+    },
+    {
+      "codevdb": 101350,
+      "name": "Papillon",
+      "tipo": "Master",
+      "quantity": 2,
+      "needs_review": false,
+      "notes": "master - plain text [Juliet]"
+    },
+    {
+      "codevdb": 101353,
+      "name": "Parity Shift",
+      "tipo": "Political Action",
+      "quantity": 7,
+      "needs_review": false,
+      "notes": "political_action - plain text [Juliet]"
+    },
+    {
+      "codevdb": 101355,
+      "name": "Parthenon, The",
+      "tipo": "Master",
+      "quantity": 6,
+      "needs_review": false,
+      "notes": "master - plain text [Juliet]"
+    },
+    {
+      "codevdb": 101417,
+      "name": "Political Stranglehold",
+      "tipo": "Political Action",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "political_action - plain text [Juliet]"
+    },
+    {
+      "codevdb": 101663,
+      "name": "Rumors of Gehenna",
+      "tipo": "Political Action",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "political_action - plain text [Juliet]"
+    },
+    {
+      "codevdb": 101706,
+      "name": "Second Tradition: Domain",
+      "tipo": "Reaction",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "reaction - abilities parsed OK [Juliet]"
+    },
+    {
+      "codevdb": 101949,
+      "name": "Telepathic Misdirection",
+      "tipo": "Reaction",
+      "quantity": 4,
+      "needs_review": false,
+      "notes": "[aus] +1intercept. [AUS] redirect bleed + lock [Juliet]"
+    },
+    {
+      "codevdb": 102121,
+      "name": "Villein",
+      "tipo": "Master",
+      "quantity": 7,
+      "needs_review": false,
+      "notes": "Master - plain text, blood management"
+    },
+    {
+      "codevdb": 102180,
+      "name": "Wider View",
+      "tipo": "Master",
+      "quantity": 2,
+      "needs_review": false,
+      "notes": "Master - plain text"
+    },
+    {
+      "codevdb": 102207,
+      "name": "Zillah's Valley",
+      "tipo": "Master",
+      "quantity": 8,
+      "needs_review": false,
+      "notes": "master - plain text [Juliet]"
+    },
+    {
+      "codevdb": 102269,
+      "name": "Camarilla Conclave",
+      "tipo": "Master",
+      "quantity": 2,
+      "needs_review": false,
+      "notes": "master - plain text [Juliet]"
+    },
+    {
+      "codevdb": 102270,
+      "name": "Camarilla's Iron Fist",
+      "tipo": "Political Action",
+      "quantity": 4,
+      "needs_review": false,
+      "notes": "political_action - plain text [Juliet]"
+    },
+    {
+      "codevdb": 201530,
+      "name": "Alexander Silverson",
+      "tipo": "Vampire",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "vampire - plain text [Juliet]"
+    },
+    {
+      "codevdb": 201537,
+      "name": "Belinde",
+      "tipo": "Vampire",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "Juliet's Dream deck"
+    },
+    {
+      "codevdb": 201544,
+      "name": "Donny Kowalczyk",
+      "tipo": "Vampire",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "Juliet's Dream deck"
+    },
+    {
+      "codevdb": 201594,
+      "name": "Warmaksan",
+      "tipo": "Vampire",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "Juliet's Dream deck"
+    },
+    {
+      "codevdb": 201598,
+      "name": "Kasim Bayar",
+      "tipo": "Vampire",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "Juliet's Dream deck"
+    },
+    {
+      "codevdb": 201656,
+      "name": "Oluwafunmilayo",
+      "tipo": "Vampire",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "Juliet's Dream deck"
+    },
+    {
+      "codevdb": 201698,
+      "name": "Juliet Parr",
+      "tipo": "Vampire",
+      "quantity": 3,
+      "needs_review": false,
+      "notes": "Juliet's Dream deck"
+    },
+    {
+      "codevdb": 201703,
+      "name": "Modius",
+      "tipo": "Vampire",
+      "quantity": 3,
+      "needs_review": false,
+      "notes": "Juliet's Dream deck"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "codevdb": 102115,
+  "name": "Vial of Garou Blood",
+  "tipo": "equipment",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "strength": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

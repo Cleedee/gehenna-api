@@ -1,0 +1,13 @@
+{
+  "codevdb": 200265,
+  "name": "Chandler Hungerford",
+  "tipo": "vampire",
+  "source": "cardbase_crypt.json",
+  "abilities": [],
+  "modifiers": {
+    "intercept": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

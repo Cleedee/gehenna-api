@@ -1,0 +1,44 @@
+{
+  "codevdb": 101725,
+  "name": "Serenading the Kami",
+  "tipo": "action_modifier",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "tha"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "modifier.strength",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 strength"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "THA"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "modifier.strength",
+          "params": {
+            "value": 2
+          },
+          "text": "+2 strength"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "strength": 3
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

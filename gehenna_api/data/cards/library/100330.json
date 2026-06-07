@@ -1,0 +1,51 @@
+{
+  "codevdb": 100330,
+  "name": "Charge of the Buffalo",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "for"
+      ],
+      "context": "ACTION",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "spi"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "combat.strike",
+          "params": {
+            "damage": 1,
+            "damage_type": "normal"
+          },
+          "text": "(D) Enter combat with a minion. Set the range for the first round of that combat to close, and this acting vampire's initial strike during that round is strike: hand strike at +1 damage."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "SPI"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "combat.strike",
+          "params": {
+            "damage": 2,
+            "damage_type": "normal"
+          },
+          "text": "As [spi] above, but the strike is at +2 damage."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

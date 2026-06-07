@@ -1,0 +1,20 @@
+{
+  "codevdb": 101168,
+  "name": "Mark V",
+  "tipo": "equipment",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 4,
+        "damage_type": "ranged"
+      },
+      "text": "Weapon, gun.\nStrike: 4R damage, only usable once each round and only at long range."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

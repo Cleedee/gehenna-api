@@ -1,0 +1,63 @@
+{
+  "codevdb": 101929,
+  "name": "Taking the Skin: Vulture",
+  "tipo": "reaction",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "abo"
+      ],
+      "context": "REACTION",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "abo"
+      ],
+      "context": "REACTION",
+      "effects": [
+        {
+          "function": "modifier.intercept",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 intercept"
+        },
+        {
+          "function": "action.equip",
+          "params": {
+            "attachment": "self"
+          },
+          "text": "put this card on this vampire"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "have only one skin"
+          },
+          "text": "have only one skin"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "ABO"
+      ],
+      "context": "REACTION",
+      "effects": [
+        {
+          "function": "combat.maneuver",
+          "params": {},
+          "text": "As above, and this vampire gets an optional maneuver each combat."
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "intercept": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

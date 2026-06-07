@@ -1,0 +1,17 @@
+{
+  "codevdb": 101106,
+  "name": "Light Intensifying Goggles",
+  "tipo": "equipment",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.maneuver",
+      "params": {},
+      "text": "Electronic.\nThe bearer gets 1 optional maneuver during the first round of combat. You can move any aim card the bearer uses to this card, face up and out of play (even if it is canceled). The bearer can play an aim card on this equipment as if from your hand; it is then removed from the game."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

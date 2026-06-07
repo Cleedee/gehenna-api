@@ -1,0 +1,11 @@
+{
+  "codevdb": 100295,
+  "name": "Cardinal Sin: Failure of Mission",
+  "tipo": "reaction",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

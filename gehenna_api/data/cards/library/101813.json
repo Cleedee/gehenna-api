@@ -1,0 +1,65 @@
+{
+  "codevdb": 101813,
+  "name": "Smoke and Mirrors",
+  "tipo": "action_modifier",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "chi"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 stealth"
+        },
+        {
+          "function": "combat.maneuver",
+          "params": {},
+          "text": "+1 stealth, with 1 optional maneuver during the resulting combat if this action is blocked."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "obf"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 2
+          },
+          "text": "+2 stealth"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "obt"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "modifier.intercept",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 intercept"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 3,
+    "intercept": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

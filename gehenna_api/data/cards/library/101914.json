@@ -1,0 +1,21 @@
+{
+  "codevdb": 101914,
+  "name": "Swarm",
+  "tipo": "retainer",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": [
+    {
+      "function": "combat.steal_blood",
+      "params": {
+        "amount": 1
+      },
+      "text": "Animal with 1 life. Requires a ready Laibon.\nPut the Swarm on any ready minion (employing the Swarm is a +1 stealth (D) action if that minion is controlled by another Methuselah). If this action is blocked, put the Swarm on the acting minion instead (no cost is paid). During this minion's unlock phase, if the Swarm has more than 1 life, it burns a life; otherwise, it steals 1 blood or life from this minion. A minion may have only one Swarm."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

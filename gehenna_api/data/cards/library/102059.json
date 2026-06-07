@@ -1,0 +1,13 @@
+{
+  "codevdb": 102059,
+  "name": "Uncontrolled Impulse",
+  "tipo": "action_modifier",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "stealth": 2
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,14 @@
+{
+  "codevdb": 101043,
+  "name": "Khabar: Glory",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "bleed": 1,
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

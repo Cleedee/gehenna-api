@@ -1,0 +1,19 @@
+{
+  "codevdb": 102015,
+  "name": "Treasured Samadji",
+  "tipo": "equipment",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "bleed": 1
+  },
+  "default_strike": [
+    {
+      "function": "combat.dodge",
+      "params": {},
+      "text": "Unique.\nThis Ravnos gets +1 bleed. Once each combat, this Ravnos can strike: dodge."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

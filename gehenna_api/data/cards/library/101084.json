@@ -1,0 +1,17 @@
+{
+  "codevdb": 101084,
+  "name": "Left for Dead",
+  "tipo": "master",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.end",
+      "params": {},
+      "text": "Master: out-of-turn.\nOnly usable when an ally would be burned in combat. Combat ends. Put this card on that ally; that ally is not burned. Put 1 life on the ally from the blood bank if he or she has no life. Lock the ally. This ally does not unlock as normal. If he or she enters combat, he or she is burned. Burn this card during his or her next unlock phase."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

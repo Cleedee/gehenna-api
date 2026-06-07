@@ -1,0 +1,62 @@
+{
+  "codevdb": 102249,
+  "name": "Feral Hound",
+  "tipo": "retainer",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "ani"
+      ],
+      "context": "RETAINER",
+      "effects": [
+        {
+          "function": "modifier.intercept",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 intercept"
+        },
+        {
+          "function": "action.unlock",
+          "params": {},
+          "text": "unlock this vampire"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "unlock this vampire during the next discard phase",
+            "condition": "the action to employ this retainer is successful"
+          },
+          "text": "If the action to employ this retainer is successful, unlock this vampire during the next discard phase."
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "lock this retainer to give the employer +1 intercept"
+          },
+          "text": "lock this retainer to give the employer +1 intercept"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "ANI"
+      ],
+      "context": "RETAINER",
+      "effects": [
+        {
+          "function": "action.unlock",
+          "params": {},
+          "text": "unlock this vampire"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "intercept": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

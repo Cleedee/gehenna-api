@@ -1,0 +1,13 @@
+{
+  "codevdb": 101015,
+  "name": "J. S. Simmons, Esq.",
+  "tipo": "retainer",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "bleed": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

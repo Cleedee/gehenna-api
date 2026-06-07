@@ -1,0 +1,11 @@
+{
+  "codevdb": 101048,
+  "name": "Khobar Towers, Al-Khubar",
+  "tipo": "master",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

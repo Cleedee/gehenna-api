@@ -1,0 +1,11 @@
+{
+  "codevdb": 200538,
+  "name": "Greger Anderssen",
+  "tipo": "vampire",
+  "source": "cardbase_crypt.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

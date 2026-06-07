@@ -1,0 +1,37 @@
+{
+  "codevdb": 100334,
+  "name": "Charming Lobby",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "pre"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "then the next referendum called by any vampire thereafter passes automatically",
+            "condition": "the referendum passes"
+          },
+          "text": "If the referendum passes, then the next referendum called by any vampire thereafter passes automatically."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "PRE"
+      ],
+      "context": "ACTION",
+      "effects": []
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

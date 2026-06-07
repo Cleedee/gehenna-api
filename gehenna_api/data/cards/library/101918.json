@@ -1,0 +1,19 @@
+{
+  "codevdb": 101918,
+  "name": "Swoop",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "strength": 1
+  },
+  "default_strike": [
+    {
+      "function": "combat.maneuver",
+      "params": {},
+      "text": "Maneuver, only usable to go to close range, and this minion gets +1 strength on his or her initial strike this round. A minion may play only one Swoop each round."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

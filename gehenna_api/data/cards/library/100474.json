@@ -1,0 +1,17 @@
+{
+  "codevdb": 100474,
+  "name": "Crusader Sword, The",
+  "tipo": "equipment",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.maneuver",
+      "params": {},
+      "text": "Unique melee weapon.\nStrength+1 aggravated damage each strike. Only usable by a minion with True Faith or an imbued. Vampires opposing this minion with True Faith or this imbued cannot use maneuvers to go to close range."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

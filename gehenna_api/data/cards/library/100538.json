@@ -1,0 +1,39 @@
+{
+  "codevdb": 100538,
+  "name": "Devil-Channel: Feet",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "abo"
+      ],
+      "context": "COMBAT",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "abo"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.dodge",
+          "params": {},
+          "text": "Frenzy (this vampire). Not usable if the opposing minion has flight [FLIGHT]. Strike: dodge with an optional press."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "ABO"
+      ],
+      "context": "COMBAT",
+      "effects": []
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

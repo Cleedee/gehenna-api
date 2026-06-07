@@ -1,0 +1,49 @@
+{
+  "codevdb": 102098,
+  "name": "Veiled Sight",
+  "tipo": "reaction",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "chi"
+      ],
+      "context": "REACTION",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "still increase their stealth"
+          },
+          "text": "still increase their stealth"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "CHI"
+      ],
+      "context": "REACTION",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "strike: steal 1 blood or life (becoming blood) during the resulting combat if they block"
+          },
+          "text": "strike: steal 1 blood or life (becoming blood) during the resulting combat if they block"
+        },
+        {
+          "function": "combat.steal_blood",
+          "params": {
+            "amount": 1
+          },
+          "text": "As above, and this blocking vampire can strike: steal 1 blood or life (becoming blood) during the resulting combat if they block."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

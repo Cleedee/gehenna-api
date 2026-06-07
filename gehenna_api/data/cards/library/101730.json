@@ -1,0 +1,44 @@
+{
+  "codevdb": 101730,
+  "name": "Set's Call",
+  "tipo": "reaction",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "ser"
+      ],
+      "context": "REACTION",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "before block resolution",
+            "condition": "this vampire blocks an employ retainer action"
+          },
+          "text": "if this vampire blocks an employ retainer action, before block resolution."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "SER"
+      ],
+      "context": "REACTION",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "before block resolution",
+            "condition": "this vampire blocks a recruit ally action"
+          },
+          "text": "if this vampire blocks a recruit ally action, before block resolution."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

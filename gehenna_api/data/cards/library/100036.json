@@ -1,0 +1,50 @@
+{
+  "codevdb": 100036,
+  "name": "Alacrity",
+  "tipo": "action_modifier",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "cel"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 stealth"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "CEL"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "this acting vampire gets an optional maneuver during the first round of the resulting combat",
+            "condition": "this action is blocked"
+          },
+          "text": "if this action is blocked, this acting vampire gets an optional maneuver during the first round of the resulting combat."
+        },
+        {
+          "function": "combat.maneuver",
+          "params": {},
+          "text": "As above, and if this action is blocked, this acting vampire gets an optional maneuver during the first round of the resulting combat."
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

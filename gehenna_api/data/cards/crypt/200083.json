@@ -1,0 +1,13 @@
+{
+  "codevdb": 200083,
+  "name": "Andreas, The Bard of Crete",
+  "tipo": "vampire",
+  "source": "cardbase_crypt.json",
+  "abilities": [],
+  "modifiers": {
+    "intercept": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

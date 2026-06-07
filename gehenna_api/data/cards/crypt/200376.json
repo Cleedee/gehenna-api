@@ -1,0 +1,11 @@
+{
+  "codevdb": 200376,
+  "name": "Dr. John Casey",
+  "tipo": "vampire",
+  "source": "cardbase_crypt.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

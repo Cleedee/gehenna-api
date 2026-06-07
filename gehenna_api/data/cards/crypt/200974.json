@@ -1,0 +1,13 @@
+{
+  "codevdb": 200974,
+  "name": "Mélusine d'Anjou",
+  "tipo": "vampire",
+  "source": "cardbase_crypt.json",
+  "abilities": [],
+  "modifiers": {
+    "intercept": 2
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,65 @@
+{
+  "codevdb": 101282,
+  "name": "Ni Dieu ni Maître",
+  "tipo": "action_modifier",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "ani"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "the opposing minion cannot maneuver during the resulting combat",
+            "condition": "this action is blocked"
+          },
+          "text": "If this action is blocked, the opposing minion cannot maneuver during the resulting combat."
+        },
+        {
+          "function": "combat.maneuver",
+          "params": {},
+          "text": "If this action is blocked, the opposing minion cannot maneuver during the resulting combat."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "for"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "vic"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "modifier.strength",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 strength"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "this Anarch gets +1 strength during the resulting combat",
+            "condition": "this action is blocked"
+          },
+          "text": "If this action is blocked, this Anarch gets +1 strength during the resulting combat."
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "strength": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

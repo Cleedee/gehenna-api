@@ -36,6 +36,20 @@ class CardSchema(BaseModel):
     sect: Optional[str] = ''
     advanced: Optional[bool] = False
     codevdb: Optional[int] = 0
+    blood: Optional[int] = 0
+    pool: Optional[int] = 0
+    conviction: Optional[int] = 0
+    burn: Optional[str] = ''
+    requirement: Optional[str] = ''
+    ascii: Optional[str] = ''
+    artist: Optional[str] = ''
+    banned: Optional[str] = ''
+    twd: Optional[int] = 0
+    set_info: Optional[str] = ''
+    path: Optional[str] = ''
+    trifle: Optional[bool] = False
+    rulings: Optional[str] = ''
+    aka: Optional[str] = ''
     model_config = ConfigDict(from_attributes=True)
 
 
@@ -107,6 +121,7 @@ class ItemSchema(BaseModel):
 class ItemPublic(ItemSchema):
     id: int
     card: CardSimplePublic
+
 
 class ItemDB(ItemSchema):
     id: int

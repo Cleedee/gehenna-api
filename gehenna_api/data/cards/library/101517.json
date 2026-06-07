@@ -1,0 +1,59 @@
+{
+  "codevdb": 101517,
+  "name": "Pulse of the Canaille",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "aus"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "look at all Methuselahs' hands"
+          },
+          "text": "look at all Methuselahs' hands"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "AUS"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "modifier.bleed",
+          "params": {
+            "value": 2
+          },
+          "text": "+2 bleed"
+        },
+        {
+          "function": "action.equip",
+          "params": {
+            "attachment": "self"
+          },
+          "text": "put this card on this vampire"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "have only one Pulse of the Canaille"
+          },
+          "text": "have only one Pulse of the Canaille"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 1,
+    "bleed": 2
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,15 @@
+{
+  "codevdb": 101665,
+  "name": "Saatet-ta",
+  "tipo": "ally",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "bleed": 1,
+    "stealth": 1,
+    "intercept": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

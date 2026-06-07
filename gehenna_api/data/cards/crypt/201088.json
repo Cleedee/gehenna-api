@@ -1,0 +1,11 @@
+{
+  "codevdb": 201088,
+  "name": "Ox, Viceroy of the Hollows",
+  "tipo": "vampire",
+  "source": "cardbase_crypt.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

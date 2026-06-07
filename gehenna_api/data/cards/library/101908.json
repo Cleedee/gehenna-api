@@ -1,0 +1,28 @@
+{
+  "codevdb": 101908,
+  "name": "Surge",
+  "tipo": "power",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "COMBAT",
+        "REACTION"
+      ],
+      "context": "POWER",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "burn any number of surge counters to prevent that amount of non-aggravated damage"
+          },
+          "text": "burn any number of surge counters to prevent that amount of non-aggravated damage"
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

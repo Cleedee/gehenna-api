@@ -1,0 +1,11 @@
+{
+  "codevdb": 102113,
+  "name": "Vessel",
+  "tipo": "master",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": false,
+  "notes": "Master - plain text"
+}

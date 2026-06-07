@@ -1,0 +1,27 @@
+{
+  "codevdb": 100822,
+  "name": "Ghouls of Plaza Morería, The",
+  "tipo": "ally",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": [
+    {
+      "function": "combat.maneuver",
+      "params": {},
+      "text": "Unique ghoul with 2 life. 1 strength, 0 bleed.\nThe Ghouls of Plaza Morería can strike: 1R damage. They get 1 optional maneuver each combat. They can burn 1 blood from a ready vampire and put 1 container counter on themselves as a +1 stealth (D) action. Any ready Banu Haqim can burn X container counters from them to gain X blood as a +1 stealth action."
+    },
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 1,
+        "damage_type": "ranged"
+      },
+      "text": "Unique ghoul with 2 life. 1 strength, 0 bleed.\nThe Ghouls of Plaza Morería can strike: 1R damage. They get 1 optional maneuver each combat. They can burn 1 blood from a ready vampire and put 1 container counter on themselves as a +1 stealth (D) action. Any ready Banu Haqim can burn X container counters from them to gain X blood as a +1 stealth action."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

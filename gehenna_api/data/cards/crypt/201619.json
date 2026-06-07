@@ -1,0 +1,13 @@
+{
+  "codevdb": 201619,
+  "name": "Victoria Ash",
+  "tipo": "vampire",
+  "source": "cardbase_crypt.json",
+  "abilities": [],
+  "modifiers": {
+    "bleed": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,11 @@
+{
+  "codevdb": 101800,
+  "name": "Slaughterhouse, The",
+  "tipo": "master",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

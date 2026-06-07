@@ -1,0 +1,14 @@
+{
+  "codevdb": 100517,
+  "name": "Defender of the Haven",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "stealth": 1,
+    "intercept": 2
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

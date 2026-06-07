@@ -1,0 +1,20 @@
+{
+  "codevdb": 101270,
+  "name": "Neighborhood Watch Commander",
+  "tipo": "ally",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 1,
+        "damage_type": "normal"
+      },
+      "text": "Mortal with 1 life. 1 strength, 0 bleed.\nLock after resolution of an unsuccessful action to inflict 1 damage on the acting vampire. Only one Neighborhood Watch Commander can lock to inflict damage each action."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

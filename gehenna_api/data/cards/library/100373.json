@@ -1,0 +1,11 @@
+{
+  "codevdb": 100373,
+  "name": "Codex of the Damned",
+  "tipo": "equipment",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

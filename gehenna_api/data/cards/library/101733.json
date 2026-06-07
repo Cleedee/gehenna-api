@@ -1,0 +1,17 @@
+{
+  "codevdb": 101733,
+  "name": "Shackles of Enkidu",
+  "tipo": "equipment",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.end",
+      "params": {},
+      "text": "Unique equipment.\nBefore range is chosen in a round of combat, you may put the Shackles on any minion opposing the vampire with this card; you still controls this card, however. Combat ends. The Shackled minion does not unlock as normal during his or her unlock phases; he or she burns 2 blood during each of your unlock phases. Any minion may burn this card as a (D) action."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

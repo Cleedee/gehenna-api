@@ -1,0 +1,13 @@
+{
+  "codevdb": 100666,
+  "name": "Eternal Vigilance",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

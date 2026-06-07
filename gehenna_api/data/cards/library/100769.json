@@ -1,0 +1,44 @@
+{
+  "codevdb": 100769,
+  "name": "Forgotten Labyrinth",
+  "tipo": "action_modifier",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "obf"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 2
+          },
+          "text": "+2 stealth"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "OBF"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 3
+          },
+          "text": "+3 stealth"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 5
+  },
+  "default_strike": null,
+  "needs_review": false,
+  "notes": "action_modifier - abilities parsed OK [Juliet]"
+}

@@ -1,0 +1,20 @@
+{
+  "codevdb": 100166,
+  "name": "Black Gloves",
+  "tipo": "equipment",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 1,
+        "damage_type": "aggravated"
+      },
+      "text": "Unique melee weapon.\nStrength+1 aggravated damage each strike. Bearer takes 1 damage during strike resolution when this weapon is used, but only once each combat."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,19 @@
+{
+  "codevdb": 101602,
+  "name": "Renegade Garou",
+  "tipo": "ally",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": [
+    {
+      "function": "combat.maneuver",
+      "params": {},
+      "text": "Werewolf with 3 life. 2 strength, 0 bleed.\nRenegade Garou gets an additional strike (limited) each round and an optional maneuver each combat. He may enter combat with a minion controlled by another Methuselah as a +1 stealth (D) action. If Renegade Garou has 2 or fewer life during your unlock phase, he gains 1 life from the blood bank."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,11 @@
+{
+  "codevdb": 101336,
+  "name": "Out of the Frying Pan",
+  "tipo": "master",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,20 @@
+{
+  "codevdb": 100476,
+  "name": "Crypt's Sons",
+  "tipo": "retainer",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 1,
+        "damage_type": "ranged"
+      },
+      "text": "Unique mortal with 3 life. Requires an anarch.\nWhenever this anarch is blocked, he or she may burn a life from the Sons to cancel combat and continue the action as if unblocked. The Sons inflict 1R damage each round of combat during normal strike resolution."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

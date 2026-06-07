@@ -1,0 +1,11 @@
+{
+  "codevdb": 101130,
+  "name": "Loyalist",
+  "tipo": "reaction",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

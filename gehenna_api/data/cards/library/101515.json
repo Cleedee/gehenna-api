@@ -1,0 +1,22 @@
+{
+  "codevdb": 101515,
+  "name": "Pulled Fangs",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 1,
+        "damage_type": "normal"
+      },
+      "text": "Only usable at close range at the end of a round during which this minion successfully inflicted more damage than the opposing vampire. Not usable by a minion being burned or going to torpor.\nPut this card on the opposing vampire; this minion inflicts 1 damage on them. The attached vampire cannot hunt; if they must hunt, they go to torpor instead. Any vampire(s) can burn this card with two +1 stealth actions. A vampire can have only one Pulled Fangs."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

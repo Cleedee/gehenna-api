@@ -1,0 +1,17 @@
+{
+  "codevdb": 100159,
+  "name": "Big Game",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.maneuver",
+      "params": {},
+      "text": "Do not replace until after this action.\n(D) Enter combat with a ready minion controlled by another Methuselah. If that minion is a Red List minion, this minion gets an optional maneuver or press in that combat and unlocks at the end of the action if he or she is still ready."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

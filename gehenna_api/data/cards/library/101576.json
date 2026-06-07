@@ -1,0 +1,26 @@
+{
+  "codevdb": 101576,
+  "name": "Redcap Wilder",
+  "tipo": "retainer",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "myt"
+      ],
+      "context": "RETAINER",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "MYT"
+      ],
+      "context": "RETAINER",
+      "effects": []
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,11 @@
+{
+  "codevdb": 101811,
+  "name": "Smiling Jack, The Anarch",
+  "tipo": "master",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

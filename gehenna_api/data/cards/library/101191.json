@@ -1,0 +1,25 @@
+{
+  "codevdb": 101191,
+  "name": "Meat Hook",
+  "tipo": "equipment",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 1,
+        "damage_type": "normal"
+      },
+      "text": "Melee weapon.\nStrike: strength+1 damage, only usable once each round. Once each combat, if this weapon is used to strike at close range and the opponent doesn't dodge the strike, the bearer gets an optional press this round, only usable to continue combat. At close range, a vampire with Potence [pot] may destroy this weapon as a strike with first strike that costs 1 blood."
+    },
+    {
+      "function": "combat.dodge",
+      "params": {},
+      "text": "Melee weapon.\nStrike: strength+1 damage, only usable once each round. Once each combat, if this weapon is used to strike at close range and the opponent doesn't dodge the strike, the bearer gets an optional press this round, only usable to continue combat. At close range, a vampire with Potence [pot] may destroy this weapon as a strike with first strike that costs 1 blood."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

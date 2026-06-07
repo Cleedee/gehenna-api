@@ -1,0 +1,34 @@
+{
+  "codevdb": 101563,
+  "name": "Reanimated Corpse",
+  "tipo": "ally",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "thn"
+      ],
+      "context": "ALLY",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "play combat cards that require basic Fortitude [for] as a vampire"
+          },
+          "text": "play combat cards that require basic Fortitude [for] as a vampire"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "THN"
+      ],
+      "context": "ALLY",
+      "effects": []
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

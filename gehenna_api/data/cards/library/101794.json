@@ -1,0 +1,78 @@
+{
+  "codevdb": 101794,
+  "name": "Skin of the Chameleon",
+  "tipo": "action_modifier",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "tha"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "this vampire gets an optional maneuver or press in the resulting combat",
+            "condition": "this action is blocked"
+          },
+          "text": "If this action is blocked, this vampire gets an optional maneuver or press in the resulting combat."
+        },
+        {
+          "function": "combat.maneuver",
+          "params": {},
+          "text": "Only usable as an action is announced. If this action is blocked, this vampire gets an optional maneuver or press in the resulting combat."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "vis"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 stealth"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "this acting vampire gets an optional maneuver or press in the resulting combat",
+            "condition": "this action is blocked"
+          },
+          "text": "If this action is blocked, this acting vampire gets an optional maneuver or press in the resulting combat."
+        },
+        {
+          "function": "combat.maneuver",
+          "params": {},
+          "text": "+1 stealth. If this action is blocked, this acting vampire gets an optional maneuver or press in the resulting combat."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "VIS"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 2
+          },
+          "text": "+2 stealth"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 3
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

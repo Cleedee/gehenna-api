@@ -1,0 +1,51 @@
+{
+  "codevdb": 101774,
+  "name": "Shroud of Absence",
+  "tipo": "action_modifier",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "dom",
+        "obt"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 stealth"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "DOM",
+        "OBT"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "strike: combat ends during the first round of the resulting combat if they are blocked"
+          },
+          "text": "strike: combat ends during the first round of the resulting combat if they are blocked"
+        },
+        {
+          "function": "combat.end",
+          "params": {},
+          "text": "As above, and this vampire can strike: combat ends during the first round of the resulting combat if they are blocked."
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

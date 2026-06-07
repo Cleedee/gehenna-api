@@ -1,0 +1,20 @@
+{
+  "codevdb": 101194,
+  "name": "Mehemet of the Ahl-i-Batin",
+  "tipo": "ally",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 2,
+        "damage_type": "ranged"
+      },
+      "text": "Unique mage with 2 life. 0 strength, 0 bleed.\nMehemet can strike: 2R damage. Mehemet can burn 1 blood and a master discipline card on a vampire controlled by your prey as a (D) action."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

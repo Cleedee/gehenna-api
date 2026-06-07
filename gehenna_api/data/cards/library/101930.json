@@ -1,0 +1,25 @@
+{
+  "codevdb": 101930,
+  "name": "Talaq, The Immortal",
+  "tipo": "ally",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.maneuver",
+      "params": {},
+      "text": "Unique mage with 3 life. 0 strength, 0 bleed.\nTalaq may strike for 1R damage. Talaq may play cards that require basic Quietus [qui] or basic Blood Sorcery [tha] as a vampire with a capacity of 3. Talaq gets an optional maneuver each combat."
+    },
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 1,
+        "damage_type": "ranged"
+      },
+      "text": "Unique mage with 3 life. 0 strength, 0 bleed.\nTalaq may strike for 1R damage. Talaq may play cards that require basic Quietus [qui] or basic Blood Sorcery [tha] as a vampire with a capacity of 3. Talaq gets an optional maneuver each combat."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

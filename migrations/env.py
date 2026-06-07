@@ -3,7 +3,6 @@ from logging.config import fileConfig
 from alembic import context
 from sqlalchemy import engine_from_config, pool
 
-from gehenna_api.config import config as configuration
 from gehenna_api.models.base import Base
 from gehenna_api.settings import Settings
 

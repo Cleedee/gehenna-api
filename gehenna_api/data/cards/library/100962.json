@@ -1,0 +1,49 @@
+{
+  "codevdb": 100962,
+  "name": "Imposing Phantasm",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "chi"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "modifier.strength",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 strength"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "the opposing minion gains blood or life equal to the amount they lost to damage this combat",
+            "condition": "the opposing minion is ready"
+          },
+          "text": "if the opposing minion is ready, the opposing minion gains blood or life equal to the amount they lost to damage this combat."
+        },
+        {
+          "function": "combat.end",
+          "params": {},
+          "text": "This vampire gets +1 strength this combat. After combat ends, if the opposing minion is ready, the opposing minion gains blood or life equal to the amount they lost to damage this combat."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "CHI"
+      ],
+      "context": "COMBAT",
+      "effects": []
+    }
+  ],
+  "modifiers": {
+    "strength": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,14 @@
+{
+  "codevdb": 100028,
+  "name": "Ahrimane Protectorate",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "stealth": 1,
+    "intercept": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

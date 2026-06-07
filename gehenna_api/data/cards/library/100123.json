@@ -1,0 +1,17 @@
+{
+  "codevdb": 100123,
+  "name": "Backflip",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.dodge",
+      "params": {},
+      "text": "Only usable at long range.\nStrike: dodge, with an optional press."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

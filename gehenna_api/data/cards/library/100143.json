@@ -1,0 +1,11 @@
+{
+  "codevdb": 100143,
+  "name": "Bay and Howl",
+  "tipo": "master",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,17 @@
+{
+  "codevdb": 101660,
+  "name": "Ruins of Villers Abbey, Belgium",
+  "tipo": "equipment",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.maneuver",
+      "params": {},
+      "text": "This equipment card represents a location and does not count as equipment while in play. Unique.\nThe vampire with this location may burn X blood before range is determined on the first round of a combat to get X optional maneuvers for that combat."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

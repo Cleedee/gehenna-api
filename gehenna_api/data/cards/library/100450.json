@@ -1,0 +1,34 @@
+{
+  "codevdb": 100450,
+  "name": "Crocodile's Tongue",
+  "tipo": "action_modifier",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "aus"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "burn 1 blood or life to cancel this card as it is played"
+          },
+          "text": "burn 1 blood or life to cancel this card as it is played"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "AUS"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": []
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

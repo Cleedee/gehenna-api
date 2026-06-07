@@ -1,0 +1,44 @@
+{
+  "codevdb": 100282,
+  "name": "Call the Wild Hunt",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "ani",
+        "pro"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "play only one Call the Wild Hunt each combat"
+          },
+          "text": "play only one Call the Wild Hunt each combat"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "ANI",
+        "PRO"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "burn X animals from your hand to inflict X ranged damage on the opposing minion"
+          },
+          "text": "burn X animals from your hand to inflict X ranged damage on the opposing minion"
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

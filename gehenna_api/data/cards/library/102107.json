@@ -1,0 +1,22 @@
+{
+  "codevdb": 102107,
+  "name": "Vengeful Spirit",
+  "tipo": "retainer",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "bleed": 1
+  },
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 1,
+        "damage_type": "normal"
+      },
+      "text": "Wraith with 2 life.\nThe employer gets +1 bleed. Vengeful Spirit inflicts 1 damage on the opposing minion each round of combat during normal strike resolution at close range."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,11 @@
+{
+  "codevdb": 102027,
+  "name": "Trophy: Chosen",
+  "tipo": "master",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

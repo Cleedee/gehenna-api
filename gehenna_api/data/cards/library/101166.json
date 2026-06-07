@@ -1,0 +1,58 @@
+{
+  "codevdb": 101166,
+  "name": "Mark of Damnation",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "ser"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "modifier.strength",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 strength"
+        },
+        {
+          "function": "action.equip",
+          "params": {
+            "attachment": "self"
+          },
+          "text": "put this card on this vampire"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "burn this card as an action"
+          },
+          "text": "burn this card as an action"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "SER"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "modifier.strength",
+          "params": {
+            "value": 2
+          },
+          "text": "+2 strength"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "strength": 3
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,11 @@
+{
+  "codevdb": 100874,
+  "name": "Guruhi Kholo",
+  "tipo": "action_modifier/reaction",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

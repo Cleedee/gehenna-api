@@ -1,0 +1,52 @@
+{
+  "codevdb": 101786,
+  "name": "Siren's Lure",
+  "tipo": "action_modifier",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "cel"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 stealth"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "mel"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "this vampire and the blocking minion enter combat",
+            "condition": "a minion attempts to block. That attempt fails and the blocking minion cannot attempt to block this action again. Lock this vampire and the blocking minion. After the action resolution"
+          },
+          "text": "if a minion attempts to block. That attempt fails and the blocking minion cannot attempt to block this action again. Lock this vampire and the blocking minion. After the action resolution, this vampire and the blocking minion enter combat."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "MEL"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": []
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

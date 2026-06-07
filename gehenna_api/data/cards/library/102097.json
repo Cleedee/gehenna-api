@@ -1,0 +1,58 @@
+{
+  "codevdb": 102097,
+  "name": "Veil the Legions",
+  "tipo": "action_modifier",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "obf"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 stealth"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "OBF"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 stealth"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "burn X blood to give the next X actions minions you control perform this turn +1 stealth"
+          },
+          "text": "burn X blood to give the next X actions minions you control perform this turn +1 stealth"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "be played at superior each turn"
+          },
+          "text": "be played at superior each turn"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 2
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

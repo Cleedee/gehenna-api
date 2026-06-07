@@ -1,0 +1,50 @@
+{
+  "codevdb": 101066,
+  "name": "Kraken's Kiss",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "vic"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "they go to torpor",
+            "condition": "this striking minion takes 4 or more damage this combat"
+          },
+          "text": "If this striking minion takes 4 or more damage this combat, they go to torpor."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "VIC"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "strike, ranged: steal 2 blood or life (becoming blood"
+          },
+          "text": "strike, ranged: steal 2 blood or life (becoming blood"
+        },
+        {
+          "function": "combat.steal_blood",
+          "params": {
+            "amount": 2
+          },
+          "text": "As above, with 1 optional press, only usable to continue combat, and once each round this combat, this vampire can strike, ranged: steal 2 blood or life (becoming blood)."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

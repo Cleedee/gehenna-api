@@ -1,0 +1,14 @@
+{
+  "codevdb": 100967,
+  "name": "In Memory of the Two Lands",
+  "tipo": "master",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "bleed": 1,
+    "strength": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

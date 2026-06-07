@@ -1,0 +1,11 @@
+{
+  "codevdb": 201584,
+  "name": "Doctor Morocco",
+  "tipo": "vampire",
+  "source": "cardbase_crypt.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": false,
+  "notes": "vampire - plain text [Ministry]"
+}

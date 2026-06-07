@@ -1,0 +1,51 @@
+{
+  "codevdb": 101582,
+  "name": "Reformation",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "chi"
+      ],
+      "context": "ACTION",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "dom"
+      ],
+      "context": "ACTION",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "ser"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "you can burn those counters to steal the target vampire",
+            "condition": "the number of your corruption counters on the vampire equals or exceeds their capacity"
+          },
+          "text": "If the number of your corruption counters on the vampire equals or exceeds their capacity, you can burn those counters to steal the target vampire."
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "burn those counters to steal the target vampire"
+          },
+          "text": "burn those counters to steal the target vampire"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,25 @@
+{
+  "codevdb": 101910,
+  "name": "Survivalist",
+  "tipo": "ally",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.maneuver",
+      "params": {},
+      "text": "Mortal with 1 life. 0 strength, 0 bleed.\nSurvivalist may strike for 2R damage. He may lock to give a Brujah antitribu you control a maneuver."
+    },
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 2,
+        "damage_type": "ranged"
+      },
+      "text": "Mortal with 1 life. 0 strength, 0 bleed.\nSurvivalist may strike for 2R damage. He may lock to give a Brujah antitribu you control a maneuver."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

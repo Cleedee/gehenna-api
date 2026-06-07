@@ -1,0 +1,11 @@
+{
+  "codevdb": 101785,
+  "name": "Sire's Index Finger",
+  "tipo": "equipment",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

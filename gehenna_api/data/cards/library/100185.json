@@ -1,0 +1,23 @@
+{
+  "codevdb": 100185,
+  "name": "Blessing of the Name",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "stealth": 1,
+    "intercept": 1
+  },
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 1,
+        "damage_type": "normal"
+      },
+      "text": "+1 stealth action.\nUsable by a locked Salubri antitribu. You may not play this card if you have a Blessing of the Name in play. Put this card in play and choose this acting vampire and up to two other minions you control. The chosen minions unlock, and they have +1 intercept and inflict +1 damage with melee weapons while this card is in play. During your unlock phase, burn this card and lock the chosen minions."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

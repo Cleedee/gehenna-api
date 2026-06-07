@@ -1,0 +1,20 @@
+{
+  "codevdb": 101937,
+  "name": "Tara, The Hollow One",
+  "tipo": "ally",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 1,
+        "damage_type": "ranged"
+      },
+      "text": "Unique mage with 2 life. 0 strength, 0 bleed.\nTara can strike: 1R damage. Tara can burn an equipment on a Ravnos as a (D) action; that Ravnos gains blood equal to the cost of the equipment, 1 blood instead if the equipment has no cost."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

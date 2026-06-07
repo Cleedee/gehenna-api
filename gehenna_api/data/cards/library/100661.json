@@ -1,0 +1,20 @@
+{
+  "codevdb": 100661,
+  "name": "Escaped Mental Patient",
+  "tipo": "ally",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 1,
+        "damage_type": "aggravated"
+      },
+      "text": "Mortal with 1 life. 1 strength, 0 bleed.\nEscaped Mental Patient can enter combat with any minion controlled by another Methuselah as a (D) action. The Patient can strike: hand strike at +1 damage, aggravated. Burn him at the end of combat if he does so."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

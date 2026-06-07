@@ -1,0 +1,13 @@
+{
+  "codevdb": 200489,
+  "name": "Gabrielle di Righetti",
+  "tipo": "vampire",
+  "source": "cardbase_crypt.json",
+  "abilities": [],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

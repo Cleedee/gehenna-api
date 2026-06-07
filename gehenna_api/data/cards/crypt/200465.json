@@ -1,0 +1,13 @@
+{
+  "codevdb": 200465,
+  "name": "Ferox, The Rock Lord",
+  "tipo": "vampire",
+  "source": "cardbase_crypt.json",
+  "abilities": [],
+  "modifiers": {
+    "intercept": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

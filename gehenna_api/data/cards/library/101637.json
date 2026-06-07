@@ -1,0 +1,49 @@
+{
+  "codevdb": 101637,
+  "name": "Riposte",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "cel"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.strike",
+          "params": {
+            "damage": 1,
+            "damage_type": "normal"
+          },
+          "text": "Strike: combat ends, and inflict 1 damage to the opposing minion once combat ends if the range is close (damage not preventable)."
+        },
+        {
+          "function": "combat.end",
+          "params": {},
+          "text": "Strike: combat ends, and inflict 1 damage to the opposing minion once combat ends if the range is close (damage not preventable)."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "CEL"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.strike",
+          "params": {
+            "damage": 2,
+            "damage_type": "normal"
+          },
+          "text": "As above, but inflict 2 damage."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

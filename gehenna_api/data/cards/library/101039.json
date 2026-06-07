@@ -1,0 +1,20 @@
+{
+  "codevdb": 101039,
+  "name": "Kerrie",
+  "tipo": "equipment",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 1,
+        "damage_type": "ranged"
+      },
+      "text": "Melee weapon. Requires a Laibon.\nStrength+1 damage each strike. Alternatively, inflict strength ranged damage as a strike and, after strike resolution, turn this weapon face down (out of play) until the end of the action."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

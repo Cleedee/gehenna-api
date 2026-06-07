@@ -1,0 +1,20 @@
+{
+  "codevdb": 102192,
+  "name": "Wooden Stake",
+  "tipo": "equipment",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 1,
+        "damage_type": "normal"
+      },
+      "text": "Melee weapon.\nStrike: strength damage. If more than 1 damage is inflicted on an opposing vampire by this weapon in a given combat, that vampire is sent to torpor. In that case, this card is transferred to that vampire, and he or she doesn't unlock as normal during the unlock phase as long as he or she remains in torpor."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

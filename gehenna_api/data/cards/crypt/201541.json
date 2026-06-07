@@ -1,0 +1,11 @@
+{
+  "codevdb": 201541,
+  "name": "Chelsea Blake",
+  "tipo": "vampire",
+  "source": "cardbase_crypt.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

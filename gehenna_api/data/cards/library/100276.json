@@ -1,0 +1,25 @@
+{
+  "codevdb": 100276,
+  "name": "Caiaphas Smith",
+  "tipo": "ally",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.maneuver",
+      "params": {},
+      "text": "Unique mortal with 2 life. 1 strength, 0 bleed.\nCaiaphas may strike for 1R damage. Caiaphas gets an optional maneuver each combat. Any vampire blocking Caiaphas is burned after the combat (if any). Caiaphas cannot bleed. If he is unlocked at the start of your turn, your predator takes control of him."
+    },
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 1,
+        "damage_type": "ranged"
+      },
+      "text": "Unique mortal with 2 life. 1 strength, 0 bleed.\nCaiaphas may strike for 1R damage. Caiaphas gets an optional maneuver each combat. Any vampire blocking Caiaphas is burned after the combat (if any). Caiaphas cannot bleed. If he is unlocked at the start of your turn, your predator takes control of him."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,39 @@
+{
+  "codevdb": 101116,
+  "name": "Lobotomy",
+  "tipo": "action_modifier",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "vic"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "action.equip",
+          "params": {
+            "attachment": "self"
+          },
+          "text": "put this card on this vampire"
+        },
+        {
+          "function": "combat.maneuver",
+          "params": {},
+          "text": "Put this card on the ally and lock the ally after action resolution if this action is successful. Actions requiring Dominate [dom] or Presence [pre] have no effect on the attached ally. The attached ally gets -1 bleed and cannot maneuver."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "VIC"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": []
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

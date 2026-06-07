@@ -1,0 +1,11 @@
+{
+  "codevdb": 100606,
+  "name": "Ebony Fox Hunt",
+  "tipo": "master",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

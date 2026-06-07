@@ -1,0 +1,47 @@
+{
+  "codevdb": 101296,
+  "name": "Nose of the Hound",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "aus"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "combat.maneuver",
+          "params": {},
+          "text": "(D) Enter combat with a ready locked minion controlled by another Methuselah. This acting minion gets an optional maneuver in that combat."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "spi"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "combat.maneuver",
+          "params": {},
+          "text": "As [aus] above, with an additional optional maneuver during that combat."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "SPI"
+      ],
+      "context": "ACTION",
+      "effects": []
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

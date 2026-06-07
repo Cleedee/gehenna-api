@@ -1,0 +1,25 @@
+During your influence phase you may spend       At any time during this phase, if a vampire transfers as follows:                           has at least as many blood counters as their capacity, the Methuselah can move that
+◼ Spend 1 transfer to move 1 pool counter       vampire face up to the ready region, unlocked. from your pool to a vampire in your uncon-      The counters are kept on them to represent trolled region.                                 their blood. Counters in excess of his capacity
+◼ Spend 2 transfers to move 1 blood counter     drain off immediately as usual. If the vampire from a vampire in your uncontrolled region to   grants additional transfers, those cannot be your pool.                                      used on this turn because transfers are gained
+◼ Spend 4 transfers and burn 1 pool to move a   at the start of the influence phase. Other vampire from your crypt to your uncontrolled    types of crypt cards are handled similarly. region.
+Nora comes to her influence phase. She has 4 transfers to spend, but only 2 pool. She sees that she has built up 6 blood counters on a vampire named Alexa Draper with a blood capacity of 8, and she thinks she can win the game if she gets that vampire into play. However, she cannot use both counters in her pool to put that vampire into play because that would put her out of the game.
+Ready
+She had invested 2 counters in a vampire named
+Sybren van Oosten with a blood capacity of 7 on a previous turn, so she spends 2 of her 4 transfers to take back 1 of those counters and put it in her pool.
+Now she has 3 pool and 2 transfers left to spend.
+She spends the 2 transfers by moving 2 of the 3
+Uncontrolled      counters from her pool to Alexa Draper and moves her to the ready region.
+
+5. DISCARD PHASE
+ADVANCED RULES                                     In your discard phase you receive by default
+Advanced: An advanced card is a type of            one discard phase action. You can use a discard vampire card for your crypt. An advanced card      phase action to discard a card from your hand has a special icon _| under the clan icon. The     and draw to replace it. Discard phase actions advanced card is a vampire card in all respects,   not used are lost; they cannot be saved for late so it can be influenced in the normal manner.
+In addition, if you already control the advanced or the associated regular “base” vampire and       ADVANCED RULES the other version of the vampire is in your        You may use a discard phase action to put uncontrolled region, then you can spend 4          an event card into play but no more than transfers and 1 pool counter to move the vam-      one per phase. Some effects may change the pire card from your uncontrolled region to the     number of discard phase actions you receive controlled vampire card (place the advanced        or may give you alternate ways to use your card on top of the base card). The two cards       discard phase actions. effectively merge ¶µ to form a single vampire.
+Each event card may only be played once each
+The particulars of this merge are as follows.      game.
+The counters and cards on the vampire already in play remain, but any counters or cards (if any) on the vampire coming from the uncontrolled region are burned. The advanced and the base card are treated as a single vampire      Ending the Game card, even if sent to the uncontrolled region somehow, until the vampire is burned. Any          When a Methuselah runs out of pool couneffects in play that targeted the vampire now      ters, they are ousted from the game. If you are target the merged version.                         ousted, all the cards you control are removed from the game. Any of your rivals’ cards you
+When merged, the text on the base card still       control are returned to them at the end of the applies, but the rest of the card is ignored       game. Any of your cards controlled by other
+(capacity, Disciplines, etc.). The advanced card   Methuselahs remain in play as normal. The applies in full. If the advanced card conflicts    game continues until only one Methuselah with the base card (a different sect, for exam-    is left. ple), the advanced card has precedence. Some merged cards have an additional effect that        You get 1 victory point and 6 pool counters only applies if the card is merged with its base   from the blood bank whenever your prey is card. Such an effect is identified in the card     ousted (no matter how or by whom your prey text by a merged icon ¶µ.                          was ousted). You receive an additional victory point if you are the last Methuselah remain-
+The advanced vampire (merged or not) will          ing. At the end of the game, the winner is contest other copies of the same vampire           the Methuselah with the most victory points,
+(advanced or not) in play, as usual.               even if they have been ousted.
+
+In the case of a tie there is no winner of the game.

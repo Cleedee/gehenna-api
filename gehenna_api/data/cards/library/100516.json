@@ -1,0 +1,25 @@
+{
+  "codevdb": 100516,
+  "name": "Deer Rifle",
+  "tipo": "equipment",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.maneuver",
+      "params": {},
+      "text": "Weapon: gun.\n1R damage each strike, with two optional maneuvers each combat."
+    },
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 1,
+        "damage_type": "ranged"
+      },
+      "text": "Weapon: gun.\n1R damage each strike, with two optional maneuvers each combat."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

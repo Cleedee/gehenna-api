@@ -10,6 +10,12 @@ from gehenna_api.utils.vdb import (
 )
 
 
+def _json_dumps(val) -> str:
+    if val is None or val == '' or val == {} or val == []:
+        return ''
+    return json.dumps(val, ensure_ascii=False)
+
+
 def criar_carta_biblioteca(data, codevdb) -> Card:
     dados = data[codevdb]
     custo = (
@@ -25,6 +31,20 @@ def criar_carta_biblioteca(data, codevdb) -> Card:
         text=dados['text'],
         codevdb=codevdb,
         code=0,
+        blood=dados.get('blood') or 0,
+        pool=dados.get('pool') or 0,
+        conviction=dados.get('conviction') or 0,
+        burn=dados.get('burn') or '',
+        requirement=dados.get('requirement') or '',
+        ascii=dados.get('ascii') or '',
+        artist=_json_dumps(dados.get('artist')),
+        banned=dados.get('banned') or '',
+        twd=dados.get('twd') or 0,
+        set_info=_json_dumps(dados.get('set')),
+        path=dados.get('path') or '',
+        trifle=dados.get('trifle') or False,
+        rulings=_json_dumps(dados.get('rulings')),
+        aka=dados.get('aka') or '',
     )
     return carta
 
@@ -46,6 +66,20 @@ def criar_carta_cripta(data, codevdb) -> Card:
         codevdb=key,
         avancado=False if data[key]['adv'] == '' else data[key]['adv'][0],
         code=0,
+        blood=0,
+        pool=0,
+        conviction=0,
+        burn='',
+        requirement='',
+        ascii=data[key].get('ascii') or '',
+        artist=_json_dumps(data[key].get('artist')),
+        banned=data[key].get('banned') or '',
+        twd=data[key].get('twd') or 0,
+        set_info=_json_dumps(data[key].get('set')),
+        path=data[key].get('path') or '',
+        trifle=False,
+        rulings=_json_dumps(data[key].get('rulings')),
+        aka=data[key].get('aka') or '',
     )
     return carta
 

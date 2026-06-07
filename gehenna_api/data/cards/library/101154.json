@@ -1,0 +1,11 @@
+{
+  "codevdb": 101154,
+  "name": "Malkavian Justicar",
+  "tipo": "political_action",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

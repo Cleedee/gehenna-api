@@ -1,0 +1,20 @@
+{
+  "codevdb": 100379,
+  "name": "Combat Shotgun",
+  "tipo": "equipment",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 3,
+        "damage_type": "ranged"
+      },
+      "text": "Weapon, Gun.\n3R damage each strike, only usable once each round."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

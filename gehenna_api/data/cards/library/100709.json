@@ -1,0 +1,17 @@
+{
+  "codevdb": 100709,
+  "name": "FBI Special Affairs Division",
+  "tipo": "event",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.end",
+      "params": {},
+      "text": "Government.\nIf an ally is burned in combat with an acting vampire, add 1 counter to this card and inflict 2 unpreventable environmental damage on the acting vampire after the combat ends. If this card has 4 counters, burn it."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

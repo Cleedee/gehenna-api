@@ -1,0 +1,11 @@
+{
+  "codevdb": 101449,
+  "name": "Praxis Seizure: Atlanta",
+  "tipo": "political_action",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

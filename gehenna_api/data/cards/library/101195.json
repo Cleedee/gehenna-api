@@ -1,0 +1,67 @@
+{
+  "codevdb": 101195,
+  "name": "Melange",
+  "tipo": "reaction",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "aus"
+      ],
+      "context": "REACTION",
+      "effects": [
+        {
+          "function": "modifier.intercept",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 intercept"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "AUS"
+      ],
+      "context": "REACTION",
+      "effects": [
+        {
+          "function": "modifier.bleed",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 bleed"
+        },
+        {
+          "function": "action.equip",
+          "params": {
+            "attachment": "self"
+          },
+          "text": "put this card on this vampire"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "put this card on the acting minion; you still control this card",
+            "condition": "this vampire blocks"
+          },
+          "text": "if this vampire blocks, put this card on the acting minion; you still control this card."
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "burn this card to get +1 bleed"
+          },
+          "text": "burn this card to get +1 bleed"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "intercept": 1,
+    "bleed": 1
+  },
+  "default_strike": null,
+  "needs_review": false,
+  "notes": "Juliet's Dream deck"
+}

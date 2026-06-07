@@ -1,0 +1,11 @@
+{
+  "codevdb": 200833,
+  "name": "Lernean",
+  "tipo": "vampire",
+  "source": "cardbase_crypt.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

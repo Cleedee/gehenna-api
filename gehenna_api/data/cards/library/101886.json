@@ -1,0 +1,22 @@
+{
+  "codevdb": 101886,
+  "name": "Strike with Conviction",
+  "tipo": "conviction",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "bleed": 1
+  },
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 1,
+        "damage_type": "normal"
+      },
+      "text": "Burn to make a hand or weapon strike against a monster at +1 damage.\nBurn to bleed at +1 bleed as a (D) action."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

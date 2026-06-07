@@ -1,0 +1,20 @@
+{
+  "codevdb": 102267,
+  "name": "Vozhd of Sofia",
+  "tipo": "ally",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 3,
+        "damage_type": "ranged"
+      },
+      "text": "Unique ghoul with 5 life. 3 strength, 0 bleed.\nAfter this ally enters play, burn an ally or retainer you control. It can strike: 3R damage. It can enter combat with a minion as a (D) action. During your unlock phase, you can discard an ally or retainer card to add 2 life to this ally."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

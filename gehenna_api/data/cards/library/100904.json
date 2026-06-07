@@ -1,0 +1,87 @@
+{
+  "codevdb": 100904,
+  "name": "Heart of the City",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "pre"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 stealth"
+        },
+        {
+          "function": "action.equip",
+          "params": {
+            "attachment": "self"
+          },
+          "text": "Put this card on this vampire."
+        },
+        {
+          "function": "modifier.bleed",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 bleed"
+        },
+        {
+          "function": "card.restrict_use",
+          "params": {
+            "max_per_vampire": 1
+          },
+          "text": "A vampire can have only one Heart of the City."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "PRE"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 stealth"
+        },
+        {
+          "function": "action.equip",
+          "params": {
+            "attachment": "self"
+          },
+          "text": "Put this card on this vampire."
+        },
+        {
+          "function": "modifier.bleed",
+          "params": {
+            "value": 2
+          },
+          "text": "+2 bleed"
+        },
+        {
+          "function": "card.restrict_use",
+          "params": {
+            "max_per_vampire": 1
+          },
+          "text": "A vampire can have only one Heart of the City."
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 1,
+    "bleed": 3
+  },
+  "default_strike": null,
+  "needs_review": false,
+  "notes": "[pre] +1stealth, equip, +1bleed. [PRE] +2bleed [Ministry]"
+}

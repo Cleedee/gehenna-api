@@ -1,0 +1,20 @@
+{
+  "codevdb": 101426,
+  "name": "Pounce",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 2,
+        "damage_type": "normal"
+      },
+      "text": "Strike: hand strike at +2 damage, and the opposing minion cannot strike for the remainder of the round (this doesn't affect the current strike resolution). If this strike is dodged, this striking minion takes 1 damage during strike resolution and the opposing minion gets an optional press."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,17 @@
+{
+  "codevdb": 101319,
+  "name": "Olid Loa",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.maneuver",
+      "params": {},
+      "text": "Only usable before range is determined. Retainers on the opposing minion lose their abilities this combat. The opposing minion cannot maneuver to close or press to continue this combat."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

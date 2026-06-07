@@ -1,0 +1,20 @@
+{
+  "codevdb": 100900,
+  "name": "Haymaker",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 1,
+        "damage_type": "normal"
+      },
+      "text": "Play after range is determined. Only usable at close range. Not usable if this minion played a Haymaker last round.\nThis minion's initial strike this round will be strike: hand strike at +1 damage, and the opposing minion's initial strike this round gets first strike. If either minion inflicts more damage than the other this round, that minion gets an optional press this round."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

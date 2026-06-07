@@ -1,0 +1,17 @@
+{
+  "codevdb": 100756,
+  "name": "Follow the Alpha",
+  "tipo": "action_modifier",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.maneuver",
+      "params": {},
+      "text": "Only usable by a ready unlocked Gangrel antitribu when combat involving another Gangrel antitribu you control ends and the opposing minion is still ready.\nLock this Gangrel antitribu. This Gangrel antitribu enters combat with the opposing minion. The first round of this new combat, the opposing minion cannot use maneuvers."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

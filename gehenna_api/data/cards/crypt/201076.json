@@ -1,0 +1,13 @@
+{
+  "codevdb": 201076,
+  "name": "Oliver Thrace",
+  "tipo": "vampire",
+  "source": "cardbase_crypt.json",
+  "abilities": [],
+  "modifiers": {
+    "bleed": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

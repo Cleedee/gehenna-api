@@ -1,0 +1,11 @@
+{
+  "codevdb": 100199,
+  "name": "Blood Doll",
+  "tipo": "master",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": false,
+  "notes": "master - plain text [Ministry]"
+}

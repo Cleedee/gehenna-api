@@ -1,0 +1,11 @@
+{
+  "codevdb": 201689,
+  "name": "Trung Chau Pham",
+  "tipo": "vampire",
+  "source": "cardbase_crypt.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,22 @@
+{
+  "codevdb": 101090,
+  "name": "Legend of the Leopard",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 1,
+        "damage_type": "normal"
+      },
+      "text": "+1 stealth action.\n(D) Inflict 1 damage on a vampire controlled by your predator or prey or take control of an ally controlled by your predator or prey."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

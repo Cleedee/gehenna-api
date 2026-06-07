@@ -1,0 +1,22 @@
+{
+  "codevdb": 101600,
+  "name": "Remnant of the Endless Storm",
+  "tipo": "ally",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "strength": 1
+  },
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 2,
+        "damage_type": "normal"
+      },
+      "text": "Unique werewolf with 5 life. 1 strength, 0 bleed. Requires a magaji.\nThe Remnant gets +1 strength for each life it has. The Remnant may enter combat with any minion as a (D) action. If any effect does more than 2 damage to the Remnant, ignore the excess. If the Remnant has 4 or fewer life during your unlock phase, it gains 1 life from the blood bank."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,11 @@
+{
+  "codevdb": 201165,
+  "name": "Raphaela Giovanni",
+  "tipo": "vampire",
+  "source": "cardbase_crypt.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,49 @@
+{
+  "codevdb": 101985,
+  "name": "Tinglestripe",
+  "tipo": "equipment",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "myt"
+      ],
+      "context": "EQUIPMENT",
+      "effects": [
+        {
+          "function": "combat.strike",
+          "params": {
+            "damage": 2,
+            "damage_type": "ranged"
+          },
+          "text": "Strike: 2R damage."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "MYT"
+      ],
+      "context": "EQUIPMENT",
+      "effects": [
+        {
+          "function": "combat.maneuver",
+          "params": {},
+          "text": "As above, or strike: 1R damage, with 1 optional maneuver each combat."
+        },
+        {
+          "function": "combat.strike",
+          "params": {
+            "damage": 1,
+            "damage_type": "ranged"
+          },
+          "text": "As above, or strike: 1R damage, with 1 optional maneuver each combat."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

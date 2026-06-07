@@ -1,0 +1,49 @@
+{
+  "codevdb": 100087,
+  "name": "Armor of Caine's Fury",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "pre"
+      ],
+      "context": "COMBAT",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "val"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "prevent 1 damage from the opposing minion's strikes each round"
+          },
+          "text": "prevent 1 damage from the opposing minion's strikes each round"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "VAL"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "prevent 2 damage from the opposing minion's strikes each round"
+          },
+          "text": "prevent 2 damage from the opposing minion's strikes each round"
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

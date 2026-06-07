@@ -1,0 +1,43 @@
+{
+  "codevdb": 100429,
+  "name": "Corrupt Construction",
+  "tipo": "ally",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "vic"
+      ],
+      "context": "ALLY",
+      "effects": [
+        {
+          "function": "modifier.strength",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 strength"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "remove from the game any number of ally, retainer or vampire cards from your ash heap or hand; this ally gains 1 life for each card removed this way"
+          },
+          "text": "remove from the game any number of ally, retainer or vampire cards from your ash heap or hand; this ally gains 1 life for each card removed this way"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "VIC"
+      ],
+      "context": "ALLY",
+      "effects": []
+    }
+  ],
+  "modifiers": {
+    "strength": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

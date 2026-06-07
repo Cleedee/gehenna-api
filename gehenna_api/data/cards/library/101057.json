@@ -1,0 +1,44 @@
+{
+  "codevdb": 101057,
+  "name": "King of the Mountain",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "for"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "that weapon is destroyed",
+            "condition": "the strike was made with a melee weapon"
+          },
+          "text": "If the strike was made with a melee weapon, that weapon is destroyed."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "FOR"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "he or she takes an equal amount of damage during strike resolution as well",
+            "condition": "the opposing minion inflicts damage with a hand strike this round (even if the damage is prevented)"
+          },
+          "text": "If the opposing minion inflicts damage with a hand strike this round (even if the damage is prevented), he or she takes an equal amount of damage during strike resolution as well."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

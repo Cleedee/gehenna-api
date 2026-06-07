@@ -1,0 +1,41 @@
+{
+  "codevdb": 100681,
+  "name": "Eyes of Blades",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "aus",
+        "cel"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "prevent 1 damage from a retainer"
+          },
+          "text": "prevent 1 damage from a retainer"
+        },
+        {
+          "function": "combat.dodge",
+          "params": {},
+          "text": "Strike: dodge, and this vampire may prevent 1 damage from a retainer."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "AUS",
+        "CEL"
+      ],
+      "context": "COMBAT",
+      "effects": []
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

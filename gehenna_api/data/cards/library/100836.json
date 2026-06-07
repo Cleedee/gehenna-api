@@ -1,0 +1,20 @@
+{
+  "codevdb": 100836,
+  "name": "Glaser Rounds",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 2,
+        "damage_type": "normal"
+      },
+      "text": "Ammo.\nOnly usable before resolution of a gun's strike. This gun inflicts +2 damage each strike for the remainder of this combat. Not usable the first time the gun is used in a given combat. No more than 1 ammo card can be used on a gun card each combat."
+    }
+  ],
+  "needs_review": false,
+  "notes": "Juliet's Dream deck"
+}

@@ -1,0 +1,35 @@
+{
+  "codevdb": 100561,
+  "name": "Dive Bomb",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "FLIGHT"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "the blocking minion gets 1 optional press during the first round of the resulting combat",
+            "condition": "this action is blocked"
+          },
+          "text": "If this action is blocked, the blocking minion gets 1 optional press during the first round of the resulting combat."
+        },
+        {
+          "function": "combat.maneuver",
+          "params": {},
+          "text": "(D) Enter combat with a minion. This acting minion gets 1 optional maneuver during the first round of that combat. If this action is blocked, the blocking minion gets 1 optional press during the first round of the resulting combat."
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

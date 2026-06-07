@@ -1,0 +1,26 @@
+{
+  "codevdb": 101340,
+  "name": "Owl Companion",
+  "tipo": "retainer",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "ani"
+      ],
+      "context": "RETAINER",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "ANI"
+      ],
+      "context": "RETAINER",
+      "effects": []
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

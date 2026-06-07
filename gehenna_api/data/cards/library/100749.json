@@ -1,0 +1,35 @@
+{
+  "codevdb": 100749,
+  "name": "Flesh of Marble",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "pro"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "any additional damage inflicted on this vampire in the same round is automatically prevented",
+            "condition": "a damage is successfully inflicted on this vampire in a given round"
+          },
+          "text": "if a damage is successfully inflicted on this vampire in a given round, any additional damage inflicted on this vampire in the same round is automatically prevented."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "PRO"
+      ],
+      "context": "COMBAT",
+      "effects": []
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,22 @@
+{
+  "codevdb": 100293,
+  "name": "Car Bomb",
+  "tipo": "reaction",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 2,
+        "damage_type": "normal"
+      },
+      "text": "Requires a ready anarch. Only usable as the action is announced.\nLock this reacting minion. If the acting minion has a vehicle, the action fails, the vehicle is burned, and the acting minion takes 2 damage (not preventable). Otherwise, the action gets -1 stealth."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

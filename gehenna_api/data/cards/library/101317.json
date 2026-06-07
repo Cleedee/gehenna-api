@@ -1,0 +1,17 @@
+{
+  "codevdb": 101317,
+  "name": "Ohoyo Hopoksia (Bastet)",
+  "tipo": "ally",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.maneuver",
+      "params": {},
+      "text": "Unique werewolf with 3 life. 3 strength, 0 bleed.\nWhen a minion you control would enter combat with an acting minion, you may lock Ohoyo to cancel that combat and have Ohoyo enter combat with the acting minion instead. She gets an optional maneuver each combat. If she has less than 3 life during your unlock phase, she gains 1 life from the blood bank."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

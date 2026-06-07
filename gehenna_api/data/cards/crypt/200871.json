@@ -1,0 +1,13 @@
+{
+  "codevdb": 200871,
+  "name": "Lucian, the Perfect",
+  "tipo": "vampire",
+  "source": "cardbase_crypt.json",
+  "abilities": [],
+  "modifiers": {
+    "bleed": 3
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

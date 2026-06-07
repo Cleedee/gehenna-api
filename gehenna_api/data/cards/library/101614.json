@@ -1,0 +1,19 @@
+{
+  "codevdb": 101614,
+  "name": "Restricted Vitae",
+  "tipo": "event",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.steal_blood",
+      "params": {
+        "amount": 1
+      },
+      "text": "Gehenna. Do not replace until a vampire successfully hunts.\nVampires cannot hunt unless they must hunt. Vampires who must hunt can steal 1 blood from a younger vampire as a (D) hunt action."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

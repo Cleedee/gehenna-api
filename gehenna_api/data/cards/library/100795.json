@@ -1,0 +1,66 @@
+{
+  "codevdb": 100795,
+  "name": "Frozen Object",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "ser"
+      ],
+      "context": "ACTION",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "tem"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "action.equip",
+          "params": {
+            "attachment": "self"
+          },
+          "text": "put this card on this vampire"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "you can burn this card to inflict 2 unpreventable environmental damage on the acting minion before block resolution",
+            "condition": "this vampire blocks a directed action"
+          },
+          "text": "If this vampire blocks a directed action, you can burn this card to inflict 2 unpreventable environmental damage on the acting minion before block resolution."
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "burn this card to inflict 2 unpreventable environmental damage on the acting minion before block resolution"
+          },
+          "text": "burn this card to inflict 2 unpreventable environmental damage on the acting minion before block resolution"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "TEM"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "burn this card after a minion successfully bleeds you to inflict 2 unpreventable environmental damage on the bleeding minion"
+          },
+          "text": "burn this card after a minion successfully bleeds you to inflict 2 unpreventable environmental damage on the bleeding minion"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

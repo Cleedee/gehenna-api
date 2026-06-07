@@ -1,0 +1,17 @@
+{
+  "codevdb": 100568,
+  "name": "Dog Pack",
+  "tipo": "retainer",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.end",
+      "params": {},
+      "text": "Animal with 1 life.\nMinions in combat with the employer cannot strike: combat ends."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

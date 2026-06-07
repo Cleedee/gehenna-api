@@ -1,0 +1,65 @@
+{
+  "codevdb": 101928,
+  "name": "Taking the Skin: Minion",
+  "tipo": "action_modifier/combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "abo"
+      ],
+      "context": "ACTION MODIFIER/COMBAT",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "abo"
+      ],
+      "context": "ACTION MODIFIER/COMBAT",
+      "effects": [
+        {
+          "function": "modifier.bleed",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 bleed"
+        },
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 stealth"
+        },
+        {
+          "function": "action.equip",
+          "params": {
+            "attachment": "self"
+          },
+          "text": "put this card on this vampire"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "bleed an additional time this turn and gets +1 bleed and +1 stealth when bleeding"
+          },
+          "text": "bleed an additional time this turn and gets +1 bleed and +1 stealth when bleeding"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "have only one skin"
+          },
+          "text": "have only one skin"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "bleed": 1,
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,42 @@
+{
+  "codevdb": 102283,
+  "name": "Touch of Oblivion",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "obl"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "action.equip",
+          "params": {
+            "attachment": "self"
+          },
+          "text": "put this card on this vampire"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "burn it",
+            "condition": "this card has no counters"
+          },
+          "text": "If this card has no counters, burn it."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "OBL"
+      ],
+      "context": "COMBAT",
+      "effects": []
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

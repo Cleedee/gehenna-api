@@ -36,6 +36,20 @@ def create_card(card: CardSchema, session: Session = Depends(get_session)):
         sect=card.sect,
         avancado=card.advanced,
         codevdb=card.codevdb,
+        blood=card.blood,
+        pool=card.pool,
+        conviction=card.conviction,
+        burn=card.burn,
+        requirement=card.requirement,
+        ascii=card.ascii,
+        artist=card.artist,
+        banned=card.banned,
+        twd=card.twd,
+        set_info=card.set_info,
+        path=card.path,
+        trifle=card.trifle,
+        rulings=card.rulings,
+        aka=card.aka,
     )
     session.add(db_card)
     session.commit()
@@ -67,13 +81,12 @@ def read_cards(
         ids = eval('[' + ids + ']')
         cards = session.scalars(select(Card).where(Card.id.in_(ids))).all()
     elif codevdb:
-        cards = session.scalars(select(Card).where(Card.codevdb == codevdb)).all()
+        cards = session.scalars(
+            select(Card).where(Card.codevdb == codevdb)
+        ).all()
     elif tipo:
         cards = session.scalars(
-            select(Card)
-            .where(Card.tipo == tipo)
-            .offset(skip)
-            .limit(limit)
+            select(Card).where(Card.tipo == tipo).offset(skip).limit(limit)
         ).all()
     else:
         cards = session.scalars(select(Card).offset(skip).limit(limit)).all()
@@ -128,6 +141,20 @@ def update_card(
     db_card.text = card.text
     db_card.title = card.title
     db_card.codevdb = card.codevdb
+    db_card.blood = card.blood
+    db_card.pool = card.pool
+    db_card.conviction = card.conviction
+    db_card.burn = card.burn
+    db_card.requirement = card.requirement
+    db_card.ascii = card.ascii
+    db_card.artist = card.artist
+    db_card.banned = card.banned
+    db_card.twd = card.twd
+    db_card.set_info = card.set_info
+    db_card.path = card.path
+    db_card.trifle = card.trifle
+    db_card.rulings = card.rulings
+    db_card.aka = card.aka
     session.commit()
     session.refresh(db_card)
     return db_card

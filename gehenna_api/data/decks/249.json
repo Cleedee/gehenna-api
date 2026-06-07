@@ -1,0 +1,299 @@
+{
+  "deck_id": 249,
+  "name": "Ministry [by VTES Team]",
+  "creator": "VTES Team",
+  "date": "2026-05-05",
+  "format": "2R+F",
+  "description": "Preconstructed from \"Fifth Edition (Anarchs)\" [2021-12-01]",
+  "all_reviewed": true,
+  "cards": [
+    {
+      "codevdb": 100199,
+      "name": "Blood Doll",
+      "tipo": "Master",
+      "quantity": 4,
+      "needs_review": false,
+      "notes": "master - plain text [Ministry]"
+    },
+    {
+      "codevdb": 100366,
+      "name": "Club Illusion",
+      "tipo": "Master",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "master - plain text [Ministry]"
+    },
+    {
+      "codevdb": 100374,
+      "name": "Codex of the Edenic Groundskeepers",
+      "tipo": "Equipment",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "equipment - plain text [Ministry]"
+    },
+    {
+      "codevdb": 100588,
+      "name": "Dreams of the Sphinx",
+      "tipo": "Master",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "Master - plain text, draw engine"
+    },
+    {
+      "codevdb": 100601,
+      "name": "Earth Meld",
+      "tipo": "Combat",
+      "quantity": 5,
+      "needs_review": false,
+      "notes": "Earth Meld: [pro]combat.end [PRO]unlock+combat.end"
+    },
+    {
+      "codevdb": 100640,
+      "name": "Enchant Kindred",
+      "tipo": "Action",
+      "quantity": 7,
+      "needs_review": false,
+      "notes": "Action: [pre]+1stealth [PRE] +3bleed"
+    },
+    {
+      "codevdb": 100652,
+      "name": "Entrancement",
+      "tipo": "Action",
+      "quantity": 2,
+      "needs_review": false,
+      "notes": "action - abilities parsed OK [Ministry]"
+    },
+    {
+      "codevdb": 100687,
+      "name": "Faceless Night",
+      "tipo": "Action Modifier",
+      "quantity": 4,
+      "needs_review": false,
+      "notes": "Action Modifier: [obf] +1stealth [OBF] +2stealth"
+    },
+    {
+      "codevdb": 100771,
+      "name": "Form of Mist",
+      "tipo": "Combat",
+      "quantity": 4,
+      "needs_review": false,
+      "notes": "[pro] dodge. [PRO] combat ends + continue action after block (complex, verify)."
+    },
+    {
+      "codevdb": 100903,
+      "name": "Heart of Nizchetus",
+      "tipo": "Equipment",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "Equipment - plain text, draw ability"
+    },
+    {
+      "codevdb": 100904,
+      "name": "Heart of the City",
+      "tipo": "Action",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "[pre] +1stealth, equip, +1bleed. [PRE] +2bleed [Ministry]"
+    },
+    {
+      "codevdb": 101014,
+      "name": "Ivory Bow",
+      "tipo": "Equipment",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "equipment - plain text [Ministry]"
+    },
+    {
+      "codevdb": 101125,
+      "name": "Lost in Crowds",
+      "tipo": "Action Modifier",
+      "quantity": 4,
+      "needs_review": false,
+      "notes": "Action Modifier: [obf]+1stealth [OBF]+2stealth vs older"
+    },
+    {
+      "codevdb": 101321,
+      "name": "On the Qui Vive",
+      "tipo": "Reaction",
+      "quantity": 4,
+      "needs_review": false,
+      "notes": "Reaction - plain text"
+    },
+    {
+      "codevdb": 101326,
+      "name": "Opium Den",
+      "tipo": "Master",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "master - plain text [Ministry]"
+    },
+    {
+      "codevdb": 101857,
+      "name": "Spying Mission",
+      "tipo": "Action Modifier",
+      "quantity": 4,
+      "needs_review": false,
+      "notes": "[obf] +1stealth. [OBF] cancel bleed + store for next +2bleed."
+    },
+    {
+      "codevdb": 101953,
+      "name": "Temple Hunting Ground",
+      "tipo": "Master",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "master - plain text [Ministry]"
+    },
+    {
+      "codevdb": 102041,
+      "name": "True Love's Face",
+      "tipo": "Action Modifier",
+      "quantity": 2,
+      "needs_review": false,
+      "notes": "[obf][pre] +1bleed limited. [OBF][PRE] cancel block, opponent may burn 1 pool to cancel."
+    },
+    {
+      "codevdb": 102180,
+      "name": "Wider View",
+      "tipo": "Master",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "Master - plain text"
+    },
+    {
+      "codevdb": 102221,
+      "name": "Enchanting Gaze",
+      "tipo": "Action Modifier",
+      "quantity": 6,
+      "needs_review": false,
+      "notes": "[pre][pro] +1stealth. [PRE][PRO] burn 1 corruption to cancel block [Ministry]"
+    },
+    {
+      "codevdb": 102224,
+      "name": "Form of the Cobra",
+      "tipo": "Action Modifier/Combat",
+      "quantity": 4,
+      "needs_review": false,
+      "notes": "action_modifier/combat - abilities parsed OK [Ministry]"
+    },
+    {
+      "codevdb": 102231,
+      "name": "Party Out Of Bounds",
+      "tipo": "Reaction",
+      "quantity": 5,
+      "needs_review": false,
+      "notes": "reaction - abilities parsed OK [Ministry]"
+    },
+    {
+      "codevdb": 102232,
+      "name": "Platinum Protocol, The",
+      "tipo": "Action",
+      "quantity": 7,
+      "needs_review": false,
+      "notes": "action - abilities parsed OK [Ministry]"
+    },
+    {
+      "codevdb": 102233,
+      "name": "Revelation of the Serpent",
+      "tipo": "Action Modifier",
+      "quantity": 6,
+      "needs_review": false,
+      "notes": "[pre][pro] +1bleed(limited) or +1stealth+1bleed. [PRE][PRO] also burn 2 corruption to unlock [Ministry]"
+    },
+    {
+      "codevdb": 201577,
+      "name": "Aluc Romas de Leon",
+      "tipo": "Vampire",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "vampire - plain text [Ministry]"
+    },
+    {
+      "codevdb": 201582,
+      "name": "Crystal Lynn",
+      "tipo": "Vampire",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "vampire - plain text [Ministry]"
+    },
+    {
+      "codevdb": 201584,
+      "name": "Doctor Morocco",
+      "tipo": "Vampire",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "vampire - plain text [Ministry]"
+    },
+    {
+      "codevdb": 201586,
+      "name": "Elisha Tucker",
+      "tipo": "Vampire",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "vampire - plain text [Ministry]"
+    },
+    {
+      "codevdb": 201588,
+      "name": "Faruq Abd al-Qadir",
+      "tipo": "Vampire",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "vampire - plain text [Ministry]"
+    },
+    {
+      "codevdb": 201591,
+      "name": "Hesha Ruhadze",
+      "tipo": "Vampire",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "vampire - plain text [Ministry]"
+    },
+    {
+      "codevdb": 201593,
+      "name": "Jenny Silver",
+      "tipo": "Vampire",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "vampire - plain text [Ministry]"
+    },
+    {
+      "codevdb": 201600,
+      "name": "Marcel",
+      "tipo": "Vampire",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "vampire - plain text [Ministry]"
+    },
+    {
+      "codevdb": 201603,
+      "name": "Melech",
+      "tipo": "Vampire",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "vampire - plain text [Ministry]"
+    },
+    {
+      "codevdb": 201605,
+      "name": "Milton Fox",
+      "tipo": "Vampire",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "vampire - plain text [Ministry]"
+    },
+    {
+      "codevdb": 201608,
+      "name": "Nonu Dis",
+      "tipo": "Vampire",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "vampire - plain text [Ministry]"
+    },
+    {
+      "codevdb": 201615,
+      "name": "Vivian VI",
+      "tipo": "Vampire",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "vampire - plain text [Ministry]"
+    }
+  ]
+}

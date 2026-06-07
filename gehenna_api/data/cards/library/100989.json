@@ -1,0 +1,42 @@
+{
+  "codevdb": 100989,
+  "name": "Inscription",
+  "tipo": "equipment",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "tha"
+      ],
+      "context": "EQUIPMENT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "burn this equipment to use the basic Blood Sorcery ability of that card"
+          },
+          "text": "burn this equipment to use the basic Blood Sorcery ability of that card"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "THA"
+      ],
+      "context": "EQUIPMENT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "use the superior Blood Sorcery [THA] ability of the card"
+          },
+          "text": "use the superior Blood Sorcery [THA] ability of the card"
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

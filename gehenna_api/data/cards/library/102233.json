@@ -1,0 +1,88 @@
+{
+  "codevdb": 102233,
+  "name": "Revelation of the Serpent",
+  "tipo": "action_modifier",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "pre",
+        "pro"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "modifier.bleed",
+          "params": {
+            "value": 1,
+            "limited": true
+          },
+          "text": "+1 bleed (limited)"
+        },
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 stealth"
+        },
+        {
+          "function": "modifier.bleed",
+          "params": {
+            "value": 1,
+            "limited": true
+          },
+          "text": "+1 bleed (limited)"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "PRE",
+        "PRO"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "modifier.bleed",
+          "params": {
+            "value": 1,
+            "limited": true
+          },
+          "text": "+1 bleed (limited)"
+        },
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 stealth"
+        },
+        {
+          "function": "modifier.bleed",
+          "params": {
+            "value": 1,
+            "limited": true
+          },
+          "text": "+1 bleed (limited)"
+        },
+        {
+          "function": "action.unlock",
+          "params": {
+            "cost": {
+              "corruption_counter": 2
+            }
+          },
+          "text": "Burn 2 corruption counters from a minion controlled by the target Methuselah to unlock."
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "bleed": 1,
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": false,
+  "notes": "[pre][pro] +1bleed(limited) or +1stealth+1bleed. [PRE][PRO] also burn 2 corruption to unlock [Ministry]"
+}

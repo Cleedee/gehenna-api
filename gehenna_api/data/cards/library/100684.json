@@ -1,0 +1,44 @@
+{
+  "codevdb": 100684,
+  "name": "Eyes of the Dead",
+  "tipo": "reaction",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "nec"
+      ],
+      "context": "REACTION",
+      "effects": [
+        {
+          "function": "modifier.intercept",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 intercept"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "NEC"
+      ],
+      "context": "REACTION",
+      "effects": [
+        {
+          "function": "modifier.intercept",
+          "params": {
+            "value": 2
+          },
+          "text": "+2 intercept"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "intercept": 3
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

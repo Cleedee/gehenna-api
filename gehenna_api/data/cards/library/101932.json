@@ -1,0 +1,20 @@
+{
+  "codevdb": 101932,
+  "name": "Talith",
+  "tipo": "equipment",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 1,
+        "damage_type": "normal"
+      },
+      "text": "Melee weapon.\nStrike: strength+1 damage. A Ravnos can use this weapon to strike: burn weapon with first strike."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

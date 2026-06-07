@@ -1,0 +1,50 @@
+{
+  "codevdb": 100427,
+  "name": "Corpse Balloon",
+  "tipo": "retainer",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "vic"
+      ],
+      "context": "RETAINER",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "they get 1 optional maneuver during the first round of the resulting combat",
+            "condition": "the employer blocks a directed action"
+          },
+          "text": "If the employer blocks a directed action, they get 1 optional maneuver during the first round of the resulting combat."
+        },
+        {
+          "function": "combat.maneuver",
+          "params": {},
+          "text": "If the employer blocks a directed action, they get 1 optional maneuver during the first round of the resulting combat."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "VIC"
+      ],
+      "context": "RETAINER",
+      "effects": [
+        {
+          "function": "modifier.intercept",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 intercept"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "intercept": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

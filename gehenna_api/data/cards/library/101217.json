@@ -1,0 +1,11 @@
+{
+  "codevdb": 101217,
+  "name": "Minion Tap",
+  "tipo": "master",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

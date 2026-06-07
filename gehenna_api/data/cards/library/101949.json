@@ -1,0 +1,44 @@
+{
+  "codevdb": 101949,
+  "name": "Telepathic Misdirection",
+  "tipo": "reaction",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "aus"
+      ],
+      "context": "REACTION",
+      "effects": [
+        {
+          "function": "modifier.intercept",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 intercept"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "AUS"
+      ],
+      "context": "REACTION",
+      "effects": [
+        {
+          "function": "reaction.redirect_bleed",
+          "params": {
+            "lock": true
+          },
+          "text": "Lock this reacting vampire. Change the target of the bleed to another Methuselah other than the acting minion controller."
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "intercept": 1
+  },
+  "default_strike": null,
+  "needs_review": false,
+  "notes": "[aus] +1intercept. [AUS] redirect bleed + lock [Juliet]"
+}

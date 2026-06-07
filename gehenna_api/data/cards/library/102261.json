@@ -1,0 +1,11 @@
+{
+  "codevdb": 102261,
+  "name": "Sword of the Archangel",
+  "tipo": "equipment",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

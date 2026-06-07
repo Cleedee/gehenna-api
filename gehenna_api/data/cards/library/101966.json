@@ -1,0 +1,42 @@
+{
+  "codevdb": 101966,
+  "name": "Theft of Vitae",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "tha"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.steal_blood",
+          "params": {
+            "amount": 1
+          },
+          "text": "Ranged strike: steal 1 blood or life (becoming blood)."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "THA"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.steal_blood",
+          "params": {
+            "amount": 2
+          },
+          "text": "Ranged strike: steal 2 blood or life (becoming blood)."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

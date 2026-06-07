@@ -1,0 +1,25 @@
+{
+  "codevdb": 101922,
+  "name": "Sword of Troile",
+  "tipo": "equipment",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.maneuver",
+      "params": {},
+      "text": "Unique melee weapon.\nStrike: strength+2 damage. The vampire with this card has superior Potence [POT] and superior Presence [PRE]. Each strike the bearer makes at close range must be with this weapon if possible. Bearer cannot use maneuvers to go to long range."
+    },
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 2,
+        "damage_type": "normal"
+      },
+      "text": "Unique melee weapon.\nStrike: strength+2 damage. The vampire with this card has superior Potence [POT] and superior Presence [PRE]. Each strike the bearer makes at close range must be with this weapon if possible. Bearer cannot use maneuvers to go to long range."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

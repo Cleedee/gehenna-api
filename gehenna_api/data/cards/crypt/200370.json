@@ -1,0 +1,11 @@
+{
+  "codevdb": 200370,
+  "name": "Dorka",
+  "tipo": "vampire",
+  "source": "cardbase_crypt.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

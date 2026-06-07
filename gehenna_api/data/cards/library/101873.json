@@ -1,0 +1,20 @@
+{
+  "codevdb": 101873,
+  "name": "Stone Dog",
+  "tipo": "retainer",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 1,
+        "damage_type": "normal"
+      },
+      "text": "Gargoyle creature with 4 life.\nThe Gargoyle with this retainer can enter combat with a ready minion controlled by another Methuselah as a (D) action. When the Gargoyle with this retainer is in combat, the opposing minion takes 1 damage during the initial strike resolution phase of each round when the range is close."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,83 @@
+{
+  "codevdb": 101772,
+  "name": "Show of Force",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "pot",
+        "pre"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "modifier.bleed",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 bleed"
+        },
+        {
+          "function": "modifier.strength",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 strength"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "before range is determined during the first round of the resulting combat, this vampire can gain +1 strength that combat",
+            "condition": "this action is blocked"
+          },
+          "text": "If this action is blocked, before range is determined during the first round of the resulting combat, this vampire can gain +1 strength that combat."
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "gain +1 strength that combat"
+          },
+          "text": "gain +1 strength that combat"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "POT",
+        "PRE"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "modifier.bleed",
+          "params": {
+            "value": 2
+          },
+          "text": "+2 bleed"
+        },
+        {
+          "function": "modifier.strength",
+          "params": {
+            "value": 2
+          },
+          "text": "+2 strength"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "gain +2 strength"
+          },
+          "text": "gain +2 strength"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "bleed": 3,
+    "strength": 3
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

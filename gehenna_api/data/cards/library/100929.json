@@ -1,0 +1,19 @@
+{
+  "codevdb": 100929,
+  "name": "High Top",
+  "tipo": "ally",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "intercept": 1
+  },
+  "default_strike": [
+    {
+      "function": "combat.maneuver",
+      "params": {},
+      "text": "Unique werewolf with 3 life. 1 strength, 0 bleed.\nHigh Top gets +1 intercept. High Top may enter combat with any minion controlled by another Methuselah as a (D) action. High Top gets an additional strike (limited) each round and an optional maneuver once each combat. He may play cards requiring basic Celerity [cel] as a vampire with a capacity of 4. If High Top has less than 3 life during your unlock phase, he gains 1 life."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

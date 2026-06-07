@@ -1,0 +1,44 @@
+{
+  "codevdb": 100205,
+  "name": "Blood of the Cobra",
+  "tipo": "combat",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "qui"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "combat.strike",
+          "params": {
+            "damage": 1,
+            "damage_type": "ranged"
+          },
+          "text": "Strike: 1R damage."
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "QUI"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "the hand strike's damage is not ranged and this strike is not a hand strike)",
+            "condition": "it were ranged (if the chosen strike is a hand strike"
+          },
+          "text": "if it were ranged (if the chosen strike is a hand strike, the hand strike's damage is not ranged and this strike is not a hand strike)."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,11 @@
+{
+  "codevdb": 100926,
+  "name": "High Museum of Art, Atlanta",
+  "tipo": "master",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

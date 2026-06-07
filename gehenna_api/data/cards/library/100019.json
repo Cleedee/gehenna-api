@@ -1,0 +1,11 @@
+{
+  "codevdb": 100019,
+  "name": "Acquired Ventrue Assets",
+  "tipo": "master",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

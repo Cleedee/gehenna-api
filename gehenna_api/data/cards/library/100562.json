@@ -1,0 +1,58 @@
+{
+  "codevdb": 100562,
+  "name": "Dive into Madness",
+  "tipo": "action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "dem"
+      ],
+      "context": "ACTION",
+      "effects": []
+    },
+    {
+      "disciplines": [
+        "DEM"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "modifier.bleed",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 bleed"
+        },
+        {
+          "function": "action.equip",
+          "params": {
+            "attachment": "self"
+          },
+          "text": "put this card on this vampire"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "burn this card as a (D) action"
+          },
+          "text": "burn this card as a (D) action"
+        },
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "have no more than two Dive into Madness cards"
+          },
+          "text": "have no more than two Dive into Madness cards"
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 1,
+    "bleed": 1
+  },
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

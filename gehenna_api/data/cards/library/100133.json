@@ -1,0 +1,22 @@
+{
+  "codevdb": 100133,
+  "name": "Banshee Ironwail",
+  "tipo": "equipment",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": [
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 2,
+        "damage_type": "aggravated"
+      },
+      "text": "Unique melee weapon.\nStrength+2 damage each strike. Damage inflicted on a Kiasyd by this weapon is aggravated. Bearer gets -1 stealth on each action. If bearer blocks an action, the acting minion burns 1 blood or life (before combat begins, if any)."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

@@ -1,0 +1,34 @@
+{
+  "codevdb": 100966,
+  "name": "Impundulu",
+  "tipo": "ally",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": [
+    {
+      "function": "combat.maneuver",
+      "params": {},
+      "text": "Unique demon with 1 life. 1 strength, 0 bleed.\nImpundulu has flight [FLIGHT], gets one optional maneuver each combat, and may strike: 1R damage. He may steal 1 blood or life from a minion as a +1 stealth (D) action."
+    },
+    {
+      "function": "combat.strike",
+      "params": {
+        "damage": 1,
+        "damage_type": "ranged"
+      },
+      "text": "Unique demon with 1 life. 1 strength, 0 bleed.\nImpundulu has flight [FLIGHT], gets one optional maneuver each combat, and may strike: 1R damage. He may steal 1 blood or life from a minion as a +1 stealth (D) action."
+    },
+    {
+      "function": "combat.steal_blood",
+      "params": {
+        "amount": 1
+      },
+      "text": "Unique demon with 1 life. 1 strength, 0 bleed.\nImpundulu has flight [FLIGHT], gets one optional maneuver each combat, and may strike: 1R damage. He may steal 1 blood or life from a minion as a +1 stealth (D) action."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}

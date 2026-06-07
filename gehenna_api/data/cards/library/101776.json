@@ -1,0 +1,42 @@
+{
+  "codevdb": 101776,
+  "name": "Shroudsight",
+  "tipo": "action_modifier",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "nec"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "move the action card used for this action from your ash heap to the top of your library"
+          },
+          "text": "move the action card used for this action from your ash heap to the top of your library"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "NEC"
+      ],
+      "context": "ACTION MODIFIER",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "effect": "move any card played during this action from your ash heap to the top of your library"
+          },
+          "text": "move any card played during this action from your ash heap to the top of your library"
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": true,
+  "notes": ""
+}

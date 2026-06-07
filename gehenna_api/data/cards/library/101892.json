@@ -1,0 +1,22 @@
+{
+  "codevdb": 101892,
+  "name": "Succubus",
+  "tipo": "ally",
+  "source": "cardbase_lib.json",
+  "abilities": [],
+  "modifiers": {
+    "bleed": 1,
+    "stealth": 1
+  },
+  "default_strike": [
+    {
+      "function": "combat.steal_blood",
+      "params": {
+        "amount": 1
+      },
+      "text": "Demon with 3 life. 1 strength, 0 bleed.\nDamage from Succubus's hand strikes is aggravated. Succubus may steal 1 blood or life (gaining a life) from a minion as a +1 stealth (D) action. Once each turn, she may burn 1 life to get +1 bleed for the current action."
+    }
+  ],
+  "needs_review": true,
+  "notes": ""
+}
