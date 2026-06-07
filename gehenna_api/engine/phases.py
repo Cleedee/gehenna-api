@@ -481,23 +481,19 @@ class PhaseManager:
         self.events.emit(
             GameEvent(
                 type=EventType.combat_started,
-                data={
-                    'attacker': attacker.name,
-                    'defender': defender.name,
-                },
+                data={'attacker': attacker.name, 'defender': defender.name},
             )
         )
 
         round_num = 0
-        while True:
+        max_rounds = 20  # Safety limit
+        while round_num < max_rounds:
             round_num += 1
             combat_ended = self._execute_combat_round(
                 attacker, defender, attacker_player, defender_player, round_num
             )
             if combat_ended:
                 break
-
-            # Check if both combatants are still ready
             if not self._is_combatant_ready(attacker) or not self._is_combatant_ready(defender):
                 break
 
@@ -521,37 +517,30 @@ class PhaseManager:
         round_num: int,
     ) -> bool:
         """Execute one round of combat. Returns True if combat ended."""
-        # Step 1: Before Range (simplified - no card play for now)
         # Step 2: Determine Range
         current_range = self._determine_range(attacker, defender)
 
-        # Step 3: Before Strikes (simplified)
-        # Step 4: Strike
+        # Step 4: Strike - acting minion chooses first
         attacker_strike = self._choose_strike(attacker, defender, current_range, is_attacker=True)
         defender_strike = self._choose_strike(defender, attacker, current_range, is_attacker=False)
 
-        # Resolve strikes simultaneously
-        self._resolve_strikes(attacker, defender, attacker_strike, defender_strike, current_range)
+        # Resolve strikes
+        combat_ended = self._resolve_strikes(
+            attacker, defender, attacker_strike, defender_strike, current_range
+        )
+        if combat_ended:
+            return True
 
-        # Step 5: Damage Resolution
-        self._resolve_damage(attacker)
-        self._resolve_damage(defender)
-
+        # Step 5: Damage Resolution (already handled in take_damage)
         # Check if combat ends due to damage
         if not self._is_combatant_ready(attacker) or not self._is_combatant_ready(defender):
             return True
 
-        # Step 6: Press (simplified - combat ends after 1 round for now)
-        # In full implementation, players would choose to press or not
-        return True  # Combat ends after 1 round in basic implementation
+        # Step 6: Press - simplified: combat ends after 1 round
+        return True
 
     def _determine_range(self, attacker: CardInstance, defender: CardInstance) -> str:
-        """Determine combat range. Default is close.
-        
-        Maneuvers can change range. Without maneuver cards, stays at close.
-        """
-        # Basic implementation: always close range
-        # Full implementation would check for maneuver cards
+        """Determine combat range. Default is close."""
         return 'close'
 
     def _choose_strike(
@@ -565,95 +554,103 @@ class PhaseManager:
         
         Strike types:
         - hand_strike: damage = strength, close range only
-        - dodge: no damage, protects from opponent's strike
-        - combat_ends: ends combat immediately
-        - steal_blood: steals blood from opponent
+        - dodge: 0 damage, protects from opponent's strike, any range
+        - combat_ends: ends combat immediately, any range, resolves first
+        - steal_blood: steals blood, not damage, any range
         
-        Default is hand strike.
+        Default: hand_strike.
         """
-        # Basic implementation: always hand strike
-        # Full implementation would check for combat cards
         return {
             'type': 'hand_strike',
             'damage': striker.strength,
             'aggravated': False,
-            'steal': 0,
+            'steal_amount': 0,
+            'dodge': False,
+            'combat_ends': False,
         }
 
     def _resolve_strikes(
         self,
         attacker: CardInstance,
         defender: CardInstance,
-        attacker_strike: dict,
-        defender_strike: dict,
+        atk_strike: dict,
+        def_strike: dict,
         current_range: str,
-    ) -> None:
-        """Resolve strikes from both combatants.
-        
-        Strikes resolve simultaneously, except:
-        - combat_ends resolves first
-        - first strike resolves before normal strikes
-        """
-        # Handle combat_ends first
-        if attacker_strike['type'] == 'combat_ends':
+    ) -> bool:
+        """Resolve strikes. Returns True if combat ended."""
+        # Combat ends resolves first, before everything else
+        if atk_strike.get('combat_ends'):
             self._log_action(
                 self.state.player_by_id(self._player_id_for_minion(attacker)),
                 f'{attacker.name} plays combat ends',
             )
-            return
-        if defender_strike['type'] == 'combat_ends':
+            return True
+        if def_strike.get('combat_ends'):
             self._log_action(
                 self.state.player_by_id(self._player_id_for_minion(defender)),
                 f'{defender.name} plays combat ends',
             )
-            return
+            return True
 
-        # Apply damage from strikes
-        # Hand strike only works at close range
-        if attacker_strike['type'] == 'hand_strike' and current_range == 'close':
-            damage = attacker_strike['damage']
-            if damage > 0:
-                defender.take_damage(damage, attacker_strike.get('aggravated', False))
+        # Determine if each minion is dodging
+        atk_dodges = atk_strike.get('dodge', False)
+        def_dodges = def_strike.get('dodge', False)
+
+        # Resolve steal_blood (happens before damage, not preventable)
+        if atk_strike.get('steal_amount', 0) > 0:
+            self._steal_blood(attacker, defender, atk_strike['steal_amount'])
+        if def_strike.get('steal_amount', 0) > 0:
+            self._steal_blood(defender, attacker, def_strike['steal_amount'])
+
+        # Resolve damage strikes
+        # Hand strike only at close range; dodge protects at any range
+        if atk_strike['type'] == 'hand_strike' and current_range == 'close' and not def_dodges:
+            dmg = atk_strike['damage']
+            if dmg > 0:
+                aggravated = atk_strike.get('aggravated', False)
+                defender.take_damage(dmg, aggravated)
+                dmg_type = 'aggravated' if aggravated else 'normal'
                 self._log_action(
                     self.state.player_by_id(self._player_id_for_minion(defender)),
-                    f'{defender.name} takes {damage} damage from {attacker.name}',
+                    f'{defender.name} takes {dmg} {dmg_type} damage from {attacker.name}',
                 )
 
-        if defender_strike['type'] == 'hand_strike' and current_range == 'close':
-            damage = defender_strike['damage']
-            if damage > 0:
-                attacker.take_damage(damage, defender_strike.get('aggravated', False))
+        if def_strike['type'] == 'hand_strike' and current_range == 'close' and not atk_dodges:
+            dmg = def_strike['damage']
+            if dmg > 0:
+                aggravated = def_strike.get('aggravated', False)
+                attacker.take_damage(dmg, aggravated)
+                dmg_type = 'aggravated' if aggravated else 'normal'
                 self._log_action(
                     self.state.player_by_id(self._player_id_for_minion(attacker)),
-                    f'{attacker.name} takes {damage} damage from {defender.name}',
+                    f'{attacker.name} takes {dmg} {dmg_type} damage from {defender.name}',
                 )
 
-        # Handle steal_blood
-        if attacker_strike.get('steal', 0) > 0:
-            self._steal_blood(attacker, defender, attacker_strike['steal'])
-        if defender_strike.get('steal', 0) > 0:
-            self._steal_blood(defender, attacker, defender_strike['steal'])
+        # Log dodges
+        if atk_dodges:
+            self._log_action(
+                self.state.player_by_id(self._player_id_for_minion(attacker)),
+                f'{attacker.name} dodges',
+            )
+        if def_dodges:
+            self._log_action(
+                self.state.player_by_id(self._player_id_for_minion(defender)),
+                f'{defender.name} dodges',
+            )
+
+        return False
 
     def _steal_blood(self, thief: CardInstance, victim: CardInstance, amount: int) -> None:
         """Steal blood from victim and give to thief."""
         stolen = min(amount, victim.blood)
+        if stolen <= 0:
+            return
         victim.blood -= stolen
-        # Add to thief, respecting capacity
         thief.add_blood(stolen)
         self._log_action(
             self.state.player_by_id(self._player_id_for_minion(thief)),
             f'{thief.name} steals {stolen} blood from {victim.name}',
         )
-
-    def _resolve_damage(self, minion: CardInstance) -> None:
-        """Resolve damage for a minion.
-        
-        Damage is already applied by take_damage.
-        This handles the aftermath (torpor, burning).
-        """
-        # take_damage already handles blood burning and torpor
-        # This method is for any additional damage resolution effects
-        pass
 
     def _is_combatant_ready(self, minion: CardInstance) -> bool:
         """Check if a minion is still ready for combat."""
