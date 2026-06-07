@@ -4,6 +4,7 @@ import random
 
 from abc import ABC, abstractmethod
 
+from gehenna_api.engine.card_instance import CardPosition
 from gehenna_api.engine.state import GameState
 
 
@@ -17,22 +18,46 @@ class Bot(ABC):
     ) -> str:
         """Choose which action type a minion should perform.
 
-        Returns one of: 'bleed', 'hunt', or 'action_card'
-        Default: prefer bleed, hunt if vampire with no blood, else action card.
+        Returns: 'bleed', 'hunt', 'leave_torpor', 'rescue', 'diablerie', 'action_card'
         """
         minion = state.card_by_id(minion_id)
         if not minion:
             return 'bleed'
 
+        is_vampire = minion.tipo in ('Vampire', 'vampire', 'Imbued')
+
+        # Leave torpor: mandatory if in torpor and have 2+ blood
+        if minion.position == CardPosition.torpor:
+            if is_vampire and minion.blood >= 2:
+                return 'leave_torpor'
+            return 'action_card'  # Can't act
+
         # Hunt is mandatory for vampires with no blood
-        if minion.tipo in ('Vampire', 'vampire', 'Imbued'):
+        if is_vampire:
             if minion.blood == 0:
                 return 'hunt'
             if minion.blood <= 2 and random.random() < 0.3:
                 return 'hunt'
 
-        # Default to bleed (intrinsic action)
+        # Look for rescue/diablerie opportunities
+        player = state.player_by_id(player_id)
+        has_torpor_target = self._has_torpor_target(state, player_id)
+        if has_torpor_target:
+            if random.random() < 0.2:
+                return 'rescue'
+            if random.random() < 0.1 and is_vampire:
+                return 'diablerie'
+
+        # Default to bleed
         return 'bleed'
+
+    def _has_torpor_target(self, state: GameState, player_id: int) -> bool:
+        """Check if there's a vampire in torpor that can be targeted."""
+        for c in state.cards.values():
+            if c.position == CardPosition.torpor:
+                if c.tipo in ('Vampire', 'vampire', 'Imbued'):
+                    return True
+        return False
 
     @abstractmethod
     def choose_block(

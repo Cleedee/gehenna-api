@@ -611,3 +611,168 @@ class TestCombat:
         engine._is_running = True
         engine.phases._start_combat(attacker, defender)
         assert (10 - defender.blood) > (10 - attacker.blood)
+
+
+# ── Leave Torpor / Rescue / Diablerie Tests ─────────────────────────────────
+
+
+class TestLeaveTorpor:
+    def _make_torpor_state(self, blood=3, damage_taken=2):
+        state = GameState(game_id="torpor")
+        p1 = PlayerState(id=1, username="P1", pool=30)
+        state.players.append(p1)
+        c = CardInstance(
+            id="p1_vamp", card_id=1, name="Vampire",
+            position=CardPosition.torpor, tipo="Vampire",
+            capacity=5, blood=blood, damage_taken=damage_taken,
+        )
+        state.cards[c.id] = c
+        return state, c, p1
+
+    def test_leave_torpor_success(self):
+        """Vampire with 2+ blood should leave torpor."""
+        state, vampire, player = self._make_torpor_state(blood=3)
+        engine = GameEngine(state)
+        engine._is_running = True
+        engine.phases._resolve_leave_torpor(vampire, player)
+        assert vampire.position == CardPosition.ready
+        assert vampire.blood == 1  # 3 - 2
+        assert vampire.damage_taken == 0
+
+    def test_leave_torpor_insufficient_blood(self):
+        """Vampire with < 2 blood cannot leave torpor."""
+        state, vampire, player = self._make_torpor_state(blood=1)
+        engine = GameEngine(state)
+        engine._is_running = True
+        engine.phases._resolve_leave_torpor(vampire, player)
+        assert vampire.position == CardPosition.torpor
+        assert vampire.blood == 1
+
+    def test_leave_torpor_exact_blood(self):
+        """Vampire with exactly 2 blood can leave torpor."""
+        state, vampire, player = self._make_torpor_state(blood=2)
+        engine = GameEngine(state)
+        engine._is_running = True
+        engine.phases._resolve_leave_torpor(vampire, player)
+        assert vampire.position == CardPosition.ready
+        assert vampire.blood == 0
+
+
+class TestRescue:
+    def _make_rescue_state(self, rescuer_blood=4, victim_blood=0, victim_dmg=3):
+        state = GameState(game_id="rescue")
+        p1 = PlayerState(id=1, username="P1", pool=30)
+        state.players.append(p1)
+        rescuer = CardInstance(
+            id="p1_rescuer", card_id=1, name="Rescuer",
+            position=CardPosition.ready, tipo="Vampire",
+            capacity=5, blood=rescuer_blood,
+        )
+        state.cards[rescuer.id] = rescuer
+        victim = CardInstance(
+            id="p1_victim", card_id=2, name="Victim",
+            position=CardPosition.torpor, tipo="Vampire",
+            capacity=5, blood=victim_blood, damage_taken=victim_dmg,
+        )
+        state.cards[victim.id] = victim
+        return state, rescuer, victim, p1
+
+    def test_rescue_success(self):
+        """Rescuer with 2+ blood should rescue vampire from torpor."""
+        state, rescuer, victim, player = self._make_rescue_state()
+        engine = GameEngine(state)
+        engine._is_running = True
+        engine.phases._resolve_rescue(rescuer, player, victim)
+        assert victim.position == CardPosition.ready
+        assert victim.damage_taken == 0
+        assert rescuer.blood == 2  # 4 - 2
+
+    def test_rescue_insufficient_blood(self):
+        """Rescuer with < 2 blood cannot rescue."""
+        state, rescuer, victim, player = self._make_rescue_state(rescuer_blood=1)
+        engine = GameEngine(state)
+        engine._is_running = True
+        engine.phases._resolve_rescue(rescuer, player, victim)
+        assert victim.position == CardPosition.torpor
+
+    def test_rescue_no_target(self):
+        """Rescue with no target should fail gracefully."""
+        state, rescuer, _, player = self._make_rescue_state()
+        engine = GameEngine(state)
+        engine._is_running = True
+        engine.phases._resolve_rescue(rescuer, player, None)
+        assert rescuer.blood == 4  # Unchanged
+
+    def test_rescued_victim_not_locked(self):
+        """Rescued vampire should not be locked."""
+        state, rescuer, victim, player = self._make_rescue_state()
+        engine = GameEngine(state)
+        engine._is_running = True
+        engine.phases._resolve_rescue(rescuer, player, victim)
+        assert victim.locked is False
+
+
+class TestDiablerie:
+    def _make_diablerie_state(self, diablerist_cap=5, victim_cap=7, victim_blood=4):
+        state = GameState(game_id="diablerie")
+        p1 = PlayerState(id=1, username="P1", pool=30)
+        p2 = PlayerState(id=2, username="P2", pool=30)
+        state.players.extend([p1, p2])
+        diablerist = CardInstance(
+            id="p1_diabolist", card_id=1, name="Diablerist",
+            position=CardPosition.ready, tipo="Vampire",
+            capacity=diablerist_cap, blood=2,
+        )
+        state.cards[diablerist.id] = diablerist
+        victim = CardInstance(
+            id="p2_victim", card_id=2, name="Victim",
+            position=CardPosition.torpor, tipo="Vampire",
+            capacity=victim_cap, blood=victim_blood, damage_taken=2,
+        )
+        state.cards[victim.id] = victim
+        return state, diablerist, victim, p1
+
+    def test_diablerie_burns_victim(self):
+        """Diablerie should burn the victim."""
+        state, diablerist, victim, player = self._make_diablerie_state()
+        engine = GameEngine(state)
+        engine._is_running = True
+        engine.phases._resolve_diablerie(diablerist, player, victim)
+        assert victim.position == CardPosition.ash_heap
+
+    def test_diablerie_steals_blood(self):
+        """Diablerist should gain victim's blood."""
+        state, diablerist, victim, player = self._make_diablerie_state()
+        engine = GameEngine(state)
+        engine._is_running = True
+        initial_blood = diablerist.blood
+        engine.phases._resolve_diablerie(diablerist, player, victim)
+        assert diablerist.blood > initial_blood
+
+    def test_diablerie_gains_capacity_if_victim_older(self):
+        """Diablerist should gain +1 capacity if victim was older."""
+        state, diablerist, victim, player = self._make_diablerie_state(
+            diablerist_cap=5, victim_cap=7
+        )
+        engine = GameEngine(state)
+        engine._is_running = True
+        engine.phases._resolve_diablerie(diablerist, player, victim)
+        assert diablerist.capacity == 6  # 5 + 1
+
+    def test_diablerie_no_capacity_gain_if_victim_younger(self):
+        """Diablerist should not gain capacity if victim was younger."""
+        state, diablerist, victim, player = self._make_diablerie_state(
+            diablerist_cap=7, victim_cap=5
+        )
+        engine = GameEngine(state)
+        engine._is_running = True
+        engine.phases._resolve_diablerie(diablerist, player, victim)
+        assert diablerist.capacity == 7  # Unchanged
+
+    def test_diablerie_no_target(self):
+        """Diablerie with no target should fail gracefully."""
+        state, diablerist, _, player = self._make_diablerie_state()
+        engine = GameEngine(state)
+        engine._is_running = True
+        engine.phases._resolve_diablerie(diablerist, player, None)
+        assert diablerist.blood == 2  # Unchanged

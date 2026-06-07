@@ -281,7 +281,17 @@ class PhaseManager:
         """
         ready_minions = self._get_ready_minions(player.id)
         if not ready_minions:
-            self._log_action(player, 'skip (no ready minions)')
+            # Check for minions in torpor that can leave
+            torpor_minions = self._get_torpor_minions(player.id)
+            if not torpor_minions:
+                self._log_action(player, 'skip (no ready minions)')
+                return
+            # Handle leave torpor attempts
+            for minion in torpor_minions:
+                if self.state.is_finished:
+                    return
+                if minion.blood >= 2 and self._is_vampire(minion):
+                    self._minion_action(minion, player, bot)
             return
 
         # First, handle mandatory actions (hunt for vampires with 0 blood)
@@ -298,6 +308,13 @@ class PhaseManager:
                 return
             self._minion_action(minion, player, bot)
 
+        # Finally, handle leave torpor attempts
+        for minion in self._get_torpor_minions(player.id):
+            if self.state.is_finished:
+                return
+            if minion.blood >= 2 and self._is_vampire(minion):
+                self._minion_action(minion, player, bot)
+
     def _get_ready_minions(self, player_id: int) -> list[CardInstance]:
         """Get all ready unlocked minions for a player."""
         prefix = f'p{player_id}_'
@@ -305,6 +322,15 @@ class PhaseManager:
             c for c in self.state.cards.values()
             if c.id.startswith(prefix)
             and c.is_ready
+        ]
+
+    def _get_torpor_minions(self, player_id: int) -> list[CardInstance]:
+        """Get all minions in torpor for a player."""
+        prefix = f'p{player_id}_'
+        return [
+            c for c in self.state.cards.values()
+            if c.id.startswith(prefix)
+            and c.position == CardPosition.torpor
         ]
 
     def _is_vampire(self, minion: CardInstance) -> bool:
@@ -352,38 +378,72 @@ class PhaseManager:
         minion.has_acted_this_turn = True
 
     def _get_action_info(self, action_type: str, minion: CardInstance, player: PlayerState) -> dict:
-        """Get action properties for an action type.
-        
-        Returns dict with:
-        - name: Action name for logging
-        - stealth: Base stealth value
-        - directed: Whether action is directed at another Methuselah
-        - resolve: Function to resolve the action
-        """
+        """Get action properties for an action type."""
         if action_type == 'bleed':
             prey = self.state.prey_of(player.id)
             is_directed = prey is not None
             return {
                 'name': f'bleed' + (f' {prey.username}' if prey else ''),
-                'stealth': minion.stealth,  # Default 0
+                'stealth': minion.stealth,
                 'directed': is_directed,
                 'resolve': lambda m, p, b: self._resolve_bleed_action(m, p),
             }
         elif action_type == 'hunt':
             return {
                 'name': 'hunt',
-                'stealth': 1 + minion.stealth,  # Hunt has inherent +1 stealth
+                'stealth': 1 + minion.stealth,
                 'directed': False,
                 'resolve': lambda m, p, b: self._resolve_hunt(m),
             }
+        elif action_type == 'leave_torpor':
+            return {
+                'name': 'leave torpor',
+                'stealth': 1 + minion.stealth,
+                'directed': False,
+                'resolve': lambda m, p, b: self._resolve_leave_torpor(m, p),
+            }
+        elif action_type == 'rescue':
+            target = self._find_torpor_target(minion, player)
+            is_directed = target is not None and self._player_id_for_minion(target) != player.id
+            stealth = 0 + minion.stealth if is_directed else 1 + minion.stealth
+            return {
+                'name': f'rescue {target.name}' if target else 'rescue',
+                'stealth': stealth,
+                'directed': is_directed,
+                'resolve': lambda m, p, b: self._resolve_rescue(m, p, target),
+            }
+        elif action_type == 'diablerie':
+            target = self._find_torpor_target(minion, player)
+            is_directed = target is not None and self._player_id_for_minion(target) != player.id
+            stealth = 0 + minion.stealth if is_directed else 1 + minion.stealth
+            return {
+                'name': f'diablerize {target.name}' if target else 'diablerie',
+                'stealth': stealth,
+                'directed': is_directed,
+                'resolve': lambda m, p, b: self._resolve_diablerie(m, p, target),
+            }
         else:
-            # Default action card action
             return {
                 'name': 'action',
-                'stealth': minion.stealth,  # Default 0
+                'stealth': minion.stealth,
                 'directed': False,
                 'resolve': lambda m, p, b: self._play_action_card(m, p, b),
             }
+
+    def _find_torpor_target(self, minion: CardInstance, player: PlayerState) -> Optional[CardInstance]:
+        """Find a vampire in torpor that can be targeted by rescue or diablerie."""
+        # First look for own vampires in torpor
+        prefix = f'p{player.id}_'
+        for c in self.state.cards.values():
+            if c.id.startswith(prefix) and c.position == CardPosition.torpor:
+                if c.tipo in ('Vampire', 'vampire', 'Imbued'):
+                    return c
+        # Then look for other players' vampires in torpor
+        for c in self.state.cards.values():
+            if c.position == CardPosition.torpor:
+                if c.tipo in ('Vampire', 'vampire', 'Imbued'):
+                    return c
+        return None
 
     def _resolve_block_attempts(
         self,
@@ -718,9 +778,101 @@ class PhaseManager:
             )
         )
 
+    def _resolve_leave_torpor(self, minion: CardInstance, player: PlayerState) -> None:
+        """Resolve a leave torpor action.
+        
+        Cost: 2 blood (paid by the acting vampire)
+        Effect: Vampire moves from torpor to ready, unlocked.
+        The vampire must have at least 2 blood to attempt this.
+        """
+        if minion.blood < 2:
+            self._log_action(
+                player,
+                f'{minion.name} cannot leave torpor (needs 2 blood, has {minion.blood})',
+            )
+            return
+
+        minion.blood -= 2
+        minion.position = CardPosition.ready
+        minion.locked = False
+        minion.damage_taken = 0
+        self._log_action(
+            player,
+            f'{minion.name} leaves torpor (burned 2 blood)',
+        )
+
+    def _resolve_rescue(
+        self, minion: CardInstance, player: PlayerState, target: Optional[CardInstance]
+    ) -> None:
+        """Resolve a rescue from torpor action.
+        
+        Cost: 2 blood (can be split between acting and rescued vampire)
+        Effect: Target vampire moves from torpor to ready, unlocked.
+        The rescued vampire does not lock or unlock.
+        """
+        if target is None:
+            self._log_action(player, f'{minion.name} rescue — no valid target')
+            return
+
+        # Check if acting vampire can pay (simplified: acting vampire pays)
+        if minion.blood < 2:
+            self._log_action(
+                player,
+                f'{minion.name} cannot rescue (needs 2 blood, has {minion.blood})',
+            )
+            return
+
+        minion.blood -= 2
+        target.position = CardPosition.ready
+        target.locked = False
+        target.damage_taken = 0
+        self._log_action(
+            player,
+            f'{minion.name} rescues {target.name} from torpor',
+        )
+
+    def _resolve_diablerie(
+        self, minion: CardInstance, player: PlayerState, target: Optional[CardInstance]
+    ) -> None:
+        """Resolve a diablerie action.
+        
+        Cost: None
+        Effect:
+        1. All blood on victim moves to diablerist
+        2. Victim is burned (cards and counters burned)
+        3. If victim was older (higher capacity), diablerist may gain a Discipline
+        """
+        if target is None:
+            self._log_action(player, f'{minion.name} diablerie — no valid target')
+            return
+
+        # Step 1: Move all blood from victim to diablerist
+        blood_stolen = target.blood
+        if blood_stolen > 0:
+            minion.add_blood(blood_stolen)
+            target.blood = 0
+
+        # Step 2: Burn the victim
+        target.position = CardPosition.ash_heap
+        target.blood = 0
+        target.damage_taken = 0
+
+        self._log_action(
+            player,
+            f'{minion.name} diablerizes {target.name}',
+        )
+
+        # Step 3: Check if victim was older (higher capacity)
+        if target.capacity > minion.capacity:
+            # Diablerist gains +1 capacity (simplified - no Discipline card search)
+            minion.capacity += 1
+            self._log_action(
+                player,
+                f'{minion.name} grows stronger (capacity {minion.capacity - 1} -> {minion.capacity})',
+            )
+
     def _player_id_for_minion(self, minion: CardInstance) -> int:
         """Get the player ID that controls a minion."""
-        # Minion IDs are formatted as p{player_id}_...
         parts = minion.id.split('_')
         if parts[0].startswith('p'):
             return int(parts[0][1:])
