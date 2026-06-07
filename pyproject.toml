@@ -1,6 +1,6 @@
 [project]
 name = "gehenna-api"
-version = "0.3.0"
+version = "0.3.1"
 description = "API Rest e Web UI para gerenciamento de coleções e decks de V:TES"
 authors = [{ name = "Claudio Torcato", email = "claudiotorcato@gmail.com" }]
 requires-python = ">=3.12,<4"
@@ -11,8 +11,8 @@ classifiers = [
     "Programming Language :: Python :: 3.14",
 ]
 dependencies = [
-    "fastapi>=0.100.1,<0.101",
-    "uvicorn>=0.23.2,<0.24",
+    "fastapi>=0.100.1",
+    "uvicorn>=0.23.2",
     "pydantic[email]>=2.1.1,<3",
     "sqlalchemy>=2.0.19,<3",
     "pydantic-settings>=2.0.2,<3",
@@ -24,29 +24,28 @@ dependencies = [
     "bump-pydantic>=0.8.0,<0.9",
     "requests>=2.32.3,<3",
     "pyjsonq>=1.0.2,<2",
+    # Web UI (Flask)
+    "flask>=3.0.0,<4",
+    "flask-wtf>=1.2.1,<2",
+    "wtforms>=3.1.1,<4",
 ]
 
 [dependency-groups]
 dev = [
     "pytest>=7.4.0,<8",
     "taskipy>=1.12.0,<2",
-    "blue>=0.9.1,<0.10",
-    "ruff>=0.0.282,<0.0.283",
+    "ruff>=0.0.282",
     "httpx>=0.24.1,<0.25",
     "isort>=5.12.0,<6",
     "pytest-cov>=4.1.0,<5",
 ]
 
-[tool.uv]
-default-groups = "all"
-
-# [build-system]
-# requires = ["uv_build>=0.10.0,<0.11.0"]
-# build-backend = "uv_build"
-
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+[tool.uv]
+default-groups = "all"
 
 [tool.ruff]
 line-length = 79
@@ -60,15 +59,12 @@ extend_skip = ['migrations']
 [tool.pytest.ini_options]
 pythonpath = "."
 
-[tool.blue]
-extend-exclude = '(migrations/)'
-
 [tool.taskipy.tasks]
-lint = 'ruff . && blue --check . --diff'
-format = 'blue .  && isort .'
-server = 'python -m uvicorn gehenna_api.app:app --port=8002 --host=0.0.0.0 --reload'
+lint = 'ruff check .'
+format = 'ruff check --fix . && ruff format .'
+server = 'python -c "import uvicorn; uvicorn.run(\"gehenna_api.app:app\", host=\"0.0.0.0\", port=8002)"'
+web = 'python -m flask --app gehenna_web.app run --port=5000 --debug'
 stop = 'lsof -t -i:8002 | xargs -r kill -9; lsof -t -i:5000 | xargs -r kill -9; echo "Stopped"'
-pre_test = 'python -m ruff . && python -m blue --check . --diff'
+pre_test = 'ruff check .'
 test = 'pytest -s -x --cov=gehenna_api -vv'
 post_test = 'coverage html'
-web = 'python -m uvicorn gehenna_api.app:app --port=8002 --host=0.0.0.0 --reload & python gehenna_web/run.py'
