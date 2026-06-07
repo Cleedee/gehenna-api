@@ -17,6 +17,7 @@ class EventType(str, Enum):
     action_blocked = 'action_blocked'
     action_resolved = 'action_resolved'
     combat_started = 'combat_started'
+    combat_ended = 'combat_ended'
     strike_declared = 'strike_declared'
     damage_dealt = 'damage_dealt'
     minion_ousted = 'minion_ousted'

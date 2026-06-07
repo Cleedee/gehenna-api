@@ -405,3 +405,209 @@ class TestCardInstance:
         assert c.locked is True
         c.unlock()
         assert c.locked is False
+
+    def test_is_alive(self):
+        c = CardInstance(id="t", card_id=1, name="T", position=CardPosition.ready)
+        assert c.is_alive is True
+        c.position = CardPosition.ash_heap
+        assert c.is_alive is False
+        c.position = CardPosition.removed
+        assert c.is_alive is False
+
+    def test_is_wounded(self):
+        c = CardInstance(id="t", card_id=1, name="T", position=CardPosition.ready)
+        assert c.is_wounded is False
+        c.damage_taken = 1
+        assert c.is_wounded is True
+        c.position = CardPosition.torpor
+        assert c.is_wounded is True
+
+    def test_mend_damage(self):
+        c = CardInstance(id="t", card_id=1, name="T", position=CardPosition.ready, damage_taken=3)
+        mended = c.mend_damage(2)
+        assert mended == 2
+        assert c.damage_taken == 1
+
+    def test_take_damage_aggravated(self):
+        c = CardInstance(id="t", card_id=1, name="T", position=CardPosition.ready, blood=3, capacity=5)
+        c.take_damage(2, aggravated=True)
+        # Aggravated damage doesn't burn blood, goes straight to damage_taken
+        assert c.blood == 3
+        assert c.damage_taken == 2
+        assert c.position == CardPosition.torpor
+
+    def test_take_damage_kills_empty_vampire(self):
+        c = CardInstance(id="t", card_id=1, name="T", position=CardPosition.ready, blood=0, capacity=5)
+        c.take_damage(1)
+        # No blood to mend, goes to torpor
+        assert c.position == CardPosition.torpor
+
+    def test_strength_default(self):
+        c = CardInstance(id="t", card_id=1, name="T")
+        assert c.strength == 1
+
+    def test_hunt_default(self):
+        c = CardInstance(id="t", card_id=1, name="T")
+        assert c.hunt == 1
+
+    def test_stealth_intercept_default(self):
+        c = CardInstance(id="t", card_id=1, name="T")
+        assert c.stealth == 0
+        assert c.intercept == 0
+        assert c.bleed == 0
+
+    def test_actions_tracking(self):
+        c = CardInstance(id="t", card_id=1, name="T")
+        assert c.has_acted_this_turn is False
+        assert c.actions_this_turn == 0
+        c.has_acted_this_turn = True
+        c.actions_this_turn = 1
+        assert c.has_acted_this_turn is True
+        assert c.actions_this_turn == 1
+
+
+# ── Combat Tests ────────────────────────────────────────────────────────────
+
+
+class TestCombat:
+    def _make_combat_state(self, p1_blood=4, p1_str=2, p2_blood=3, p2_str=1, p2_intercept=5):
+        """Helper to create a 2-player state with combat-ready minions."""
+        state = GameState(game_id="combat")
+        state.edge_uncontrolled = True
+        for pid in range(1, 3):
+            p = PlayerState(id=pid, username=f"P{pid}", pool=30)
+            state.players.append(p)
+
+        attacker = CardInstance(
+            id="p1_atk", card_id=1, name="Attacker",
+            position=CardPosition.ready, tipo="Vampire",
+            capacity=5, blood=p1_blood, locked=False, strength=p1_str,
+        )
+        state.cards[attacker.id] = attacker
+
+        defender = CardInstance(
+            id="p2_def", card_id=2, name="Defender",
+            position=CardPosition.ready, tipo="Vampire",
+            capacity=5, blood=p2_blood, locked=False, strength=p2_str,
+            intercept=p2_intercept,
+        )
+        state.cards[defender.id] = defender
+
+        return state, attacker, defender
+
+    def test_combat_deals_damage(self):
+        """Combat should deal damage based on strength."""
+        state, attacker, defender = self._make_combat_state(
+            p1_blood=4, p1_str=2, p2_blood=3, p2_str=1
+        )
+        engine = GameEngine(state)
+        engine._is_running = True
+        engine.phases._start_combat(attacker, defender)
+        assert defender.blood == 1  # 3 - 2
+        assert attacker.blood == 3  # 4 - 1
+
+    def test_combat_both_survive(self):
+        """Both combatants should survive if damage doesn't exceed blood."""
+        state, attacker, defender = self._make_combat_state(
+            p1_blood=5, p1_str=1, p2_blood=5, p2_str=1
+        )
+        engine = GameEngine(state)
+        engine._is_running = True
+        engine.phases._start_combat(attacker, defender)
+        assert attacker.position == CardPosition.ready
+        assert defender.position == CardPosition.ready
+
+    def test_combat_sends_to_torpor(self):
+        """Vampire should go to torpor when damage exceeds blood."""
+        state, attacker, defender = self._make_combat_state(
+            p1_blood=5, p1_str=5, p2_blood=2, p2_str=1
+        )
+        engine = GameEngine(state)
+        engine._is_running = True
+        engine.phases._start_combat(attacker, defender)
+        assert defender.position == CardPosition.torpor
+
+    def test_combat_runs_without_error(self):
+        """Combat should run without errors."""
+        state, attacker, defender = self._make_combat_state()
+        engine = GameEngine(state)
+        engine._is_running = True
+        engine.phases._start_combat(attacker, defender)
+        # Combat should complete and log damage
+        log_texts = [e["data"].get("text", "") for e in engine.log]
+        assert any("damage" in t.lower() for t in log_texts)
+
+    def test_combat_through_block(self):
+        """Combat should trigger when action is blocked."""
+        state = GameState(game_id="block_combat")
+        state.edge_uncontrolled = True
+
+        for pid in range(1, 3):
+            p = PlayerState(id=pid, username=f"P{pid}", pool=30)
+            for i in range(6):
+                c = CardInstance(
+                    id=f"p{pid}_crypt_{i}", card_id=i, name=f"Vamp{pid}_{i}",
+                    position=CardPosition.crypt, tipo="Vampire", capacity=5, blood=0,
+                )
+                state.cards[c.id] = c
+                p.crypt.append(c.id)
+            blocker = CardInstance(
+                id=f"p{pid}_blocker", card_id=99, name=f"Blocker{pid}",
+                position=CardPosition.ready, tipo="Vampire", capacity=5, blood=3,
+                locked=False, intercept=5, strength=1,
+            )
+            state.cards[blocker.id] = blocker
+            p.crypt.append(blocker.id)
+            state.players.append(p)
+
+        attacker = state.card_by_id("p1_crypt_0")
+        attacker.position = CardPosition.ready
+        attacker.blood = 4
+        attacker.locked = False
+        attacker.strength = 2
+
+        engine = GameEngine(state)
+        for pid in range(1, 3):
+            p = state.players[pid - 1]
+            for i in range(7):
+                if p.library:
+                    cid = p.library.pop(0)
+                    p.hand.append(cid)
+
+        bots = {p.id: RandomBot() for p in state.players}
+        engine.phases.execute_minion(bots)
+
+        # Combat should have occurred (blocker blocked, combat triggered)
+        log_texts = [e["data"].get("text", "") for e in engine.log]
+        assert any("blocked" in t.lower() for t in log_texts)
+        assert any("damage" in t.lower() for t in log_texts)
+
+    def test_combat_damage_log(self):
+        """Combat should log damage dealt."""
+        state, attacker, defender = self._make_combat_state(
+            p1_blood=4, p1_str=3, p2_blood=3, p2_str=2
+        )
+        engine = GameEngine(state)
+        engine._is_running = True
+        engine.phases._start_combat(attacker, defender)
+        log_texts = [e["data"].get("text", "") for e in engine.log]
+        assert any("damage" in t.lower() for t in log_texts)
+
+    def test_combat_close_range_default(self):
+        """Combat should default to close range."""
+        state, attacker, defender = self._make_combat_state()
+        engine = GameEngine(state)
+        engine._is_running = True
+        engine.phases._start_combat(attacker, defender)
+        assert attacker.blood < 4
+        assert defender.blood < 3
+
+    def test_combat_strength_matters(self):
+        """Higher strength should deal more damage."""
+        state, attacker, defender = self._make_combat_state(
+            p1_blood=10, p1_str=5, p2_blood=10, p2_str=1
+        )
+        engine = GameEngine(state)
+        engine._is_running = True
+        engine.phases._start_combat(attacker, defender)
+        assert (10 - defender.blood) > (10 - attacker.blood)
