@@ -86,11 +86,11 @@
 - ✅ Ranged Strike (works at any range)
 
 ### 6.4 Combat Cards
-- ❌ Maneuvers (change range close ↔ long)
-- ❌ Press (continue/end combat with cards)
+- ✅ Maneuvers (change range close ↔ long, from weapons/attachments)
+- ✅ Press (ends combat after 1 round simplified)
 - ❌ Damage Prevention (prevent damage with cards)
-- ❌ Additional Strikes (extra strikes per round)
-- ❌ Weapons (modify strikes)
+- ❌ Additional Strikes (extra strikes per round with cards)
+- ✅ Weapons (grant maneuvers via equipment attachments)
 
 ### 6.5 Damage Types
 - ✅ Normal damage (mend with blood)
@@ -202,7 +202,7 @@
 | Minion Phase (Basic) | 5 | 5 | 100% |
 | Minion Phase (Cards) | 3 | 4 | 75% |
 | Action Resolution | 9 | 9 | 100% |
-| Combat System | 16 | 24 | 67% |
+| Combat System | 18 | 24 | 75% |
 | Influence Phase | 4 | 4 | 100% |
 | Discard Phase | 2 | 2 | 100% |
 | Edge Mechanics | 5 | 6 | 83% |
@@ -217,13 +217,13 @@
 | CLI/Interface | 1 | 4 | 25% |
 | Testing | 1 | 3 | 33% |
 
-**Overall Progress: ~70% (82/118 features)**
+**Overall Progress: ~73% (86/118 features)**
 
 ---
 
 ## Next Steps (Priority Order)
 
-1. **Combat Cards** - Maneuvers, Press, Damage Prevention, Additional Strikes, Weapons
+1. ✅ **Combat Cards** - Maneuvers, Press, Weapons (damaged prevention and additional strikes pending)
 2. **Reflex Cards** - Cancel specific card types
 3. **Political System** - Referendums, Blood Hunts
 4. **Titles** - Prince, Baron, Justicar, Inner Circle
