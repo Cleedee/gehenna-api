@@ -23,7 +23,7 @@ CRYPT_TIPOS = {'Vampire', 'vampire', 'Imbued', 'Power'}
 
 class CreateGameRequest(BaseModel):
     player_names: list[str]
-    deck_id: int
+    deck_ids: list[int]
     bots: bool = True
 
 
@@ -71,6 +71,16 @@ def _load_deck(deck_id: int) -> tuple[list[dict], list[dict]]:
     return crypt, library
 
 
+def _safe_int(value) -> int:
+    """Safely convert a value to int, returning 0 on failure."""
+    if value is None:
+        return 0
+    try:
+        return int(value)
+    except (ValueError, TypeError):
+        return 0
+
+
 def _make_card_instance(
     card_data: dict, card_index: int, prefix: str
 ) -> CardInstance:
@@ -101,7 +111,7 @@ def _make_card_instance(
         position=CardPosition.library,
         tipo=card_data.get('tipo', ''),
         pool_cost=pool_cost,
-        capacity=int(card_data.get('capacity') or card_data.get('blood') or 0),
+        capacity=_safe_int(card_data.get('capacity')) or _safe_int(card_data.get('blood')) or 0,
         stealth=0,
         intercept=0,
         bleed=bleed_value,
@@ -129,12 +139,22 @@ def create_game(req: CreateGameRequest) -> dict:
     game_id = str(uuid.uuid4())[:8]
     state = GameState(game_id=game_id)
 
-    crypt, library = _load_deck(req.deck_id)
-    crypt_template = _build_pool(crypt, 'crypt')
-    lib_template = _build_pool(library, 'lib')
+    # Validate: need 1 deck per player or 1 deck for all
+    if len(req.deck_ids) == 1:
+        deck_ids = req.deck_ids * len(req.player_names)
+    elif len(req.deck_ids) != len(req.player_names):
+        return {'error': f'Expected {len(req.player_names)} deck_ids, got {len(req.deck_ids)}'}
+    else:
+        deck_ids = req.deck_ids
 
     for i, name in enumerate(req.player_names):
         pid = i + 1
+        deck_id = deck_ids[i]
+
+        crypt, library = _load_deck(deck_id)
+        crypt_template = _build_pool(crypt, f'p{pid}_crypt')
+        lib_template = _build_pool(library, f'p{pid}_lib')
+
         player_crypt = []
         for c in crypt_template:
             clone = c.model_copy(deep=True)

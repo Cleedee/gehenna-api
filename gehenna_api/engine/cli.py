@@ -46,10 +46,10 @@ class GameAPI:
     def __init__(self, base_url: str = API_BASE) -> None:
         self.client = httpx.Client(base_url=base_url, timeout=15)
 
-    def create_game(self, player_names: list[str], deck_id: int) -> dict:
+    def create_game(self, player_names: list[str], deck_ids: list[int]) -> dict:
         r = self.client.post(
             '/game/new',
-            json={'player_names': player_names, 'deck_id': deck_id},
+            json={'player_names': player_names, 'deck_ids': deck_ids},
         )
         r.raise_for_status()
         return r.json()
@@ -130,21 +130,23 @@ def show_summary(summary: dict) -> None:
 
 def run_simulation(
     api: GameAPI,
-    deck_id: int,
-    num_players: int = 2,
+    deck_ids: list[int],
+    num_players: int | None = None,
     max_turns: int = 30,
     delay: float = 0.5,
 ) -> None:
+    if num_players is None:
+        num_players = len(deck_ids)
     names = [f'Bot-{chr(65 + i)}' for i in range(num_players)]
 
     print(green(bold('\n=== BOT SIMULATION ===')))
-    result = api.create_game(names, deck_id)
+    result = api.create_game(names, deck_ids)
+    if 'error' in result:
+        print(red(f'Error: {result["error"]}'))
+        return
     gid = result['game_id']
     print(f'Game {gid} created with {result["players"]} players')
-    print(
-        f'Deck: {result["deck"]["crypt"]} crypt + '
-        f'{result["deck"]["library"]} library'
-    )
+    print(f'Decks: {deck_ids}')
 
     prev_log_len = 0
     for turn in range(max_turns):
@@ -181,15 +183,21 @@ def run_simulation(
 
 def run_human_game(
     api: GameAPI,
-    deck_id: int,
-    num_bots: int = 3,
+    deck_ids: list[int],
+    num_bots: int | None = None,
     max_turns: int = 50,
 ) -> None:
+    if num_bots is None:
+        num_bots = len(deck_ids) - 1
     human_name = input(f'  Your name [{green("You")}]: ').strip() or 'You'
     names = [human_name] + [f'Bot-{chr(66 + i)}' for i in range(num_bots)]
 
+    # Ensure we have enough deck_ids
+    if len(deck_ids) < len(names):
+        deck_ids = deck_ids + [deck_ids[-1]] * (len(names) - len(deck_ids))
+
     print(green(bold('\n=== HUMAN VS BOTS ===')))
-    result = api.create_game(names, deck_id)
+    result = api.create_game(names, deck_ids)
     gid = result['game_id']
     print(f'Game {gid} created')
     print(
@@ -267,14 +275,14 @@ def main() -> None:
     sub.add_parser('list-decks', help='List available decks')
 
     p_play = sub.add_parser('play', help='Play as human vs bots')
-    p_play.add_argument('deck', type=int, help='Deck ID')
-    p_play.add_argument('--bots', type=int, default=3, help='Number of bots')
+    p_play.add_argument('decks', type=int, nargs='+', help='Deck IDs (one per player)')
+    p_play.add_argument('--bots', type=int, default=None, help='Number of bots (default: len(decks)-1)')
     p_play.add_argument('--turns', type=int, default=50, help='Max turns')
 
     p_sim = sub.add_parser('simulate', help='Bot vs bot simulation')
-    p_sim.add_argument('deck_id', type=int, help='Deck ID')
+    p_sim.add_argument('decks', type=int, nargs='+', help='Deck IDs (one per player)')
     p_sim.add_argument(
-        '--players', type=int, default=4, help='Number of players'
+        '--players', type=int, default=None, help='Number of players (default: len(decks))'
     )
     p_sim.add_argument('--turns', type=int, default=30, help='Max turns')
     p_sim.add_argument(
@@ -288,10 +296,10 @@ def main() -> None:
         if args.command == 'list-decks':
             list_decks_cmd(api)
         elif args.command == 'play':
-            run_human_game(api, args.deck, args.bots, args.turns)
+            run_human_game(api, args.decks, args.bots, args.turns)
         elif args.command == 'simulate':
             run_simulation(
-                api, args.deck_id, args.players, args.turns, args.delay
+                api, args.decks, args.players, args.turns, args.delay
             )
     finally:
         api.close()
