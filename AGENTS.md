@@ -7,12 +7,21 @@ FastAPI REST API for managing V:TES (Vampire: The Eternal Struggle) card collect
 ## Developer Commands
 
 ```bash
-task lint        # Run ruff + blue checks
-task format     # Run blue + isort formatting
-task server     # Start dev API server on port 8002 (uvicorn --reload)
+task lint        # Run ruff checks
+task format     # Run ruff format
+task server     # Start API server on port 8002
+task web        # Start Web UI on port 5000 (needs API running)
+task all        # Start API + Web UI simultaneously
 task stop       # Stop all services (API + Web UI)
 task test       # Run pytest with coverage
-task web        # Start API server (8002) + Web UI (5000)
+
+# Bot simulation (requires API running on port 8002)
+task simulate   # Bot vs bot simulation
+uv run python -m gehenna_api.engine.cli simulate 1 --players 2 --turns 20
+uv run python -m gehenna_api.engine.cli list-decks
+
+# Or use the simulation script directly
+python scripts/simulate_bots.py
 
 # Docker
 docker compose up --build     # Start all services
