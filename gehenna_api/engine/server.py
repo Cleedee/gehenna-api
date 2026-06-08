@@ -110,6 +110,21 @@ def _make_card_instance(
     except Exception:
         pass
 
+    # Enrich with data from card JSON files + manual overrides
+    # JSON/override data takes precedence over text parsing
+    try:
+        from gehenna_api.engine.card_loader import load_card
+        enriched = load_card(card_data.get('codevdb', 0))
+        if enriched:
+            if enriched.modifiers.get('bleed', 0) != 0:
+                bleed_value = enriched.modifiers['bleed']
+            if enriched.modifiers.get('stealth', 0) != 0:
+                stealth_value = enriched.modifiers['stealth']
+            if enriched.modifiers.get('intercept', 0) != 0:
+                intercept_value = enriched.modifiers['intercept']
+    except Exception:
+        pass
+
     return CardInstance(
         id=f'{prefix}_{card_data["id"]}_{card_index}',
         card_id=card_data['id'],
