@@ -436,8 +436,13 @@ class PhaseManager:
 
         # Step 4: Reaction phase
         # Reactions can be played by other Methuselahs' minions
-        reactions = self._play_reactions(minion, player, action_info, bot)
-        self._apply_reaction_effects(action_info, reactions)
+        # Only called for pure bleed actions (not generic action cards),
+        # where reactions like Deflection (redirect bleed) are meaningful.
+        # The engine does not yet support redirect effects for other types.
+        reactions = []
+        if action_type == 'bleed':
+            reactions = self._play_reactions(minion, player, action_info, bot)
+            self._apply_reaction_effects(action_info, reactions)
 
         # Step 5: Resolve action
         # Pass action_info to resolve when we have a pre-selected action card
@@ -795,15 +800,19 @@ class PhaseManager:
             if not should_block:
                 continue
             
-            # During block attempt, acting minion can play stealth action modifiers
-            # The actor plays stealth only if the blocker can already block
-            # (i.e., blocker intercept >= actor stealth)
-            if blocker.intercept >= acting_stealth:
-                mods = self._play_stealth_modifiers(minion, player, action_info, bot)
-                self._apply_modifier_effects(action_info, mods)
-                acting_stealth = action_info['stealth']
+            # Reset per-blocker state
+            action_info['reaction_intercept'] = 0
+            
+            # During block attempt, acting minion may play stealth action modifiers
+            # Per VTES rules: the acting minion can play stealth whenever someone
+            # attempts to block (before the blocker plays reactions).
+            mods = self._play_stealth_modifiers(minion, player, action_info, bot)
+            self._apply_modifier_effects(action_info, mods)
+            acting_stealth = action_info['stealth']
             
             # Blocker can play reactions to increase intercept
+            # The blocker plays intercept-granting reactions if they can't
+            # block yet (intercept < stealth after actor's stealth mods)
             if blocker.intercept < acting_stealth:
                 self._play_block_reactions(blocker, blocker_player, action_info, bot)
             
