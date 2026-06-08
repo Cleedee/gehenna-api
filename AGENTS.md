@@ -18,10 +18,8 @@ task test       # Run pytest with coverage
 # Bot simulation (requires API running on port 8002)
 task simulate   # Bot vs bot simulation
 uv run python -m gehenna_api.engine.cli simulate 1 --players 2 --turns 20
+uv run python -m gehenna_api.engine.cli simulate 1 --players 2 --turns 20 --seed 42   # Reproduzível
 uv run python -m gehenna_api.engine.cli list-decks
-
-# Or use the simulation script directly
-python scripts/simulate_bots.py
 
 # Docker
 docker compose up --build     # Start all services

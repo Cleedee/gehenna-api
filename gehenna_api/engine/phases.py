@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import random
 from typing import Optional
 
 from gehenna_api.engine.ai.base import Bot
@@ -89,6 +88,26 @@ MINION_TIPOS = {
     'Reaction/Combat',
 }
 
+# Action card types (cards a minion can play as an action)
+# Excludes Action Modifier, Reaction, Combat (pure) — those are played
+# at different times during an action or combat
+ACTION_TIPOS = {
+    'Action',
+    'Political Action',
+    'Equipment',
+    'Retainer',
+    'Ally',
+    'Action / Combat',
+    'Action / Reaction',
+    'Action/Combat',
+    'Action/Equipment',
+    'Action/Retainer',
+    'Action/Ally',
+    'Equipment ',
+    'Retainer ',
+    'Ally ',
+}
+
 COMBAT_ONLY = {'Combat'}
 
 COMBAT_TIPOS = {
@@ -115,6 +134,11 @@ def _is_minion(inst: CardInstance) -> bool:
     # Cards with "Action" (including "Action/Combat" hybrids)
     # OR hybrids like "Combat / Action" that have action abilities
     return _tipo_key(inst.tipo) in MINION_TIPOS
+
+
+def _is_action_card(inst: CardInstance) -> bool:
+    """Check if a card is an action card a minion can play."""
+    return _tipo_key(inst.tipo) in ACTION_TIPOS
 
 
 def _is_combat_only(inst: CardInstance) -> bool:
@@ -370,16 +394,30 @@ class PhaseManager:
         action_type = bot.choose_action_type(self.state, player.id, minion.id)
         action_info = self._get_action_info(action_type, minion, player)
 
+        # For action cards, peek at the card now so the announcement includes its name
+        if action_type == 'action_card':
+            action_cards = _has_type(player.hand, self.state, _is_action_card)
+            if action_cards:
+                card_id = bot.choose_action(self.state, player.id)
+                inst = self.state.card_by_id(card_id) if card_id else None
+                if not inst or inst.id not in player.hand or not _is_action_card(inst):
+                    inst = self.state.card_by_id(action_cards[0])
+                if inst:
+                    action_info['name'] = inst.name
+                    action_info['_action_card'] = inst.id
+                    # Equipment / Retainer / Ally actions get +1 stealth by default
+                    t = inst.tipo.strip().lower()
+                    if t in ('equipment', 'retainer', 'ally'):
+                        action_info['stealth'] = 1 + minion.stealth
+                        action_info['directed'] = False
+
         # Step 1: Announce action
         self._log_action(player, f'{minion.name} announces {action_info["name"]}')
         minion.lock()
 
-        # Step 2: Action modifier phase
-        # Acting minion can play action modifiers first
-        modifiers = self._play_action_modifiers(minion, player, action_info, bot)
-        self._apply_modifier_effects(action_info, modifiers)
-
-        # Step 3: Block attempt phase
+        # Step 2: Block attempt phase
+        # Blockers may attempt to block; acting minion can play stealth
+        # action modifiers reactively during block attempts
         blocked, blocker = self._resolve_block_attempts(
             minion, player, action_info, bot
         )
@@ -390,19 +428,86 @@ class PhaseManager:
             minion.has_acted_this_turn = True
             return
 
-        # Step 4: Reaction phase (after successful block resolution)
+        # Step 3: Action modifier phase (after blocks declined)
+        # Now that the action is not blocked, acting minion can play
+        # action modifiers (bleed enhancers, etc.) before resolution
+        modifiers = self._play_action_modifiers(minion, player, action_info, bot)
+        self._apply_modifier_effects(action_info, modifiers)
+
+        # Step 4: Reaction phase
         # Reactions can be played by other Methuselahs' minions
         reactions = self._play_reactions(minion, player, action_info, bot)
         self._apply_reaction_effects(action_info, reactions)
 
         # Step 5: Resolve action
-        action_info['resolve'](minion, player, bot)
+        # Pass action_info to resolve when we have a pre-selected action card
+        if '_action_card' in action_info:
+            action_info['resolve'](minion, player, bot, action_info)
+        else:
+            action_info['resolve'](minion, player, bot)
         minion.has_acted_this_turn = True
+
+    def _play_stealth_modifiers(
+        self, minion: CardInstance, player: PlayerState, action_info: dict, bot: Bot
+    ) -> list:
+        """Play stealth action modifiers reactively during a block attempt.
+        
+        The acting minion may play stealth modifiers when someone tries
+        to block, to increase stealth and avoid the block.
+        """
+        mods = []
+        mod_cards = _has_type(player.hand, self.state, _is_action_modifier)
+        for mod_id in mod_cards:
+            mod_card = self.state.card_by_id(mod_id)
+            if not mod_card or mod_card.stealth <= 0:
+                continue
+            cost = mod_card.pool_cost if mod_card.pool_cost > 0 else 0
+            if minion.blood < cost:
+                continue
+            minion.blood -= cost
+            if mod_card.id in player.hand:
+                player.hand.remove(mod_card.id)
+            mod_card.position = CardPosition.ash_heap
+            mods.append(mod_card)
+            self._log_action(
+                player,
+                f'{minion.name} plays {mod_card.name} (stealth modifier)',
+            )
+            break  # one stealth modifier per block attempt
+        return mods
+
+    def _play_block_reactions(
+        self, blocker: CardInstance, blocker_player: PlayerState,
+        action_info: dict, bot: Bot,
+    ) -> None:
+        """Play reaction cards during a block attempt to increase intercept.
+        
+        The blocking minion can play up to one reaction card that grants
+        intercept to help block the action.
+        """
+        for cid in blocker_player.hand:
+            card = self.state.card_by_id(cid)
+            if not card:
+                continue
+            if card.tipo.strip().lower() != 'reaction':
+                continue
+            if card.intercept > 0:
+                if cid in blocker_player.hand:
+                    blocker_player.hand.remove(cid)
+                card.position = CardPosition.ash_heap
+                action_info['reaction_intercept'] = (
+                    action_info.get('reaction_intercept', 0) + card.intercept
+                )
+                self._log_action(
+                    blocker_player,
+                    f'{blocker.name} plays {card.name} (reaction)',
+                )
+                break  # one reaction per block attempt
 
     def _play_action_modifiers(
         self, minion: CardInstance, player: PlayerState, action_info: dict, bot: Bot
     ) -> list:
-        """Play action modifiers for an action.
+        """Play action modifiers for an action (after blocks are declined).
         
         Action modifiers are played by the acting minion (or other minions
         controlled by the same Methuselah for 'other than acting minion' cards).
@@ -419,6 +524,10 @@ class PhaseManager:
         for mod_id in mod_cards:
             mod_card = self.state.card_by_id(mod_id)
             if not mod_card:
+                continue
+            # Skip pure stealth modifiers after blocks are declined
+            # Per VTES rules, stealth can only be increased during a block attempt
+            if mod_card.stealth > 0 and mod_card.bleed == 0:
                 continue
             # Check if minion can pay the cost
             cost = mod_card.pool_cost if mod_card.pool_cost > 0 else 0
@@ -601,7 +710,7 @@ class PhaseManager:
                 'name': 'action',
                 'stealth': minion.stealth,
                 'directed': False,
-                'resolve': lambda m, p, b: self._play_action_card(m, p, b),
+                'resolve': lambda m, p, b, ai=None: self._play_action_card(m, p, b, ai),
             }
 
     def _find_torpor_target(self, minion: CardInstance, player: PlayerState) -> Optional[CardInstance]:
@@ -647,20 +756,35 @@ class PhaseManager:
             # Directed: only target can block
             target = self.state.prey_of(player.id)  # For bleed
             if target:
-                potential_blockers = self._get_blocking_minions(target.id)
+                for b in self._get_blocking_minions(target.id):
+                    if b not in potential_blockers:
+                        potential_blockers.append(b)
         else:
             # Undirected: prey first, then predator
             prey = self.state.prey_of(player.id)
             predator = self.state.predator_of(player.id)
-            if prey:
-                potential_blockers.extend(self._get_blocking_minions(prey.id))
-            if predator:
-                potential_blockers.extend(self._get_blocking_minions(predator.id))
+            # Deduplicate in case prey == predator (2-player game)
+            seen_players = set()
+            for who in (prey, predator):
+                if who and who.id not in seen_players:
+                    seen_players.add(who.id)
+                    potential_blockers.extend(self._get_blocking_minions(who.id))
         
         # Check if any potential blocker can intercept
         for blocker in potential_blockers:
             blocker_player = self.state.player_by_id(self._player_id_for_minion(blocker))
             if not blocker_player:
+                continue
+            
+            # Pre-check: skip if blocker has no chance of blocking
+            # (intercept < stealth and no intercept reactions available)
+            potential_intercept = blocker.intercept
+            for cid in blocker_player.hand:
+                c = self.state.card_by_id(cid)
+                if c and c.tipo.strip().lower() == 'reaction' and c.intercept > 0:
+                    potential_intercept += c.intercept
+                    break
+            if potential_intercept < acting_stealth:
                 continue
             
             # Bot decides whether to attempt block
@@ -671,7 +795,19 @@ class PhaseManager:
             if not should_block:
                 continue
             
-            # Calculate intercept (base + reaction bonuses)
+            # During block attempt, acting minion can play stealth action modifiers
+            # The actor plays stealth only if the blocker can already block
+            # (i.e., blocker intercept >= actor stealth)
+            if blocker.intercept >= acting_stealth:
+                mods = self._play_stealth_modifiers(minion, player, action_info, bot)
+                self._apply_modifier_effects(action_info, mods)
+                acting_stealth = action_info['stealth']
+            
+            # Blocker can play reactions to increase intercept
+            if blocker.intercept < acting_stealth:
+                self._play_block_reactions(blocker, blocker_player, action_info, bot)
+            
+            # Recalculate after reactions
             reaction_bonus = action_info.get('reaction_intercept', 0)
             blocker_intercept = blocker.intercept + reaction_bonus
             
@@ -808,6 +944,10 @@ class PhaseManager:
     ) -> dict:
         """Choose a strike for a minion.
         
+        Checks the controlling player's hand for combat cards that
+        can be used as strikes. The bot chooses between available
+        options.
+        
         Strike types:
         - hand_strike: damage = strength, close range only
         - dodge: 0 damage, protects from opponent's strike, any range
@@ -818,6 +958,34 @@ class PhaseManager:
         
         Default: hand_strike.
         """
+        player_id = self._player_id_for_minion(striker)
+        player = self.state.player_by_id(player_id)
+        bot = None  # We don't have the bot reference here, use fallback
+        
+        # Look for combat cards in player's hand
+        combat_cards = [
+            self.state.card_by_id(cid)
+            for cid in player.hand
+            if _is_combat_only(self.state.card_by_id(cid))
+        ] if player else []
+        combat_cards = [c for c in combat_cards if c is not None]
+        
+        if combat_cards:
+            # Pick first available combat card as strike
+            for c in combat_cards:
+                strike_type = self._classify_combat_strike(c, current_range, striker)
+                if strike_type:
+                    # Play the card
+                    if c.id in player.hand:
+                        player.hand.remove(c.id)
+                    c.position = CardPosition.ash_heap
+                    self._log_action(
+                        player,
+                        f'{striker.name} plays {c.name} (combat)',
+                    )
+                    return strike_type
+        
+        # Fallback: basic hand strike
         return {
             'type': 'hand_strike',
             'damage': striker.strength,
@@ -926,11 +1094,36 @@ class PhaseManager:
         opponent_dodges: bool,
     ) -> None:
         """Apply damage from a strike to the target."""
-        if strike['type'] != 'hand_strike':
-            return
-        if effective_range not in ('close', 'any'):
-            return
         if opponent_dodges:
+            return
+
+        strike_type = strike.get('type', 'hand_strike')
+
+        # Torpor strike: send opponent to torpor
+        if strike_type == 'torpor':
+            target.take_damage(target.blood + 1)  # enough to send to torpor
+            player = self.state.player_by_id(self._player_id_for_minion(striker))
+            self._log_action(
+                player,
+                f'{striker.name} sends {target.name} to torpor',
+            )
+            return
+
+        # Burn ally: remove ally from game
+        if strike_type == 'burn_ally':
+            target.position = CardPosition.ash_heap
+            player = self.state.player_by_id(self._player_id_for_minion(striker))
+            self._log_action(
+                player,
+                f'{striker.name} burns {target.name}',
+            )
+            return
+
+        # Combat ends, dodge, etc. — no damage
+        if strike_type not in ('hand_strike',):
+            return
+
+        if effective_range not in ('close', 'any'):
             return
 
         dmg = strike['damage']
@@ -963,9 +1156,96 @@ class PhaseManager:
         self, attacker: CardInstance, defender: CardInstance,
         attacker_player: PlayerState, defender_player: PlayerState,
     ) -> None:
-        """Step 1: Play cards before range is determined."""
-        # Placeholder - no card play yet
+        """Step 1: Play combat cards before range is determined.
+        
+        Both combatants may play cards that grant maneuvers
+        or affect the upcoming range determination.
+        """
+        # Attacker plays first
+        self._play_combat_before_range(attacker, attacker_player, is_attacker=True)
+        self._play_combat_before_range(defender, defender_player, is_attacker=False)
+
+    def _play_combat_before_range(
+        self, minion: CardInstance, player: PlayerState,
+        is_attacker: bool,
+    ) -> None:
+        """Play combat cards that grant maneuvers before range."""
+        combat_cards = [
+            self.state.card_by_id(cid)
+            for cid in player.hand
+            if _is_combat_only(self.state.card_by_id(cid))
+        ] if player else []
+        combat_cards = [c for c in combat_cards if c is not None]
+        for c in combat_cards:
+            if c.maneuvers > 0:
+                if c.id in player.hand:
+                    player.hand.remove(c.id)
+                c.position = CardPosition.ash_heap
+                self._log_action(player, f'{minion.name} plays {c.name} (combat)')
+                minion.maneuvers += c.maneuvers
+                break
+
+    def _classify_combat_strike(
+        self, card: CardInstance, current_range: str, striker: CardInstance
+    ) -> dict | None:
+        """Classify a combat card into a strike dict based on its name."""
+        name = (card.name or '').lower()
+
+        # Strike: dodge
+        if 'mist' in name or 'dodge' in name:
+            return {
+                'type': 'dodge',
+                'damage': 0,
+                'aggravated': False,
+                'steal_amount': 0,
+                'dodge': True,
+                'combat_ends': False,
+                'first_strike': False,
+                'ranged': False,
+            }
+
+        # Strike: combat ends
+        if any(kw in name for kw in ('meld', 'oubliette', 'shadow body', 'earth')):
+            return {
+                'type': 'combat_ends',
+                'damage': 0,
+                'aggravated': False,
+                'steal_amount': 0,
+                'dodge': False,
+                'combat_ends': True,
+                'first_strike': False,
+                'ranged': False,
+            }
+
+        # Strike: torpor (send opposing vampire to torpor)
+        if 'entomb' in name or 'torpor' in name:
+            return {
+                'type': 'torpor',
+                'damage': striker.strength,
+                'aggravated': False,
+                'steal_amount': 0,
+                'dodge': False,
+                'combat_ends': False,
+                'first_strike': False,
+                'ranged': False,
+            }
+
+        return None
+
+    def _play_combat_before_strikes(
+        self, minion: CardInstance, player: PlayerState,
+        current_range: str,
+    ) -> None:
+        """Play combat cards that buff before strikes."""
         pass
+
+    def _try_press(self, minion: CardInstance, player: PlayerState) -> bool:
+        """Check if a minion can and wants to press (continue combat)."""
+        name = (minion.name or '').lower()
+        # Simplified: check if minion has abilities that allow press
+        # (e.g., certain weapons or combat cards)
+        # For now, default to no press
+        return False
 
     def _determine_range(
         self, attacker: CardInstance, defender: CardInstance,
@@ -1027,8 +1307,9 @@ class PhaseManager:
         Acting minion plays first, then defender.
         Cards can: increase strength, grant first strike, grant additional strikes, etc.
         """
-        # Placeholder - no card play yet
-        pass
+        # Attacker plays first
+        self._play_combat_before_strikes(attacker, attacker_player, current_range)
+        self._play_combat_before_strikes(defender, defender_player, current_range)
 
     def _play_additional_strikes(
         self, attacker: CardInstance, defender: CardInstance,
@@ -1069,9 +1350,20 @@ class PhaseManager:
         """Step 6: Press phase.
         
         Returns True if combat should continue.
-        Acting minion decides first.
+        Acting minion decides first, then defender.
         """
-        # Simplified: combat ends after 1 round (no press cards yet)
+        # Attacker decides first
+        if self._try_press(attacker, attacker_player):
+            self._log_action(attacker_player, f'{attacker.name} presses')
+            # Defender can counter-press
+            if self._try_press(defender, defender_player):
+                self._log_action(defender_player, f'{defender.name} presses back')
+                return True
+            return True
+        # Defender can press if attacker doesn't
+        if self._try_press(defender, defender_player):
+            self._log_action(defender_player, f'{defender.name} presses')
+            return True
         return False
 
     def _resolve_bleed_action(self, minion: CardInstance, player: PlayerState) -> None:
@@ -1436,21 +1728,26 @@ class PhaseManager:
             return int(parts[0][1:])
         return 0
 
-    def _play_action_card(self, minion: CardInstance, player: PlayerState, bot: Bot) -> None:
+    def _play_action_card(self, minion: CardInstance, player: PlayerState, bot: Bot, action_info: dict | None = None) -> None:
         """Play an action card from hand for a minion action.
         
         Handles: bleed, equip, employ retainer, recruit ally, political, combat.
         """
-        action_cards = _has_type(player.hand, self.state, _is_minion)
+        action_cards = _has_type(player.hand, self.state, _is_action_card)
         if not action_cards:
             self._log_action(player, f'{minion.name} defaults to bleed (no action card)')
             self._resolve_bleed(minion, player)
             return
 
-        card_id = bot.choose_action(self.state, player.id)
-        inst = self.state.card_by_id(card_id) if card_id else None
+        # Use pre-selected card if available (from announcement phase)
+        pre_selected_id = (action_info or {}).get('_action_card')
+        if pre_selected_id and pre_selected_id in player.hand:
+            inst = self.state.card_by_id(pre_selected_id)
+        else:
+            card_id = bot.choose_action(self.state, player.id)
+            inst = self.state.card_by_id(card_id) if card_id else None
 
-        if not inst or inst.id not in player.hand or not _is_minion(inst):
+        if not inst or inst.id not in player.hand or not _is_action_card(inst):
             inst = self.state.card_by_id(action_cards[0])
 
         tipo_lower = (inst.tipo or '').lower()
@@ -1764,7 +2061,7 @@ class PhaseManager:
         self, player: PlayerState
     ) -> Optional[PlayerState]:
         targets = [p for p in self.state.active_players if p.id != player.id]
-        return random.choice(targets) if targets else None
+        return self.state.random.choice(targets) if targets else None
 
     def _log_action(self, player: PlayerState, message: str) -> None:
         self.events.emit(
@@ -1795,4 +2092,4 @@ class PhaseManager:
         if player.ash_heap:
             player.library = player.ash_heap[:]
             player.ash_heap = []
-            random.shuffle(player.library)
+            self.state.random.shuffle(player.library)

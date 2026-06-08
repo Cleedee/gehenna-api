@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import random
-
 from abc import ABC, abstractmethod
 
 from gehenna_api.engine.card_instance import CardPosition
@@ -37,7 +35,7 @@ class Bot(ABC):
         if is_vampire:
             if minion.blood == 0:
                 return 'hunt'
-            if minion.blood <= 2 and random.random() < 0.3:
+            if minion.blood <= 2 and state.random.random() < 0.3:
                 return 'hunt'
 
         # Check for action cards in hand
@@ -45,16 +43,16 @@ class Bot(ABC):
         if has_action_cards:
             # Check if there's a political action card
             if self._has_political_card(state, player_id) and is_vampire:
-                if not player.political_action_used and random.random() < 0.15:
+                if not player.political_action_used and state.random.random() < 0.15:
                     return 'political'
             return 'action_card'
 
         # Look for rescue/diablerie opportunities
         has_torpor_target = self._has_torpor_target(state, player_id)
         if has_torpor_target:
-            if random.random() < 0.2:
+            if state.random.random() < 0.2:
                 return 'rescue'
-            if random.random() < 0.1 and is_vampire:
+            if state.random.random() < 0.1 and is_vampire:
                 return 'diablerie'
 
         # Default to bleed
@@ -70,15 +68,20 @@ class Bot(ABC):
         return False
 
     def _has_action_cards(self, state: GameState, player_id: int) -> bool:
-        """Check if player has any minion action cards in hand."""
+        """Check if player has any minion action cards in hand.
+        
+        Only true action cards (not Action Modifier, Reaction, or Combat).
+        """
         player = state.player_by_id(player_id)
         for cid in player.hand:
             card = state.card_by_id(cid)
-            if card and card.tipo.strip().lower() in (
-                'action', 'equipment', 'retainer', 'ally',
-                'political action', 'combat',
-            ):
-                return True
+            if card:
+                t = card.tipo.strip().lower()
+                if t in (
+                    'action', 'equipment', 'retainer', 'ally',
+                    'political action',
+                ):
+                    return True
         return False
 
     def _has_torpor_target(self, state: GameState, player_id: int) -> bool:

@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import random
 import uuid
+from typing import Optional
 
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 from pydantic import BaseModel
@@ -25,6 +26,7 @@ class CreateGameRequest(BaseModel):
     player_names: list[str]
     deck_ids: list[int]
     bots: bool = True
+    seed: Optional[int] = None
 
 
 # ── Deck loading helpers ───────────────────────────────────────────────
@@ -90,8 +92,10 @@ def _make_card_instance(
     except ValueError:
         pool_cost = 0
 
-    # Parse card text to extract bleed and other modifiers
+    # Parse card text to extract modifiers (bleed, stealth, intercept)
     bleed_value = 0
+    stealth_value = 0
+    intercept_value = 0
     try:
         from gehenna_api.engine.cardtext import parse_card_text
         parsed = parse_card_text(
@@ -101,6 +105,8 @@ def _make_card_instance(
             disciplines=card_data.get('disciplines', ''),
         )
         bleed_value = parsed.modifiers.get('bleed', 0)
+        stealth_value = parsed.modifiers.get('stealth', 0)
+        intercept_value = parsed.modifiers.get('intercept', 0)
     except Exception:
         pass
 
@@ -112,13 +118,13 @@ def _make_card_instance(
         tipo=card_data.get('tipo', ''),
         pool_cost=pool_cost,
         capacity=_safe_int(card_data.get('capacity')) or _safe_int(card_data.get('blood')) or 0,
-        stealth=0,
-        intercept=0,
+        stealth=stealth_value,
+        intercept=intercept_value,
         bleed=bleed_value,
     )
 
 
-def _build_pool(cards: list[dict], prefix: str) -> list[CardInstance]:
+def _build_pool(cards: list[dict], prefix: str, rng: random.Random) -> list[CardInstance]:
     pool: list[CardInstance] = []
     idx = 0
     for entry in cards:
@@ -127,7 +133,7 @@ def _build_pool(cards: list[dict], prefix: str) -> list[CardInstance]:
             inst = _make_card_instance(card_data, idx, prefix)
             idx += 1
             pool.append(inst)
-    random.shuffle(pool)
+    rng.shuffle(pool)
     return pool
 
 
@@ -137,7 +143,8 @@ def _build_pool(cards: list[dict], prefix: str) -> list[CardInstance]:
 @router.post('/new')
 def create_game(req: CreateGameRequest) -> dict:
     game_id = str(uuid.uuid4())[:8]
-    state = GameState(game_id=game_id)
+    state = GameState(game_id=game_id, seed=req.seed)
+    rng = state.random
 
     # Validate: need 1 deck per player or 1 deck for all
     if len(req.deck_ids) == 1:
@@ -152,8 +159,8 @@ def create_game(req: CreateGameRequest) -> dict:
         deck_id = deck_ids[i]
 
         crypt, library = _load_deck(deck_id)
-        crypt_template = _build_pool(crypt, f'p{pid}_crypt')
-        lib_template = _build_pool(library, f'p{pid}_lib')
+        crypt_template = _build_pool(crypt, f'p{pid}_crypt', rng)
+        lib_template = _build_pool(library, f'p{pid}_lib', rng)
 
         player_crypt = []
         for c in crypt_template:
@@ -171,8 +178,8 @@ def create_game(req: CreateGameRequest) -> dict:
             state.cards[clone.id] = clone
             player_lib.append(clone)
 
-        random.shuffle(player_crypt)
-        random.shuffle(player_lib)
+        rng.shuffle(player_crypt)
+        rng.shuffle(player_lib)
 
         player_state = PlayerState(
             id=pid,

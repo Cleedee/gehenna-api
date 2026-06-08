@@ -1,9 +1,10 @@
 from __future__ import annotations
 
+import random as _random_module
 from enum import Enum
 from typing import Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, PrivateAttr
 
 from gehenna_api.engine.card_instance import CardInstance, CardPosition
 
@@ -55,10 +56,30 @@ class GameState(BaseModel):
     turn_number: int = 0
     blood_bank: int = 999_999
     edge_uncontrolled: bool = True
+    seed: Optional[int] = None
     _is_finished: bool = False
     # Political system
     current_referendum: Optional[dict] = None
     referendum_results: dict = Field(default_factory=dict)
+    # Seeded random generator for reproducibility
+    _rng: _random_module.Random = PrivateAttr()
+
+    def model_post_init(self, __context) -> None:
+        """Initialize the random generator with the given seed."""
+        if self.seed is not None:
+            object.__setattr__(self, '_rng', _random_module.Random(self.seed))
+        else:
+            object.__setattr__(self, '_rng', _random_module.Random())
+
+    @property
+    def random(self) -> _random_module.Random:
+        """Access the game's seeded random number generator."""
+        if not hasattr(self, '_rng'):
+            if self.seed is not None:
+                object.__setattr__(self, '_rng', _random_module.Random(self.seed))
+            else:
+                object.__setattr__(self, '_rng', _random_module.Random())
+        return self._rng
 
     @property
     def current_player(self) -> Optional[PlayerState]:

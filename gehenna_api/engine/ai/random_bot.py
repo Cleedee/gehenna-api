@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import random
-
 from gehenna_api.engine.ai.base import Bot
 from gehenna_api.engine.state import GameState
 
@@ -11,7 +9,7 @@ class RandomBot(Bot):
         player = state.player_by_id(player_id)
         if not player or not player.hand:
             return 'pass'
-        return random.choice(player.hand)
+        return state.random.choice(player.hand)
 
     def choose_block(
         self, state: GameState, player_id: int, action_id: str

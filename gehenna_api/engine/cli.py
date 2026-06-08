@@ -46,10 +46,13 @@ class GameAPI:
     def __init__(self, base_url: str = API_BASE) -> None:
         self.client = httpx.Client(base_url=base_url, timeout=15)
 
-    def create_game(self, player_names: list[str], deck_ids: list[int]) -> dict:
+    def create_game(self, player_names: list[str], deck_ids: list[int], seed: int | None = None) -> dict:
+        body = {'player_names': player_names, 'deck_ids': deck_ids}
+        if seed is not None:
+            body['seed'] = seed
         r = self.client.post(
             '/game/new',
-            json={'player_names': player_names, 'deck_ids': deck_ids},
+            json=body,
         )
         r.raise_for_status()
         return r.json()
@@ -134,13 +137,14 @@ def run_simulation(
     num_players: int | None = None,
     max_turns: int = 30,
     delay: float = 0.5,
+    seed: int | None = None,
 ) -> None:
     if num_players is None:
         num_players = len(deck_ids)
     names = [f'Bot-{chr(65 + i)}' for i in range(num_players)]
 
     print(green(bold('\n=== BOT SIMULATION ===')))
-    result = api.create_game(names, deck_ids)
+    result = api.create_game(names, deck_ids, seed=seed)
     if 'error' in result:
         print(red(f'Error: {result["error"]}'))
         return
@@ -186,6 +190,7 @@ def run_human_game(
     deck_ids: list[int],
     num_bots: int | None = None,
     max_turns: int = 50,
+    seed: int | None = None,
 ) -> None:
     if num_bots is None:
         num_bots = len(deck_ids) - 1
@@ -197,7 +202,7 @@ def run_human_game(
         deck_ids = deck_ids + [deck_ids[-1]] * (len(names) - len(deck_ids))
 
     print(green(bold('\n=== HUMAN VS BOTS ===')))
-    result = api.create_game(names, deck_ids)
+    result = api.create_game(names, deck_ids, seed=seed)
     gid = result['game_id']
     print(f'Game {gid} created')
     print(
@@ -263,6 +268,7 @@ def main() -> None:
             '  python -m gehenna_api.engine.cli list-decks\n'
             '  python -m gehenna_api.engine.cli play 1 --bots 2\n'
             '  python -m gehenna_api.engine.cli simulate 1 2 --turns 20\n'
+            '  python -m gehenna_api.engine.cli simulate 1 2 --seed 123 --turns 20\n'
         ),
     )
     parser.add_argument(
@@ -278,6 +284,7 @@ def main() -> None:
     p_play.add_argument('decks', type=int, nargs='+', help='Deck IDs (one per player)')
     p_play.add_argument('--bots', type=int, default=None, help='Number of bots (default: len(decks)-1)')
     p_play.add_argument('--turns', type=int, default=50, help='Max turns')
+    p_play.add_argument('--seed', type=int, default=42, help='Seed for reproducibility (default: 42)')
 
     p_sim = sub.add_parser('simulate', help='Bot vs bot simulation')
     p_sim.add_argument('decks', type=int, nargs='+', help='Deck IDs (one per player)')
@@ -288,6 +295,7 @@ def main() -> None:
     p_sim.add_argument(
         '--delay', type=float, default=0.5, help='Delay between turns'
     )
+    p_sim.add_argument('--seed', type=int, default=42, help='Seed for reproducibility (default: 42)')
 
     args = parser.parse_args()
     api = GameAPI(args.api)
@@ -296,10 +304,10 @@ def main() -> None:
         if args.command == 'list-decks':
             list_decks_cmd(api)
         elif args.command == 'play':
-            run_human_game(api, args.decks, args.bots, args.turns)
+            run_human_game(api, args.decks, args.bots, args.turns, seed=args.seed)
         elif args.command == 'simulate':
             run_simulation(
-                api, args.decks, args.players, args.turns, args.delay
+                api, args.decks, args.players, args.turns, args.delay, seed=args.seed
             )
     finally:
         api.close()
