@@ -21,6 +21,22 @@ uv run python -m gehenna_api.engine.cli simulate 1 --players 2 --turns 20
 uv run python -m gehenna_api.engine.cli simulate 1 --players 2 --turns 20 --seed 42   # Reproduzível
 uv run python -m gehenna_api.engine.cli list-decks
 
+# Deck management
+python scripts/manage_decks.py list          # List all decks
+python scripts/manage_decks.py show 241      # Show deck contents
+python scripts/manage_decks.py search meld   # Search for cards
+python scripts/manage_decks.py add 241 100601 --qty 3   # Add Earth Meld x3
+python scripts/manage_decks.py remove 241 100601        # Remove card
+python scripts/manage_decks.py from-db 241              # Export deck from DB
+
+# Card data validation
+python scripts/validate_cards.py             # Validate all decks
+python scripts/validate_cards.py -c          # Critical cards only
+python scripts/validate_cards.py -v          # Verbose output
+
+# Card data overrides (edit):
+#   gehenna_api/data/cards/manual_overrides.py
+
 # Docker
 docker compose up --build     # Start all services
 docker compose down           # Stop all services
