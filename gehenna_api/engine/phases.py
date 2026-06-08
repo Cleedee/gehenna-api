@@ -189,17 +189,6 @@ class PhaseManager:
 
         player = self.state.current_player
         if player:
-            # If Edge is uncontrolled, current player gains it
-            if self.state.edge_uncontrolled:
-                player.has_edge = True
-                self.state.edge_uncontrolled = False
-                self.events.emit(
-                    GameEvent(
-                        type=EventType.edge_gained,
-                        player_id=player.id,
-                        data={'player': player.username},
-                    )
-                )
             # Player with Edge gains 1 pool from blood bank
             if player.has_edge:
                 player.pool += 1
