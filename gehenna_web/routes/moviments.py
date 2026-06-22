@@ -3,7 +3,7 @@ from datetime import date
 from flask import Blueprint, flash, redirect, render_template, request, session, url_for
 from flask_wtf import FlaskForm
 from wtforms import DecimalField, IntegerField, SelectField, StringField, SubmitField
-from wtforms.validators import DataRequired
+from wtforms.validators import DataRequired, InputRequired
 
 from gehenna_web.routes.auth import login_required
 from gehenna_web.services import api_client
@@ -15,7 +15,7 @@ class MovimentForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
     tipo = SelectField('Type', choices=[('E', 'Entry (E)'), ('S', 'Sale (S)')], validators=[DataRequired()])
     date_move = StringField('Date (YYYY-MM-DD)', validators=[DataRequired()])
-    price = DecimalField('Price', validators=[DataRequired()])
+    price = DecimalField('Price', validators=[InputRequired()])
     code = IntegerField('Code')
     submit = SubmitField('Save')
 
@@ -47,13 +47,14 @@ def list():
 def create():
     form = MovimentForm()
     form.date_move.data = date.today().isoformat()
+    form.code.data = 0
     if form.validate_on_submit():
         data = {
             'name': form.name.data,
             'tipo': form.tipo.data,
             'date_move': form.date_move.data,
             'price': float(form.price.data),
-            'code': form.code.data,
+            'code': form.code.data or 0,
             'owner_id': session.get('user_id')
         }
         response = api_client.create_moviment(data)
@@ -87,7 +88,7 @@ def edit(moviment_id):
             'tipo': form.tipo.data,
             'date_move': form.date_move.data,
             'price': float(form.price.data),
-            'code': form.code.data,
+            'code': form.code.data or 0,
             'owner_id': session.get('user_id')
         }
         response = api_client.update_moviment(moviment_id, data)
