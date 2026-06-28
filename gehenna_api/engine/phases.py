@@ -290,6 +290,18 @@ class PhaseManager:
             self._use_master_action(player, bot, master_card_played)
             master_card_played = True
 
+    def _can_play_master(self, player: PlayerState, inst: CardInstance) -> bool:
+        """Check if a master card can be played by the player."""
+        # Villein requires a ready vampire you control
+        if 'villein' in inst.name.lower():
+            # Check if player has a ready vampire
+            has_ready_vampire = any(
+                c.is_ready and c.tipo in ('Vampire', 'vampire', 'Imbued')
+                for c in self.state.get_cards_in_play(player.id)
+            )
+            return has_ready_vampire
+        return True
+
     def _use_master_action(self, player: PlayerState, bot: Bot, master_card_played: bool) -> None:
         player.master_actions -= 1
 
@@ -298,12 +310,28 @@ class PhaseManager:
             self._log_action(player, 'pass (no master in hand)')
             return
 
+        # Filter masters that can actually be played
+        playable_masters = []
+        for mid in masters:
+            inst = self.state.card_by_id(mid)
+            if inst and self._can_play_master(player, inst):
+                playable_masters.append(mid)
+
+        if not playable_masters:
+            self._log_action(player, f'pass (no valid master to play)')
+            return
+
         card_id = bot.choose_action(self.state, player.id)
         inst = self.state.card_by_id(card_id) if card_id else None
 
         if not inst or inst.id not in player.hand or not _is_master_or_trifle(inst):
             # Bot picked wrong type - use first valid master/trifle
-            inst = self.state.card_by_id(masters[0])
+            inst = self.state.card_by_id(playable_masters[0])
+
+        if not self._can_play_master(player, inst):
+            # Master can't be played (e.g., Villein without vampire)
+            self._log_action(player, f'pass ({inst.name} cannot be played)')
+            return
 
         self._log_action(player, f'master: {inst.name}')
         self._play_card(player, inst, 'ash_heap')
