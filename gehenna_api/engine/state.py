@@ -157,24 +157,40 @@ class GameState(BaseModel):
             )
         ]
 
-    def can_play_unique(self, card: 'CardInstance') -> bool:
-        """Check if a unique card can be played (no same-named card in play)."""
+    def _get_card_owner(self, card: 'CardInstance') -> int | None:
+        """Extract player ID from card ID prefix (e.g., 'p1_card' -> 1)."""
+        parts = card.id.split('_')
+        if len(parts) >= 2 and parts[0].startswith('p'):
+            try:
+                return int(parts[0][1:])
+            except ValueError:
+                return None
+        return None
+
+    def can_play_unique(self, card: 'CardInstance', player_id: int) -> bool:
+        """Check if a unique card can be played by a player.
+        Only blocks if same-named card is in play from a DIFFERENT player."""
         if not card.is_unique:
             return True
-        # Check if any card with same name is already in play
         for c in self.get_all_cards_in_play():
             if c.id != card.id and c.name.lower() == card.name.lower():
-                return False
+                # Only contest if card belongs to a different player
+                c_owner = self._get_card_owner(c)
+                if c_owner is not None and c_owner != player_id:
+                    return False
         return True
 
-    def mark_card_in_play(self, card: 'CardInstance') -> None:
-        """Mark a card as in play and handle unique contestation."""
+    def mark_card_in_play(self, card: 'CardInstance', player_id: int) -> None:
+        """Mark a card as in play and handle unique contestation.
+        Only contests with cards from different players."""
         if card.is_unique:
-            # Find any existing card with same name and contest it
             for c in self.get_all_cards_in_play():
                 if c.id != card.id and c.name.lower() == card.name.lower():
-                    c.position = 'contested'
-                    card.position = 'contested'
+                    c_owner = self._get_card_owner(c)
+                    if c_owner is not None and c_owner != player_id:
+                        c.position = 'contested'
+                        card.position = 'contested'
+                        return
 
     @property
     def active_players(self) -> list[PlayerState]:

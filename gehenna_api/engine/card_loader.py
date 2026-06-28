@@ -76,6 +76,32 @@ def _load_json(path: str) -> Optional[dict]:
         return None
 
 
+def _is_vampire_type(tipo: str) -> bool:
+    """Check if card type is a vampire (crypt card)."""
+    if not tipo:
+        return False
+    tipo_lower = tipo.lower().strip()
+    return tipo_lower in ('vampire', 'imbued') or 'vampire' in tipo_lower
+
+
+# Non-unique vampires (can have multiple copies in play)
+NON_UNIQUE_VAMPIRES = {
+    'Horde, The',
+    'Skeleton, The',
+    'Shade, The',
+    'Wraith, The',
+    'Carrion Crow',
+    'Rock Cat',
+}
+
+
+def _is_non_unique_vampire(name: str) -> bool:
+    """Check if vampire is non-unique (can have multiple copies)."""
+    if not name:
+        return False
+    return name in NON_UNIQUE_VAMPIRES or 'Horde' in name
+
+
 def _parse_abilities(raw: list) -> list[CardAbility]:
     """Parse raw abilities array from JSON into CardAbility objects."""
     result = []
@@ -120,10 +146,20 @@ def load_card(codevdb: int) -> Optional[CardData]:
         return None
 
     # Parse from JSON
+    is_unique = raw.get('is_unique', False)
+    
+    # Vampires are unique by default (game rule: each crypt card is unique)
+    # unless explicitly marked as non-unique (e.g., The Horde)
+    tipo = raw.get('tipo', '')
+    name = raw.get('name', '')
+    if not is_unique and _is_vampire_type(tipo):
+        # Check if this is a known non-unique vampire
+        is_unique = not _is_non_unique_vampire(name)
+    
     card = CardData(
         codevdb=raw.get('codevdb', codevdb),
         name=raw.get('name', ''),
-        tipo=raw.get('tipo', ''),
+        tipo=tipo,
         cost=raw.get('cost', ''),
         text=raw.get('text', ''),
         abilities=_parse_abilities(raw.get('abilities', [])),
@@ -131,7 +167,7 @@ def load_card(codevdb: int) -> Optional[CardData]:
         default_strike=_parse_strikes(raw.get('default_strike')),
         disciplines=raw.get('disciplines', []),
         special_effects=list(raw.get('special_effects', [])),
-        is_unique=raw.get('is_unique', False),
+        is_unique=is_unique,
         needs_review=raw.get('needs_review', False),
         notes=raw.get('notes', ''),
     )
