@@ -82,7 +82,11 @@ def get_preconstructed_decks_with_card(card_id):
     return api.get(f'/decks/preconstructed/with-card/{card_id}')
 
 
-def get_cards(name=None, code=None, codevdb=None, tipo=None, skip=0, limit=100):
+def get_cards(
+    name=None, code=None, codevdb=None, tipo=None,
+    clan=None, discipline=None, sect=None, group=None,
+    skip=0, limit=100
+):
     params = {'skip': skip, 'limit': limit}
     if name:
         params['name'] = name
@@ -92,6 +96,14 @@ def get_cards(name=None, code=None, codevdb=None, tipo=None, skip=0, limit=100):
         params['codevdb'] = codevdb
     if tipo:
         params['tipo'] = tipo
+    if clan:
+        params['clan'] = clan
+    if discipline:
+        params['discipline'] = discipline
+    if sect:
+        params['sect'] = sect
+    if group:
+        params['group'] = group
     return api.get('/cards/', params=params)
 
 

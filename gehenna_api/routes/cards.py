@@ -1,13 +1,12 @@
-from typing import Annotated, Union
+from typing import Union
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from gehenna_api.database import get_session
 from gehenna_api.models.card import Card
 from gehenna_api.schemas import CardList, CardPublic, CardSchema, Message
-from gehenna_api.utils.parameters import CommaSeparatedList
 
 router = APIRouter(prefix='/cards', tags=['cards'])
 
@@ -64,32 +63,37 @@ def read_cards(
     ids: Union[str, None] = None,
     codevdb: Union[str, None] = None,
     tipo: Union[str, None] = None,
+    clan: Union[str, None] = None,
+    discipline: Union[str, None] = None,
+    sect: Union[str, None] = None,
+    group: Union[str, None] = None,
     skip: int = 0,
     limit: int = 100,
     session: Session = Depends(get_session),
 ):
+    query = select(Card)
+
     if name:
-        cards = session.scalars(
-            select(Card)
-            .where(Card.name.like(f'%{name}%'))
-            .offset(skip)
-            .limit(limit)
-        ).all()
-    elif code:
-        cards = session.scalars(select(Card).where(Card.code == code)).all()
-    elif ids:
-        ids = eval('[' + ids + ']')
-        cards = session.scalars(select(Card).where(Card.id.in_(ids))).all()
-    elif codevdb:
-        cards = session.scalars(
-            select(Card).where(Card.codevdb == codevdb)
-        ).all()
-    elif tipo:
-        cards = session.scalars(
-            select(Card).where(Card.tipo == tipo).offset(skip).limit(limit)
-        ).all()
-    else:
-        cards = session.scalars(select(Card).offset(skip).limit(limit)).all()
+        query = query.where(Card.name.like(f'%{name}%'))
+    if code:
+        query = query.where(Card.code == code)
+    if ids:
+        ids_list = eval('[' + ids + ']')
+        query = query.where(Card.id.in_(ids_list))
+    if codevdb:
+        query = query.where(Card.codevdb == codevdb)
+    if tipo:
+        query = query.where(Card.tipo == tipo)
+    if clan:
+        query = query.where(Card.clan.ilike(f'%{clan}%'))
+    if discipline:
+        query = query.where(Card.disciplines.ilike(f'%{discipline}%'))
+    if sect:
+        query = query.where(Card.sect.ilike(f'%{sect}%'))
+    if group:
+        query = query.where(Card.group == group)
+
+    cards = session.scalars(query.offset(skip).limit(limit)).all()
     for card in cards:
         card.image_url = _get_card_image_url(card)
     return {'cards': list(cards)}

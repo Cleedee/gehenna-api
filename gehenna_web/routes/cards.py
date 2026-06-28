@@ -1,4 +1,4 @@
-from flask import Blueprint, flash, redirect, render_template, request, url_for
+from flask import Blueprint, render_template, request
 from flask_wtf import FlaskForm
 from wtforms import SelectField, StringField, SubmitField
 from wtforms.validators import Optional
@@ -153,11 +153,100 @@ CARD_TYPES = [
     ('Imbued', 'Imbued'),
 ]
 
+CLANS = [
+    ('', 'All Clans'),
+    ('Assamite', 'Assamite'),
+    ('Baali', 'Baali'),
+    ('Brujah', 'Brujah'),
+    ('Brujah antitribu', 'Brujah antitribu'),
+    ('Caitiff', 'Caitiff'),
+    ('Gangrel', 'Gangrel'),
+    ('Gangrel antitribu', 'Gangrel antitribu'),
+    ('Giovanni', 'Giovanni'),
+    ('Harbinger of Skulls', 'Harbinger of Skulls'),
+    ('Lasombra', 'Lasombra'),
+    ('Malkavian', 'Malkavian'),
+    ('Malkavian antitribu', 'Malkavian antitribu'),
+    ('Nosferatu', 'Nosferatu'),
+    ('Nosferatu antitribu', 'Nosferatu antitribu'),
+    ('Ravnos', 'Ravnos'),
+    ('Salubri', 'Salubri'),
+    ('Set', 'Set'),
+    ('Toreador', 'Toreador'),
+    ('Toreador antitribu', 'Toreador antitribu'),
+    ('Tremere', 'Tremere'),
+    ('Tremere antitribu', 'Tremere antitribu'),
+    ('Tzimisce', 'Tzimisce'),
+    ('Ventrue', 'Ventrue'),
+    ('Ventrue antitribu', 'Ventrue antitribu'),
+]
+
+DISCIPLINES = [
+    ('', 'Any Discipline'),
+    ('ANI', 'Animalism (Superior)'),
+    ('ani', 'Animalism'),
+    ('AUS', 'Auspex (Superior)'),
+    ('aus', 'Auspex'),
+    ('CEL', 'Celerity (Superior)'),
+    ('cel', 'Celerity'),
+    ('DOM', 'Dominate (Superior)'),
+    ('dom', 'Dominate'),
+    ('FOR', 'Fortitude (Superior)'),
+    ('for', 'Fortitude'),
+    ('MEL', 'Melee (Superior)'),
+    ('mel', 'Melee'),
+    ('NEC', 'Necromancy (Superior)'),
+    ('nec', 'Necromancy'),
+    ('OBF', 'Obfuscate (Superior)'),
+    ('obf', 'Obfuscate'),
+    ('POT', 'Potence (Superior)'),
+    ('pot', 'Potence'),
+    ('PRE', 'Presence (Superior)'),
+    ('pre', 'Presence'),
+    ('PRO', 'Protean (Superior)'),
+    ('pro', 'Protean'),
+    ('QUI', 'Quietus (Superior)'),
+    ('qui', 'Quietus'),
+    ('SAN', 'Serpentis (Superior)'),
+    ('san', 'Serpentis'),
+    ('THA', 'Thaumaturgy (Superior)'),
+    ('tha', 'Thaumaturgy'),
+    ('THN', 'Thanatosis (Superior)'),
+    ('thn', 'Thanatosis'),
+    ('VIC', 'Vicissitude (Superior)'),
+    ('vic', 'Vicissitude'),
+    ('VIS', 'Vision (Superior)'),
+    ('vin', 'Vision'),
+]
+
+SECTS = [
+    ('', 'All Sects'),
+    ('Camarilla', 'Camarilla'),
+    ('Sabbat', 'Sabbat'),
+    ('Independent', 'Independent'),
+    ('Laibon', 'Laibon'),
+    ('Anarch', 'Anarch'),
+]
+
+GROUPS = [
+    ('', 'All Groups'),
+    ('1', 'Group 1'),
+    ('2', 'Group 2'),
+    ('3', 'Group 3'),
+    ('4', 'Group 4'),
+    ('5', 'Group 5'),
+    ('6', 'Group 6'),
+]
+
 
 class SearchForm(FlaskForm):
     name = StringField('Card Name', validators=[Optional()])
     code = StringField('Card Code', validators=[Optional()])
     tipo = SelectField('Type', choices=CARD_TYPES, default='')
+    clan = SelectField('Clan', choices=CLANS, default='')
+    discipline = SelectField('Discipline', choices=DISCIPLINES, default='')
+    sect = SelectField('Sect', choices=SECTS, default='')
+    group = SelectField('Group', choices=GROUPS, default='')
     submit = SubmitField('Search')
 
 
@@ -167,19 +256,39 @@ def search():
     name = request.args.get('name')
     code = request.args.get('code')
     tipo = request.args.get('tipo')
+    clan = request.args.get('clan')
+    discipline = request.args.get('discipline')
+    sect = request.args.get('sect')
+    group = request.args.get('group')
 
     if request.args.get('form.name'):
         form.name.data = request.args.get('form.name')
     if request.args.get('form.tipo'):
         form.tipo.data = request.args.get('form.tipo')
+    if request.args.get('form.clan'):
+        form.clan.data = request.args.get('form.clan')
+    if request.args.get('form.discipline'):
+        form.discipline.data = request.args.get('form.discipline')
+    if request.args.get('form.sect'):
+        form.sect.data = request.args.get('form.sect')
+    if request.args.get('form.group'):
+        form.group.data = request.args.get('form.group')
 
     cards = []
-    response = api_client.get_cards(name=name, code=code, tipo=tipo, limit=50)
+    response = api_client.get_cards(
+        name=name, code=code, tipo=tipo,
+        clan=clan, discipline=discipline, sect=sect, group=group,
+        limit=100
+    )
     if response.status_code == 200:
         data = response.json()
         cards = [process_card_icons(c) for c in data.get('cards', [])]
 
-    return render_template('cards/search.html', form=form, cards=cards, name=name, code=code, tipo=tipo)
+    return render_template(
+        'cards/search.html', form=form, cards=cards,
+        name=name, code=code, tipo=tipo,
+        clan=clan, discipline=discipline, sect=sect, group=group
+    )
 
 
 @bp.route('/<int:card_id>')
