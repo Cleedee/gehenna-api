@@ -39,5 +39,7 @@
   },
   "default_strike": null,
   "needs_review": true,
-  "notes": ""
+  "notes": "",
+  "text": "+1 stealth action. Condemnation.\n[ser] Ⓓ Lock a younger vampire.\n[dai] Requires an infernal vampire. Ⓓ Put this card on a ready minion. Bleed actions cost the attached minion +1 blood (allies cannot pay blood costs). Burn all other condemnation cards on this minion.\n[DAI] As [dai] above, and the attached minion's controller burns the top card of their library during their unlock phase.",
+  "is_infernal": true
 }

@@ -9,5 +9,7 @@
   },
   "default_strike": null,
   "needs_review": true,
-  "notes": ""
+  "notes": "",
+  "text": "Camarilla: Vidal can meet the clan, sect, or non-infernal vampire trait (e.g., Black Hand) requirement to play any card. He can meet a given requirement only once each game. +1 bleed.",
+  "is_infernal": true
 }

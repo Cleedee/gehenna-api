@@ -7,5 +7,7 @@
   "modifiers": {},
   "default_strike": null,
   "needs_review": true,
-  "notes": ""
+  "notes": "",
+  "text": "Unique.\nPut this card on a non-infernal mortal ally you control, or burn 2 pool to put this card on a non-infernal minion you control. This minion cannot be the target of directed actions requiring Dominate [dom] or Presence [pre]. In combat, damage this minion inflicts on infernal minions is aggravated. Infernal minions cannot block or strike against this minion. Burn this card if this minion becomes infernal.",
+  "is_infernal": true
 }

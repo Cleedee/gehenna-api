@@ -7,5 +7,7 @@
   "modifiers": {},
   "default_strike": null,
   "needs_review": false,
-  "notes": "Vampire - plain text"
+  "notes": "Vampire - plain text",
+  "text": "Independent: Xeper gets +1 vote for each ready unique infernal vampire you control. He can steal an ally controlled by another Methuselah as a Ⓓ action. Infernal.",
+  "is_infernal": true
 }

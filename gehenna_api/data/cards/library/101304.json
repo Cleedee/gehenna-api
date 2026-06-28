@@ -7,5 +7,7 @@
   "modifiers": {},
   "default_strike": null,
   "needs_review": true,
-  "notes": ""
+  "notes": "",
+  "text": "Requires a Sabbat vampire with capacity above 7. Only usable as the action is announced.\nNon-infernal vampires with capacity less than 6 cannot block this action.",
+  "is_infernal": true
 }

@@ -9,5 +9,7 @@
   },
   "default_strike": null,
   "needs_review": true,
-  "notes": ""
+  "notes": "",
+  "text": "+1 stealth action. Requires an infernal Baali with capacity 9 or more.\nPut this card on this Baali; if this Baali has three copies of this card, burn these copies to give each other Methuselah who has no shattered counters 1 shattered counter with \"During your unlock phase, burn 3 pool\". A vampire with capacity 6 or more can burn the Edge to burn this card as a Ⓓ action.",
+  "is_infernal": true
 }

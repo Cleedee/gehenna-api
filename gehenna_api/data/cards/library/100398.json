@@ -55,5 +55,7 @@
   },
   "default_strike": null,
   "needs_review": true,
-  "notes": ""
+  "notes": "",
+  "text": "+1 stealth action. Condemnation.\n[obf] Ⓓ Lock a younger vampire.\n[dai] Requires an infernal vampire. Ⓓ Put this card on a ready minion. The attached minion gets -1 stealth. Burn all other condemnation cards on this minion.\n[DAI] As [dai] above, and if the attached minion is blocked, their controller burns 1 pool before block resolution.",
+  "is_infernal": true
 }

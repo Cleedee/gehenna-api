@@ -821,19 +821,18 @@ class PhaseManager:
             if not should_block:
                 continue
 
-            # Reset per-blocker state
+            # Blocker attempts to block - priority returns to actor
+            # Per VTES rules: when someone attempts to block, the acting
+            # minion gets priority to play stealth action modifiers
             action_info['reaction_intercept'] = 0
 
-            # During block attempt, acting minion may play stealth action modifiers
-            # Per VTES rules: the acting minion can play stealth whenever someone
-            # attempts to block (before the blocker plays reactions).
+            # Acting minion plays stealth modifiers in response to block attempt
             mods = self._play_stealth_modifiers(minion, player, action_info, bot)
             self._apply_modifier_effects(action_info, mods)
             acting_stealth = action_info['stealth']
 
-            # Blocker can play reactions to increase intercept
-            # The blocker plays intercept-granting reactions if they can't
-            # block yet (intercept < stealth after actor's stealth mods)
+            # Now priority passes to blocker to play reactions
+            # Blocker plays intercept-granting reactions if they still can't block
             if blocker.intercept < acting_stealth:
                 self._play_block_reactions(blocker, blocker_player, action_info, bot)
 

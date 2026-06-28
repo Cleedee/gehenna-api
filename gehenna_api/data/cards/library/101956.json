@@ -7,5 +7,7 @@
   "modifiers": {},
   "default_strike": null,
   "needs_review": false,
-  "notes": "Master - plain text"
+  "notes": "Master - plain text",
+  "text": "Choose a ready unlocked infernal Baali you control. Add 3 blood to a younger infernal vampire in your uncontrolled region.",
+  "is_infernal": true
 }

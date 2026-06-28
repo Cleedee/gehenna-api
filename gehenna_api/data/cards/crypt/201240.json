@@ -9,5 +9,7 @@
   },
   "default_strike": null,
   "needs_review": true,
-  "notes": ""
+  "notes": "",
+  "text": "Independent: After Sargon performs a successful action, you gain the Edge. Infernal. +1 strength.",
+  "is_infernal": true
 }

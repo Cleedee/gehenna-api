@@ -7,5 +7,7 @@
   "modifiers": {},
   "default_strike": null,
   "needs_review": true,
-  "notes": ""
+  "notes": "",
+  "text": "Unique.\nPut this card in play. During your master phase, you can burn 1 pool to unlock all infernal minions you control. Minions can burn this card as a Ⓓ action that inflicts 1 unpreventable environmental damage on acting vampires.",
+  "is_infernal": true
 }

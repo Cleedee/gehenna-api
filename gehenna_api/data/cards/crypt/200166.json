@@ -9,5 +9,7 @@
   },
   "default_strike": null,
   "needs_review": true,
-  "notes": ""
+  "notes": "",
+  "text": "Independent: Barbaro can change his clan to Tremere antitribu as +1 stealth action. He can put 1 taint counter on a minion as a +1 stealth Ⓓ action; if the minion has 2 taint counters, burn them and the minion becomes infernal. Infernal.",
+  "is_infernal": true
 }

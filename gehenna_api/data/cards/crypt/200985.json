@@ -7,5 +7,7 @@
   "modifiers": {},
   "default_strike": null,
   "needs_review": true,
-  "notes": ""
+  "notes": "",
+  "text": "Sabbat: While Midget is acting or is in combat, animal retainers lose their abilities. Infernal.",
+  "is_infernal": true
 }

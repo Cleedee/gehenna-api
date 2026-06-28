@@ -7,5 +7,7 @@
   "modifiers": {},
   "default_strike": null,
   "needs_review": true,
-  "notes": ""
+  "notes": "",
+  "text": "Master: trifle.\nPut this card on an infernal vampire. This vampire may play cards that require Striga [str] (not a Discipline). With two of these cards, he or she may play cards that require superior Striga [STR]. Burn this card if this vampire is not infernal.",
+  "is_infernal": true
 }

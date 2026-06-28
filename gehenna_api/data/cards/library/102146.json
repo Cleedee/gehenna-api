@@ -47,5 +47,7 @@
   },
   "default_strike": null,
   "needs_review": true,
-  "notes": ""
+  "notes": "",
+  "text": "[pre] +1 stealth action. Unlock a younger non-infernal vampire.\n[val] +1 stealth action. Rescue a non-infernal vampire from torpor.\n[VAL] Ⓓ Diablerize a vampire in torpor. Vampires cannot cast votes or ballots in favor of the blood hunt unless they are Baali, Tremere or Tremere antitribu.",
+  "is_infernal": true
 }

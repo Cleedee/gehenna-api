@@ -9,5 +9,7 @@
   },
   "default_strike": null,
   "needs_review": true,
-  "notes": ""
+  "notes": "",
+  "text": "+1 stealth action. Requires an infernal minion. Unique.\nPut this card in play. Your prey burns 1 pool after resolution of each action during which you have burned corruption counters. Methuselahs can burn a vampire they control with any corruption counters during their unlock phase to burn this card.",
+  "is_infernal": true
 }

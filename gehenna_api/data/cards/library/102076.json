@@ -78,5 +78,7 @@
   },
   "default_strike": null,
   "needs_review": false,
-  "notes": "Complex: put in play as blocking 9-cap infernal. [DAI] also unlock."
+  "notes": "Complex: put in play as blocking 9-cap infernal. [DAI] also unlock.",
+  "text": "+1 stealth action. Requires an infernal vampire. Unique.\n[dai] Put this card in play. This card can attempt to block an action directed at you (or a card you control) and is considered a 9-capacity infernal vampire with +2 intercept during that attempt; if successful, the acting minion takes 1 unpreventable environmental aggravated damage and this card is burned.\n[DAI] As above, and unlock this vampire.",
+  "is_infernal": true
 }

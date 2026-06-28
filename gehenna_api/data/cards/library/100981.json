@@ -59,5 +59,7 @@
   "modifiers": {},
   "default_strike": null,
   "needs_review": false,
-  "notes": "Ally: act same turn, remove if no infernal. [DAI] can use basic dai/obf."
+  "notes": "Ally: act same turn, remove if no infernal. [DAI] can use basic dai/obf.",
+  "text": "Unique demon with 2 life. 1 strength, 3 bleed. Requires an infernal vampire.\n[dai] Infernal Servitor can perform actions the turn it is recruited. Remove it from the game if you control no infernal vampires, or after it performs a successful action.\n[DAI] As above, and Infernal Servitor can play cards requiring basic Daimoinon [dai] and/or basic Obfuscate [obf] as a vampire.",
+  "is_infernal": true
 }

@@ -7,5 +7,7 @@
   "modifiers": {},
   "default_strike": null,
   "needs_review": false,
-  "notes": "Master - plain text"
+  "notes": "Master - plain text",
+  "text": "Unique location.\nPut pool you burn to unlock infernal minions you control using the infernal trait on this card. During an action, you can burn X counters from this card to reduce a bleed against you by X. During your predator's discard phase, burn all the counters from this card.",
+  "is_infernal": true
 }

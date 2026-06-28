@@ -9,5 +9,7 @@
   },
   "default_strike": null,
   "needs_review": true,
-  "notes": ""
+  "notes": "",
+  "text": "Independent: If Huitzilopochtli is ready during your master phase, you can burn 1 pool to get +1 master phase action. Infernal. +1 bleed.",
+  "is_infernal": true
 }

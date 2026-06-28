@@ -21,5 +21,7 @@
     }
   ],
   "needs_review": true,
-  "notes": ""
+  "notes": "",
+  "text": "[COMBAT] [2 CONVICTION] Only usable before strikes are chosen.\nBurn this card. The opposing monster takes an amount of damage equal to his or her strength, then combat ends. Not usable on an infernal minion, a vampire with capacity above 7, nor a vampire who has Memories of Mortality or Humanitas.",
+  "is_infernal": true
 }

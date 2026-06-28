@@ -7,5 +7,7 @@
   "modifiers": {},
   "default_strike": null,
   "needs_review": true,
-  "notes": ""
+  "notes": "",
+  "text": "Demon with 5 life. 3 strength, 1 bleed, flight [FLIGHT]. Infernal.\nHerald of Topheth can play cards requiring basic Daimoinon [dai], basic Potence [pot] and/or basic Presence [pre] as a vampire with capacity 5. It can enter combat with a minion as a Ⓓ action. If it has 4 or fewer life during your unlock phase, it gains 1 life.",
+  "is_infernal": true
 }

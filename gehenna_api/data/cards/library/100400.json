@@ -39,5 +39,7 @@
   },
   "default_strike": null,
   "needs_review": true,
-  "notes": ""
+  "notes": "",
+  "text": "+1 stealth action. Condemnation.\n[chi] Ⓓ Lock a younger vampire.\n[dai] Requires an infernal vampire. Ⓓ Put this card on a ready vampire. The attached vampire gets -3 votes. Burn all other condemnation cards on this minion.\n[DAI] As [dai] above, and the attached vampire burns 1 blood after a referendum passes.",
+  "is_infernal": true
 }

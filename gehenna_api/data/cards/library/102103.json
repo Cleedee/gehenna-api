@@ -9,5 +9,7 @@
   },
   "default_strike": null,
   "needs_review": false,
-  "notes": "Ally - plain text ally"
+  "notes": "Ally - plain text ally",
+  "text": "Unique mage with 2 life. 1 strength, 2 bleed. Requires an infernal vampire.\nVeneficti has +1 stealth. He can steal a demon ally or burn a demon retainer as a Ⓓ action. He cannot be the target of a directed action performed by an ally or a vampire with capacity 6 or less.",
+  "is_infernal": true
 }

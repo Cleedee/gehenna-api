@@ -9,5 +9,7 @@
   },
   "default_strike": null,
   "needs_review": false,
-  "notes": "Juliet's Dream deck"
+  "notes": "Juliet's Dream deck",
+  "text": "+1 stealth action.\nPut this card with X ritual counters on this Baali, where X is this Baali's capacity. This Baali can put 1 ritual counter on this card as a +1 stealth action. If this card has 11 or more ritual counters, move this card to your ready region, burn this Baali and choose three Disciplines; this card becomes a 9-capacity unique clanless Independent infernal vampire with 4 strength, 3 bleed, the chosen three Disciplines at the superior level and 9 blood who can enter combat with a minion as a Ⓓ action and can prevent 1 damage each combat.",
+  "is_infernal": true
 }

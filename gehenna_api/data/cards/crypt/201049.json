@@ -9,5 +9,7 @@
   },
   "default_strike": null,
   "needs_review": true,
-  "notes": ""
+  "notes": "",
+  "text": "Independent: While Nergal is acting, reaction cards cost +1 blood. During an action, he can burn 1 blood to get +1 stealth. Infernal.",
+  "is_infernal": true
 }

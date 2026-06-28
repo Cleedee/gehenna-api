@@ -9,5 +9,7 @@
   },
   "default_strike": null,
   "needs_review": true,
-  "notes": ""
+  "notes": "",
+  "text": "Independent: If Cybele is unlocked at the start of your master phase, you get +1 master phase action. She can bleed with +2 bleed as a Ⓓ action that costs 1 blood. Infernal.",
+  "is_infernal": true
 }

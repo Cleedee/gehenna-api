@@ -7,5 +7,7 @@
   "modifiers": {},
   "default_strike": null,
   "needs_review": true,
-  "notes": ""
+  "notes": "",
+  "text": "Advanced, Sabbat. Red List: If Valerius attempts to block, the acting minion cannot play action modifier or combat cards that require Chimerstry [chi] or Obfuscate [obf]. Infernal.\n[MERGED] Independent: Valerius becomes non-infernal and non-Red List as he merges. While merged, his capacity is reduced by 2.",
+  "is_infernal": true
 }

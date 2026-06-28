@@ -71,5 +71,7 @@
   },
   "default_strike": null,
   "needs_review": true,
-  "notes": ""
+  "notes": "",
+  "text": "+1 stealth action.\n[ser] Ⓓ Bleed. If more than 1 pool is bled with this action, ignore the excess.\n[dai] Requires an infernal vampire. Put this card on this vampire. This vampire treats aggravated damage as normal damage and gets +1 strength and -1 stealth.\n[DAI] As [dai] above, and this vampire gets flight [FLIGHT]. During your influence phase, this vampire can burn 1 blood to unlock.",
+  "is_infernal": true
 }

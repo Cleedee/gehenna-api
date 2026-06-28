@@ -39,5 +39,7 @@
   "modifiers": {},
   "default_strike": null,
   "needs_review": true,
-  "notes": ""
+  "notes": "",
+  "text": "Demon with 2 life.\n[tha] The vampire with this retainer can play a card that requires a Discipline he or she does not have as if he or she had the basic level of that Discipline; if he or she does so, place an investment counter on the Infernal Familiar. If the number of investment counters on the Familiar is greater than this vampire's capacity, burn this vampire.",
+  "is_infernal": true
 }

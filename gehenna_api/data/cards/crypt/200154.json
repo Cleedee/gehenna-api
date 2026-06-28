@@ -7,5 +7,7 @@
   "modifiers": {},
   "default_strike": null,
   "needs_review": true,
-  "notes": ""
+  "notes": "",
+  "text": "Independent: Actions to put vampires in play cost Azaneal -1 blood or pool. Infernal.",
+  "is_infernal": true
 }
