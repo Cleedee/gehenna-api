@@ -8,9 +8,6 @@
 <form method="POST" class="mb-4">
     {{ form.hidden_tag() }}
     <div class="mb-3">
-        <input type="hidden" name="moviment_id" value="{{ moviment_id }}">
-    </div>
-    <div class="mb-3">
         {{ form.card_id.label(class="form-label") }}
         {{ form.card_id(class="form-control", required=True) }}
     </div>

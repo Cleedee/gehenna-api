@@ -4,6 +4,22 @@
 
 FastAPI REST API for managing V:TES (Vampire: The Eternal Struggle) card collections and decks.
 
+## Documentation
+
+Full documentation is in `docs/`:
+- `docs/index.md` — Documentation index
+- `docs/getting-started.md` — Installation and setup
+- `docs/architecture.md` — System architecture
+- `docs/api-reference.md` — REST API endpoints
+- `docs/web-ui.md` — Flask web interface
+- `docs/game-engine.md` — V:TES game engine
+- `docs/krcg-integration.md` — KRCG resources integration
+- `docs/rules/` — V:TES game rules (English)
+- `docs/development.md` — Development checklists
+- `docs/changelog.md` — Version history
+- `docs/dev-notes.md` — Developer notes
+- `docs/raw/` — PDFs for extraction to Markdown
+
 ## Developer Commands
 
 ```bash
@@ -17,9 +33,8 @@ task test       # Run pytest with coverage
 
 # Bot simulation (requires API running on port 8002)
 task simulate   # Bot vs bot simulation
-uv run python -m gehenna_api.engine.cli simulate 1 --players 2 --turns 20
-uv run python -m gehenna_api.engine.cli simulate 1 --players 2 --turns 20 --seed 42   # Reproduzível
-uv run python -m gehenna_api.engine.cli list-decks
+python -m gehenna_api.engine.cli simulate 1 --players 2 --turns 20
+python -m gehenna_api.engine.cli simulate 1 --players 2 --turns 20 --seed 42
 
 # Deck management
 python scripts/manage_decks.py list          # List all decks
@@ -34,7 +49,7 @@ python scripts/validate_cards.py             # Validate all decks
 python scripts/validate_cards.py -c          # Critical cards only
 python scripts/validate_cards.py -v          # Verbose output
 
-# Card data overrides (edit):
+# Card data overrides:
 #   gehenna_api/data/cards/manual_overrides.py
 
 # Docker
@@ -71,43 +86,10 @@ docker compose logs -f        # View logs
 - Settings: `gehenna_api/settings.py` (loads `.env`)
 - DB session: `gehenna_api/database.py`
 
-## Trends API
-
-Endpoints for tournament winning deck analysis (TWDA):
-
-- **GET /trends/** - Trends analysis (cards, clans, disciplines, formats)
-  - `limit` - Number of top cards (default 100)
-  - `format` - Filter by tournament format (2R+F, 3R+F)
-  - `year` - Filter by year
-- **GET /trends/recommendations/{username}** - Card recommendations based on user collection
-  - Suggests cards from meta that user needs
-  - Shows gaps (cards user doesn't have)
-
-Cache: `gehenna_api/data/vtes_lookup.json` (card metadata)
-
-## Web UI (gehenna_web)
-
-Flask-based web interface that consumes the REST API.
-
-- **Port**: 5000
-- **Entry point**: `gehenna_web/run.py`
-- **Run command**: `python gehenna_web/run.py`
-- **Templates**: `gehenna_web/templates/` (auth, cards, decks, items, moviments, slots, trends, users)
-- **Static**: `gehenna_web/static/css/style.css`
-- **Routes**: `gehenna_web/routes/` (auth, cards, decks, items, moviments, slots, trends, users)
-- **API Client**: `gehenna_web/services/api_client.py`
-- **Config**: `gehenna_web/config.py`
-
-Note: API must be running on port 8002 for the web UI to work.
-
-### Web Features
-
-- **/trends/recommendations** - Card recommendations based on user's collection vs tournament meta
-  - Shows cards from winning decks user may need
-  - Highlights gaps (cards user doesn't own)
-
 ## Test Users
 
 For automated testing (Playwright, etc.):
 
 - **opencode**: `username=opencode`, `password=test123456`, `id=6`
+
+On the login screen, in the username field, fill in `opencode@example.com`

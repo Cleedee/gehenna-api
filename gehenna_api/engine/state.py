@@ -61,6 +61,8 @@ class GameState(BaseModel):
     # Political system
     current_referendum: Optional[dict] = None
     referendum_results: dict = Field(default_factory=dict)
+    # Track minions that entered torpor this phase (cannot leave torpor same phase)
+    torpor_this_phase: set[str] = Field(default_factory=set)
     # Seeded random generator for reproducibility
     _rng: _random_module.Random = PrivateAttr()
 
@@ -112,10 +114,23 @@ class GameState(BaseModel):
                 CardPosition.in_play,
                 CardPosition.attached,
             )
+            and c.id.startswith(f'p{player_id}_')
         ]
 
     def ready_minions(self, player_id: int) -> list[CardInstance]:
         return [c for c in self.cards.values() if c.is_ready]
+
+    def mark_torpor_this_phase(self, card_id: str) -> None:
+        """Mark a minion as having entered torpor this phase."""
+        self.torpor_this_phase.add(card_id)
+
+    def can_leave_torpor(self, card_id: str) -> bool:
+        """Check if a vampire can leave torpor (must not have entered torpor this phase)."""
+        return card_id not in self.torpor_this_phase
+
+    def clear_torpor_tracking(self) -> None:
+        """Clear torpor tracking at the start of each unlock phase."""
+        self.torpor_this_phase.clear()
 
     def next_player(self) -> None:
         self.current_player_index = (self.current_player_index + 1) % len(

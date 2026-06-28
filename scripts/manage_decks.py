@@ -249,11 +249,123 @@ def cmd_search(args):
     print()
 
 
-def cmd_from_db(args):
-    """Rebuild deck JSON from the database (one-time conversion)."""
-    print(f'  Rebuilding deck #{args.deck_id} from database...')
+def _get_db_session():
+    """Get a database session, with fallback."""
+    try:
+        from gehenna_api.database import get_session
+        return next(get_session())
+    except Exception:
+        from sqlalchemy import create_engine
+        from sqlalchemy.orm import Session
+        from gehenna_api.settings import Settings
+        settings = Settings()
+        engine = create_engine(settings.database_url)
+        return Session(engine)
 
-    # Ensure project modules are importable
+
+def _ensure_card_json(card, session=None) -> str:
+    """
+    Ensure the card's JSON file exists. If missing, generate it from DB data.
+    Returns the relative card_path.
+    """
+    codevdb = card.codevdb or 0
+    is_vampire = card.tipo.strip().lower().startswith('vampire') or card.tipo == 'Imbued'
+
+    if is_vampire:
+        card_dir = os.path.join(os.path.dirname(__file__), '..', 'gehenna_api', 'data', 'cards', 'crypt')
+        card_path = f'gehenna_api/data/cards/crypt/{codevdb}.json'
+    else:
+        card_dir = os.path.join(os.path.dirname(__file__), '..', 'gehenna_api', 'data', 'cards', 'library')
+        card_path = f'gehenna_api/data/cards/library/{codevdb}.json'
+
+    abs_path = os.path.join(os.path.dirname(__file__), '..', card_path)
+    if os.path.exists(abs_path):
+        return card_path  # already exists
+
+    # Generate card JSON from DB data
+    os.makedirs(card_dir, exist_ok=True)
+
+    # Try to parse modifiers from card text
+    modifiers = {}
+    bleed_val = 0
+    stealth_val = 0
+    intercept_val = 0
+    try:
+        sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+        from gehenna_api.engine.cardtext import parse_card_text
+        parsed = parse_card_text(
+            name=card.name or '',
+            tipo=card.tipo or '',
+            text=card.text or '',
+            disciplines=card.disciplines or '',
+        )
+        modifiers = dict(parsed.modifiers)
+        bleed_val = modifiers.get('bleed', 0)
+        stealth_val = modifiers.get('stealth', 0)
+        intercept_val = modifiers.get('intercept', 0)
+    except Exception:
+        pass
+
+    if bleed_val:
+        modifiers['bleed'] = bleed_val
+    if stealth_val:
+        modifiers['stealth'] = stealth_val
+    if intercept_val:
+        modifiers['intercept'] = intercept_val
+
+    card_json = {
+        'codevdb': codevdb,
+        'name': card.name or '',
+        'tipo': card.tipo or '',
+        'source': 'DB export',
+        'abilities': [],
+        'modifiers': modifiers,
+        'default_strike': None,
+        'needs_review': True,
+        'notes': 'Auto-generated from DB — check abilities/modifiers',
+    }
+
+    with open(abs_path, 'w', encoding='utf-8') as f:
+        json.dump(card_json, f, indent=2, ensure_ascii=False)
+        f.write('\n')
+    print(f'    📝  Generated card JSON: {card_path}')
+    return card_path
+
+
+def cmd_list_db(args):
+    """List all decks in the database."""
+    sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+    from gehenna_api.models.deck import Deck as DeckModel
+    from gehenna_api.models.slot import Slot
+    from sqlalchemy import select, func
+
+    session = _get_db_session()
+    decks = session.scalars(select(DeckModel).order_by(DeckModel.id)).all()
+
+    print(f'\n{"ID":>5}  {"Name":50} {"Cards":>5}  {"Author":20}  {"Exists"}')
+    print(f'{"─"*5}  {"─"*50} {"─"*5}  {"─"*20}  {"─"*6}')
+
+    for deck in decks:
+        # Count slots (total quantity of cards in deck)
+        slots = session.scalars(
+            select(Slot).where(Slot.deck_id == deck.id)
+        ).all()
+        total_cards = sum(s.quantity for s in slots) if slots else 0
+
+        deck_path = os.path.join(DECK_DIR, f'{deck.id}.json')
+        exists = '✅' if os.path.exists(deck_path) else '—'
+
+        print(f'{deck.id:>5}  {deck.name or "(no name)":50} {total_cards:>5}  '
+              f'{deck.creator or "?":20}  {exists}')
+
+    session.close()
+    print()
+
+
+def cmd_from_db(args):
+    """Export (or re-export) a deck from database to deck JSON + card JSONs."""
+    print(f'  Exporting deck #{args.deck_id} from database...')
+
     sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
     try:
@@ -265,40 +377,37 @@ def cmd_from_db(args):
 
     from sqlalchemy import select
 
-    try:
-        from gehenna_api.database import get_session
-        session = next(get_session())
-    except Exception:
-        # Fallback: try sync session
-        from sqlalchemy import create_engine
-        from sqlalchemy.orm import Session
-        from gehenna_api.settings import Settings
-        settings = Settings()
-        engine = create_engine(settings.database_url)
-        session = Session(engine)
+    session = _get_db_session()
 
     deck = session.scalar(select(DeckModel).where(DeckModel.id == args.deck_id))
     if not deck:
         print(f'❌ Deck #{args.deck_id} not found in database')
+        session.close()
         sys.exit(1)
 
     slots = session.scalars(select(Slot).where(Slot.deck_id == args.deck_id)).all()
 
+    if not slots:
+        print(f'⚠️  Deck #{args.deck_id} has no cards (slots)')
+
     cards = []
+    missing_card_jsons = 0
     for slot in slots:
         card = slot.card
         codevdb = card.codevdb or 0
-        is_vampire = card.tipo.strip().lower().startswith('vampire') or card.tipo == 'Imbued'
 
-        if is_vampire:
-            card_path = f'gehenna_api/data/cards/crypt/{codevdb}.json'
-        else:
-            card_path = f'gehenna_api/data/cards/library/{codevdb}.json'
+        # Generate card JSON if missing
+        card_path = _ensure_card_json(card, session)
+
+        # Check if card JSON exists after ensuring
+        abs_card_path = os.path.join(os.path.dirname(__file__), '..', card_path)
+        if not os.path.exists(abs_card_path):
+            missing_card_jsons += 1
 
         entry = {
             'codevdb': codevdb,
             'name': card.name,
-            'tipo': card.tipo,
+            'tipo': _normalize_tipo(card.tipo),
             'quantity': slot.quantity,
             'needs_review': False,
             'notes': '',
@@ -309,16 +418,31 @@ def cmd_from_db(args):
     deck_data = {
         'deck_id': deck.id,
         'name': deck.name or '',
-        'creator': deck.author or '',
-        'date': deck.created_at.strftime('%Y-%m-%d') if deck.created_at else '',
-        'format': deck.format or '',
+        'creator': deck.creator or '',
+        'date': deck.created.strftime('%Y-%m-%d') if deck.created else '',
+        'format': deck.tipo or '',
         'description': deck.description or '',
         'all_reviewed': False,
         'cards': cards,
     }
 
+    path = os.path.join(DECK_DIR, f'{args.deck_id}.json')
+    if os.path.exists(path):
+        print(f'  ⚠️  Overwriting existing {path}')
+
     _save_deck_json(args.deck_id, deck_data)
-    print(f'  ✅  {len(cards)} cards exported from DB')
+
+    notes = []
+    if missing_card_jsons:
+        notes.append(f'{missing_card_jsons} cards with missing JSON files')
+    if any(c.get('needs_review') for c in cards):
+        notes.append('some cards need review')
+
+    print(f'  ✅  Exported {len(cards)} cards to {path}')
+    if notes:
+        print(f'  ℹ️  {", ".join(notes)}. Run validate_cards.py to check.')
+
+    session.close()
 
 
 def main():
@@ -330,7 +454,8 @@ def main():
     sub = parser.add_subparsers(dest='command')
 
     # list
-    p = sub.add_parser('list', help='List all decks')
+    p = sub.add_parser('list', help='List all decks from JSON files')
+    p = sub.add_parser('list-db', help='List all decks from database')
 
     # show
     p = sub.add_parser('show', help='Show deck contents')
@@ -365,6 +490,7 @@ def main():
 
     command_map = {
         'list': cmd_list,
+        'list-db': cmd_list_db,
         'show': cmd_show,
         'add': cmd_add,
         'remove': cmd_remove,

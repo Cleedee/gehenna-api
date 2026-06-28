@@ -1,8 +1,10 @@
-# Análise KRCG - Recursos Disponíveis e Insights
+# KRCG - Integração
+
+Recursos e integração com o KRCG (Kindle Reader Card Generator).
 
 ## Visão Geral
 
-O KRCG (Kindle Reader Card Generator / V:TES Companion) fornece recursos estáticos e API para desenvolvimento de aplicações V:TES (Vampire: The Eternal Struggle).
+O KRCG fornece recursos estáticos e API para desenvolvimento de aplicações V:TES.
 
 - **Site Estático**: https://static.krcg.org/
 - **API**: https://api.krcg.org/
@@ -242,6 +244,25 @@ https://static.krcg.org/web/krcg.js
 - **Cache Busting**:
   - Fragment identifier: `card/fame.jpg#2022-01-25-14`
   - Prefix: `https://static.krcg.org/bust/2022012514/card/fame.jpg`
+
+---
+
+## Como Usar no Projeto
+
+### Imagens de Cartas
+URL base: `https://static.krcg.org/card/{nome}.webp`
+
+Usado em:
+- [Web UI](web-ui.md) — exibição de imagens
+- [API Reference](api-reference.md) — campo `image_url`
+
+### Dados JSON
+- `vtes.json` — todas as cartas com rulings
+- `twda.json` — decks vencedores
+
+Usado em:
+- [API Reference](api-reference.md) — endpoint `/trends/`
+- [Game Engine](game-engine.md) — base de dados de cartas
 
 ---
 

@@ -112,6 +112,7 @@ def _make_card_instance(
 
     # Enrich with data from card JSON files + manual overrides
     # JSON/override data takes precedence over text parsing
+    special_effects: list[str] = []
     try:
         from gehenna_api.engine.card_loader import load_card
         enriched = load_card(card_data.get('codevdb', 0))
@@ -122,6 +123,7 @@ def _make_card_instance(
                 stealth_value = enriched.modifiers['stealth']
             if enriched.modifiers.get('intercept', 0) != 0:
                 intercept_value = enriched.modifiers['intercept']
+            special_effects = enriched.special_effects
     except Exception:
         pass
 
@@ -136,6 +138,7 @@ def _make_card_instance(
         stealth=stealth_value,
         intercept=intercept_value,
         bleed=bleed_value,
+        special_effects=special_effects,
     )
 
 
@@ -157,6 +160,9 @@ def _build_pool(cards: list[dict], prefix: str, rng: random.Random) -> list[Card
 
 @router.post('/new')
 def create_game(req: CreateGameRequest) -> dict:
+    # Clear any stale game state from previous connections
+    games.clear()
+    connections.clear()
     game_id = str(uuid.uuid4())[:8]
     state = GameState(game_id=game_id, seed=req.seed)
     rng = state.random
@@ -251,7 +257,7 @@ def run_turn(game_id: str) -> dict:
         'turn': engine.state.turn_number,
         'player': engine.state.current_player_id,
         'phase': engine.state.current_phase.value,
-        'winner': winner.id if winner else None,
+        'winner': winner,
     }
 
 

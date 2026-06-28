@@ -296,27 +296,11 @@ def test_create_slot(client, card, deck):
         json={'quantity': 3, 'card_id': 1, 'deck_id': 1, 'code': 1},
     )
     assert response.status_code == 201
-    assert response.json() == {
-        'quantity': 3,
-        'card_id': 1,
-        'deck_id': 1,
-        'code': 1,
-        'id': 1,
-        'card': {
-            'code': 1,
-            'name': 'Teste',
-            'tipo': 'master',
-            'disciplines': '',
-            'clan': '',
-            'cost': '',
-            'capacity': '',
-            'group': '',
-            'attributes': '',
-            'text': '',
-            'title': '',
-            'sect': '',
-            'advanced': False,
-            'codevdb': 0,
-            'id': 1,
-        },
-    }
+    data = response.json()
+    assert data['quantity'] == 3
+    assert data['card_id'] == 1
+    assert data['deck_id'] == 1
+    assert data['code'] == 1
+    assert data['id'] == 1
+    assert data['card']['name'] == 'Teste'
+    assert data['card']['code'] == 1

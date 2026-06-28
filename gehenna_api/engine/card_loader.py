@@ -59,6 +59,7 @@ class CardData:
     modifiers: dict[str, int] = field(default_factory=dict)
     default_strike: list[StrikeData] = field(default_factory=list)
     disciplines: list[str] = field(default_factory=list)
+    special_effects: list[str] = field(default_factory=list)
     needs_review: bool = False
     notes: str = ''
 
@@ -128,6 +129,7 @@ def load_card(codevdb: int) -> Optional[CardData]:
         modifiers=dict(raw.get('modifiers', {})),
         default_strike=_parse_strikes(raw.get('default_strike')),
         disciplines=raw.get('disciplines', []),
+        special_effects=list(raw.get('special_effects', [])),
         needs_review=raw.get('needs_review', False),
         notes=raw.get('notes', ''),
     )
@@ -145,6 +147,8 @@ def load_card(codevdb: int) -> Optional[CardData]:
             card.tipo = override['tipo']
         if 'disciplines' in override:
             card.disciplines = override['disciplines']
+        if 'special_effects' in override:
+            card.special_effects = override['special_effects']
 
     return card
 

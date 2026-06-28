@@ -569,4 +569,16 @@ MANUAL_OVERRIDES = {
                           'text': 'Gain +1 transfer.'}]},
         ],
     },
+
+    # ═══════════════════════════════════════════════════════════════
+    # VAMPIRES — Special Abilities
+    # ═══════════════════════════════════════════════════════════════
+
+    201411: {  # The Unnamed (G6) — Baali, 10 cap
+        'disciplines': ['CEL', 'DAI', 'OBF', 'PRE', 'PRO'],
+        'special_effects': [
+            'strike_blood_for_aggravated',
+            'bleed_gain_pool',
+        ],
+    },
 }

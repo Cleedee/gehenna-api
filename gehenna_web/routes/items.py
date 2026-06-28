@@ -1,4 +1,4 @@
-from flask import Blueprint, flash, redirect, render_template, request, session, url_for
+from flask import Blueprint, flash, redirect, render_template, request, url_for
 from flask_wtf import FlaskForm
 from wtforms import IntegerField, SubmitField
 from wtforms.validators import DataRequired
@@ -10,7 +10,6 @@ bp = Blueprint('items', __name__, url_prefix='/items')
 
 
 class ItemForm(FlaskForm):
-    moviment_id = IntegerField('Moviment ID', validators=[DataRequired()])
     card_id = IntegerField('Card ID', validators=[DataRequired()])
     quantity = IntegerField('Quantity', validators=[DataRequired()])
     code = IntegerField('Code')
@@ -34,7 +33,7 @@ def create(moviment_id):
     form = ItemForm()
     if form.validate_on_submit():
         data = {
-            'moviment_id': form.moviment_id.data,
+            'moviment_id': moviment_id,
             'card_id': form.card_id.data,
             'quantity': form.quantity.data,
             'code': form.code.data or 0,
@@ -60,7 +59,6 @@ def edit(item_id):
 
     if request.method == 'GET' and response.status_code == 200:
         item = response.json()
-        form.moviment_id.data = item.get('moviment_id')
         form.card_id.data = item.get('card_id')
         form.quantity.data = item.get('quantity')
         form.code.data = item.get('code')

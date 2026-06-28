@@ -1,6 +1,6 @@
-from flask import Blueprint, flash, redirect, render_template, request, session, url_for
+from flask import Blueprint, flash, redirect, render_template, request, url_for
 from flask_wtf import FlaskForm
-from wtforms import IntegerField, SelectField, StringField, SubmitField
+from wtforms import IntegerField, SubmitField
 from wtforms.validators import DataRequired
 
 from gehenna_web.routes.auth import login_required
@@ -10,7 +10,6 @@ bp = Blueprint('slots', __name__, url_prefix='/slots')
 
 
 class SlotForm(FlaskForm):
-    deck_id = IntegerField('Deck ID', validators=[DataRequired()])
     card_id = IntegerField('Card ID', validators=[DataRequired()])
     quantity = IntegerField('Quantity', validators=[DataRequired()])
     code = IntegerField('Code')
@@ -34,11 +33,11 @@ def create(deck_id):
     form = SlotForm()
     if form.validate_on_submit():
         data = {
-            'deck_id': form.deck_id.data,
+            'deck_id': deck_id,
             'card_id': form.card_id.data,
             'quantity': form.quantity.data,
             'code': form.code.data or 0,
-        }
+ }
         response = api_client.create_slot(data)
         if response.status_code == 201:
             flash('Card added to deck', 'success')
@@ -60,7 +59,6 @@ def edit(slot_id):
 
     if request.method == 'GET' and response.status_code == 200:
         slot = response.json()
-        form.deck_id.data = slot.get('deck_id')
         form.card_id.data = slot.get('card_id')
         form.quantity.data = slot.get('quantity')
         form.code.data = slot.get('code')

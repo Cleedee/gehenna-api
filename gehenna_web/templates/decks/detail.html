@@ -9,6 +9,9 @@
         <h3>{{ deck.name }}</h3>
         <div>
             <a href="{{ url_for('slots.list', deck_id=deck.id) }}" class="btn btn-info btn-sm">Cards</a>
+            {% if session.username and session.user_id == deck.owner_id %}
+            <a href="{{ url_for('slots.create', deck_id=deck.id) }}" class="btn btn-success btn-sm">Add Card</a>
+            {% endif %}
             {% if session.username %}
             <a href="{{ url_for('decks.missing_cards', deck_id=deck.id) }}" class="btn btn-primary btn-sm">Missing Cards</a>
             {% if session.user_id == deck.owner_id %}

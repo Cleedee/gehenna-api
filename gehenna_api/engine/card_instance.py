@@ -51,6 +51,10 @@ class CardInstance(BaseModel):
     additional_strikes: int = 0
     first_strike: bool = False
     ranged: bool = False
+    # Special abilities (vampire-specific effects)
+    special_effects: list[str] = Field(default_factory=list)
+    # Track once-per-turn abilities
+    abilities_used_this_turn: set[str] = Field(default_factory=set)
 
     def lock(self) -> None:
         self.locked = True
@@ -64,7 +68,16 @@ class CardInstance(BaseModel):
         return added
 
     def take_damage(self, amount: int, aggravated: bool = False) -> int:
+        # Vampires in torpor can be destroyed by aggravated damage
         if self.position == CardPosition.torpor:
+            if aggravated:
+                # Aggravated damage to wounded vampire: burn blood to avoid destruction
+                blood_to_burn = min(amount, self.blood)
+                self.blood -= blood_to_burn
+                if self.blood <= 0:
+                    # Vampire is burned (destroyed)
+                    self.position = CardPosition.ash_heap
+                return amount
             return 0
         can_mend = 0 if aggravated else min(self.blood, amount)
         self.blood -= can_mend

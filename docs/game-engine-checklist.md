@@ -47,7 +47,7 @@
 - ✅ Diablerie (steal blood, burn victim, +1 cap if victim older)
 
 ### 5.2 Action Card Actions (require card in hand)
-- ✅ Equip (attach equipment, costs blood)
+- 🔄 Equip (attach equipment, costs blood or pool)
 - ✅ Employ Retainer (attach retainer with life, costs blood)
 - ✅ Recruit Ally (create ally in ready, locked first turn, costs blood)
 - ✅ Political Action (call referendum, costs blood)
