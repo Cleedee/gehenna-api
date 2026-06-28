@@ -525,12 +525,18 @@ MANUAL_OVERRIDES = {
         ],
     },
 
-    102121: {  # Villein
+    102121: {  # Villein (Trifle)
         'modifiers': {},
         'abilities': [
             {'disciplines': [], 'context': 'MASTER',
-             'effects': [{'function': 'master.blood', 'params': {},
-                          'text': 'Take blood from a vampire and add to pool.'}]},
+             'effects': [
+                 {'function': 'master.blood', 'params': {'min_blood': 2},
+                  'text': 'Put this card on a vampire you control and move 2+ blood to your pool.'},
+                 {'function': 'master.minion_tap_penalty', 'params': {},
+                  'text': 'Minion Tap cards cost an additional pool on this vampire.'},
+                 {'function': 'master.play_cost_penalty', 'params': {'extra_pool': 1},
+                  'text': 'Villein costs an additional pool to play on this vampire.'},
+             ]},
         ],
     },
 

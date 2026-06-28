@@ -3,9 +3,22 @@
   "name": "Villein",
   "tipo": "master",
   "source": "cardbase_lib.json",
-  "abilities": [],
+  "abilities": [
+    {
+      "disciplines": [],
+      "context": "MASTER",
+      "effects": [
+        {
+          "function": "master.blood",
+          "params": {"min_blood": 2},
+          "text": "Put this card on a vampire you control and move 2 or more blood from that vampire to your pool."
+        }
+      ]
+    }
+  ],
   "modifiers": {},
   "default_strike": null,
+  "is_unique": true,
   "needs_review": false,
-  "notes": "Master - plain text, blood management"
+  "notes": "Master - Trifle. Put on vampire, move 2+ blood to pool. Minion Tap costs +1 pool. Villein costs +1 pool to play on this vampire."
 }
