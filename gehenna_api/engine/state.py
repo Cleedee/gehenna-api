@@ -137,6 +137,45 @@ class GameState(BaseModel):
             self.active_players
         )
 
+    def get_cards_in_play(self, player_id: int) -> list['CardInstance']:
+        """Get all cards in play for a player (ready, torpor, in_play, attached)."""
+        prefix = f'p{player_id}_'
+        return [
+            c for c in self.cards.values()
+            if c.id.startswith(prefix)
+            and c.position in (
+                'ready', 'torpor', 'in_play', 'attached'
+            )
+        ]
+
+    def get_all_cards_in_play(self) -> list['CardInstance']:
+        """Get all cards in play across all players."""
+        return [
+            c for c in self.cards.values()
+            if c.position in (
+                'ready', 'torpor', 'in_play', 'attached'
+            )
+        ]
+
+    def can_play_unique(self, card: 'CardInstance') -> bool:
+        """Check if a unique card can be played (no same-named card in play)."""
+        if not card.is_unique:
+            return True
+        # Check if any card with same name is already in play
+        for c in self.get_all_cards_in_play():
+            if c.id != card.id and c.name.lower() == card.name.lower():
+                return False
+        return True
+
+    def mark_card_in_play(self, card: 'CardInstance') -> None:
+        """Mark a card as in play and handle unique contestation."""
+        if card.is_unique:
+            # Find any existing card with same name and contest it
+            for c in self.get_all_cards_in_play():
+                if c.id != card.id and c.name.lower() == card.name.lower():
+                    c.position = 'contested'
+                    card.position = 'contested'
+
     @property
     def active_players(self) -> list[PlayerState]:
         return [p for p in self.players if not p.is_ousted]

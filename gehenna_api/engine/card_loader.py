@@ -60,6 +60,7 @@ class CardData:
     default_strike: list[StrikeData] = field(default_factory=list)
     disciplines: list[str] = field(default_factory=list)
     special_effects: list[str] = field(default_factory=list)
+    is_unique: bool = False
     needs_review: bool = False
     notes: str = ''
 
@@ -130,6 +131,7 @@ def load_card(codevdb: int) -> Optional[CardData]:
         default_strike=_parse_strikes(raw.get('default_strike')),
         disciplines=raw.get('disciplines', []),
         special_effects=list(raw.get('special_effects', [])),
+        is_unique=raw.get('is_unique', False),
         needs_review=raw.get('needs_review', False),
         notes=raw.get('notes', ''),
     )

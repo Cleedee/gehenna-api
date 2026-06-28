@@ -55,6 +55,8 @@ class CardInstance(BaseModel):
     special_effects: list[str] = Field(default_factory=list)
     # Track once-per-turn abilities
     abilities_used_this_turn: set[str] = Field(default_factory=set)
+    # Unique card flag (contests with same-named cards)
+    is_unique: bool = False
 
     def lock(self) -> None:
         self.locked = True
