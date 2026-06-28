@@ -61,6 +61,7 @@ class CardData:
     disciplines: list[str] = field(default_factory=list)
     special_effects: list[str] = field(default_factory=list)
     is_unique: bool = False
+    is_infernal: bool = False
     needs_review: bool = False
     notes: str = ''
 
@@ -100,6 +101,13 @@ def _is_non_unique_vampire(name: str) -> bool:
     if not name:
         return False
     return name in NON_UNIQUE_VAMPIRES or 'Horde' in name
+
+
+def _is_infernal(text: str) -> bool:
+    """Check if card has the Infernal trait."""
+    if not text:
+        return False
+    return 'infernal' in text.lower()
 
 
 def _parse_abilities(raw: list) -> list[CardAbility]:
@@ -168,6 +176,7 @@ def load_card(codevdb: int) -> Optional[CardData]:
         disciplines=raw.get('disciplines', []),
         special_effects=list(raw.get('special_effects', [])),
         is_unique=is_unique,
+        is_infernal=_is_infernal(raw.get('text', '')),
         needs_review=raw.get('needs_review', False),
         notes=raw.get('notes', ''),
     )

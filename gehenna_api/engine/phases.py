@@ -207,11 +207,32 @@ class PhaseManager:
         )
 
     def execute_unlock(self) -> None:
+        player = self.state.current_player
+        
         for card in self.state.cards.values():
             if card.position == CardPosition.ready:
-                card.locked = False
+                # Infernal minions do not unlock normally
+                # Controller must burn 1 pool to unlock them
+                if card.is_infernal:
+                    # Auto-unlock Infernal if player has pool (bot behavior)
+                    # In real game, player chooses whether to pay
+                    if player and player.pool > 0:
+                        player.pool -= 1
+                        card.locked = False
+                        self._log_action(
+                            player,
+                            f'{card.name} unlocks (Infernal, burned 1 pool)',
+                        )
+                        self.events.emit(
+                            GameEvent(
+                                type=EventType.pool_changed,
+                                player_id=player.id,
+                                data={'delta': -1, 'reason': 'infernal_unlock'},
+                            )
+                        )
+                else:
+                    card.locked = False
 
-        player = self.state.current_player
         if player:
             # Player with Edge gains 1 pool from blood bank
             if player.has_edge:

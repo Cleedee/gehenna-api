@@ -6,6 +6,9 @@
   "abilities": [],
   "modifiers": {},
   "default_strike": null,
+  "is_unique": true,
+  "is_infernal": true,
+  "text": "Independent: The unnamed can burn 1 blood to strike: 2R aggravated damage. After it successfully bleeds, you can gain 2 pool. Infernal.",
   "needs_review": false,
   "notes": "Vampire - plain text"
 }

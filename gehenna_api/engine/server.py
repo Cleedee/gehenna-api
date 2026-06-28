@@ -124,8 +124,9 @@ def _make_card_instance(
             if enriched.modifiers.get('intercept', 0) != 0:
                 intercept_value = enriched.modifiers['intercept']
             special_effects = enriched.special_effects
+            is_infernal = enriched.is_infernal
     except Exception:
-        pass
+        is_infernal = False
 
     return CardInstance(
         id=f'{prefix}_{card_data["id"]}_{card_index}',
@@ -139,6 +140,7 @@ def _make_card_instance(
         intercept=intercept_value,
         bleed=bleed_value,
         special_effects=special_effects,
+        is_infernal=is_infernal,
     )
 
 
