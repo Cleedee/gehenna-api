@@ -62,6 +62,7 @@ class CardData:
     special_effects: list[str] = field(default_factory=list)
     is_unique: bool = False
     is_infernal: bool = False
+    master_type: str | None = None
     needs_review: bool = False
     notes: str = ''
 
@@ -177,6 +178,7 @@ def load_card(codevdb: int) -> Optional[CardData]:
         special_effects=list(raw.get('special_effects', [])),
         is_unique=is_unique,
         is_infernal=_is_infernal(raw.get('text', '')),
+        master_type=raw.get('master_type', None),
         needs_review=raw.get('needs_review', False),
         notes=raw.get('notes', ''),
     )
@@ -196,6 +198,8 @@ def load_card(codevdb: int) -> Optional[CardData]:
             card.disciplines = override['disciplines']
         if 'special_effects' in override:
             card.special_effects = override['special_effects']
+        if 'master_type' in override:
+            card.master_type = override['master_type']
 
     return card
 

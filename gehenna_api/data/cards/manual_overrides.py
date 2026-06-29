@@ -516,8 +516,9 @@ MANUAL_OVERRIDES = {
     # Masters are played generically in the engine (pay cost, put in ash heap).
     # The overrides below are for future use when specific master effects are implemented.
 
-    100588: {  # Dreams of the Sphinx
+    100588: {  # Dreams of the Sphinx (permanent)
         'modifiers': {},
+        'master_type': 'permanent',
         'abilities': [
             {'disciplines': [], 'context': 'MASTER',
              'effects': [{'function': 'master.draw', 'params': {},
@@ -525,8 +526,9 @@ MANUAL_OVERRIDES = {
         ],
     },
 
-    102121: {  # Villein (Trifle)
+    102121: {  # Villein (Trifle, attached to vampire)
         'modifiers': {},
+        'master_type': 'attached',
         'abilities': [
             {'disciplines': [], 'context': 'MASTER',
              'effects': [

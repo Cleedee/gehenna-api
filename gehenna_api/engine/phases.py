@@ -334,12 +334,49 @@ class PhaseManager:
             return
 
         self._log_action(player, f'master: {inst.name}')
-        self._play_card(player, inst, 'ash_heap')
+
+        # Determine master placement based on master_type
+        master_type = getattr(inst, 'master_type', None)
+        if master_type == 'attached':
+            # Attach to a vampire (e.g., Villein, Blood Doll)
+            target = self._choose_attachment_target(player, inst)
+            if target:
+                inst.attached_to = target.id
+                target.attachments.append(inst.id)
+                inst.position = 'attached'
+                self._log_action(player, f'{inst.name} attached to {target.name}')
+            else:
+                # No valid target, burn the card
+                inst.position = 'ash_heap'
+                self._log_action(player, f'{inst.name} burned (no valid target)')
+        elif master_type == 'permanent':
+            # Permanent master stays in ready region
+            inst.position = 'ready'
+            self._log_action(player, f'{inst.name} in play (permanent)')
+        else:
+            # Default: burn after effect
+            self._play_card(player, inst, 'ash_heap')
 
         # Trifle: gain +1 master phase action only if it's the FIRST master card played
         if _is_trifle(inst) and not master_card_played:
             player.master_actions += 1
             self._log_action(player, 'trifle: +1 master action')
+
+    def _choose_attachment_target(self, player: PlayerState, inst: CardInstance) -> CardInstance | None:
+        """Choose a target minion for an attached master card."""
+        # Find ready vampires the player controls
+        targets = [
+            c for c in self.state.get_cards_in_play(player.id)
+            if c.is_ready and c.tipo in ('Vampire', 'vampire', 'Imbued')
+        ]
+        if not targets:
+            return None
+        # Prefer vampires without attachments
+        for t in targets:
+            if not t.attachments:
+                return t
+        # Otherwise use first available
+        return targets[0]
 
     # ── Minion phase ───────────────────────────────────────────────
 

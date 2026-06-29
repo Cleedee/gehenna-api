@@ -141,6 +141,7 @@ def _make_card_instance(
         bleed=bleed_value,
         special_effects=special_effects,
         is_infernal=is_infernal,
+        master_type=enriched.master_type,
     )
 
 

@@ -59,6 +59,8 @@ class CardInstance(BaseModel):
     is_unique: bool = False
     # Infernal trait (does not unlock normally, costs 1 pool to unlock)
     is_infernal: bool = False
+    # Master card type: 'permanent', 'attached', or None (burned after effect)
+    master_type: str | None = None
 
     def lock(self) -> None:
         self.locked = True
