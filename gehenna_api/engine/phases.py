@@ -293,12 +293,23 @@ class PhaseManager:
         """Check if a master card can be played by the player."""
         # Villein requires a ready vampire you control
         if 'villein' in inst.name.lower():
-            # Check if player has a ready vampire
             has_ready_vampire = any(
                 c.is_ready and c.tipo in ('Vampire', 'vampire', 'Imbued')
                 for c in self.state.get_cards_in_play(player.id)
             )
-            return has_ready_vampire
+            if not has_ready_vampire:
+                return False
+
+        # Unique cards: can't play a second copy if already in play by this player
+        if inst.is_unique:
+            name_lower = inst.name.lower()
+            for c in self.state.cards.values():
+                if (c.id != inst.id
+                        and c.id.startswith(f'p{player.id}_')
+                        and c.name.lower() == name_lower
+                        and c.position in ('ready', 'attached', 'in_play')):
+                    return False
+
         return True
 
     def _use_master_action(self, player: PlayerState, bot: Bot, master_card_played: bool) -> None:
@@ -347,14 +358,22 @@ class PhaseManager:
                 inst.attached_to = target.id
                 target.attachments.append(inst.id)
                 inst.position = 'attached'
+                # Remove from hand when attached
+                if inst.id in player.hand:
+                    player.hand.remove(inst.id)
                 self._log_action(player, f'{inst.name} attached to {target.name}')
             else:
                 # No valid target, burn the card
                 inst.position = 'ash_heap'
+                if inst.id in player.hand:
+                    player.hand.remove(inst.id)
                 self._log_action(player, f'{inst.name} burned (no valid target)')
         elif master_type == 'permanent':
             # Permanent master stays in ready region
             inst.position = 'ready'
+            # Remove from hand when put in play
+            if inst.id in player.hand:
+                player.hand.remove(inst.id)
             self._log_action(player, f'{inst.name} in play (permanent)')
             # Apply permanent master effects
             self._apply_master_effects(player, inst)

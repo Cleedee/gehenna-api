@@ -116,6 +116,7 @@ def _make_card_instance(
     abilities: list = []
     effects: list = []
     master_type: str | None = None
+    is_unique: bool = False
     try:
         from gehenna_api.engine.card_loader import load_card
         enriched = load_card(card_data.get('codevdb', 0))
@@ -131,6 +132,7 @@ def _make_card_instance(
             abilities = enriched.abilities
             effects = enriched.effects
             master_type = enriched.master_type
+            is_unique = enriched.is_unique
     except Exception:
         is_infernal = False
 
@@ -147,6 +149,7 @@ def _make_card_instance(
         bleed=bleed_value,
         special_effects=special_effects,
         is_infernal=is_infernal,
+        is_unique=is_unique,
         master_type=master_type,
         abilities=abilities,
         effects=effects,
