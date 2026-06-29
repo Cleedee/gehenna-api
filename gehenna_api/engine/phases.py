@@ -3114,9 +3114,10 @@ class PhaseManager:
         # 1. Pay cost
         self._pay_window_card_cost(card, player, context)
 
-        # 2. Remove from hand
+        # 2. Remove from hand and draw replacement
         if card.id in player.hand:
             player.hand.remove(card.id)
+            self.draw_cards(player, 1)
 
         # 3. Determine effect and execute
         effect_name = ''
