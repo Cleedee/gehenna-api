@@ -745,9 +745,10 @@ class PhaseManager:
                 if inst:
                     action_info['name'] = inst.name
                     action_info['_action_card'] = inst.id
-                    # Equipment / Retainer / Ally actions get +1 stealth by default
+                    # Equipment / Retainer / Ally / Political Action actions
+                    # get +1 stealth by default (VTES rules)
                     t = inst.tipo.strip().lower()
-                    if t in ('equipment', 'retainer', 'ally'):
+                    if t in ('equipment', 'retainer', 'ally', 'political action'):
                         action_info['stealth'] = 1 + minion.stealth
                         action_info['directed'] = False
 
