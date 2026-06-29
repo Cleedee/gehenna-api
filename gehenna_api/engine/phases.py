@@ -326,7 +326,11 @@ class PhaseManager:
 
         if not inst or inst.id not in player.hand or not _is_master_or_trifle(inst):
             # Bot picked wrong type - use first valid master/trifle
-            inst = self.state.card_by_id(playable_masters[0])
+            if playable_masters:
+                inst = self.state.card_by_id(playable_masters[0])
+            else:
+                self._log_action(player, 'pass (no valid master)')
+                return
 
         if not self._can_play_master(player, inst):
             # Master can't be played (e.g., Villein without vampire)
