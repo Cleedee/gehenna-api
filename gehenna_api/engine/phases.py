@@ -455,12 +455,9 @@ class PhaseManager:
                 # Apply attached master effects (blood_capacity, etc.)
                 self._apply_master_effects(player, inst)
             else:
-                # No valid target, burn the card
-                inst.position = 'ash_heap'
-                if inst.id in player.hand:
-                    player.hand.remove(inst.id)
-                    self.draw_cards(player, 1)
-                self._log_action(player, f'{inst.name} burned (no valid target)')
+                # No valid target — keep card in hand for later
+                self._log_action(player, f'{inst.name} kept in hand (no valid target)')
+                return
         elif master_type == 'permanent':
             # Permanent master stays in ready region
             inst.position = 'ready'
