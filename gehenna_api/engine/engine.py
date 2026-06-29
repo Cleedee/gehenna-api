@@ -28,6 +28,8 @@ class GameEngine:
                 EventType.card_played,
                 EventType.pool_changed,
                 EventType.player_ousted,
+                EventType.phase_changed,
+                EventType.turn_started,
             ):
                 self.log.append(
                     {
@@ -43,6 +45,8 @@ class GameEngine:
         self.events.on(EventType.card_played, on_event)
         self.events.on(EventType.pool_changed, on_event)
         self.events.on(EventType.player_ousted, on_event)
+        self.events.on(EventType.phase_changed, on_event)
+        self.events.on(EventType.turn_started, on_event)
 
     def start(self) -> None:
         self._is_running = True
@@ -77,11 +81,11 @@ class GameEngine:
 
         self.phases.execute_unlock()
 
-        # Master phase — all active players play one master card each
+        # Master phase — current player plays one master card
         self.state.current_phase = Phase.master
         self.phases.execute_master(self.bots)
 
-        # Minion phase — each active player with ready minions
+        # Minion phase — current player's ready minions may act
         self.state.current_phase = Phase.minion
         self.phases.execute_minion(self.bots)
 

@@ -117,7 +117,7 @@ def show_summary(summary: dict) -> None:
             f'H: {p["hand_size"]:>2}  '
             f'Lib: {p["library_size"]:>3}  '
             f'VP: {p["vp"]}  '
-            f'Edge: {"✓" if p["has_edge"] else "·"}'
+            f'Edge: \u00b7'
         )
         for m in p.get('minions', []):
             status = green('✓') if m['ready'] else dim('🔒')
@@ -129,6 +129,103 @@ def show_summary(summary: dict) -> None:
 
 
 # ── Simulation mode ───────────────────────────────────────────────────
+
+# Portuguese phase names for display
+_PHASE_PT = {
+    'unlock': 'untap',
+    'master': 'master',
+    'minion': 'minion',
+    'influence': 'influence',
+    'discard': 'discard',
+}
+
+
+def _player_status_line(player: dict) -> str:
+    """Format player status line like:
+    Bot-A        Pool: 29  H:  7  Lib:  82  VP: 0  Edge: ·
+    """
+    return (
+        f'{player["name"]:12} '
+        f'Pool: {player["pool"]:>2}  '
+        f'H: {player["hand_size"]:>2}  '
+        f'Lib: {player["library_size"]:>3}  '
+        f'VP: {player["vp"]}  '
+        f'Edge: \u00b7'
+    )
+
+
+def _display_turn_block(
+    log_entries: list[dict],
+    turn_number: int,
+    player_name: str,
+    player_status: str,
+) -> None:
+    """Display one player's full turn in the desired format.
+
+    Format:
+        Turno X - PlayerName
+        [untap] skip
+        [master] skip
+        [minion]
+        - main action
+          - sub action
+        [influence]
+        - action
+        [discard] skip
+        PlayerStatus
+    """
+    # Group action texts by phase
+    phases: dict[str, list[str]] = {
+        'unlock': [],
+        'master': [],
+        'minion': [],
+        'influence': [],
+        'discard': [],
+    }
+    current_phase: str | None = None
+
+    for entry in log_entries:
+        etype = entry.get('type')
+        if etype == 'phase_changed':
+            phase = entry['data'].get('phase', '')
+            if phase in phases:
+                current_phase = phase
+        elif etype == 'action_declared':
+            text = entry['data'].get('text', '')
+            if text and current_phase and current_phase in phases:
+                phases[current_phase].append(text)
+
+    print(f'\nTurno {turn_number} - {player_name}')
+
+    for phase_key in ('unlock', 'master', 'minion', 'influence', 'discard'):
+        actions = phases[phase_key]
+        pt_name = _PHASE_PT[phase_key]
+
+        if not actions:
+            print(f'[{pt_name}] skip')
+            continue
+
+        # Simple action (pass/skip) shown inline
+        first = actions[0].lower()
+        if len(actions) == 1 and (
+            'skip' in first or first.startswith('pass') or first == 'none'
+        ):
+            print(f'[{pt_name}] skip')
+            continue
+
+        print(f'[{pt_name}]')
+        if phase_key == 'minion':
+            # Minion phase: nest sub-actions under main "announces" items
+            for action in actions:
+                if 'announces' in action:
+                    print(f'- {action}')
+                else:
+                    print(f'  - {action}')
+        else:
+            for action in actions:
+                print(f'- {action}')
+
+    print(player_status)
 
 
 def run_simulation(
@@ -153,28 +250,46 @@ def run_simulation(
     print(f'Decks: {deck_ids}')
 
     prev_log_len = 0
-    for turn in range(max_turns):
+    for _ in range(max_turns):
         time.sleep(delay)
 
         api.run_turn(gid)
         summary = api.get_summary(gid)
         log = api.get_log(gid)
-
-        show_summary(summary)
-        current_player_id = summary.get('current_player')
-        for entry in log[prev_log_len:]:
-            data = entry.get('data', {})
-            text = data.get('text', '')
-            if text:
-                # Determine which player performed this action
-                player_id = entry.get('player_id', current_player_id)
-                player_name = '??'
-                for p in summary['players']:
-                    if p['id'] == player_id:
-                        player_name = p['name']
-                        break
-                print(dim(f'  [{player_name}] {text}'))
+        fresh = log[prev_log_len:]
         prev_log_len = len(log)
+
+        if not fresh:
+            continue
+
+        # Determine which player just played from the summary
+        # current_player in summary is the NEXT player to act;
+        # the player who just finished is the previous one.
+        current_pid = summary.get('current_player')
+        turn_num = summary.get('turn', 0)
+
+        # Find the player who played this turn by looking at events
+        played_pid = None
+        for entry in fresh:
+            pid = entry.get('player_id')
+            if pid is not None:
+                played_pid = pid
+                break
+
+        if played_pid is None:
+            played_pid = current_pid
+
+        # Get player name from summary
+        player_name = f'Bot-{chr(64 + played_pid)}' if played_pid else f'#{played_pid}'
+        for p in summary['players']:
+            if p['id'] == played_pid:
+                player_name = p['name']
+                player_status = _player_status_line(p)
+                break
+        else:
+            player_status = ''
+
+        _display_turn_block(fresh, turn_num, player_name, player_status)
 
         if summary.get('winner'):
             break

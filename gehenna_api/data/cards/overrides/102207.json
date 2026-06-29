@@ -1,0 +1,18 @@
+{
+  "abilities": [
+    {
+      "disciplines": [],
+      "context": "MASTER",
+      "effects": [
+        {
+          "function": "master.uncontrolled_add_blood",
+          "params": {
+            "amount": 4,
+            "min_capacity": 8
+          },
+          "text": "Move 4 blood from the blood bank to a vampire in your uncontrolled region with a capacity 8 or more."
+        }
+      ]
+    }
+  ]
+}

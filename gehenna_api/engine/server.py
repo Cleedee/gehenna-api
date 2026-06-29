@@ -113,6 +113,9 @@ def _make_card_instance(
     # Enrich with data from card JSON files + manual overrides
     # JSON/override data takes precedence over text parsing
     special_effects: list[str] = []
+    abilities: list = []
+    effects: list = []
+    master_type: str | None = None
     try:
         from gehenna_api.engine.card_loader import load_card
         enriched = load_card(card_data.get('codevdb', 0))
@@ -125,6 +128,9 @@ def _make_card_instance(
                 intercept_value = enriched.modifiers['intercept']
             special_effects = enriched.special_effects
             is_infernal = enriched.is_infernal
+            abilities = enriched.abilities
+            effects = enriched.effects
+            master_type = enriched.master_type
     except Exception:
         is_infernal = False
 
@@ -141,7 +147,10 @@ def _make_card_instance(
         bleed=bleed_value,
         special_effects=special_effects,
         is_infernal=is_infernal,
-        master_type=enriched.master_type,
+        master_type=master_type,
+        abilities=abilities,
+        effects=effects,
+        disciplines=card_data.get('disciplines', ''),
     )
 
 

@@ -261,12 +261,11 @@ class PhaseManager:
                 data={'phase': 'master'},
             )
         )
-        for player in self.state.active_players:
-            if self.state.is_finished:
-                return
-            bot = bots.get(player.id)
-            if not bot:
-                continue
+        player = self.state.current_player
+        if not player or self.state.is_finished:
+            return
+        bot = bots.get(player.id)
+        if bot:
             self._player_master_phase(player, bot)
 
     def _player_master_phase(self, player: PlayerState, bot: Bot) -> None:
@@ -360,7 +359,8 @@ class PhaseManager:
             # Apply permanent master effects
             self._apply_master_effects(player, inst)
         else:
-            # Default: burn after effect
+            # Default: apply effect then burn
+            self._apply_master_effects(player, inst)
             self._play_card(player, inst, 'ash_heap')
 
         # Trifle: gain +1 master phase action only if it's the FIRST master card played
@@ -369,11 +369,23 @@ class PhaseManager:
             self._log_action(player, 'trifle: +1 master action')
 
     def _apply_master_effects(self, player: PlayerState, inst: CardInstance) -> None:
-        """Apply effects from a permanent master card."""
+        """Apply effects from a master card."""
         # Effects can be in inst.effects or inst.abilities[*].effects
-        effects = list(inst.effects)
-        for ability in inst.abilities:
-            effects.extend(ability.effects)
+        # Normalize to dicts (CardEffect dataclass objects are converted)
+        effects: list[dict] = []
+        for e in inst.effects:
+            if isinstance(e, dict):
+                effects.append(e)
+            else:
+                effects.append({'function': getattr(e, 'function', ''), 'params': getattr(e, 'params', {})})
+        abilities = getattr(inst, 'abilities', []) or []
+        for ability in abilities:
+            ability_effects = getattr(ability, 'effects', []) or []
+            for ae in ability_effects:
+                if isinstance(ae, dict):
+                    effects.append(ae)
+                else:
+                    effects.append({'function': getattr(ae, 'function', ''), 'params': getattr(ae, 'params', {})})
         
         for effect in effects:
             func = effect.get('function', '')
@@ -385,6 +397,11 @@ class PhaseManager:
                     player,
                     f'{inst.name}: hand size +{params.get("value", 1)} (now {player.hand_size})',
                 )
+            elif func == 'master.uncontrolled_add_blood':
+                # Move blood from blood bank to an uncontrolled vampire
+                amount = params.get('amount', 1)
+                min_capacity = params.get('min_capacity', 0)
+                self._resolve_uncontrolled_add_blood(player, inst, amount, min_capacity)
 
     def _choose_attachment_target(self, player: PlayerState, inst: CardInstance) -> CardInstance | None:
         """Choose a target minion for an attached master card."""
@@ -402,6 +419,63 @@ class PhaseManager:
         # Otherwise use first available
         return targets[0]
 
+    def _resolve_uncontrolled_add_blood(
+        self,
+        player: PlayerState,
+        inst: CardInstance,
+        amount: int,
+        min_capacity: int,
+    ) -> None:
+        """Move blood from blood bank to an uncontrolled vampire with capacity >= min_capacity.
+
+        Effect used by: Zillah's Valley (move 4 blood to uncontrolled vampire cap 8+).
+        """
+        # Find uncontrolled vampires meeting the capacity requirement
+        targets = [
+            c for c in self.state.cards.values()
+            if c.position == CardPosition.uncontrolled
+            and c.id.startswith(f'p{player.id}_')
+            and c.tipo in ('Vampire', 'vampire', 'Imbued')
+            and c.capacity >= min_capacity
+        ]
+
+        if not targets:
+            self._log_action(
+                player,
+                f'{inst.name}: no valid target (need uncontrolled vampire capacity {min_capacity}+)',
+            )
+            return
+
+        # Pick the uncontrolled vampire closest to capacity (best use of blood)
+        target = max(targets, key=lambda c: c.capacity - c.blood)
+
+        # Transfer blood from blood bank to the target
+        blood_to_add = min(amount, target.capacity - target.blood)
+        if blood_to_add <= 0:
+            self._log_action(
+                player,
+                f'{inst.name}: {target.name} already at full capacity',
+            )
+            return
+
+        self.state.blood_bank -= blood_to_add
+        target.blood += blood_to_add
+
+        self._log_action(
+            player,
+            f'{inst.name}: {blood_to_add} blood to {target.name} '
+            f'({target.blood}/{target.capacity})',
+        )
+
+        # Check if target reaches capacity and moves to ready
+        if target.blood >= target.capacity:
+            target.position = CardPosition.ready
+            target.locked = False
+            self._log_action(
+                player,
+                f'{target.name} moves to ready (blood {target.blood}/{target.capacity})',
+            )
+
     # ── Minion phase ───────────────────────────────────────────────
 
     def execute_minion(self, bots: dict[int, Bot]) -> None:
@@ -411,12 +485,11 @@ class PhaseManager:
                 data={'phase': 'minion'},
             )
         )
-        for player in self.state.active_players:
-            if self.state.is_finished:
-                return
-            bot = bots.get(player.id)
-            if not bot:
-                continue
+        player = self.state.current_player
+        if not player or self.state.is_finished:
+            return
+        bot = bots.get(player.id)
+        if bot:
             self._player_minion_phase(player, bot)
 
     def _player_minion_phase(self, player: PlayerState, bot: Bot) -> None:
@@ -463,26 +536,43 @@ class PhaseManager:
             self._log_action(player, 'skip (no ready minions)')
 
     def _get_ready_minions(self, player_id: int) -> list[CardInstance]:
-        """Get all ready unlocked minions for a player."""
+        """Get all ready unlocked minions (Vampire/Imbued/Ally) for a player.
+        Excludes non-minion permanents like Master locations."""
+        minion_tipos = {'Vampire', 'vampire', 'Imbued', 'Ally'}
         prefix = f'p{player_id}_'
         return [
             c for c in self.state.cards.values()
             if c.id.startswith(prefix)
             and c.is_ready
+            and c.tipo.strip() in minion_tipos
         ]
 
     def _get_torpor_minions(self, player_id: int) -> list[CardInstance]:
-        """Get all minions in torpor for a player."""
+        """Get all minions (Vampire/Imbued/Ally) in torpor for a player."""
+        minion_tipos = {'Vampire', 'vampire', 'Imbued', 'Ally'}
         prefix = f'p{player_id}_'
         return [
             c for c in self.state.cards.values()
             if c.id.startswith(prefix)
             and c.position == CardPosition.torpor
+            and c.tipo.strip() in minion_tipos
         ]
 
     def _is_vampire(self, minion: CardInstance) -> bool:
         """Check if a minion is a vampire."""
         return minion.tipo in ('Vampire', 'vampire', 'Imbued')
+
+    @staticmethod
+    def _minion_has_discipline(minion: CardInstance, discipline: str) -> bool:
+        """Check if a minion has a discipline at the required level.
+
+        discipline format examples:
+          'pre'  -> basic Presence
+          'PRE'  -> superior Presence
+        """
+        if not minion.disciplines:
+            return False
+        return discipline in minion.disciplines.split('|')
 
     def _is_ally(self, minion: CardInstance) -> bool:
         """Check if a minion is an ally."""
@@ -944,12 +1034,14 @@ class PhaseManager:
         return False, None
 
     def _get_blocking_minions(self, player_id: int) -> list[CardInstance]:
-        """Get all ready unlocked minions that can block for a player."""
+        """Get all ready unlocked minions (Vampire/Imbued/Ally) that can block."""
+        minion_tipos = {'Vampire', 'vampire', 'Imbued', 'Ally'}
         prefix = f'p{player_id}_'
         return [
             c for c in self.state.cards.values()
             if c.id.startswith(prefix)
             and c.is_ready
+            and c.tipo.strip() in minion_tipos
         ]
 
     def _start_combat(self, attacker: CardInstance, defender: CardInstance) -> None:
@@ -1932,8 +2024,96 @@ class PhaseManager:
             self._log_action(player, f'{minion.name} political: {inst.name}')
             self._play_card(player, inst, 'ash_heap')
         else:
-            self._log_action(player, f'{minion.name} action: {inst.name}')
+            # Generic action card — check abilities for discipline-based effects
+            effect_desc = self._resolve_action_card_abilities(minion, player, inst)
+            if effect_desc:
+                self._log_action(player, f'{minion.name} action: {inst.name} ({effect_desc})')
+            else:
+                self._log_action(player, f'{minion.name} action: {inst.name}')
             self._play_card(player, inst, 'ash_heap')
+
+    def _resolve_action_card_abilities(
+        self,
+        minion: CardInstance,
+        player: PlayerState,
+        card: CardInstance,
+    ) -> str | None:
+        """Check a generic action card's abilities, find which ones the
+        minion qualifies for (discipline-based), apply available modifier
+        effects (bleed, stealth, intercept), and return a description of
+        the selected effect.
+
+        Returns a short description string like '+1 bleed' or '+1 stealth',
+        or None if no abilities match.
+        """
+        abilities = getattr(card, 'abilities', []) or []
+        if not abilities:
+            return None
+
+        # Find which abilities the minion qualifies for
+        usable: list[dict] = []
+        for ab in abilities:
+            if isinstance(ab, dict):
+                disciplines = ab.get('disciplines', [])
+            else:
+                disciplines = getattr(ab, 'disciplines', None) or []
+            if not disciplines:
+                usable.append(ab)
+                continue
+            # Check if minion has any of the required disciplines
+            for disc in disciplines:
+                if self._minion_has_discipline(minion, disc):
+                    usable.append(ab)
+                    break
+
+        if not usable:
+            return None
+
+        # Pick the highest-level ability (prefer superior disciplines)
+        def _disc_level(ab) -> int:
+            if isinstance(ab, dict):
+                discs = ab.get('disciplines', [])
+            else:
+                discs = getattr(ab, 'disciplines', None) or []
+            # Superior (uppercase) = 2, basic (lowercase) = 1, none = 0
+            return max((2 if d.isupper() else 1) for d in discs) if discs else 0
+
+        chosen = max(usable, key=_disc_level)
+
+        # Get effects from the chosen ability
+        if isinstance(chosen, dict):
+            effects = chosen.get('effects', [])
+        else:
+            effects = getattr(chosen, 'effects', None) or []
+
+        effect_desc_parts: list[str] = []
+        for eff in effects:
+            if isinstance(eff, dict):
+                func = eff.get('function', '')
+                params = eff.get('params', {})
+                text = eff.get('text', '')
+            else:
+                func = getattr(eff, 'function', None) or ''
+                params = getattr(eff, 'params', None) or {}
+                text = getattr(eff, 'text', None) or ''
+
+            if func == 'modifier.bleed':
+                bonus = params.get('value', 1)
+                minion.bleed += bonus
+                effect_desc_parts.append(f'+{bonus} bleed')
+            elif func == 'modifier.stealth':
+                bonus = params.get('value', 1)
+                minion.stealth += bonus
+                effect_desc_parts.append(f'+{bonus} stealth')
+            elif func == 'modifier.intercept':
+                bonus = params.get('value', 1)
+                minion.intercept += bonus
+                effect_desc_parts.append(f'+{bonus} intercept')
+            else:
+                if text:
+                    effect_desc_parts.append(text)
+
+        return ', '.join(effect_desc_parts) if effect_desc_parts else None
 
     def _resolve_bleed_with_card(self, minion: CardInstance, player: PlayerState, card: CardInstance) -> None:
         """Resolve an enhanced bleed using an action card."""

@@ -63,6 +63,10 @@ class CardInstance(BaseModel):
     master_type: str | None = None
     # Master card effects (for permanent/attached masters)
     effects: list = []
+    # Card abilities (from card text parsing)
+    abilities: list = []
+    # Disciplines string (pipe-delimited, e.g. '|pre|PRE|cel|')
+    disciplines: str = ''
 
     def lock(self) -> None:
         self.locked = True
