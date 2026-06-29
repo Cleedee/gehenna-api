@@ -3,11 +3,25 @@
   "name": "Monastery of Shadows",
   "tipo": "master",
   "source": "cardbase_lib.json",
-  "abilities": [],
+  "abilities": [
+    {
+      "disciplines": [],
+      "context": "MASTER",
+      "effects": [
+        {
+          "function": "master.hand_size",
+          "params": {"value": 1},
+          "text": "+1 hand size (permanent)."
+        }
+      ]
+    }
+  ],
   "modifiers": {
     "stealth": 1
   },
   "default_strike": null,
+  "is_unique": true,
+  "master_type": "permanent",
   "needs_review": false,
-  "notes": "Master - plain text"
+  "notes": "Master - Unique location. +1 hand size. Lock to give vampire with cap 8+ +1 stealth."
 }

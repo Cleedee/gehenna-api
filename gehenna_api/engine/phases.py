@@ -357,6 +357,8 @@ class PhaseManager:
             # Permanent master stays in ready region
             inst.position = 'ready'
             self._log_action(player, f'{inst.name} in play (permanent)')
+            # Apply permanent master effects
+            self._apply_master_effects(player, inst)
         else:
             # Default: burn after effect
             self._play_card(player, inst, 'ash_heap')
@@ -365,6 +367,19 @@ class PhaseManager:
         if _is_trifle(inst) and not master_card_played:
             player.master_actions += 1
             self._log_action(player, 'trifle: +1 master action')
+
+    def _apply_master_effects(self, player: PlayerState, inst: CardInstance) -> None:
+        """Apply effects from a permanent master card."""
+        for effect in inst.effects:
+            func = effect.function
+            params = effect.params
+            if func == 'master.hand_size':
+                # Increase hand size permanently
+                player.hand_size += params.get('value', 1)
+                self._log_action(
+                    player,
+                    f'{inst.name}: hand size +{params.get("value", 1)} (now {player.hand_size})',
+                )
 
     def _choose_attachment_target(self, player: PlayerState, inst: CardInstance) -> CardInstance | None:
         """Choose a target minion for an attached master card."""

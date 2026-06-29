@@ -516,6 +516,18 @@ MANUAL_OVERRIDES = {
     # Masters are played generically in the engine (pay cost, put in ash heap).
     # The overrides below are for future use when specific master effects are implemented.
 
+    101238: {  # Monastery of Shadows (permanent, location)
+        'modifiers': {},
+        'master_type': 'permanent',
+        'abilities': [
+            {'disciplines': [], 'context': 'MASTER',
+             'effects': [
+                 {'function': 'master.hand_size', 'params': {'value': 1},
+                  'text': '+1 hand size (permanent).'},
+             ]},
+        ],
+    },
+
     100588: {  # Dreams of the Sphinx (permanent)
         'modifiers': {},
         'master_type': 'permanent',

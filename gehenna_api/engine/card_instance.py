@@ -61,6 +61,8 @@ class CardInstance(BaseModel):
     is_infernal: bool = False
     # Master card type: 'permanent', 'attached', or None (burned after effect)
     master_type: str | None = None
+    # Master card effects (for permanent/attached masters)
+    effects: list = []
 
     def lock(self) -> None:
         self.locked = True

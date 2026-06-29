@@ -25,6 +25,7 @@ class PlayerState(BaseModel):
     crypt: list[str] = Field(default_factory=list)
     library: list[str] = Field(default_factory=list)
     ash_heap: list[str] = Field(default_factory=list)
+    hand_size: int = 7  # Default hand size
     has_edge: bool = False
     transfers: int = 0
     victory_points: int = 0
