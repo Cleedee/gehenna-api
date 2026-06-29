@@ -2666,25 +2666,32 @@ class PhaseManager:
         tipo_key = card.tipo.strip().lower()
         acting_player = context.get('acting_player')
         is_acting_player = player is not None and acting_player is not None and player.id == acting_player.id
+        is_out_of_turn = getattr(card, 'master_type', None) == 'reaction'
 
-        # Reaction master cards (out-of-turn) can be played in as_announced
-        # and before_resolution (base rule; specific cards use registry)
-        if getattr(card, 'master_type', None) == 'reaction':
-            if window in ('as_announced', 'before_resolution'):
-                # Cannot be played by the acting player (out-of-turn)
-                return not is_acting_player
+        # ── Out-of-turn master cards (e.g. Direct Intervention) ───────
+        # Can be played in as_announced and before_resolution windows,
+        # but NOT by the acting player (must be another player's turn)
+        # and only ONE per turn cycle per player.
+        if is_out_of_turn:
+            if window not in ('as_announced', 'before_resolution'):
+                return False
+            # Cannot be played by the acting player (out-of-turn on own action)
+            if is_acting_player:
+                return False
+            # Can only play one out-of-turn master per cycle
+            if player and player.out_of_turn_master_played:
+                return False
+            return True
 
         # ── block_attempt ─────────────────────────────────────────────
         # Acting player: action modifiers with stealth
         # Blocking player: reaction cards with intercept
         if window == 'block_attempt':
             if is_acting_player:
-                # Acting player plays stealth action modifiers
                 if tipo_key in ('action_modifier', 'action modifier'):
                     return card.stealth > 0
                 return False
             else:
-                # Blocking player plays intercept reactions
                 if tipo_key == 'reaction':
                     return card.intercept > 0
                 return False
@@ -2694,7 +2701,6 @@ class PhaseManager:
         if window == 'after_blocks':
             if is_acting_player:
                 if tipo_key in ('action_modifier', 'action modifier'):
-                    # Skip pure stealth modifiers (only relevant during block)
                     if card.stealth > 0 and card.bleed == 0:
                         return False
                     return True
@@ -2712,8 +2718,7 @@ class PhaseManager:
         # Non-acting players can play out-of-turn masters, wake, reflex
         if window == 'as_announced':
             if not is_acting_player:
-                # Out-of-turn masters
-                if getattr(card, 'master_type', None) == 'reaction':
+                if is_out_of_turn:
                     return True
                 # Wake effects (basic heuristic) can be played
                 if card.name in ('Wake', 'On the Qui Vive', 'Wake with Evening\'s Freshness'):
