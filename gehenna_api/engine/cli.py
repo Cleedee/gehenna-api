@@ -161,11 +161,19 @@ def run_simulation(
         log = api.get_log(gid)
 
         show_summary(summary)
+        current_player_id = summary.get('current_player')
         for entry in log[prev_log_len:]:
             data = entry.get('data', {})
             text = data.get('text', '')
             if text:
-                print(dim(f'  {text}'))
+                # Determine which player performed this action
+                player_id = entry.get('player_id', current_player_id)
+                player_name = '??'
+                for p in summary['players']:
+                    if p['id'] == player_id:
+                        player_name = p['name']
+                        break
+                print(dim(f'  [{player_name}] {text}'))
         prev_log_len = len(log)
 
         if summary.get('winner'):
