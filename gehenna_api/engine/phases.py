@@ -19,11 +19,11 @@ except ImportError:
     def get_window_effect(effect_name): return None  # type: ignore
 
 
-MASTER_TIPOS = {'Master', 'Master '}
+MASTER_TIPOS = {'master'}
 
-EVENT_TIPOS = {'Event'}
+EVENT_TIPOS = {'event'}
 
-TRIFLE_TIPOS = {'Trifle', 'Master/Trifle'}
+TRIFLE_TIPOS = {'trifle', 'master/trifle'}
 
 # All playable master cards (regular masters + trifles)
 ALL_MASTER_TIPOS = MASTER_TIPOS | TRIFLE_TIPOS
@@ -40,97 +40,97 @@ BASIC_ACTIONS = {
 
 # Action card types (played from hand to enhance or enable special actions)
 ACTION_CARD_TYPES = {
-    'Action',
-    'Action Modifier',
-    'Political Action',
-    'Equipment',
-    'Retainer',
-    'Ally',
-    'Conviction',
-    'Power',
-    'Imbued',
-    'Combo',
-    'Action / Combat',
-    'Action / Reaction',
-    'Action Modifier / Combat',
-    'Action Modifier / Reaction',
-    'Action Modifier/Combat',
-    'Action Modifier/Reaction',
-    'Action/Combat',
-    'Reaction/Action Modifier',
-    'Reaction/Combat',
-    'Combat / Action',
-    'Combat/Action Modifier',
-    'Combat/Reaction',
+    'action',
+    'action modifier',
+    'political action',
+    'equipment',
+    'retainer',
+    'ally',
+    'conviction',
+    'power',
+    'imbued',
+    'combo',
+    'action / combat',
+    'action / reaction',
+    'action modifier / combat',
+    'action modifier / reaction',
+    'action modifier/combat',
+    'action modifier/reaction',
+    'action/combat',
+    'reaction/action modifier',
+    'reaction/combat',
+    'combat / action',
+    'combat/action modifier',
+    'combat/reaction',
 }
 
 MINION_TIPOS = {
-    'Action',
-    'Action Modifier',
-    'Political Action',
-    'Reaction',
-    'Equipment',
-    'Retainer',
-    'Ally',
-    'Conviction',
-    'Power',
-    'Imbued',
-    'Combo',
-    'Action / Combat',
-    'Action / Reaction',
-    'Action Modifier / Combat',
-    'Action Modifier / Reaction',
-    'Action Modifier/Combat',
-    'Action Modifier/Reaction',
-    'Action/Combat',
-    'Reaction/Action Modifier',
+    'action',
+    'action modifier',
+    'political action',
+    'reaction',
+    'equipment',
+    'retainer',
+    'ally',
+    'conviction',
+    'power',
+    'imbued',
+    'combo',
+    'action / combat',
+    'action / reaction',
+    'action modifier / combat',
+    'action modifier / reaction',
+    'action modifier/combat',
+    'action modifier/reaction',
+    'action/combat',
+    'reaction/action modifier',
     # Additional aliases
-    'Equipment ',
-    'Retainer ',
-    'Ally ',
-    'Action/Equipment',
-    'Action/Retainer',
-    'Action/Ally',
-    'Combat',
-    'Combat / Action',
-    'Combat/Action Modifier',
-    'Combat/Reaction',
-    'Ranged',
-    'Reaction/Combat',
+    'equipment ',
+    'retainer ',
+    'ally ',
+    'action/equipment',
+    'action/retainer',
+    'action/ally',
+    'combat',
+    'combat / action',
+    'combat/action modifier',
+    'combat/reaction',
+    'ranged',
+    'reaction/combat',
 }
 
 # Action card types (cards a minion can play as an action)
 # Excludes Action Modifier, Reaction, Combat (pure) - those are played
 # at different times during an action or combat
 ACTION_TIPOS = {
-    'Action',
-    'Political Action',
-    'Equipment',
-    'Retainer',
-    'Ally',
-    'Action / Combat',
-    'Action / Reaction',
-    'Action/Combat',
-    'Action/Equipment',
-    'Action/Retainer',
-    'Action/Ally',
-    'Equipment ',
-    'Retainer ',
-    'Ally ',
+    'action',
+    'political action',
+    'equipment',
+    'retainer',
+    'ally',
+    'action / combat',
+    'action / reaction',
+    'action/combat',
+    'action/equipment',
+    'action/retainer',
+    'action/ally',
+    'equipment ',
+    'retainer ',
+    'ally ',
 }
 
-COMBAT_ONLY = {'Combat'}
+COMBAT_ONLY = {'combat'}
 
 COMBAT_TIPOS = {
-    'Combat',
-    'Combat / Action',
-    'Combat/Action Modifier',
-    'Combat/Reaction',
+    'combat',
+    'combat / action',
+    'combat/action modifier',
+    'combat/reaction',
 }
 
 
 def _tipo_key(raw: str) -> str:
-    return raw.strip()
+    return raw.strip().lower()
 
 
 def _is_master(inst: CardInstance) -> bool:
@@ -167,15 +167,15 @@ def _is_master_or_trifle(inst: CardInstance) -> bool:
 def _is_action_modifier(inst: CardInstance) -> bool:
     """Check if a card is an action modifier."""
     return _tipo_key(inst.tipo) in (
-        'Action Modifier', 'Action Modifier / Combat', 'Action Modifier/Combat',
-        'Action Modifier / Reaction', 'Action Modifier/Reaction', 'Action / Reaction',
+        'action modifier', 'action modifier / combat', 'action modifier/combat',
+        'action modifier / reaction', 'action modifier/reaction', 'action / reaction',
     )
 
 
 def _is_reaction(inst: CardInstance) -> bool:
     """Check if a card is a reaction card."""
     return _tipo_key(inst.tipo) in (
-        'Reaction', 'Reaction/Action Modifier', 'Reaction/Combat', 'Action / Reaction',
+        'reaction', 'reaction/action modifier', 'reaction/combat', 'action / reaction',
     )
 
 
@@ -307,8 +307,9 @@ class PhaseManager:
         if getattr(inst, 'master_type', None) == 'reaction':
             return False
 
-        # Villein requires a ready vampire you control
-        if 'villein' in inst.name.lower():
+        # Attached masters (Villein, Vessel, Blood Doll, etc.) require a ready
+        # vampire you control to attach to
+        if getattr(inst, 'master_type', None) == 'attached':
             has_ready_vampire = any(
                 c.is_ready and c.tipo in ('Vampire', 'vampire', 'Imbued')
                 for c in self.state.get_cards_in_play(player.id)
@@ -379,6 +380,8 @@ class PhaseManager:
                     player.hand.remove(inst.id)
                     self.draw_cards(player, 1)
                 self._log_action(player, f'{inst.name} attached to {target.name}')
+                # Apply attached master effects (blood_capacity, etc.)
+                self._apply_master_effects(player, inst)
             else:
                 # No valid target, burn the card
                 inst.position = 'ash_heap'
@@ -448,6 +451,18 @@ class PhaseManager:
                 amount = params.get('amount', 1)
                 min_capacity = params.get('min_capacity', 0)
                 self._resolve_uncontrolled_add_blood(player, inst, amount, min_capacity)
+            elif func == 'master.blood_capacity':
+                # Increase target vampire's blood capacity (e.g., Vessel)
+                # Target is already set via _use_master_action's attachment logic
+                value = params.get('value', 1)
+                target = self.state.card_by_id(getattr(inst, 'attached_to', ''))
+                if target:
+                    old_cap = target.capacity
+                    target.capacity += value
+                    self._log_action(
+                        player,
+                        f'{target.name}: blood capacity +{value} ({old_cap} → {target.capacity})',
+                    )
 
     def _choose_attachment_target(self, player: PlayerState, inst: CardInstance) -> CardInstance | None:
         """Choose a target minion for an attached master card."""

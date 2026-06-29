@@ -1,0 +1,13 @@
+{
+  "master_type": "attached",
+  "text": "Put this card on a ready vampire you control. The vampire gets +1 blood capacity (increase its capacity by 1).",
+  "abilities": [
+    {
+      "disciplines": [],
+      "context": "MASTER",
+      "effects": [
+        {"function": "master.blood_capacity", "params": {"value": 1}, "text": "Vampire gets +1 blood capacity."}
+      ]
+    }
+  ]
+}
