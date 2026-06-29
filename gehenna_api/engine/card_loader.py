@@ -1,11 +1,10 @@
 """
-Card loader — loads card data from JSON files with manual override fallback.
+Card loader — loads card data from JSON files with override support.
 
 Architecture:
   - Each card has a JSON file in data/cards/{crypt,library}/<codevdb>.json
-  - Cards used in simulation decks may have incomplete data (abilities, modifiers)
-  - manual_overrides.py provides corrected data for those cards
-  - This module merges: JSON file data → manual overrides → final CardData
+  - Overrides are stored in data/cards/overrides/{codevdb}.json
+  - This module merges: JSON file data → override file → final CardData
 """
 
 from __future__ import annotations
@@ -15,7 +14,7 @@ import os
 from dataclasses import dataclass, field
 from typing import Optional
 
-from gehenna_api.data.cards.manual_overrides import MANUAL_OVERRIDES
+from gehenna_api.data.cards.overrides import load_override
 
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), '..', 'data')
@@ -63,6 +62,7 @@ class CardData:
     is_unique: bool = False
     is_infernal: bool = False
     master_type: str | None = None
+    effects: list = field(default_factory=list)
     needs_review: bool = False
     notes: str = ''
 
@@ -183,8 +183,8 @@ def load_card(codevdb: int) -> Optional[CardData]:
         notes=raw.get('notes', ''),
     )
 
-    # Apply manual overrides (if any)
-    override = MANUAL_OVERRIDES.get(codevdb)
+    # Apply overrides from file (if any)
+    override = load_override(codevdb)
     if override:
         if 'modifiers' in override:
             card.modifiers.update(override['modifiers'])
@@ -200,6 +200,14 @@ def load_card(codevdb: int) -> Optional[CardData]:
             card.special_effects = override['special_effects']
         if 'master_type' in override:
             card.master_type = override['master_type']
+        if 'effects' in override:
+            card.effects = override['effects']
+        if 'is_unique' in override:
+            card.is_unique = override['is_unique']
+        if 'is_infernal' in override:
+            card.is_infernal = override['is_infernal']
+        if 'text' in override:
+            card.text = override['text']
 
     return card
 

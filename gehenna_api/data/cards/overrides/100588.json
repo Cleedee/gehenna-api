@@ -1,0 +1,13 @@
+{
+  "master_type": "permanent",
+  "text": "Draw 1 card during your master phase.",
+  "abilities": [
+    {
+      "disciplines": [],
+      "context": "MASTER",
+      "effects": [
+        {"function": "master.draw", "params": {}, "text": "Draw 1 card during your master phase."}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "is_unique": true,
+  "master_type": "attached",
+  "text": "Trifle. Put this card on a vampire you control and move 2 or more blood from that vampire to your pool. Minion Tap cards cost an additional pool. Villein costs an additional pool to play on this vampire.",
+  "abilities": [
+    {
+      "disciplines": [],
+      "context": "MASTER",
+      "effects": [
+        {"function": "master.blood", "params": {"min_blood": 2}, "text": "Put this card on a vampire you control and move 2+ blood to your pool."},
+        {"function": "master.minion_tap_penalty", "params": {}, "text": "Minion Tap cards cost an additional pool on this vampire."},
+        {"function": "master.play_cost_penalty", "params": {"extra_pool": 1}, "text": "Villein costs an additional pool to play on this vampire."}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "text": "+1 stealth.",
+  "modifiers": {
+    "stealth": 1,
+    "strength": 1
+  }
+}

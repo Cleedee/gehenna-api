@@ -370,9 +370,14 @@ class PhaseManager:
 
     def _apply_master_effects(self, player: PlayerState, inst: CardInstance) -> None:
         """Apply effects from a permanent master card."""
-        for effect in inst.effects:
-            func = effect.function
-            params = effect.params
+        # Effects can be in inst.effects or inst.abilities[*].effects
+        effects = list(inst.effects)
+        for ability in inst.abilities:
+            effects.extend(ability.effects)
+        
+        for effect in effects:
+            func = effect.get('function', '')
+            params = effect.get('params', {})
             if func == 'master.hand_size':
                 # Increase hand size permanently
                 player.hand_size += params.get('value', 1)

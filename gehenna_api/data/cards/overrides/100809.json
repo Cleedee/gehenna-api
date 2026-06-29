@@ -1,0 +1,7 @@
+{
+  "text": "Gain +1 transfer.",
+  "special_effects": [
+    "strike_blood_for_aggravated",
+    "bleed_gain_pool"
+  ]
+}

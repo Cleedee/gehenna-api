@@ -1,0 +1,14 @@
+{
+  "is_unique": true,
+  "master_type": "permanent",
+  "text": "Unique location. +1 hand size. Lock to give a vampire with capacity 8 or more +1 stealth.",
+  "abilities": [
+    {
+      "disciplines": [],
+      "context": "MASTER",
+      "effects": [
+        {"function": "master.hand_size", "params": {"value": 1}, "text": "+1 hand size (permanent)."}
+      ]
+    }
+  ]
+}
