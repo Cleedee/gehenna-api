@@ -389,14 +389,15 @@ class PhaseManager:
             if not has_ready_vampire:
                 return False
 
-        # Unique cards: can't play a second copy if already in play by this player
+        # Unique cards: can't play a second copy if already in play or
+        # already used (ash_heap = one-shot unique cards like Giant's Blood)
         if inst.is_unique:
             name_lower = inst.name.lower()
             for c in self.state.cards.values():
                 if (c.id != inst.id
                         and c.id.startswith(f'p{player.id}_')
                         and c.name.lower() == name_lower
-                        and c.position in ('ready', 'attached', 'in_play')):
+                        and c.position in ('ready', 'attached', 'in_play', 'ash_heap')):
                     return False
 
         return True
@@ -532,6 +533,51 @@ class PhaseManager:
                         player,
                         f'{target.name}: blood capacity +{value} ({old_cap} → {target.capacity})',
                     )
+            elif func == 'master.fill_blood':
+                # Fill a vampire to full capacity with blood from blood bank
+                self._resolve_fill_blood(player, inst)
+
+    def _resolve_fill_blood(
+        self,
+        player: PlayerState,
+        inst: CardInstance,
+    ) -> None:
+        """Fill a vampire to full capacity with blood from the blood bank.
+
+        Effect used by: Giant's Blood (fill vampire to full capacity).
+        Picks the ready vampire with the most missing blood first.
+        If no ready vampire, tries uncontrolled vampires.
+        Only fills one vampire per card.
+        """
+        vamp_tipos = ('Vampire', 'vampire', 'Imbued')
+        prefix = f'p{player.id}_'
+
+        # Find candidates: ready vampires first, then uncontrolled
+        candidates = [
+            c for c in self.state.cards.values()
+            if c.id.startswith(prefix)
+            and c.tipo in vamp_tipos
+            and c.position in (CardPosition.ready, CardPosition.uncontrolled)
+            and c.blood < c.capacity
+        ]
+
+        if not candidates:
+            self._log_action(
+                player,
+                f'{inst.name}: no valid target (all vampires at full blood)',
+            )
+            return
+
+        # Sort: ready before uncontrolled, then by most missing blood
+        def _key(c):
+            return (0 if c.position == CardPosition.ready else 1, -(c.capacity - c.blood))
+        target = min(candidates, key=_key)
+
+        target.blood = target.capacity
+        self._log_action(
+            player,
+            f'{inst.name}: {target.name} filled ({target.blood}/{target.capacity})',
+        )
 
     def _choose_attachment_target(self, player: PlayerState, inst: CardInstance) -> CardInstance | None:
         """Choose a target minion for an attached master card."""

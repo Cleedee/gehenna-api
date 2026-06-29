@@ -1,0 +1,13 @@
+{
+  "is_unique": true,
+  "text": "Master. Fill a vampire to full capacity with blood from the blood bank. Only one Giant's Blood can be played in a game.",
+  "abilities": [
+    {
+      "disciplines": [],
+      "context": "MASTER",
+      "effects": [
+        {"function": "master.fill_blood", "params": {}, "text": "Fill a vampire to full capacity with blood from the blood bank."}
+      ]
+    }
+  ]
+}
