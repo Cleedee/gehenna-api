@@ -217,9 +217,9 @@ class PhaseManager:
             )
         )
 
-    def execute_unlock(self) -> None:
+    def execute_unlock(self, bots: dict[int, Bot] | None = None) -> None:
         player = self.state.current_player
-        
+
         for card in self.state.cards.values():
             if card.position == CardPosition.ready:
                 # Infernal minions do not unlock normally
@@ -256,12 +256,84 @@ class PhaseManager:
                     )
                 )
 
+            # Process Vessel untap effects: move 1 blood between vampire and pool
+            self._process_vessel_untap(player, bots)
+
         self.events.emit(
             GameEvent(
                 type=EventType.phase_changed,
                 data={'phase': 'unlock'},
             )
         )
+
+    def _process_vessel_untap(
+        self,
+        player: PlayerState,
+        bots: dict[int, Bot] | None = None,
+    ) -> None:
+        """Process Vessel's untap effect for the current player.
+
+        For each Vessel attached to a ready vampire, the controller may
+        move 1 blood from the vampire to their pool (gain 1 pool) or
+        from their pool to the vampire (gain 1 blood).
+        """
+        bot = bots.get(player.id) if bots else None
+
+        for card in self.state.cards.values():
+            if not card.name or card.name != 'Vessel':
+                continue
+            if card.position != 'attached' and card.position != CardPosition.attached:
+                continue
+
+            # Check if this Vessel belongs to the current player
+            # Vessel is attached to a minion; find the minion's owner
+            target = self.state.card_by_id(card.attached_to) if card.attached_to else None
+            if not target:
+                continue
+            target_player_id = self._player_id_for_minion(target)
+            if target_player_id != player.id:
+                continue
+
+            # Ask bot for direction
+            direction = 'vampire_to_pool'
+            if bot:
+                direction = bot.choose_vessel_direction(
+                    self.state, player.id, card.id, target.id,
+                )
+
+            if direction == 'vampire_to_pool' and target.blood >= 1:
+                target.blood -= 1
+                player.pool += 1
+                self._log_action(
+                    player,
+                    f'Vessel ({target.name}): 1 blood → pool (now {player.pool})',
+                )
+                self.events.emit(
+                    GameEvent(
+                        type=EventType.pool_changed,
+                        player_id=player.id,
+                        data={'delta': 1, 'reason': 'vessel'},
+                    )
+                )
+            elif direction == 'pool_to_vampire' and player.pool >= 1:
+                player.pool -= 1
+                target.blood += 1
+                self._log_action(
+                    player,
+                    f'Vessel ({target.name}): 1 pool → blood (now {target.blood})',
+                )
+                self.events.emit(
+                    GameEvent(
+                        type=EventType.pool_changed,
+                        player_id=player.id,
+                        data={'delta': -1, 'reason': 'vessel'},
+                    )
+                )
+            else:
+                self._log_action(
+                    player,
+                    f'Vessel ({target.name}): skip (no blood/pool available)',
+                )
 
     # ── Master phase ───────────────────────────────────────────────
 

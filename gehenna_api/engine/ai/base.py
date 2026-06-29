@@ -107,3 +107,19 @@ class Bot(ABC):
         self, state: GameState, player_id: int, hand: list[str]
     ) -> str:
         ...
+
+    def choose_vessel_direction(
+        self,
+        state: GameState,
+        player_id: int,
+        vessel_id: str,
+        vampire_id: str,
+    ) -> str:
+        """Choose the direction for Vessel's untap effect.
+
+        Returns:
+            'vampire_to_pool': move 1 blood from vampire to pool
+            'pool_to_vampire': move 1 blood from pool to vampire
+            'skip': skip the effect
+        """
+        return 'vampire_to_pool'

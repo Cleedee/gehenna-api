@@ -79,7 +79,7 @@ class GameEngine:
         if not player:
             return
 
-        self.phases.execute_unlock()
+        self.phases.execute_unlock(self.bots)
 
         # Master phase — current player plays one master card
         self.state.current_phase = Phase.master

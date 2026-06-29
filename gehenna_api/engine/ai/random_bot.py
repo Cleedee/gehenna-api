@@ -30,3 +30,22 @@ class RandomBot(Bot):
         if not hand:
             return ''
         return hand[0]
+
+    def choose_vessel_direction(
+        self,
+        state: GameState,
+        player_id: int,
+        vessel_id: str,
+        vampire_id: str,
+    ) -> str:
+        """Decide Vessel direction: pool-to-vampire if vampire needs
+        blood, otherwise vampire-to-pool for pool gain."""
+        player = state.player_by_id(player_id)
+        vampire = state.card_by_id(vampire_id)
+        if not player or not vampire:
+            return 'skip'
+        # Vampire low on blood → pool to vampire
+        if vampire.blood <= 2:
+            return 'pool_to_vampire'
+        # Default: vampire to pool (gain pool)
+        return 'vampire_to_pool'
