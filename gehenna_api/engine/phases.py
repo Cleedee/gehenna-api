@@ -291,6 +291,11 @@ class PhaseManager:
 
     def _can_play_master(self, player: PlayerState, inst: CardInstance) -> bool:
         """Check if a master card can be played by the player."""
+        # Reaction masters (like Direct Intervention) cannot be played during
+        # the master phase; they are played out-of-turn in response to actions.
+        if getattr(inst, 'master_type', None) == 'reaction':
+            return False
+
         # Villein requires a ready vampire you control
         if 'villein' in inst.name.lower():
             has_ready_vampire = any(
@@ -597,6 +602,49 @@ class PhaseManager:
         """Check if a minion is an ally."""
         return minion.tipo == 'Ally'
 
+    def _check_direct_intervention(
+        self,
+        acting_player: PlayerState,
+        action_type: str,
+    ) -> bool:
+        """Check if any other player wants to play Direct Intervention.
+
+        Direct Intervention is a Master card that can be played out-of-turn
+        when a referendum (political action) or action card is played.
+        It cancels the action and goes to the bottom of the library.
+        """
+        # Direct Intervention only works against referendums and action cards
+        if action_type not in ('political', 'action_card'):
+            return False
+
+        for player in self.state.players:
+            if player.id == acting_player.id or player.is_ousted:
+                continue
+
+            # Check if player has Direct Intervention in hand
+            for cid in list(player.hand):
+                card = self.state.card_by_id(cid)
+                if (not card
+                        or card.name != 'Direct Intervention'
+                        or getattr(card, 'master_type', None) != 'reaction'):
+                    continue
+
+                # Found one! Check if player can pay the cost (1 pool)
+                if player.pool < 1:
+                    continue
+
+                # Play Direct Intervention
+                player.pool -= 1
+                player.hand.remove(cid)
+                card.position = CardPosition.bottom_of_library
+                self._log_action(
+                    player,
+                    f'Direct Intervention played by {player.username} - action cancelled',
+                )
+                return True
+
+        return False
+
     def _minion_action(self, minion: CardInstance, player: PlayerState, bot: Bot) -> None:
         """Have a minion perform an action with full action resolution.
 
@@ -633,6 +681,14 @@ class PhaseManager:
         # Step 1: Announce action
         self._log_action(player, f'{minion.name} announces {action_info["name"]}')
         minion.lock()
+
+        # Check if any other player plays Direct Intervention (out-of-turn)
+        # to cancel this action. Only applies to referendums and action cards.
+        if self._check_direct_intervention(player, action_type):
+            self._log_action(player, f'{action_info["name"]} cancelled by Direct Intervention')
+            minion.unlock()
+            minion.has_acted_this_turn = False
+            return
 
         # Step 2: Block attempt phase
         # Blockers may attempt to block; acting minion can play stealth

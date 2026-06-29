@@ -18,6 +18,7 @@ class CardPosition(str, Enum):
     attached = 'attached'
     contested = 'contested'
     removed = 'removed'
+    bottom_of_library = 'bottom_of_library'
 
 
 class CardInstance(BaseModel):

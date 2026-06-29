@@ -1,0 +1,16 @@
+{
+  "abilities": [
+    {
+      "disciplines": [],
+      "context": "MASTER",
+      "effects": [
+        {
+          "function": "master.direct_intervention",
+          "params": {},
+          "text": "Cancel an action when any referendum or action card is played. Put this card on the bottom of your library."
+        }
+      ]
+    }
+  ],
+  "master_type": "reaction"
+}
