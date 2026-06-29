@@ -7,7 +7,8 @@
       "disciplines": [],
       "context": "MASTER",
       "effects": [
-        {"function": "master.hand_size", "params": {"value": 1}, "text": "+1 hand size (permanent)."}
+        {"function": "master.hand_size", "params": {"value": 1}, "text": "+1 hand size (permanent)."},
+        {"function": "master.stealth_boost", "params": {"min_capacity": 8}, "text": "Lock to give a vampire with capacity 8 or more +1 stealth."}
       ]
     }
   ]
