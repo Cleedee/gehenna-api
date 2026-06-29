@@ -64,6 +64,8 @@ class GameState(BaseModel):
     referendum_results: dict = Field(default_factory=dict)
     # Track minions that entered torpor this phase (cannot leave torpor same phase)
     torpor_this_phase: set[str] = Field(default_factory=set)
+    # Cards that can only be played once per game globally (e.g., Giant's Blood)
+    one_per_game_used: set[str] = Field(default_factory=set)
     # Seeded random generator for reproducibility
     _rng: _random_module.Random = PrivateAttr()
 

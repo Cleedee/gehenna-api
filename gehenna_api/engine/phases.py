@@ -390,7 +390,7 @@ class PhaseManager:
                 return False
 
         # Unique cards: can't play a second copy if already in play or
-        # already used (ash_heap = one-shot unique cards like Giant's Blood)
+        # already used (ash_heap = one-shot unique cards)
         if inst.is_unique:
             name_lower = inst.name.lower()
             for c in self.state.cards.values():
@@ -399,6 +399,10 @@ class PhaseManager:
                         and c.name.lower() == name_lower
                         and c.position in ('ready', 'attached', 'in_play', 'ash_heap')):
                     return False
+
+        # One-per-game cards (e.g., Giant's Blood): check globally
+        if inst.name in self.state.one_per_game_used:
+            return False
 
         return True
 
@@ -542,38 +546,38 @@ class PhaseManager:
         player: PlayerState,
         inst: CardInstance,
     ) -> None:
-        """Fill a vampire to full capacity with blood from the blood bank.
+        """Fill a ready vampire to full capacity with blood from the blood bank.
 
         Effect used by: Giant's Blood (fill vampire to full capacity).
-        Picks the ready vampire with the most missing blood first.
-        If no ready vampire, tries uncontrolled vampires.
-        Only fills one vampire per card.
+        Only targets ready vampires (controlled).
+        Only one Giant's Blood can be played per game (globally tracked).
         """
         vamp_tipos = ('Vampire', 'vampire', 'Imbued')
         prefix = f'p{player.id}_'
 
-        # Find candidates: ready vampires first, then uncontrolled
+        # Find ready vampires with missing blood
         candidates = [
             c for c in self.state.cards.values()
             if c.id.startswith(prefix)
             and c.tipo in vamp_tipos
-            and c.position in (CardPosition.ready, CardPosition.uncontrolled)
+            and c.position == CardPosition.ready
             and c.blood < c.capacity
         ]
 
         if not candidates:
             self._log_action(
                 player,
-                f'{inst.name}: no valid target (all vampires at full blood)',
+                f'{inst.name}: no valid target (no ready vampire needs blood)',
             )
             return
 
-        # Sort: ready before uncontrolled, then by most missing blood
-        def _key(c):
-            return (0 if c.position == CardPosition.ready else 1, -(c.capacity - c.blood))
-        target = min(candidates, key=_key)
-
+        # Pick the one with most missing blood
+        target = max(candidates, key=lambda c: c.capacity - c.blood)
         target.blood = target.capacity
+
+        # Track as one-per-game globally
+        self.state.one_per_game_used.add(inst.name)
+
         self._log_action(
             player,
             f'{inst.name}: {target.name} filled ({target.blood}/{target.capacity})',
