@@ -7,6 +7,17 @@ from gehenna_api.engine.card_instance import CardInstance, CardPosition
 from gehenna_api.engine.events import EventBus, EventType, GameEvent
 from gehenna_api.engine.state import GameState, Phase, PlayerState
 
+# Impulse system registry for card playability in game windows
+try:
+    from gehenna_api.data.cards.impulse_registry import (
+        get_card_playability,
+        get_window_effect,
+    )
+except ImportError:
+    # Fallback if registry module doesn't exist yet
+    def get_card_playability(card_name): return None  # type: ignore
+    def get_window_effect(effect_name): return None  # type: ignore
+
 
 MASTER_TIPOS = {'Master', 'Master '}
 
@@ -2485,6 +2496,500 @@ class PhaseManager:
     ) -> Optional[PlayerState]:
         targets = [p for p in self.state.active_players if p.id != player.id]
         return self.state.random.choice(targets) if targets else None
+
+    # =========================================================================
+    # IMPULSE SYSTEM — Game Window Processing (Phase 1 Foundation)
+    # =========================================================================
+
+    def _process_window(
+        self,
+        window: str,
+        acting_player: PlayerState | None,
+        context: dict,
+        bots: dict[int, Bot],
+    ) -> bool:
+        """Process a game window with impulse cycling.
+
+        Iterates through players in impulse order, giving each the chance
+        to play eligible cards. If any player plays a card, the acting
+        player regains impulse (resets the cycle). Continues until all
+        players pass consecutively.
+
+        Args:
+            window: The game window name (e.g. 'as_announced', 'block_attempt')
+            acting_player: The player whose turn/action it is
+            context: Shared context dict (action_info, minion, etc.)
+            bots: Dict of player_id -> Bot for decision making
+
+        Returns:
+            True if the window was processed (always), False if timed out
+        """
+        order = self._get_impulse_order(window, acting_player, context)
+        if not order:
+            return False
+
+        passed: set[int] = set()
+        idx = 0
+        rounds = 0
+        max_rounds = 50  # Safety limit
+
+        while len(passed) < len(order):
+            rounds += 1
+            if rounds > max_rounds:
+                self._log_action(
+                    acting_player,
+                    f'[WARNING] Impulse window {window} timed out',
+                )
+                return False
+
+            current_player = order[idx]
+
+            if current_player.id in passed:
+                idx = (idx + 1) % len(order)
+                continue
+
+            # Get cards this player can play in this window
+            playables = self._get_playable_cards(
+                current_player, window, context, bots
+            )
+
+            if playables:
+                # Bot chooses which card to play
+                card_id = self._choose_card_for_window(
+                    current_player, playables, window, context, bots
+                )
+                if card_id:
+                    card = self.state.card_by_id(card_id)
+                    if card:
+                        self._execute_card_in_window(
+                            card, current_player, window, context
+                        )
+                        passed.clear()
+                        # Acting player regains impulse
+                        idx = 0
+                        continue
+
+            # Player passes
+            passed.add(current_player.id)
+            idx = (idx + 1) % len(order)
+
+        return True
+
+    def _get_impulse_order(
+        self,
+        window: str,
+        acting_player: PlayerState | None,
+        context: dict,
+    ) -> list[PlayerState]:
+        """Calculate the impulse order for a game window.
+
+        Rules (V:TES Sequencing, p.8):
+        - Acting Methuselah always has impulse first
+        - During undirected action: prey first, then predator
+        - Then everyone else in clockwise order
+        - During block_attempt: acting minion's controller first, then blocker's
+        - During after_blocks/before_block: only the acting player
+        """
+        if not acting_player:
+            return list(self.state.players)
+
+        # Windows restricted to acting player only
+        if window in ('before_block', 'after_blocks'):
+            return [acting_player]
+
+        # Block attempt: actives's controller then blocker's controller
+        if window == 'block_attempt':
+            blocker_player = context.get('blocker_player')
+            result = [acting_player]
+            if blocker_player and blocker_player.id != acting_player.id:
+                result.append(blocker_player)
+            return result
+
+        # Full table order for announced/before_resolution/combat windows
+        result = [acting_player]
+        seen: set[int] = {acting_player.id}
+
+        # Walk clockwise from acting player (prey first)
+        current = self.state.prey_of(acting_player.id)
+        while current and current.id not in seen:
+            result.append(current)
+            seen.add(current.id)
+            current = self.state.prey_of(current.id)
+
+        return result
+
+    def _get_playable_cards(
+        self,
+        player: PlayerState,
+        window: str,
+        context: dict,
+        bots: dict[int, Bot],
+    ) -> list[CardInstance]:
+        """Return cards in the player's hand that can be played in this window."""
+        playables: list[CardInstance] = []
+
+        for cid in list(player.hand):
+            card = self.state.card_by_id(cid)
+            if not card:
+                continue
+
+            if not self._can_play_in_window(card, window, context):
+                continue
+
+            if not self._can_afford_card(card, player, context):
+                continue
+
+            if not self._check_card_conditions(card, window, context):
+                continue
+
+            playables.append(card)
+
+        return playables
+
+    def _can_play_in_window(
+        self,
+        card: CardInstance,
+        window: str,
+        context: dict,
+    ) -> bool:
+        """Check if a card can be played in a specific game window.
+
+        Priority:
+        1. CARD_PLAYABILITY_REGISTRY (explicit mapping)
+        2. CardInstance.playable_windows (from override JSONs)
+        3. Heuristic rules by card tipo/master_type
+        """
+        # 1. Check registry
+        registry = get_card_playability(card.name)
+        if registry:
+            return window in registry.windows
+
+        # 2. Check explicit playable_windows on the card instance
+        if card.playable_windows:
+            return window in card.playable_windows
+
+        # 3. Heuristic rules
+        tipo_key = card.tipo.strip().lower()
+
+        # Reaction master cards (out-of-turn) can be played in as_announced
+        # and before_resolution (base rule; specific cards use registry)
+        if getattr(card, 'master_type', None) == 'reaction':
+            if window in ('as_announced', 'before_resolution'):
+                return True
+
+        # Action modifiers with stealth can be played during block attempts
+        if window == 'block_attempt':
+            if tipo_key in ('action_modifier', 'action modifier'):
+                return card.stealth > 0
+            if tipo_key == 'reaction':
+                return card.intercept > 0
+
+        # Action modifiers without stealth can be played after blocks
+        if window == 'after_blocks':
+            if tipo_key in ('action_modifier', 'action modifier'):
+                return True
+
+        # Reaction cards can be played before resolution of bleed actions
+        if window == 'before_resolution':
+            if tipo_key == 'reaction':
+                return True
+
+        return False
+
+    def _can_afford_card(
+        self,
+        card: CardInstance,
+        player: PlayerState,
+        context: dict,
+    ) -> bool:
+        """Check if the player can afford to play a card."""
+        # Check registry for cost info first
+        registry = get_card_playability(card.name)
+        if registry:
+            if registry.cost_type == 'pool':
+                return player.pool >= registry.cost_amount
+            else:
+                # Blood cost: need a ready minion with enough blood
+                minion = context.get('minion')
+                return minion is not None and minion.blood >= registry.cost_amount
+
+        # Fallback: check pool_cost on the card
+        cost = card.pool_cost if card.pool_cost > 0 else 0
+        if cost > 0:
+            return player.pool >= cost
+
+        return True  # No cost = affordable
+
+    def _check_card_conditions(
+        self,
+        card: CardInstance,
+        window: str,
+        context: dict,
+    ) -> bool:
+        """Check additional conditions from the registry for playing a card."""
+        registry = get_card_playability(card.name)
+        if not registry:
+            return True
+
+        for key, value in registry.conditions.items():
+            if key == 'action_type':
+                action_type = context.get('action_type')
+                if action_type is None:
+                    return False
+                if isinstance(value, tuple):
+                    if action_type not in value:
+                        return False
+                elif action_type != value:
+                    return False
+
+            elif key == 'is_directed':
+                is_directed = context.get('is_directed', False)
+                if is_directed != value:
+                    return False
+
+            elif key == 'minion_has_discipline':
+                discipline = value
+                minion = context.get('minion')
+                if not minion or not self._minion_has_discipline(minion, discipline):
+                    return False
+
+        return True
+
+    def _choose_card_for_window(
+        self,
+        player: PlayerState,
+        cards: list[CardInstance],
+        window: str,
+        context: dict,
+        bots: dict[int, Bot],
+    ) -> str | None:
+        """Choose which card to play in a window.
+
+        Uses the player's bot if available, otherwise picks the first card.
+        """
+        bot = bots.get(player.id)
+        if bot and hasattr(bot, 'choose_card_for_window'):
+            return bot.choose_card_for_window(
+                self.state, player.id, cards, window, context
+            )
+        # Default: play the first eligible card
+        if cards:
+            return cards[0].id
+        return None
+
+    def _execute_card_in_window(
+        self,
+        card: CardInstance,
+        player: PlayerState,
+        window: str,
+        context: dict,
+    ) -> None:
+        """Execute a card's effect when played in a game window.
+
+        Handles:
+        - Paying costs
+        - Removing from hand
+        - Setting card position (ash_heap or bottom_of_library)
+        - Calling the effect handler
+        - Out-of-turn master tracking
+        - Logging
+        """
+        # 1. Pay cost
+        self._pay_window_card_cost(card, player, context)
+
+        # 2. Remove from hand
+        if card.id in player.hand:
+            player.hand.remove(card.id)
+
+        # 3. Determine effect and execute
+        effect_name = ''
+        registry = get_card_playability(card.name)
+        if registry:
+            effect_name = registry.effect
+            effect_def = get_window_effect(effect_name)
+            if effect_def:
+                handler_name = effect_def.handler
+                handler = getattr(self, handler_name, None)
+                if handler:
+                    handler(card, player, context)
+
+        # 4. Position the card
+        if getattr(card, 'master_type', None) == 'reaction':
+            # Out-of-turn masters go to bottom of library
+            card.position = CardPosition.bottom_of_library
+            # Track out-of-turn master usage
+            self._track_out_of_turn_master(player, card)
+        else:
+            card.position = CardPosition.ash_heap
+
+        # 5. Log
+        log_msg = f'{player.username} plays {card.name}'
+        if window:
+            log_msg += f' ({window})'
+        if effect_name:
+            log_msg += f' [{effect_name}]'
+        self._log_action(player, log_msg)
+
+        # 6. Emit event
+        self.events.emit(
+            GameEvent(
+                type=EventType.card_played,
+                player_id=player.id,
+                data={
+                    'card': card.name,
+                    'window': window,
+                    'effect': effect_name,
+                },
+            )
+        )
+
+    def _pay_window_card_cost(
+        self,
+        card: CardInstance,
+        player: PlayerState,
+        context: dict,
+    ) -> None:
+        """Pay the cost for a card played in a game window."""
+        registry = get_card_playability(card.name)
+        if registry:
+            if registry.cost_type == 'pool':
+                player.pool -= registry.cost_amount
+                return
+            elif registry.cost_type == 'blood':
+                minion = context.get('minion')
+                if minion:
+                    minion.blood -= registry.cost_amount
+                return
+
+        # Fallback: use pool_cost field
+        cost = card.pool_cost if card.pool_cost > 0 else 0
+        if cost > 0:
+            player.pool -= cost
+
+    def _track_out_of_turn_master(
+        self,
+        player: PlayerState,
+        card: CardInstance,
+    ) -> None:
+        """Track that a player played an out-of-turn master card.
+
+        Per V:TES rules:
+        - Cannot play more than one out-of-turn master between own turns
+        - Playing one reduces master phase actions in the next turn
+        """
+        if not player.out_of_turn_master_played:
+            player.mark_out_of_turn_master()
+
+    # =========================================================================
+    # IMPULSE SYSTEM — Window Effect Handlers
+    # =========================================================================
+
+    def _apply_cancel_action(
+        self,
+        card: CardInstance,
+        player: PlayerState,
+        context: dict,
+    ) -> None:
+        """Cancel the current action entirely.
+
+        The acting minion unlocks and has_acted_this_turn is reset.
+        The action card (if any) is not paid or burned.
+        """
+        minion = context.get('minion')
+        if minion:
+            minion.unlock()
+            minion.has_acted_this_turn = False
+        context['cancelled'] = True
+
+    def _apply_stealth_modifier(
+        self,
+        card: CardInstance,
+        player: PlayerState,
+        context: dict,
+    ) -> None:
+        """Add stealth from a modifier card to the action context."""
+        context['modifier_stealth'] = (
+            context.get('modifier_stealth', 0) + card.stealth
+        )
+        # Also update action_info.stealth if present
+        action_info = context.get('action_info')
+        if action_info:
+            action_info['stealth'] = action_info.get('stealth', 0) + card.stealth
+
+    def _apply_intercept_reaction(
+        self,
+        card: CardInstance,
+        player: PlayerState,
+        context: dict,
+    ) -> None:
+        """Add intercept from a reaction card to the action context."""
+        context['reaction_intercept'] = (
+            context.get('reaction_intercept', 0) + card.intercept
+        )
+
+    def _apply_bleed_modifier(
+        self,
+        card: CardInstance,
+        player: PlayerState,
+        context: dict,
+    ) -> None:
+        """Add bleed from a modifier card to the action context."""
+        context['bleed_bonus'] = context.get('bleed_bonus', 0) + card.bleed
+
+    def _apply_wake_minion(
+        self,
+        card: CardInstance,
+        player: PlayerState,
+        context: dict,
+    ) -> None:
+        """Wake a minion so it can block or play reactions.
+
+        Marks the player as 'woken' in the context so the engine
+        allows their locked minions to act during this action.
+        """
+        woke = context.get('woke_players', set())
+        woke.add(player.id)
+        context['woke_players'] = woke
+
+    def _apply_grant_intercept(
+        self,
+        card: CardInstance,
+        player: PlayerState,
+        context: dict,
+    ) -> None:
+        """Grant intercept to a blocking minion."""
+        context['reaction_intercept'] = (
+            context.get('reaction_intercept', 0) + card.intercept
+        )
+
+    def _apply_redirect_bleed(
+        self,
+        card: CardInstance,
+        player: PlayerState,
+        context: dict,
+    ) -> None:
+        """Redirect a bleed to another Methuselah.
+
+        Placeholder — to be fully implemented in Phase 4.
+        """
+        # TODO: Implement redirect target selection
+        pass
+
+    def _apply_cancel_political(
+        self,
+        card: CardInstance,
+        player: PlayerState,
+        context: dict,
+    ) -> None:
+        """Cancel a political action/referendum.
+
+        Placeholder — to be fully implemented in Phase 4.
+        """
+        minion = context.get('minion')
+        if minion:
+            minion.unlock()
+            minion.has_acted_this_turn = False
+        context['cancelled'] = True
 
     def _log_action(self, player: PlayerState, message: str) -> None:
         self.events.emit(

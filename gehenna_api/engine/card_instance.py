@@ -68,6 +68,10 @@ class CardInstance(BaseModel):
     abilities: list = []
     # Disciplines string (pipe-delimited, e.g. '|pre|PRE|cel|')
     disciplines: str = ''
+    # Game windows where this card can be played (impulse system)
+    playable_windows: list[str] = Field(default_factory=list)
+    # Whether this is an out-of-turn master card
+    out_of_turn: bool = False
 
     def lock(self) -> None:
         self.locked = True
