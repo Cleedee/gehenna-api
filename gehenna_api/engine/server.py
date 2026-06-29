@@ -136,12 +136,17 @@ def _make_card_instance(
     except Exception:
         is_infernal = False
 
+    # Use enriched tipo from override if available (e.g., 'Master/Trifle')
+    tipo = card_data.get('tipo', '')
+    if enriched and enriched.tipo:
+        tipo = enriched.tipo
+
     return CardInstance(
         id=f'{prefix}_{card_data["id"]}_{card_index}',
         card_id=card_data['id'],
         name=card_data['name'],
         position=CardPosition.library,
-        tipo=card_data.get('tipo', ''),
+        tipo=tipo,
         pool_cost=pool_cost,
         capacity=_safe_int(card_data.get('capacity')) or _safe_int(card_data.get('blood')) or 0,
         stealth=stealth_value,

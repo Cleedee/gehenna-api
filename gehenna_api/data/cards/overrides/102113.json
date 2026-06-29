@@ -1,12 +1,17 @@
 {
+  "tipo": "Master/Trifle",
   "master_type": "attached",
-  "text": "Put this card on a ready vampire you control. The vampire gets +1 blood capacity (increase its capacity by 1).",
+  "text": "Master: trifle. Put this card on a vampire, and you may burn a Blood Doll in play (if any). During this vampire's controller's untap phase, he or she may move 1 blood from this vampire to his or her pool or from his or her pool to this vampire.",
   "abilities": [
     {
       "disciplines": [],
       "context": "MASTER",
       "effects": [
-        {"function": "master.blood_capacity", "params": {"value": 1}, "text": "Vampire gets +1 blood capacity."}
+        {
+          "function": "master.vessel_untap",
+          "params": {},
+          "text": "During untap phase, move 1 blood between this vampire and your pool."
+        }
       ]
     }
   ]
