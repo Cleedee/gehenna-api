@@ -377,12 +377,14 @@ class PhaseManager:
                 # Remove from hand when attached
                 if inst.id in player.hand:
                     player.hand.remove(inst.id)
+                    self.draw_cards(player, 1)
                 self._log_action(player, f'{inst.name} attached to {target.name}')
             else:
                 # No valid target, burn the card
                 inst.position = 'ash_heap'
                 if inst.id in player.hand:
                     player.hand.remove(inst.id)
+                    self.draw_cards(player, 1)
                 self._log_action(player, f'{inst.name} burned (no valid target)')
         elif master_type == 'permanent':
             # Permanent master stays in ready region
@@ -390,6 +392,7 @@ class PhaseManager:
             # Remove from hand when put in play
             if inst.id in player.hand:
                 player.hand.remove(inst.id)
+                self.draw_cards(player, 1)
             self._log_action(player, f'{inst.name} in play (permanent)')
             # Apply permanent master effects
             self._apply_master_effects(player, inst)
@@ -427,7 +430,15 @@ class PhaseManager:
             params = effect.get('params', {})
             if func == 'master.hand_size':
                 # Increase hand size permanently
+                old_size = player.hand_size
                 player.hand_size += params.get('value', 1)
+                # Draw cards to fill to the new hand size
+                cards_to_draw = min(
+                    player.hand_size - old_size,
+                    player.hand_size - len(player.hand),
+                )
+                if cards_to_draw > 0:
+                    self.draw_cards(player, cards_to_draw)
                 self._log_action(
                     player,
                     f'{inst.name}: hand size +{params.get("value", 1)} (now {player.hand_size})',
@@ -1286,6 +1297,7 @@ class PhaseManager:
                     # Play the card
                     if c.id in player.hand:
                         player.hand.remove(c.id)
+                        self.draw_cards(player, 1)
                     c.position = CardPosition.ash_heap
                     self._log_action(
                         player,
@@ -1517,6 +1529,7 @@ class PhaseManager:
             if c.maneuvers > 0:
                 if c.id in player.hand:
                     player.hand.remove(c.id)
+                    self.draw_cards(player, 1)
                 c.position = CardPosition.ash_heap
                 self._log_action(player, f'{minion.name} plays {c.name} (combat)')
                 minion.maneuvers += c.maneuvers
@@ -1921,6 +1934,7 @@ class PhaseManager:
                 minion.blood -= cost
                 # Remove from hand and burn
                 player.hand.remove(cid)
+                self.draw_cards(player, 1)
                 card.position = CardPosition.ash_heap
                 break
 
@@ -2262,6 +2276,7 @@ class PhaseManager:
         # Remove from hand
         if card.id in player.hand:
             player.hand.remove(card.id)
+            self.draw_cards(player, 1)
         self._log_action(player, f'{minion.name} equips {card.name}')
 
     def _resolve_employ_retainer(self, minion: CardInstance, player: PlayerState, card: CardInstance) -> None:
@@ -2288,6 +2303,7 @@ class PhaseManager:
         # Remove from hand
         if card.id in player.hand:
             player.hand.remove(card.id)
+            self.draw_cards(player, 1)
         self._log_action(player, f'{minion.name} employs {card.name}')
 
     def _resolve_recruit_ally(self, minion: CardInstance, player: PlayerState, card: CardInstance) -> None:
@@ -2322,6 +2338,7 @@ class PhaseManager:
         # Remove card from hand
         if card.id in player.hand:
             player.hand.remove(card.id)
+            self.draw_cards(player, 1)
         self._log_action(player, f'{minion.name} recruits {card.name}')
 
     def _grant_edge(self, player: PlayerState) -> None:
@@ -2471,18 +2488,19 @@ class PhaseManager:
                 return
 
         # No events to play - normal discard down to hand size
-        if len(player.hand) <= 7:
+        max_hand = player.hand_size
+        if len(player.hand) <= max_hand:
             self._log_action(player, 'discard - skip')
             return
 
         bot = bots.get(player.id)
         if not bot:
-            excess = len(player.hand) - 7
+            excess = len(player.hand) - max_hand
             player.hand = player.hand[:-excess]
             self._log_action(player, f'discard - auto ({excess} cards)')
             return
 
-        to_discard = len(player.hand) - 7
+        to_discard = len(player.hand) - max_hand
         for _ in range(to_discard):
             if not player.hand:
                 break
