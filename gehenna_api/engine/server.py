@@ -87,10 +87,20 @@ def _make_card_instance(
     card_data: dict, card_index: int, prefix: str
 ) -> CardInstance:
     cost_str = (card_data.get('cost') or '0').strip()
-    try:
-        pool_cost = int(cost_str)
-    except ValueError:
-        pool_cost = 0
+    # Parse cost: "1P" = 1 pool, "1B" = 1 blood, "1" = 1 (assume pool for masters, blood for minions)
+    if cost_str.endswith('P'):
+        pool_cost = int(cost_str[:-1]) if cost_str[:-1].isdigit() else 0
+    elif cost_str.endswith('B'):
+        pool_cost = int(cost_str[:-1]) if cost_str[:-1].isdigit() else 0
+    elif cost_str.endswith('C'):
+        pool_cost = int(cost_str[:-1]) if cost_str[:-1].isdigit() else 0
+    elif cost_str.startswith('X'):
+        pool_cost = 0  # Variable cost, handled elsewhere
+    else:
+        try:
+            pool_cost = int(cost_str)
+        except ValueError:
+            pool_cost = 0
 
     # Parse card text to extract modifiers (bleed, stealth, intercept)
     bleed_value = 0
@@ -159,6 +169,7 @@ def _make_card_instance(
         abilities=abilities,
         effects=effects,
         disciplines=card_data.get('disciplines', ''),
+        sect=card_data.get('sect', ''),
     )
 
 

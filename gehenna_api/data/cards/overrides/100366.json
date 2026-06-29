@@ -1,0 +1,15 @@
+{
+  "is_unique": true,
+  "cost": "1P",
+  "master_type": "permanent",
+  "text": "Master: unique location. When any anarch vampire declares a bleed action, he or she can burn 1 blood to get +1 bleed on that action (only usable once each action).",
+  "abilities": [
+    {
+      "disciplines": [],
+      "context": "MASTER",
+      "effects": [
+        {"function": "master.anarch_bleed_bonus", "params": {}, "text": "Anarch vampires can burn 1 blood for +1 bleed on bleed actions."}
+      ]
+    }
+  ]
+}

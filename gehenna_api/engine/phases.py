@@ -404,6 +404,10 @@ class PhaseManager:
         if inst.name in self.state.one_per_game_used:
             return False
 
+        # Check if player can afford pool cost
+        if inst.pool_cost > 0 and player.pool < inst.pool_cost:
+            return False
+
         return True
 
     def _use_master_action(self, player: PlayerState, bot: Bot, master_card_played: bool) -> None:
@@ -442,6 +446,11 @@ class PhaseManager:
             return
 
         self._log_action(player, f'master: {inst.name}')
+
+        # Pay pool cost (e.g., "1P" = 1 pool)
+        if inst.pool_cost > 0:
+            player.pool -= inst.pool_cost
+            self._log_action(player, f'pay {inst.pool_cost} pool')
 
         # Determine master placement based on master_type
         master_type = getattr(inst, 'master_type', None)
@@ -540,6 +549,13 @@ class PhaseManager:
             elif func == 'master.fill_blood':
                 # Fill a vampire to full capacity with blood from blood bank
                 self._resolve_fill_blood(player, inst)
+            elif func == 'master.anarch_bleed_bonus':
+                # Club Illusion: passive effect — handled during bleed resolution
+                # Just log it's in play
+                self._log_action(
+                    player,
+                    f'{inst.name}: anarch vampires may burn 1 blood for +1 bleed',
+                )
 
     def _resolve_fill_blood(
         self,
@@ -1077,10 +1093,26 @@ class PhaseManager:
         if action_type == 'bleed':
             prey = self.state.prey_of(player.id)
             is_directed = prey is not None
+
+            # Check Club Illusion: anarch vampire can burn 1 blood for +1 bleed
+            bleed_bonus = 0
+            club_illusion_used = False
+            if minion.sect.lower() == 'anarch' and minion.blood >= 1:
+                club_illusion = self._find_player_master(player, "Club Illusion")
+                if club_illusion:
+                    minion.blood -= 1
+                    bleed_bonus = 1
+                    club_illusion_used = True
+                    self._log_action(
+                        player,
+                        f'{minion.name} burns 1 blood for +1 bleed (Club Illusion)',
+                    )
+
             info = {
                 'name': f'bleed' + (f' {prey.username}' if prey else ''),
                 'stealth': minion.stealth,
                 'directed': is_directed,
+                'bleed_bonus': bleed_bonus,
                 'resolve': lambda m, p, b: self._resolve_bleed_action(m, p, info),
             }
             return info
@@ -3381,6 +3413,18 @@ class PhaseManager:
             player.hand.append(card_id)
             drawn.append(card_id)
         return drawn
+
+    def _find_player_master(self, player: PlayerState, name: str) -> CardInstance | None:
+        """Find a permanent master card in play by name for a given player."""
+        prefix = f'p{player.id}_'
+        name_lower = name.lower()
+        for c in self.state.cards.values():
+            if (c.id.startswith(prefix)
+                    and c.name.lower() == name_lower
+                    and c.position == CardPosition.ready
+                    and c.master_type == 'permanent'):
+                return c
+        return None
 
     @staticmethod
     def _shuffle_ash_into_library(player: PlayerState) -> None:

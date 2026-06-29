@@ -68,6 +68,8 @@ class CardInstance(BaseModel):
     abilities: list = []
     # Disciplines string (pipe-delimited, e.g. '|pre|PRE|cel|')
     disciplines: str = ''
+    # Sect (Anarch, Camarilla, Sabbat, Independent, etc.)
+    sect: str = ''
     # Game windows where this card can be played (impulse system)
     playable_windows: list[str] = Field(default_factory=list)
     # Whether this is an out-of-turn master card
