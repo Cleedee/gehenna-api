@@ -524,10 +524,9 @@ class PhaseManager:
         if not player or self.state.is_finished:
             return
         bot = bots.get(player.id)
-        if bot:
-            self._player_minion_phase(player, bot)
+        self._player_minion_phase(player, bots)
 
-    def _player_minion_phase(self, player: PlayerState, bot: Bot) -> None:
+    def _player_minion_phase(self, player: PlayerState, bots: dict[int, Bot]) -> None:
         """Execute minion phase for a player.
         
         Each ready unlocked minion can perform one action.
@@ -564,7 +563,7 @@ class PhaseManager:
                     continue
                 
                 # Non-mandatory actions
-                self._minion_action(minion, player, bot)
+                self._minion_action(minion, player, bots)
                 processed_this_wave.add(minion.id)
         
         if not processed_this_wave:
@@ -613,60 +612,28 @@ class PhaseManager:
         """Check if a minion is an ally."""
         return minion.tipo == 'Ally'
 
-    def _check_direct_intervention(
+    def _minion_action(
         self,
-        acting_player: PlayerState,
-        action_type: str,
-    ) -> bool:
-        """Check if any other player wants to play Direct Intervention.
-
-        Direct Intervention is a Master card that can be played out-of-turn
-        when a referendum (political action) or action card is played.
-        It cancels the action and goes to the bottom of the library.
-        """
-        # Direct Intervention only works against referendums and action cards
-        if action_type not in ('political', 'action_card'):
-            return False
-
-        for player in self.state.players:
-            if player.id == acting_player.id or player.is_ousted:
-                continue
-
-            # Check if player has Direct Intervention in hand
-            for cid in list(player.hand):
-                card = self.state.card_by_id(cid)
-                if (not card
-                        or card.name != 'Direct Intervention'
-                        or getattr(card, 'master_type', None) != 'reaction'):
-                    continue
-
-                # Found one! Check if player can pay the cost (1 pool)
-                if player.pool < 1:
-                    continue
-
-                # Play Direct Intervention
-                player.pool -= 1
-                player.hand.remove(cid)
-                card.position = CardPosition.bottom_of_library
-                self._log_action(
-                    player,
-                    f'Direct Intervention played by {player.username} - action cancelled',
-                )
-                return True
-
-        return False
-
-    def _minion_action(self, minion: CardInstance, player: PlayerState, bot: Bot) -> None:
+        minion: CardInstance,
+        player: PlayerState,
+        bots: dict[int, Bot],
+    ) -> None:
         """Have a minion perform an action with full action resolution.
 
-        Action resolution with impulse system:
+        Action resolution with impulse system (V:TES rules):
         1. Announce action (lock acting minion)
-        2. Action modifier phase (acting minion first)
-        3. Block attempt phase (defender, then prey/predator)
-        4. Reaction phase (defender first, then others)
-        5. Resolve or combat
+        2. [WINDOW as_announced] — out-of-turn masters, wake, reflex
+        3. Block attempt phase with [WINDOW block_attempt]
+           (stealth modifiers + intercept reactions in impulse cycle)
+        4. [WINDOW after_blocks] — action modifiers (bleed, etc.) after blocks
+        5. [WINDOW before_resolution] — reactions (Deflection, etc.)
+        6. Resolve action
         """
         if minion.has_acted_this_turn:
+            return
+
+        bot = bots.get(player.id)
+        if not bot:
             return
 
         action_type = bot.choose_action_type(self.state, player.id, minion.id)
@@ -689,49 +656,64 @@ class PhaseManager:
                         action_info['stealth'] = 1 + minion.stealth
                         action_info['directed'] = False
 
+        # Create shared context for impulse windows
+        context = {
+            'minion': minion,
+            'acting_player': player,
+            'action_type': action_type,
+            'action_info': action_info,
+            'is_directed': action_info.get('directed', False),
+        }
+
         # Step 1: Announce action
         self._log_action(player, f'{minion.name} announces {action_info["name"]}')
         minion.lock()
 
-        # Check if any other player plays Direct Intervention (out-of-turn)
-        # to cancel this action. Only applies to referendums and action cards.
-        if self._check_direct_intervention(player, action_type):
-            self._log_action(player, f'{action_info["name"]} cancelled by Direct Intervention')
+        # Step 2: [WINDOW as_announced]
+        # Out-of-turn masters (Direct Intervention), wake effects, reflex cards
+        self._process_window('as_announced', player, context, bots)
+
+        if context.get('cancelled'):
+            self._log_action(
+                player, f'{action_info["name"]} cancelled'
+            )
             minion.unlock()
             minion.has_acted_this_turn = False
             return
 
-        # Step 2: Block attempt phase
-        # Blockers may attempt to block; acting minion can play stealth
-        # action modifiers reactively during block attempts
+        # Step 3: Block attempt phase with [WINDOW block_attempt]
+        # During block attempts, acting minion plays stealth modifiers
+        # and blocking minion plays intercept reactions in impulse cycle
         blocked, blocker = self._resolve_block_attempts(
-            minion, player, action_info, bot
+            minion, player, action_info, bots, context
         )
 
         if blocked:
-            self._log_action(player, f'{action_info["name"]} blocked by {blocker.name}')
+            self._log_action(
+                player, f'{action_info["name"]} blocked by {blocker.name}'
+            )
             self._start_combat(minion, blocker)
             minion.has_acted_this_turn = True
             return
 
-        # Step 3: Action modifier phase (after blocks declined)
-        # Now that the action is not blocked, acting minion can play
-        # action modifiers (bleed enhancers, etc.) before resolution
-        modifiers = self._play_action_modifiers(minion, player, action_info, bot)
-        self._apply_modifier_effects(action_info, modifiers)
+        # Step 4: [WINDOW after_blocks]
+        # Action modifiers (bleed enhancers, etc.) after blocks declined
+        self._process_window('after_blocks', player, context, bots)
 
-        # Step 4: Reaction phase
+        # Step 5: [WINDOW before_resolution]
         # Reactions can be played by other Methuselahs' minions
-        # Only called for pure bleed actions (not generic action cards),
-        # where reactions like Deflection (redirect bleed) are meaningful.
-        # The engine does not yet support redirect effects for other types.
-        reactions = []
-        if action_type == 'bleed':
-            reactions = self._play_reactions(minion, player, action_info, bot)
-            self._apply_reaction_effects(action_info, reactions)
+        # before the action resolves (Deflection, Delaying Tactics, etc.)
+        self._process_window('before_resolution', player, context, bots)
 
-        # Step 5: Resolve action
-        # Pass action_info to resolve when we have a pre-selected action card
+        if context.get('cancelled'):
+            self._log_action(
+                player, f'{action_info["name"]} cancelled'
+            )
+            minion.unlock()
+            minion.has_acted_this_turn = False
+            return
+
+        # Step 7: Resolve action
         if '_action_card' in action_info:
             action_info['resolve'](minion, player, bot, action_info)
         else:
@@ -1024,9 +1006,13 @@ class PhaseManager:
         minion: CardInstance,
         player: PlayerState,
         action_info: dict,
-        bot: Bot,
+        bots: dict[int, Bot],
+        context: dict,
     ) -> tuple[bool, Optional[CardInstance]]:
-        """Resolve block attempts for an action.
+        """Resolve block attempts for an action using impulse windows.
+
+        Uses the [WINDOW block_attempt] to manage the stealth/intercept
+        impulse cycle between the acting minion and the blocker.
 
         Returns (blocked, blocker):
         - blocked: True if action was blocked
@@ -1038,14 +1024,14 @@ class PhaseManager:
         - Block succeeds if blocker's intercept >= acting minion's stealth
         - Blocker must be ready and unlocked
         """
-        acting_stealth = action_info['stealth']
+        bot = bots.get(player.id)
 
         # Determine who can block
         potential_blockers = []
 
         if action_info['directed']:
             # Directed: only target can block
-            target = self.state.prey_of(player.id)  # For bleed
+            target = self.state.prey_of(player.id)
             if target:
                 for b in self._get_blocking_minions(target.id):
                     if b not in potential_blockers:
@@ -1054,7 +1040,6 @@ class PhaseManager:
             # Undirected: prey first, then predator
             prey = self.state.prey_of(player.id)
             predator = self.state.predator_of(player.id)
-            # Deduplicate in case prey == predator (2-player game)
             seen_players = set()
             for who in (prey, predator):
                 if who and who.id not in seen_players:
@@ -1063,12 +1048,14 @@ class PhaseManager:
 
         # Check if any potential blocker can intercept
         for blocker in potential_blockers:
-            blocker_player = self.state.player_by_id(self._player_id_for_minion(blocker))
+            blocker_player = self.state.player_by_id(
+                self._player_id_for_minion(blocker)
+            )
             if not blocker_player:
                 continue
 
             # Pre-check: skip if blocker has no chance of blocking
-            # (intercept < stealth and no intercept reactions available)
+            acting_stealth = action_info['stealth']
             potential_intercept = blocker.intercept
             for cid in blocker_player.hand:
                 c = self.state.card_by_id(cid)
@@ -1086,31 +1073,31 @@ class PhaseManager:
             if not should_block:
                 continue
 
-            # Blocker attempts to block - priority returns to actor
-            # Per VTES rules: when someone attempts to block, the acting
-            # minion gets priority to play stealth action modifiers
+            # Blocker attempts to block — open block_attempt window
+            # with impulse cycling between acting player and blocker
             action_info['reaction_intercept'] = 0
+            context['modifier_stealth'] = 0
+            context['reaction_intercept'] = 0
 
-            # Acting minion plays stealth modifiers in response to block attempt
-            mods = self._play_stealth_modifiers(minion, player, action_info, bot)
-            self._apply_modifier_effects(action_info, mods)
+            block_context = {
+                **context,
+                'blocker': blocker,
+                'blocker_player': blocker_player,
+            }
+
+            self._process_window('block_attempt', player, block_context, bots)
+
+            # Recalculate after impulse window completed
+            modifier_stealth = block_context.get('modifier_stealth', 0)
+            action_info['stealth'] = action_info.get('stealth', 0) + modifier_stealth
+            reaction_intercept = block_context.get('reaction_intercept', 0)
             acting_stealth = action_info['stealth']
+            blocker_intercept = blocker.intercept + reaction_intercept
 
-            # Now priority passes to blocker to play reactions
-            # Blocker plays intercept-granting reactions if they still can't block
-            if blocker.intercept < acting_stealth:
-                self._play_block_reactions(blocker, blocker_player, action_info, bot)
-
-            # Recalculate after reactions
-            reaction_bonus = action_info.get('reaction_intercept', 0)
-            blocker_intercept = blocker.intercept + reaction_bonus
-
-            # Block succeeds if intercept >= stealth
             if blocker_intercept >= acting_stealth:
                 blocker.lock()
                 return True, blocker
             else:
-                # Block attempt fails, minion stays locked from announcement
                 self._log_action(
                     blocker_player,
                     f'{blocker.name} fails to block {minion.name} '
@@ -2528,6 +2515,8 @@ class PhaseManager:
         if not order:
             return False
 
+        context['_window'] = window  # For cost lookup in helpers
+
         passed: set[int] = set()
         idx = 0
         rounds = 0
@@ -2588,13 +2577,13 @@ class PhaseManager:
         - During undirected action: prey first, then predator
         - Then everyone else in clockwise order
         - During block_attempt: acting minion's controller first, then blocker's
-        - During after_blocks/before_block: only the acting player
+        - During after_blocks: only the acting player
         """
         if not acting_player:
             return list(self.state.players)
 
         # Windows restricted to acting player only
-        if window in ('before_block', 'after_blocks'):
+        if window == 'after_blocks':
             return [acting_player]
 
         # Block attempt: actives's controller then blocker's controller
@@ -2633,7 +2622,7 @@ class PhaseManager:
             if not card:
                 continue
 
-            if not self._can_play_in_window(card, window, context):
+            if not self._can_play_in_window(card, window, context, player):
                 continue
 
             if not self._can_afford_card(card, player, context):
@@ -2651,13 +2640,18 @@ class PhaseManager:
         card: CardInstance,
         window: str,
         context: dict,
+        player: PlayerState | None = None,
     ) -> bool:
         """Check if a card can be played in a specific game window.
 
         Priority:
         1. CARD_PLAYABILITY_REGISTRY (explicit mapping)
         2. CardInstance.playable_windows (from override JSONs)
-        3. Heuristic rules by card tipo/master_type
+        3. Heuristic rules by card tipo/master_type and player role
+
+        For block_attempt window, the acting player can only play action
+        modifiers (stealth), while the blocking player can only play
+        reactions (intercept). This matches V:TES rules.
         """
         # 1. Check registry
         registry = get_card_playability(card.name)
@@ -2670,29 +2664,61 @@ class PhaseManager:
 
         # 3. Heuristic rules
         tipo_key = card.tipo.strip().lower()
+        acting_player = context.get('acting_player')
+        is_acting_player = player is not None and acting_player is not None and player.id == acting_player.id
 
         # Reaction master cards (out-of-turn) can be played in as_announced
         # and before_resolution (base rule; specific cards use registry)
         if getattr(card, 'master_type', None) == 'reaction':
             if window in ('as_announced', 'before_resolution'):
-                return True
+                # Cannot be played by the acting player (out-of-turn)
+                return not is_acting_player
 
-        # Action modifiers with stealth can be played during block attempts
+        # ── block_attempt ─────────────────────────────────────────────
+        # Acting player: action modifiers with stealth
+        # Blocking player: reaction cards with intercept
         if window == 'block_attempt':
-            if tipo_key in ('action_modifier', 'action modifier'):
-                return card.stealth > 0
-            if tipo_key == 'reaction':
-                return card.intercept > 0
+            if is_acting_player:
+                # Acting player plays stealth action modifiers
+                if tipo_key in ('action_modifier', 'action modifier'):
+                    return card.stealth > 0
+                return False
+            else:
+                # Blocking player plays intercept reactions
+                if tipo_key == 'reaction':
+                    return card.intercept > 0
+                return False
 
-        # Action modifiers without stealth can be played after blocks
+        # ── after_blocks ──────────────────────────────────────────────
+        # Only the acting player can play action modifiers (non-stealth)
         if window == 'after_blocks':
-            if tipo_key in ('action_modifier', 'action modifier'):
-                return True
+            if is_acting_player:
+                if tipo_key in ('action_modifier', 'action modifier'):
+                    # Skip pure stealth modifiers (only relevant during block)
+                    if card.stealth > 0 and card.bleed == 0:
+                        return False
+                    return True
+            return False
 
-        # Reaction cards can be played before resolution of bleed actions
+        # ── before_resolution ─────────────────────────────────────────
+        # Non-acting players can play reactions
         if window == 'before_resolution':
-            if tipo_key == 'reaction':
-                return True
+            if not is_acting_player:
+                if tipo_key == 'reaction':
+                    return True
+            return False
+
+        # ── as_announced ──────────────────────────────────────────────
+        # Non-acting players can play out-of-turn masters, wake, reflex
+        if window == 'as_announced':
+            if not is_acting_player:
+                # Out-of-turn masters
+                if getattr(card, 'master_type', None) == 'reaction':
+                    return True
+                # Wake effects (basic heuristic) can be played
+                if card.name in ('Wake', 'On the Qui Vive', 'Wake with Evening\'s Freshness'):
+                    return True
+            return False
 
         return False
 
@@ -2703,22 +2729,87 @@ class PhaseManager:
         context: dict,
     ) -> bool:
         """Check if the player can afford to play a card."""
+        tipo_key = card.tipo.strip().lower()
+        window = context.get('_window', '')
+
         # Check registry for cost info first
         registry = get_card_playability(card.name)
         if registry:
             if registry.cost_type == 'pool':
                 return player.pool >= registry.cost_amount
-            else:
-                # Blood cost: need a ready minion with enough blood
-                minion = context.get('minion')
+            elif registry.cost_type == 'blood':
+                if getattr(card, 'master_type', None) == 'reaction':
+                    return player.pool >= registry.cost_amount
+                minion = self._get_cost_paying_minion(card, player, context)
                 return minion is not None and minion.blood >= registry.cost_amount
 
-        # Fallback: check pool_cost on the card
+        # Fallback heuristic: determine cost type by card type
         cost = card.pool_cost if card.pool_cost > 0 else 0
-        if cost > 0:
+        if cost <= 0:
+            return True
+
+        # Out-of-turn masters pay from pool
+        if getattr(card, 'master_type', None) == 'reaction':
             return player.pool >= cost
 
-        return True  # No cost = affordable
+        # Action modifiers: paid by the acting minion (blood)
+        if tipo_key in ('action_modifier', 'action modifier'):
+            minion = context.get('minion')
+            return minion is not None and minion.blood >= cost
+
+        # Reactions in block_attempt: paid by blocker (blood)
+        if tipo_key == 'reaction' and window == 'block_attempt':
+            blocker = context.get('blocker')
+            return blocker is not None and blocker.blood >= cost
+
+        # Reactions in before_resolution: paid by any ready minion (blood)
+        if tipo_key == 'reaction' and window == 'before_resolution':
+            return self._has_ready_minion_with_blood(player, cost)
+
+        # Default: pool cost
+        return player.pool >= cost
+
+    def _get_cost_paying_minion(
+        self,
+        card: CardInstance,
+        player: PlayerState,
+        context: dict,
+    ) -> CardInstance | None:
+        """Determine which minion pays the cost for a card, based on context."""
+        tipo_key = card.tipo.strip().lower()
+        window = context.get('_window', '')
+
+        # Action modifiers: pay from acting minion
+        if tipo_key in ('action_modifier', 'action modifier'):
+            return context.get('minion')
+
+        # Reactions in block_attempt: pay from blocker
+        if tipo_key == 'reaction' and window == 'block_attempt':
+            return context.get('blocker')
+
+        # Reactions in before_resolution: pay from any ready minion
+        if tipo_key == 'reaction' and window == 'before_resolution':
+            cost = card.pool_cost if card.pool_cost > 0 else 0
+            return self._find_ready_minion_with_blood(player, cost)
+
+        return None
+
+    def _has_ready_minion_with_blood(
+        self, player: PlayerState, amount: int
+    ) -> bool:
+        """Check if the player has a ready minion with at least `amount` blood."""
+        return self._find_ready_minion_with_blood(player, amount) is not None
+
+    def _find_ready_minion_with_blood(
+        self, player: PlayerState, amount: int
+    ) -> CardInstance | None:
+        """Find a ready minion controlled by the player with at least `amount` blood."""
+        for c in self.state.cards.values():
+            if (c.id.startswith(f'p{player.id}_')
+                    and c.is_ready
+                    and c.blood >= amount):
+                return c
+        return None
 
     def _check_card_conditions(
         self,
@@ -2849,21 +2940,69 @@ class PhaseManager:
         player: PlayerState,
         context: dict,
     ) -> None:
-        """Pay the cost for a card played in a game window."""
+        """Pay the cost for a card played in a game window.
+
+        Cost resolution by priority:
+        1. Registry-defined cost type and amount
+        2. Heuristic by card type:
+           - Out-of-turn masters: pool (from Methuselah)
+           - Action modifiers: blood (from acting minion)
+           - Reactions in block_attempt: blood (from blocker)
+           - Reactions in before_resolution: blood (from any ready minion)
+           - Default: pool
+        """
+        tipo_key = card.tipo.strip().lower()
+        window = context.get('_window', '')
+
+        # 1. Registry-defined cost
         registry = get_card_playability(card.name)
         if registry:
             if registry.cost_type == 'pool':
                 player.pool -= registry.cost_amount
                 return
             elif registry.cost_type == 'blood':
-                minion = context.get('minion')
+                # Out-of-turn masters with blood cost pay pool instead
+                if getattr(card, 'master_type', None) == 'reaction':
+                    player.pool -= registry.cost_amount
+                    return
+                minion = self._get_cost_paying_minion(card, player, context)
                 if minion:
                     minion.blood -= registry.cost_amount
                 return
 
-        # Fallback: use pool_cost field
+        # 2. Heuristic cost
         cost = card.pool_cost if card.pool_cost > 0 else 0
-        if cost > 0:
+        if cost <= 0:
+            return
+
+        # Out-of-turn masters pay from pool
+        if getattr(card, 'master_type', None) == 'reaction':
+            player.pool -= cost
+            return
+
+        # Action modifiers: paid by acting minion (blood)
+        if tipo_key in ('action_modifier', 'action modifier'):
+            minion = context.get('minion')
+            if minion and minion.blood >= cost:
+                minion.blood -= cost
+            return
+
+        # Reactions in block_attempt: paid by blocker (blood)
+        if tipo_key == 'reaction' and window == 'block_attempt':
+            blocker = context.get('blocker')
+            if blocker and blocker.blood >= cost:
+                blocker.blood -= cost
+            return
+
+        # Reactions in before_resolution: paid by any ready minion (blood)
+        if tipo_key == 'reaction' and window == 'before_resolution':
+            payer = self._find_ready_minion_with_blood(player, cost)
+            if payer:
+                payer.blood -= cost
+            return
+
+        # Default: pool cost
+        if player.pool >= cost:
             player.pool -= cost
 
     def _track_out_of_turn_master(
