@@ -1,3 +1,15 @@
 {
-  "text": "Cancel an action and put it on the bottom of the acting minion\\"
+  "abilities": [
+    {
+      "disciplines": [],
+      "context": "REACTION",
+      "effects": [
+        {
+          "function": "reaction.cancel_political",
+          "params": {},
+          "text": "Cancel an action and put it on the bottom of the acting minion's library."
+        }
+      ]
+    }
+  ]
 }

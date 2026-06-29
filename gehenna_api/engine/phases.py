@@ -931,12 +931,13 @@ class PhaseManager:
         if action_type == 'bleed':
             prey = self.state.prey_of(player.id)
             is_directed = prey is not None
-            return {
+            info = {
                 'name': f'bleed' + (f' {prey.username}' if prey else ''),
                 'stealth': minion.stealth,
                 'directed': is_directed,
-                'resolve': lambda m, p, b: self._resolve_bleed_action(m, p),
+                'resolve': lambda m, p, b: self._resolve_bleed_action(m, p, info),
             }
+            return info
         elif action_type == 'hunt':
             return {
                 'name': 'hunt',
@@ -1033,7 +1034,7 @@ class PhaseManager:
             # Directed: only target can block
             target = self.state.prey_of(player.id)
             if target:
-                for b in self._get_blocking_minions(target.id):
+                for b in self._get_blocking_minions(target.id, context):
                     if b not in potential_blockers:
                         potential_blockers.append(b)
         else:
@@ -1044,7 +1045,7 @@ class PhaseManager:
             for who in (prey, predator):
                 if who and who.id not in seen_players:
                     seen_players.add(who.id)
-                    potential_blockers.extend(self._get_blocking_minions(who.id))
+                    potential_blockers.extend(self._get_blocking_minions(who.id, context))
 
         # Check if any potential blocker can intercept
         for blocker in potential_blockers:
@@ -1106,16 +1107,34 @@ class PhaseManager:
 
         return False, None
 
-    def _get_blocking_minions(self, player_id: int) -> list[CardInstance]:
-        """Get all ready unlocked minions (Vampire/Imbued/Ally) that can block."""
+    def _get_blocking_minions(
+        self,
+        player_id: int,
+        context: dict | None = None,
+    ) -> list[CardInstance]:
+        """Get all minions that can block for a player.
+
+        Returns ready unlocked minions (Vampire/Imbued/Ally) plus any
+        woken minions (locked ready minions that were woken by cards
+        like On the Qui Vive or Wake with Evening's Freshness).
+        """
         minion_tipos = {'Vampire', 'vampire', 'Imbued', 'Ally'}
         prefix = f'p{player_id}_'
-        return [
-            c for c in self.state.cards.values()
-            if c.id.startswith(prefix)
-            and c.is_ready
-            and c.tipo.strip() in minion_tipos
-        ]
+        woken_ids = set(context.get('woken_minions', [])) if context else set()
+
+        result = []
+        for c in self.state.cards.values():
+            if not c.id.startswith(prefix):
+                continue
+            if c.tipo.strip() not in minion_tipos:
+                continue
+            # Normal ready unlocked minions
+            if c.is_ready:
+                result.append(c)
+            # Woken minions (locked but awoken by a wake effect)
+            elif c.position == CardPosition.ready and c.id in woken_ids:
+                result.append(c)
+        return result
 
     def _start_combat(self, attacker: CardInstance, defender: CardInstance) -> None:
         """Start and resolve combat between two minions.
@@ -1684,24 +1703,41 @@ class PhaseManager:
             return True
         return False
 
-    def _resolve_bleed_action(self, minion: CardInstance, player: PlayerState) -> None:
+    def _resolve_bleed_action(
+        self,
+        minion: CardInstance,
+        player: PlayerState,
+        action_info: dict | None = None,
+    ) -> None:
         """Resolve a bleed action from a minion (after successful block attempt resolution).
 
-        Target: prey (directed action)
+        Target: prey (directed action), or redirect target from Deflection.
         Effect: Target loses pool equal to bleed amount (intrinsic 1 + card modifier)
         Edge: If bleed is successful against predator, gain the Edge
 
         Special: The Unnamed (201411) gains 2 pool after successful bleed.
         """
-        target = self.state.prey_of(player.id)
+        # Determine target (supports redirect from Deflection)
+        redirect_to_id = None
+        if action_info:
+            redirect_to_id = action_info.get('redirect_to')
+
+        if redirect_to_id:
+            target = self.state.player_by_id(redirect_to_id)
+        else:
+            target = self.state.prey_of(player.id)
+
         if not target:
             self._log_action(player, f'{minion.name} bleed - no valid target')
             return
 
         # Intrinsic bleed is 1
         bleed_amount = 1 + minion.bleed
+        if action_info:
+            bleed_amount += action_info.get('bleed_bonus', 0)
         target.pool -= bleed_amount
-        self._log_action(player, f'{minion.name} bleeds {target.username} ({bleed_amount} pool)')
+        target_name = f'{target.username} (redirected)' if redirect_to_id else target.username
+        self._log_action(player, f'{minion.name} bleeds {target_name} ({bleed_amount} pool)')
         self.events.emit(
             GameEvent(
                 type=EventType.pool_changed,
@@ -3086,14 +3122,29 @@ class PhaseManager:
         player: PlayerState,
         context: dict,
     ) -> None:
-        """Wake a minion so it can block or play reactions.
+        """Wake a locked ready minion so it can block or play reactions.
 
-        Marks the player as 'woken' in the context so the engine
-        allows their locked minions to act during this action.
+        Selects the first locked ready minion controlled by the player
+        and marks it as woken for the duration of the action.
+        Woken minions can attempt to block even if locked.
         """
-        woke = context.get('woke_players', set())
-        woke.add(player.id)
-        context['woke_players'] = woke
+        prefix = f'p{player.id}_'
+        for c in self.state.cards.values():
+            if (c.id.startswith(prefix)
+                    and c.position == CardPosition.ready
+                    and c.locked
+                    and c.tipo.strip() in ('Vampire', 'vampire', 'Imbued', 'Ally')):
+                woken = context.get('woken_minions', [])
+                woken.append(c.id)
+                context['woken_minions'] = woken
+                self._log_action(player, f'{c.name} wakes up')
+                return
+
+        # No valid minion to wake
+        self._log_action(
+            player,
+            f'wake failed (no locked ready minion to wake)',
+        )
 
     def _apply_grant_intercept(
         self,
@@ -3114,10 +3165,21 @@ class PhaseManager:
     ) -> None:
         """Redirect a bleed to another Methuselah.
 
-        Placeholder — to be fully implemented in Phase 4.
+        The bleed is redirected to the prey of the player playing this
+        card (the reacting player), or to any other valid target.
+        The acting minion still pays costs, but the bleed damage is
+        applied to the new target.
         """
-        # TODO: Implement redirect target selection
-        pass
+        # Choose target: prey of the player playing Deflection
+        target = self.state.prey_of(player.id)
+        if target and target.id != context.get('acting_player', player).id:
+            context['redirect_to'] = target.id
+            self._log_action(
+                player,
+                f'bleed redirected to {target.username}',
+            )
+        else:
+            self._log_action(player, 'redirect bleed failed (no valid target)')
 
     def _apply_cancel_political(
         self,
@@ -3127,13 +3189,21 @@ class PhaseManager:
     ) -> None:
         """Cancel a political action/referendum.
 
-        Placeholder — to be fully implemented in Phase 4.
+        The acting minion unlocks and the action is cancelled.
+        The card is removed from the action and the political
+        action is stopped before the referendum is called.
         """
         minion = context.get('minion')
         if minion:
             minion.unlock()
             minion.has_acted_this_turn = False
         context['cancelled'] = True
+        action_info = context.get('action_info', {})
+        action_name = action_info.get('name', 'political action')
+        self._log_action(
+            player,
+            f'{action_name} cancelled by {card.name}',
+        )
 
     def _log_action(self, player: PlayerState, message: str) -> None:
         self.events.emit(

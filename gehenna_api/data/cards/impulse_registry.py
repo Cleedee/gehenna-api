@@ -64,56 +64,31 @@ CARD_PLAYABILITY_REGISTRY: dict[str, CardPlayability] = {
         cost_type='pool',
         cost_amount=1,
     ),
+    'Deflection': CardPlayability(
+        windows=['before_resolution'],
+        conditions={},
+        effect='redirect_bleed',
+        cost_type='blood',
+        cost_amount=1,
+    ),
+    'Delaying Tactics': CardPlayability(
+        windows=['before_resolution'],
+        conditions={'action_type': 'political'},
+        effect='cancel_political',
+        cost_type='blood',
+        cost_amount=1,
+    ),
+    'On the Qui Vive': CardPlayability(
+        windows=['block_attempt'],
+        conditions={},
+        effect='wake_minion',
+    ),
+    'Wake with Evening\'s Freshness': CardPlayability(
+        windows=['block_attempt'],
+        conditions={},
+        effect='wake_minion',
+    ),
 }
-
-# Future entries (to be added in Phase 4):
-# 'Deflection': CardPlayability(
-#     windows=['before_resolution'],
-#     conditions={'action_type': 'bleed', 'is_directed': True},
-#     effect='redirect_bleed',
-# ),
-# 'Delaying Tactics': CardPlayability(
-#     windows=['before_resolution'],
-#     conditions={'action_type': 'political'},
-#     effect='cancel_political',
-# ),
-# 'Wake': CardPlayability(
-#     windows=['as_announced', 'block_attempt', 'before_resolution'],
-#     conditions={},
-#     effect='wake_minion',
-# ),
-# 'On the Qui Vive': CardPlayability(
-#     windows=['block_attempt'],
-#     conditions={},
-#     effect='wake_minion',
-# ),
-# 'Eagle\'s Sight': CardPlayability(
-#     windows=['block_attempt'],
-#     conditions={},
-#     effect='grant_intercept',
-# ),
-# 'Form of the Bat': CardPlayability(
-#     windows=['as_announced', 'block_attempt', 'after_blocks'],
-#     conditions={'minion_has_discipline': 'ANI'},
-#     effect='stealth_modifier',
-# ),
-# 'Earth Control': CardPlayability(
-#     windows=['block_attempt'],
-#     conditions={'minion_has_discipline': 'pro'},
-#     effect='stealth_modifier',
-# ),
-# 'Spying Mission': CardPlayability(
-#     windows=['block_attempt'],
-#     conditions={},
-#     effect='stealth_modifier',
-# ),
-# 'Party Out Of Bounds': CardPlayability(
-#     windows=['block_attempt'],
-#     conditions={'action_type': 'action_card'},
-#     effect='intercept_reaction',
-# ),
-# 'Revelation of the Serpent': CardPlayability(
-#     windows=['after_blocks'],
 #     conditions={'minion_has_discipline': 'ser'},
 #     effect='bleed_modifier',
 # ),
