@@ -1306,6 +1306,8 @@ class PhaseManager:
                 continue
             if c.tipo.strip() not in minion_tipos:
                 continue
+            if getattr(c, 'pentex_subversion', False):
+                continue
             # Normal ready unlocked minions
             if c.is_ready:
                 result.append(c)
@@ -3389,6 +3391,34 @@ class PhaseManager:
         self._log_action(
             player,
             f'{action_name} cancelled by {card.name}',
+        )
+
+    def _apply_pentex_subversion(
+        self,
+        card: CardInstance,
+        player: PlayerState,
+        context: dict,
+    ) -> None:
+        """Apply Pentex Subversion to a target minion.
+
+        Put this card on any ready minion (controlled by any Methuselah).
+        The minion cannot block.
+        """
+        all_ready = [
+            c for c in self.state.cards.values()
+            if c.is_ready
+            and getattr(c, 'tipo', '').strip() in {'Vampire', 'vampire', 'Imbued', 'Ally'}
+            and not getattr(c, 'pentex_subversion', False)
+        ]
+        if not all_ready:
+            self._log_action(player, f'{card.name} has no valid target')
+            return
+
+        chosen = all_ready[0]
+        chosen.pentex_subversion = True
+        self._log_action(
+            player,
+            f'{card.name} targets {chosen.name} (cannot block)',
         )
 
     def _log_action(self, player: PlayerState, message: str) -> None:

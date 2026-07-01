@@ -88,10 +88,14 @@ CARD_PLAYABILITY_REGISTRY: dict[str, CardPlayability] = {
         conditions={},
         effect='wake_minion',
     ),
+    'Pentex(TM) Subversion': CardPlayability(
+        windows=['as_announced'],
+        conditions={},
+        effect='apply_pentex_subversion',
+        cost_type='pool',
+        cost_amount=1,
+    ),
 }
-#     conditions={'minion_has_discipline': 'ser'},
-#     effect='bleed_modifier',
-# ),
 
 # =============================================================================
 # WINDOW EFFECTS REGISTRY
@@ -131,6 +135,10 @@ WINDOW_EFFECTS_REGISTRY: dict[str, WindowEffect] = {
     'grant_intercept': WindowEffect(
         handler='_apply_grant_intercept',
         description='Grant intercept to a minion attempting to block.',
+    ),
+    'apply_pentex_subversion': WindowEffect(
+        handler='_apply_pentex_subversion',
+        description='Attach Pentex Subversion to a target minion.',
     ),
 }
 

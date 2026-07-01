@@ -3,9 +3,23 @@
   "name": "Pentex(TM) Subversion",
   "tipo": "master",
   "source": "cardbase_lib.json",
-  "abilities": [],
+  "master_type": "reaction",
+  "is_unique": true,
+  "abilities": [
+    {
+      "disciplines": [],
+      "context": "MASTER",
+      "effects": [
+        {
+          "function": "master.pentex_subversion",
+          "params": {},
+          "text": "Unique. Put this card on a ready minion. This minion cannot block. Other minions can burn this card as a (D) action."
+        }
+      ]
+    }
+  ],
   "modifiers": {},
   "default_strike": null,
-  "needs_review": true,
-  "notes": ""
+  "needs_review": false,
+  "notes": "pentex_subversion flag blocks blocking; (D) action burn not yet implemented in engine"
 }

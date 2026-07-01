@@ -23,39 +23,48 @@ Full documentation is in `docs/`:
 ## Developer Commands
 
 ```bash
-task lint        # Run ruff checks
-task format     # Run ruff format
-task server     # Start API server on port 8002
-task web        # Start Web UI on port 5000 (needs API running)
-task all        # Start API + Web UI simultaneously
-task stop       # Stop all services (API + Web UI)
-task test       # Run pytest with coverage
+# All commands use UV for environment management
+uv run task lint        # Run ruff checks
+uv run task format      # Run ruff format
+uv run task server      # Start API server on port 8002
+uv run task web         # Start Web UI on port 5000 (needs API running)
+uv run task all         # Start API + Web UI simultaneously
+uv run task stop        # Stop all services (API + Web UI)
+uv run task test        # Run pytest with coverage
+
+# Enter venv first to run commands directly (uv run task ... works too)
+uv shell                # Activate virtual environment
 
 # Bot simulation (requires API running on port 8002)
-task simulate   # Bot vs bot simulation
-python -m gehenna_api.engine.cli simulate 1 --players 2 --turns 20
-python -m gehenna_api.engine.cli simulate 1 --players 2 --turns 20 --seed 42
+uv run python -m gehenna_api.engine.cli simulate 1 --players 2 --turns 20
+uv run python -m gehenna_api.engine.cli simulate 1 --players 2 --turns 20 --seed 42
 
 # Deck management
-python scripts/manage_decks.py list          # List all decks
-python scripts/manage_decks.py show 241      # Show deck contents
-python scripts/manage_decks.py search meld   # Search for cards
-python scripts/manage_decks.py add 241 100601 --qty 3   # Add Earth Meld x3
-python scripts/manage_decks.py remove 241 100601        # Remove card
-python scripts/manage_decks.py from-db 241              # Export deck from DB
+uv run python scripts/manage_decks.py list          # List all decks
+uv run python scripts/manage_decks.py show 241      # Show deck contents
+uv run python scripts/manage_decks.py search meld   # Search for cards
+uv run python scripts/manage_decks.py add 241 100601 --qty 3   # Add Earth Meld x3
+uv run python scripts/manage_decks.py remove 241 100601        # Remove card
+uv run python scripts/manage_decks.py from-db 241              # Export deck from DB
 
 # Card data validation
-python scripts/validate_cards.py             # Validate all decks
-python scripts/validate_cards.py -c          # Critical cards only
-python scripts/validate_cards.py -v          # Verbose output
+uv run python scripts/validate_cards.py             # Validate all decks
+uv run python scripts/validate_cards.py -c          # Critical cards only
+uv run python scripts/validate_cards.py -v          # Verbose output
 
 # Card data overrides:
 #   gehenna_api/data/cards/manual_overrides.py
 
-# Docker
+# Docker (no UV needed)
 docker compose up --build     # Start all services
 docker compose down           # Stop all services
 docker compose logs -f        # View logs
+
+# Dependency management
+uv sync              # Install all dependencies from uv.lock
+uv add <package>     # Add a new dependency
+uv remove <package>  # Remove a dependency
+uv lock              # Update uv.lock after changing pyproject.toml
 ```
 
 ## Key Details
