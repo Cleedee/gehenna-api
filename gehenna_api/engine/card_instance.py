@@ -76,6 +76,9 @@ class CardInstance(BaseModel):
     out_of_turn: bool = False
     # Pentex Subversion: minion cannot block or play reactions
     pentex_subversion: bool = False
+    # Effects on this minion that can be burned by another minion's directed action
+    # e.g. ['pentex_subversion'] — each entry is an effect name
+    burnable_effects: list[str] = Field(default_factory=list)
 
     def lock(self) -> None:
         self.locked = True

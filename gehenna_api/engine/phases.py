@@ -1150,6 +1150,13 @@ class PhaseManager:
                 'directed': is_directed,
                 'resolve': lambda m, p, b: self._resolve_diablerie(m, p, target),
             }
+        elif action_type == 'burn_card':
+            return {
+                'name': 'burn card',
+                'stealth': minion.stealth,
+                'directed': True,
+                'resolve': lambda m, p, b: self._resolve_burn_card(m, p, b),
+            }
         elif action_type == 'political':
             return {
                 'name': 'political action',
@@ -3393,6 +3400,49 @@ class PhaseManager:
             f'{action_name} cancelled by {card.name}',
         )
 
+    def _find_burnable_targets(
+        self, minion: CardInstance, player: PlayerState
+    ) -> list[CardInstance]:
+        """Find ready minions (other than the acting one) that have
+        burnable effects attached (e.g. Pentex Subversion).
+
+        Returns a list of target minions that have at least one burnable effect.
+        """
+        targets = []
+        for c in self.state.cards.values():
+            if c.id == minion.id:
+                continue
+            if not c.is_ready:
+                continue
+            if c.tipo.strip() not in {'Vampire', 'vampire', 'Imbued', 'Ally'}:
+                continue
+            if getattr(c, 'burnable_effects', None):
+                targets.append(c)
+        return targets
+
+    def _resolve_burn_card(
+        self, minion: CardInstance, player: PlayerState, bot: Bot
+    ) -> None:
+        """Resolve a burn_card directed action.
+
+        The acting minion targets another ready minion that has burnable
+        effects, and burns one of them.
+        """
+        targets = self._find_burnable_targets(minion, player)
+        if not targets:
+            self._log_action(player, f'{minion.name} burn card: no valid targets')
+            return
+
+        target = targets[0]
+        if target.burnable_effects:
+            effect = target.burnable_effects.pop(0)
+            if effect == 'pentex_subversion':
+                target.pentex_subversion = False
+            self._log_action(
+                player,
+                f'{minion.name} burns {effect} from {target.name}',
+            )
+
     def _apply_pentex_subversion(
         self,
         card: CardInstance,
@@ -3416,6 +3466,8 @@ class PhaseManager:
 
         chosen = all_ready[0]
         chosen.pentex_subversion = True
+        if 'pentex_subversion' not in chosen.burnable_effects:
+            chosen.burnable_effects.append('pentex_subversion')
         self._log_action(
             player,
             f'{card.name} targets {chosen.name} (cannot block)',

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 
-from gehenna_api.engine.card_instance import CardPosition
+from gehenna_api.engine.card_instance import CardInstance, CardPosition
 from gehenna_api.engine.state import GameState
 
 
@@ -16,7 +16,8 @@ class Bot(ABC):
     ) -> str:
         """Choose which action type a minion should perform.
 
-        Returns: 'bleed', 'hunt', 'leave_torpor', 'rescue', 'diablerie', 'action_card'
+        Returns: 'bleed', 'hunt', 'leave_torpor', 'rescue', 'diablerie',
+                 'action_card', 'burn_card'
         """
         minion = state.card_by_id(minion_id)
         if not minion:
@@ -55,8 +56,28 @@ class Bot(ABC):
             if state.random.random() < 0.1 and is_vampire:
                 return 'diablerie'
 
+        # Look for burnable card targets (Pentex Subversion, etc.)
+        if self._has_burnable_target(state, minion, player_id):
+            if state.random.random() < 0.3:
+                return 'burn_card'
+
         # Default to bleed
         return 'bleed'
+
+    def _has_burnable_target(
+        self, state: GameState, minion: CardInstance, player_id: int
+    ) -> bool:
+        """Check if there's another minion with a burnable effect."""
+        for c in state.cards.values():
+            if c.id == minion.id:
+                continue
+            if not c.is_ready:
+                continue
+            if c.tipo.strip() not in {'Vampire', 'vampire', 'Imbued', 'Ally'}:
+                continue
+            if getattr(c, 'burnable_effects', None):
+                return True
+        return False
 
     def _has_political_card(self, state: GameState, player_id: int) -> bool:
         """Check if player has a political action card in hand."""
