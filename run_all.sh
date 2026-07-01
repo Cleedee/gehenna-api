@@ -7,7 +7,7 @@ lsof -t -i:5000 | xargs -r kill -9 2>/dev/null
 sleep 1
 
 # Start API in background
-python -c "import uvicorn; uvicorn.run('gehenna_api.app:app', host='0.0.0.0', port=8002)" &
+uv run python -c "import uvicorn; uvicorn.run('gehenna_api.app:app', host='0.0.0.0', port=8002)" &
 API_PID=$!
 echo "API starting (PID: $API_PID) on port 8002..."
 
@@ -21,7 +21,7 @@ for i in $(seq 1 10); do
 done
 
 # Start Web UI in background
-python -m flask --app gehenna_web.app run --port 5000 --debug &
+uv run python -m flask --app gehenna_web.app run --port 5000 --debug &
 WEB_PID=$!
 echo "Web UI starting (PID: $WEB_PID) on port 5000..."
 

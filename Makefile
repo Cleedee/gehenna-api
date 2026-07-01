@@ -1,6 +1,6 @@
 env:
-	poetry env activate
+	uv venv && uv sync
 server:
-	poetry run task run
+	uv run task server
 syncronize:
-	poetry run python scripts/cadastrar_novas_cartas.py
+	uv run python scripts/cadastrar_novas_cartas.py
