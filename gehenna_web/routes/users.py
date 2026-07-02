@@ -59,7 +59,7 @@ def create():
 def edit(user_id):
     form = UserForm()
     if request.method == 'GET':
-        response = api_client.get_user(user_id)
+        response = api_client.get_user_by_id(user_id)
         if response.status_code == 200:
             user = response.json()
             form.username.data = user.get('username')

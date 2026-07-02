@@ -2,6 +2,11 @@
 
 {% block title %}{{ title }}{% endblock %}
 
+{% block breadcrumbs %}
+{% set breadcrumbs = [('Home', 'index'), ('Movements', 'moviments.list'), ('Movement', 'moviments.detail', {'moviment_id': moviment_id}), ('Items', 'items.list', {'moviment_id': moviment_id}), (title)] %}
+{% include "components/breadcrumb.html" %}
+{% endblock %}
+
 {% block content %}
 <h2>{{ title }}</h2>
 

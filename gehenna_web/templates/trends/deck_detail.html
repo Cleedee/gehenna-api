@@ -2,6 +2,11 @@
 
 {% block title %}{{ deck.get('name', 'Deck') }} - Gehenna{% endblock %}
 
+{% block breadcrumbs %}
+{% set breadcrumbs = [('Home', 'index'), ('Recommendations', 'trends.recommendations'), (deck.get('name', 'Deck') if deck else 'Deck')] %}
+{% include "components/breadcrumb.html" %}
+{% endblock %}
+
 {% block content %}
 {% if deck %}
 <div class="card">

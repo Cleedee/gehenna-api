@@ -2,14 +2,20 @@
 
 {% block title %}Cards in Deck{% endblock %}
 
+{% block breadcrumbs %}
+{% set breadcrumbs = [('Home', 'index'), ('Decks', 'decks.list'), ('Deck', 'decks.detail', {'deck_id': deck_id}), ('Cards')] %}
+{% include "components/breadcrumb.html" %}
+{% endblock %}
+
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
+<div class="page-header">
     <h2>Cards in Deck</h2>
     <a href="{{ url_for('slots.create', deck_id=deck_id) }}" class="btn btn-primary">Add Card</a>
 </div>
 
 {% if slots %}
 <table class="table table-striped">
+    <caption class="visually-hidden">Cards in this deck</caption>
     <thead>
         <tr>
             <th>Quantity</th>
@@ -29,8 +35,10 @@
             <td>{{ slot.card.clan or '-' }}</td>
             <td>{{ slot.card.disciplines or '-' }}</td>
             <td>
-                <a href="{{ url_for('slots.edit', slot_id=slot.id, deck_id=deck_id) }}" class="btn btn-sm btn-warning">Edit</a>
-                <a href="{{ url_for('slots.delete', slot_id=slot.id, deck_id=deck_id) }}" class="btn btn-sm btn-danger" onclick="return confirm('Remove card from deck?')">Remove</a>
+                <a href="{{ url_for('slots.edit', slot_id=slot.id, deck_id=deck_id) }}" class="btn btn-sm btn-warning" aria-label="Edit slot">Edit</a>
+                <a href="{{ url_for('slots.delete', slot_id=slot.id, deck_id=deck_id) }}" class="btn btn-sm btn-danger"
+                   data-confirm="Remove '{{ slot.card.name }}' from deck?"
+                   data-confirm-action="Remove" aria-label="Remove {{ slot.card.name }} from deck">Remove</a>
             </td>
         </tr>
         {% endfor %}

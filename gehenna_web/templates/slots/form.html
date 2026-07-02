@@ -2,6 +2,11 @@
 
 {% block title %}{{ title }}{% endblock %}
 
+{% block breadcrumbs %}
+{% set breadcrumbs = [('Home', 'index'), ('Decks', 'decks.list'), ('Deck', 'decks.detail', {'deck_id': deck_id}), ('Cards', 'slots.list', {'deck_id': deck_id}), (title)] %}
+{% include "components/breadcrumb.html" %}
+{% endblock %}
+
 {% block content %}
 <h2>{{ title }}</h2>
 

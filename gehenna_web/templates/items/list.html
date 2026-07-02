@@ -1,15 +1,21 @@
 {% extends "base.html" %}
 
-{% block title %}Items in Moviment{% endblock %}
+{% block title %}Items in Movement{% endblock %}
+
+{% block breadcrumbs %}
+{% set breadcrumbs = [('Home', 'index'), ('Movements', 'moviments.list'), ('Movement', 'moviments.detail', {'moviment_id': moviment_id}), ('Items')] %}
+{% include "components/breadcrumb.html" %}
+{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>Items in Moviment</h2>
+<div class="page-header">
+    <h2>Items in Movement</h2>
     <a href="{{ url_for('items.create', moviment_id=moviment_id) }}" class="btn btn-primary">Add Item</a>
 </div>
 
 {% if items %}
 <table class="table table-striped">
+    <caption class="visually-hidden">Items in this movement</caption>
     <thead>
         <tr>
             <th>Quantity</th>
@@ -29,16 +35,18 @@
             <td>{{ item.card.clan or '-' }}</td>
             <td>{{ item.code }}</td>
             <td>
-                <a href="{{ url_for('items.edit', item_id=item.id, moviment_id=moviment_id) }}" class="btn btn-sm btn-warning">Edit</a>
-                <a href="{{ url_for('items.delete', item_id=item.id, moviment_id=moviment_id) }}" class="btn btn-sm btn-danger" onclick="return confirm('Remove item?')">Remove</a>
+                <a href="{{ url_for('items.edit', item_id=item.id, moviment_id=moviment_id) }}" class="btn btn-sm btn-warning" aria-label="Edit item">Edit</a>
+                <a href="{{ url_for('items.delete', item_id=item.id, moviment_id=moviment_id) }}" class="btn btn-sm btn-danger"
+                   data-confirm="Remove this item from the movement?"
+                   data-confirm-action="Remove" aria-label="Remove item">Remove</a>
             </td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
 {% else %}
-<p class="text-muted">No items in this moviment.</p>
+<p class="text-muted">No items in this movement.</p>
 {% endif %}
 
-<a href="{{ url_for('moviments.detail', moviment_id=moviment_id) }}" class="btn btn-secondary mt-3">Back to Moviment</a>
+<a href="{{ url_for('moviments.detail', moviment_id=moviment_id) }}" class="btn btn-secondary mt-3">Back to Movement</a>
 {% endblock %}

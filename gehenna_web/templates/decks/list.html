@@ -2,8 +2,13 @@
 
 {% block title %}Decks{% endblock %}
 
+{% block breadcrumbs %}
+{% set breadcrumbs = [('Home', 'index'), ('Decks', 'decks.list')] %}
+{% include "components/breadcrumb.html" %}
+{% endblock %}
+
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
+<div class="page-header">
     <h2>Decks</h2>
     {% if session.username %}
     <a href="{{ url_for('decks.create') }}" class="btn btn-primary">Create Deck</a>
@@ -15,15 +20,15 @@
         <input type="text" name="username" class="form-control" placeholder="Username" value="{{ username or '' }}">
     </div>
     <div class="col-md-3">
-        <input type="text" name="name" class="form-control" placeholder="Deck Name">
+        <input type="text" name="name" class="form-control" placeholder="Deck Name" value="{{ name or '' }}">
     </div>
     <div class="col-md-3">
-        <input type="text" name="card_name" class="form-control" placeholder="Card Name">
+        <input type="text" name="card_name" class="form-control" placeholder="Card Name" value="{{ card_name or '' }}">
     </div>
     <div class="col-md-2">
         <select name="preconstructed" class="form-select">
             <option value="">All</option>
-            <option value="true">Preconstructed</option>
+            <option value="true" {{ 'selected' if preconstructed == 'true' }}>Preconstructed</option>
         </select>
     </div>
     <div class="col-md-1">
@@ -33,6 +38,7 @@
 
 {% if decks %}
 <table class="table table-striped">
+    <caption class="visually-hidden">List of decks</caption>
     <thead>
         <tr>
             <th>ID</th>
@@ -54,10 +60,12 @@
             <td>{{ deck.creator or '-' }}</td>
             <td>{{ deck.player or '-' }}</td>
             <td>
-                <a href="{{ url_for('decks.detail', deck_id=deck.id) }}" class="btn btn-sm btn-info">View</a>
+                <a href="{{ url_for('decks.detail', deck_id=deck.id) }}" class="btn btn-sm btn-info" aria-label="View deck {{ deck.name }}">View</a>
                 {% if session.username and session.user_id == deck.owner_id %}
-                <a href="{{ url_for('decks.edit', deck_id=deck.id) }}" class="btn btn-sm btn-warning">Edit</a>
-                <a href="{{ url_for('decks.delete', deck_id=deck.id) }}" class="btn btn-sm btn-danger" onclick="return confirm('Delete deck?')">Delete</a>
+                <a href="{{ url_for('decks.edit', deck_id=deck.id) }}" class="btn btn-sm btn-warning" aria-label="Edit deck {{ deck.name }}">Edit</a>
+                <a href="{{ url_for('decks.delete', deck_id=deck.id) }}" class="btn btn-sm btn-danger"
+   data-confirm="Delete deck '{{ deck.name }}'?"
+   data-confirm-action="Delete" aria-label="Delete deck {{ deck.name }}">Delete</a>
                 {% endif %}
             </td>
         </tr>

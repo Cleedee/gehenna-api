@@ -41,77 +41,43 @@ def read_decks(
     name: Union[str, None] = None,
     card_name: Union[str, None] = None,
     code: Union[str, None] = None,
-    preconstructed: Union[bool, None] = None,
+    preconstructed: Union[str, None] = None,
     tag: Union[str, None] = None,
     skip: int = 0,
     limit: int = 100,
     session: Session = Depends(get_session),
 ):
-    if name and username:
+    query = select(Deck)
+
+    if username:
         user = session.scalar(select(User).where(User.username == username))
         if user is None:
             return {'decks': []}
-        lista = session.scalars(
-            select(Deck).where(
-                Deck.owner_id == user.id,
-                Deck.name.contains(name)
-            )
-            .order_by(Deck.created.desc())
-            .offset(skip).limit(limit)
-        ).all()
-        return {'decks': lista}
-    if username and not card_name:
-        user = session.scalar(select(User).where(User.username == username))
-        if user is None:
-            return {'decks': []}
-        lista = session.scalars(
-            select(Deck).where(Deck.owner_id == user.id)
-            .order_by(Deck.created.desc())
-            .offset(skip).limit(limit)
-        ).all()
-        return {'decks': lista}
-    if card_name and username is None:
-        lista = session.scalars(
-            select(Deck)
-                .join(Slot, Deck.id == Slot.deck_id)
-                .join(Card, Card.id == Slot.card_id)
-                .where(Card.name.contains(card_name))
-                .offset(skip).limit(limit)
-        ).all()
-        return {'decks': lista }
-    if card_name and username:
-        user = session.scalar(select(User).where(User.username == username))
-        if user is None:
-            return {'decks': []}
-        lista = session.scalars(
-            select(Deck)
-                .join(Slot, Deck.id == Slot.deck_id)
-                .join(Card, Card.id == Slot.card_id)
-                .where(
-                    Deck.owner_id == user.id,
-                    Card.name.contains(card_name)
-                )
-                .order_by(Deck.created.desc())
-                .offset(skip).limit(limit)
-        ).all()
-        return {'decks': lista}
+        query = query.where(Deck.owner_id == user.id)
+
+    if name:
+        query = query.where(Deck.name.contains(name))
+
+    if card_name:
+        query = (
+            query
+            .join(Slot, Deck.id == Slot.deck_id)
+            .join(Card, Card.id == Slot.card_id)
+            .where(Card.name.contains(card_name))
+            .distinct()
+        )
+
     if code:
-        deck = session.scalar(select(Deck).where(Deck.code == code))
-        if deck is None:
-            return {'decks': []}
-        else:
-            return {'decks': [ deck  ]}
-    if preconstructed:
-        lista = session.scalars(select(Deck).where(Deck.preconstructed == True).offset(skip).limit(limit)).all()
-        return {'decks': lista}
+        query = query.where(Deck.code == code)
+
+    if preconstructed and preconstructed.lower() == 'true':
+        query = query.where(Deck.preconstructed == True)
+
     if tag:
-        lista = session.scalars(
-            select(Deck).where(Deck.tags.contains(tag)).offset(skip).limit(limit)
-        ).all()
-        return {'decks': lista}
-    lista = session.scalars(
-        select(Deck).offset(skip).limit(limit)
-    ).all()
+        query = query.where(Deck.tags.contains(tag))
+
+    query = query.order_by(Deck.created.desc()).offset(skip).limit(limit)
+    lista = session.scalars(query).all()
     return {'decks': lista}
 
 @router.get('/{id}', response_model=DeckPublic)

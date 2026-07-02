@@ -1,0 +1,36 @@
+{#
+  Confirmation modal component.
+  Usage:
+    <button type="button"
+            class="btn btn-danger btn-sm"
+            data-confirm="Delete deck?"
+            data-confirm-action="Delete"
+            data-confirm-url="{{ url_for('decks.delete', deck_id=deck.id) }}">
+      Delete
+    </button>
+
+  Or use the shortcut:
+    <a href="{{ url_for('decks.delete', deck_id=deck.id) }}"
+       class="btn btn-sm btn-danger"
+       data-confirm="Delete deck?"
+       data-confirm-action="Delete">Delete</a>
+
+  The modal is rendered once and reused via JavaScript.
+#}
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="confirmModalLabel">Confirm Action</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="confirmModalBody">
+        Are you sure?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <a href="#" id="confirmModalBtn" class="btn btn-danger" role="button">Confirm</a>
+      </div>
+    </div>
+  </div>
+</div>

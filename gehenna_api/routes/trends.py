@@ -40,8 +40,26 @@ class TrendDeck(BaseModel):
 class RecommendationCard(BaseModel):
     card_id: int
     name: str
-    needed: int
+    owned: int
+    needed: int  # copies the deck requires
     in_trend: bool
+
+
+class DeckRecommendation(BaseModel):
+    id: str
+    name: str
+    player: str
+    event: str
+    date: str
+    tournament_format: str
+    total_unique: int          # unique cards in the deck
+    total_copies: int          # total copies the deck requires
+    owned_unique: int          # unique cards user has enough copies of
+    owned_copies: int          # total copies user owns
+    missing_unique: int        # unique cards user doesn't have enough of
+    missing_copies: int        # total copies user is missing
+    completeness: float        # 0.0 to 1.0 (owned_unique / total_unique)
+    missing_cards: list[RecommendationCard]
 
 
 class TrendResponse(BaseModel):
@@ -172,50 +190,151 @@ def read_recommendations(
     limit: int = Query(default=20, le=100),
     format: Optional[str] = None,
     year: Optional[int] = None,
+    min_completeness: float = Query(default=0.1, alias='min_completeness', ge=0, le=1),
     session: Session = Depends(get_session),
 ):
+    """
+    Score all TWDA decks by how many cards the user already owns.
+    Returns decks sorted by completeness (most complete first).
+    """
     user = session.scalar(select(User).where(User.username == username))
     if user is None:
-        return {'cards': [], 'gaps': []}
+        return {'decks': [], 'total_analyzed': 0, 'total_trending': 0}
 
     user_id = user.id
 
-    # Map TWDA id (codevdb) -> local card id
+    # 1. Map TWDA id (codevdb) -> local card id
     twda_to_local = {}
     all_cards = session.scalars(select(Card)).all()
     for card in all_cards:
         if card.codevdb:
             twda_to_local[card.codevdb] = card.id
 
-    # Get owned cards (local card id -> quantity)
-    owned_cards = {}
-    entradas = (
+    # 2. Get owned cards (local card id -> net quantity)
+    owned_cards: dict[int, int] = {}
+    entradas = session.execute(
         select(Item.card_id, func.sum(Item.quantity))
         .join(Item.moviment)
         .where(Moviment.owner_id == user_id, Moviment.tipo == 'E')
         .group_by(Item.card_id)
-    )
-    for card_id, qty in session.execute(entradas).fetchall():
+    ).fetchall()
+    for card_id, qty in entradas:
         owned_cards[card_id] = qty
 
-    saidas = (
+    saidas = session.execute(
         select(Item.card_id, func.sum(Item.quantity))
         .join(Item.moviment)
         .where(Moviment.owner_id == user_id, Moviment.tipo == 'S')
         .group_by(Item.card_id)
-    )
-    for card_id, qty in session.execute(saidas).fetchall():
+    ).fetchall()
+    for card_id, qty in saidas:
         if card_id in owned_cards:
             owned_cards[card_id] -= qty
         if owned_cards.get(card_id, 0) <= 0:
             owned_cards.pop(card_id, None)
 
+    # 3. Load TWDA data
     twda = _get_twda_data()
     if format:
         twda = [d for d in twda if d.get('tournament_format') == format]
     if year:
         twda = [d for d in twda if d.get('date', '').startswith(str(year))]
 
+    vtes = _load_vtes_lookup()
+
+    # 4. Score every deck
+    deck_scores: list[DeckRecommendation] = []
+
+    for deck in twda:
+        # Collect all cards in this deck with quantities
+        deck_cards: dict[int, int] = {}  # twda_id -> count needed
+
+        for vamp in deck.get('crypt', {}).get('cards', []):
+            twda_id = vamp['id']
+            qty = vamp.get('count', 1)
+            deck_cards[twda_id] = deck_cards.get(twda_id, 0) + qty
+
+        for lib_section in deck.get('library', {}).get('cards', []):
+            for card in lib_section.get('cards', []):
+                twda_id = card['id']
+                qty = card.get('count', 1)
+                deck_cards[twda_id] = deck_cards.get(twda_id, 0) + qty
+
+        if not deck_cards:
+            continue
+
+        # Compare with user's collection
+        total_unique = 0
+        total_copies = 0
+        owned_unique = 0
+        owned_copies = 0
+        missing_card_list = []
+
+        for twda_id, needed_qty in deck_cards.items():
+            local_id = twda_to_local.get(twda_id)
+            if local_id is None:
+                # Card not in our DB — skip from scoring but count as "unknown"
+                continue
+
+            total_unique += 1
+            total_copies += needed_qty
+
+            user_qty = owned_cards.get(local_id, 0)
+            if user_qty >= needed_qty:
+                owned_unique += 1
+                owned_copies += needed_qty
+            else:
+                # Has some but not enough
+                owned_copies += user_qty
+                missing_copies = needed_qty - user_qty
+                card_data = vtes.get(str(twda_id), {})
+                card_name = card_data.get('name', f'Card {twda_id}')
+                missing_card_list.append(
+                    RecommendationCard(
+                        card_id=local_id,
+                        name=card_name,
+                        owned=user_qty,
+                        needed=needed_qty,
+                        in_trend=True,
+                    )
+                )
+
+        if total_unique == 0:
+            continue
+
+        completeness = owned_unique / total_unique
+
+        deck_scores.append(
+            DeckRecommendation(
+                id=deck['id'],
+                name=deck.get('name', '(unnamed)'),
+                player=deck.get('player', ''),
+                event=deck.get('event', ''),
+                date=deck.get('date', ''),
+                tournament_format=deck.get('tournament_format', ''),
+                total_unique=total_unique,
+                total_copies=total_copies,
+                owned_unique=owned_unique,
+                owned_copies=owned_copies,
+                missing_unique=total_unique - owned_unique,
+                missing_copies=total_copies - owned_copies,
+                completeness=round(completeness, 4),
+                missing_cards=missing_card_list,
+            )
+        )
+
+    # 5. Sort by completeness descending, then by missing copies ascending
+    deck_scores.sort(key=lambda d: (-d.completeness, d.missing_copies))
+
+    total_before_filter = len(deck_scores)
+
+    # 6. Filter by minimum completeness and apply limit
+    if min_completeness > 0:
+        deck_scores = [d for d in deck_scores if d.completeness >= min_completeness]
+
+    result = deck_scores[:limit]
+
+    # 7. Compute global trending stats (individual cards)
     card_counter: Counter[int] = Counter()
     for deck in twda:
         for vamp in deck.get('crypt', {}).get('cards', []):
@@ -224,85 +343,10 @@ def read_recommendations(
             for card in lib_section.get('cards', []):
                 card_counter[card['id']] += card['count']
 
-    vtes = _load_vtes_lookup()
-    top_cards = sorted(card_counter.items(), key=lambda x: -x[1])[:limit + 50]
-
-    recommendations = []
-    gaps = []
-    seen = set()
-
-    for twda_id, count in top_cards:
-        if twda_id in seen:
-            continue
-        seen.add(twda_id)
-
-        # Map TWDA id to local card id
-        local_id = twda_to_local.get(twda_id)
-        if local_id is None:
-            continue
-
-        owned = owned_cards.get(local_id, 0)
-        if owned < 3:
-            needed = 3 - owned
-            card_data = vtes.get(str(twda_id), {})
-            name = card_data.get('name', f'Card {twda_id}')
-            recommendations.append(
-                RecommendationCard(
-                    card_id=local_id,
-                    name=name,
-                    needed=needed,
-                    in_trend=True,
-                )
-            )
-            if owned == 0:
-                gaps.append({
-                    'card_id': local_id,
-                    'name': name,
-                    'needed': needed,
-                })
-
-        if len(recommendations) >= limit:
-            break
-
-    # Find example decks that use the recommended cards
-    example_decks = []
-    needed_ids = set(r.card_id for r in recommendations[:10])
-    local_to_twda = {v: k for k, v in twda_to_local.items()}
-
-    for deck in twda[:50]:
-        deck_card_ids = set()
-        for vamp in deck.get('crypt', {}).get('cards', []):
-            twda_id = vamp['id']
-            local_id = twda_to_local.get(twda_id)
-            if local_id:
-                deck_card_ids.add(local_id)
-
-        for lib_section in deck.get('library', {}).get('cards', []):
-            for card in lib_section.get('cards', []):
-                twda_id = card['id']
-                local_id = twda_to_local.get(twda_id)
-                if local_id:
-                    deck_card_ids.add(local_id)
-
-        # Check overlap with needed cards
-        overlap = deck_card_ids & needed_ids
-        if overlap and len(overlap) >= 2:
-            example_decks.append({
-                'id': deck['id'],
-                'name': deck.get('name', ''),
-                'player': deck.get('player', ''),
-                'date': deck.get('date', ''),
-                'format': deck.get('tournament_format', ''),
-                'cards_count': len(overlap),
-            })
-
-    example_decks = sorted(example_decks, key=lambda x: -x['cards_count'])[:10]
-
     return {
-        'cards': recommendations,
-        'gaps': gaps,
+        'decks': [d.model_dump() for d in result],
+        'total_analyzed': total_before_filter,
         'total_trending': len(card_counter),
-        'example_decks': example_decks,
     }
 
 

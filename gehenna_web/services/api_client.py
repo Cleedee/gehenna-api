@@ -57,7 +57,7 @@ def get_decks(username=None, name=None, card_name=None, code=None, preconstructe
         params['card_name'] = card_name
     if code:
         params['code'] = code
-    if preconstructed is not None:
+    if preconstructed:
         params['preconstructed'] = preconstructed
     return api.get('/decks/', params=params)
 
@@ -149,6 +149,10 @@ def get_users(skip=0, limit=100):
 
 def get_user(username):
     return api.get(f'/users/{username}/by_name')
+
+
+def get_user_by_id(user_id):
+    return api.get(f'/users/{user_id}')
 
 
 def create_user(data):
@@ -262,8 +266,8 @@ def get_statistics(owner_id=None):
     return api.get('/stocks/statistics', params=params)
 
 
-def get_trend_recommendations(username, limit=20, format=None, year=None):
-    params = {'limit': limit}
+def get_trend_recommendations(username, limit=20, format=None, year=None, min_completeness=0.1):
+    params = {'limit': limit, 'min_completeness': min_completeness}
     if format:
         params['format'] = format
     if year:

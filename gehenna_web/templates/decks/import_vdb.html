@@ -2,6 +2,11 @@
 
 {% block title %}Import from VDB - Gehenna{% endblock %}
 
+{% block breadcrumbs %}
+{% set breadcrumbs = [('Home', 'index'), ('Decks', 'decks.my_decks'), ('Import VDB')] %}
+{% include "components/breadcrumb.html" %}
+{% endblock %}
+
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-md-6">

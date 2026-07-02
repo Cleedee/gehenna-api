@@ -2,6 +2,11 @@
 
 {% block title %}{{ title }}{% endblock %}
 
+{% block breadcrumbs %}
+{% set breadcrumbs = [('Home', 'index'), ('Decks', 'decks.list'), (title)] %}
+{% include "components/breadcrumb.html" %}
+{% endblock %}
+
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-md-8">

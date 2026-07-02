@@ -1,0 +1,30 @@
+{#
+  Breadcrumb component
+  Usage:
+    {% set breadcrumbs = [('Home', 'index'), ('Cards', 'cards.search'), ('Detail')] %}
+    {% include "components/breadcrumb.html" %}
+
+  Each item is a tuple: (label, endpoint_name_or_None)
+  - If endpoint is None (or only one item), it renders as plain text (active).
+  - Otherwise renders as a link.
+#}
+{% if breadcrumbs and breadcrumbs|length > 0 %}
+<div class="breadcrumb-container">
+  <nav aria-label="Breadcrumb">
+    <ol class="breadcrumb">
+      {% for item in breadcrumbs %}
+        {% set label = item[0] %}
+        {% set endpoint = item[1] if item|length > 1 else None %}
+        {% set args = item[2] if item|length > 2 else {} %}
+        <li class="breadcrumb-item {{ 'active' if loop.last else '' }}" {{ 'aria-current="page"' if loop.last else '' }}>
+          {% if endpoint and not loop.last %}
+            <a href="{{ url_for(endpoint, **args) }}">{{ label }}</a>
+          {% else %}
+            {{ label }}
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ol>
+  </nav>
+</div>
+{% endif %}

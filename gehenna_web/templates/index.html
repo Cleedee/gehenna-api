@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+
+{% block title %}Gehenna - V:TES Manager{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>
+        {% if session.username %}
+        Welcome, {{ session.username }}
+        {% else %}
+        Gehenna
+        {% endif %}
+    </h1>
+    <p class="page-subtitle">
+        V:TES Card Collection &amp; Deck Management
+    </p>
+</div>
+
+{% if session.username %}
+
+<!-- Summary Cards -->
+<div class="row g-3 mb-4">
+    <div class="col-md-3 col-6">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <h5 class="card-title" style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em;">Cards</h5>
+                <h3 style="color: var(--accent);">{{ dashboard.total_cards if dashboard else '...' }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-6">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <h5 class="card-title" style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em;">Decks</h5>
+                <h3 style="color: var(--accent);">{{ dashboard.total_decks if dashboard else '...' }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-6">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <h5 class="card-title" style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em;">Movements</h5>
+                <h3 style="color: var(--accent);">{{ dashboard.total_moviments if dashboard else '...' }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-6">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <h5 class="card-title" style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em;">Value</h5>
+                <h3 style="color: var(--accent);">
+                    {% if dashboard %}
+                    R$ {{ "%.2f"|format(dashboard.total_value) }}
+                    {% else %}
+                    ...
+                    {% endif %}
+                </h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Recent Decks -->
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Recent Decks</h5>
+                <a href="{{ url_for('decks.my_decks') }}" class="btn btn-sm btn-ghost">View All</a>
+            </div>
+            <div class="card-body p-0">
+                {% if dashboard and dashboard.recent_decks %}
+                <div class="list-group list-group-flush">
+                    {% for deck in dashboard.recent_decks %}
+                    <a href="{{ url_for('decks.detail', deck_id=deck.id) }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>{{ deck.name }}</strong>
+                            <br><small class="text-muted">{{ deck.tipo }}</small>
+                        </div>
+                        <span class="badge bg-primary rounded-pill">#{{ deck.id }}</span>
+                    </a>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="text-center p-4 text-muted">
+                    <p>No decks yet.</p>
+                    <a href="{{ url_for('decks.create') }}" class="btn btn-primary btn-sm">Create your first deck</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-header">
+                <h5 class="mb-0">Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{{ url_for('cards.search') }}" class="btn btn-outline-primary text-start">
+                        🔍 Search Cards
+                    </a>
+                    <a href="{{ url_for('decks.my_decks') }}" class="btn btn-outline-primary text-start">
+                        📋 My Decks
+                    </a>
+                    <a href="{{ url_for('decks.create') }}" class="btn btn-outline-primary text-start">
+                        ✨ Create New Deck
+                    </a>
+                    <a href="{{ url_for('moviments.list') }}" class="btn btn-outline-primary text-start">
+                        📦 Movements
+                    </a>
+                    <a href="{{ url_for('moviments.create') }}" class="btn btn-outline-primary text-start">
+                        ➕ New Movement
+                    </a>
+                    <a href="{{ url_for('trends.recommendations') }}" class="btn btn-outline-primary text-start">
+                        📈 Recommendations
+                    </a>
+                    <a href="{{ url_for('decks.import_vdb') }}" class="btn btn-outline-primary text-start">
+                        📥 Import from VDB
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% else %}
+<!-- Hero for unauthenticated users -->
+<div class="row justify-content-center mt-5">
+    <div class="col-md-8 text-center">
+        <h1 style="font-size: 3rem; color: var(--accent);">Gehenna</h1>
+        <p class="lead text-muted mb-4">
+            Manage your V:TES card collection, build decks, track movements and prices.
+        </p>
+        <div class="d-flex justify-content-center gap-3">
+            <a href="{{ url_for('auth.login') }}" class="btn btn-primary btn-lg px-4">Login</a>
+            <a href="{{ url_for('auth.register') }}" class="btn btn-outline-primary btn-lg px-4">Register</a>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5 g-4">
+    <div class="col-md-4">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <h3 style="font-size: 2rem;">🃏</h3>
+                <h5>Card Database</h5>
+                <p class="text-muted">Search and browse all V:TES cards with images, prices and stock.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <h3 style="font-size: 2rem;">📋</h3>
+                <h5>Deck Builder</h5>
+                <p class="text-muted">Create and manage decks, import from VDB, check missing cards.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <h3 style="font-size: 2rem;">📊</h3>
+                <h5>Inventory &amp; Trends</h5>
+                <p class="text-muted">Track your collection value, movements, and TWDA recommendations.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

@@ -2,6 +2,11 @@
 
 {% block title %}Statistics{% endblock %}
 
+{% block breadcrumbs %}
+{% set breadcrumbs = [('Home', 'index'), ('Movements', 'moviments.list'), ('Statistics')] %}
+{% include "components/breadcrumb.html" %}
+{% endblock %}
+
 {% block content %}
 <h2>My Statistics</h2>
 
@@ -116,7 +121,8 @@
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"
+        integrity="sha384-tOcRwB6Ae3PL+0qOnxgq8R7llskI9lfB0xTQBwM6sLHMujFo/3ff3gEG+lbHGFX" crossorigin="anonymous"></script>
 <script>
     const cardsByType = {{ stats.cards_by_type|tojson }};
     const cardsByClan = {{ stats.cards_by_clan|tojson }};

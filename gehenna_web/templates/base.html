@@ -1,17 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Gehenna API - V:TES{% endblock %}</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩸</text></svg>">
+    {% block extra_css %}{% endblock %}
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <!-- Skip to content (a11y) -->
+    <a href="#main-content" class="skip-to-content">Skip to content</a>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark" aria-label="Main navigation">
         <div class="container">
-            <a class="navbar-brand" href="{{ url_for('index') }}">Gehenna</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <a class="navbar-brand" href="{{ url_for('index') }}" aria-label="Gehenna Home">Gehenna</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
@@ -29,14 +37,17 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('decks.import_vdb') }}">Import VDB</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('moviments.list') }}">Moviments</a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="inventoryDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Inventory
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="inventoryDropdown">
+                            <li><a class="dropdown-item" href="{{ url_for('moviments.list') }}">Movements</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('moviments.statistics') }}">Statistics</a></li>
+                        </ul>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('trends.recommendations') }}">Recommendations</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('moviments.statistics') }}">Statistics</a>
                     </li>
                     {% if session.user_id == 1 %}
                     <li class="nav-item">
@@ -48,7 +59,7 @@
                 <ul class="navbar-nav">
                     {% if session.username %}
                     <li class="nav-item">
-                        <span class="navbar-text me-3">{{ session.username }}</span>
+                        <span class="navbar-text me-3" aria-label="Logged in as {{ session.username }}">{{ session.username }}</span>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('auth.logout') }}">Logout</a>
@@ -66,29 +77,51 @@
         </div>
     </nav>
 
-    <div class="container mt-4">
+    <!-- Flash Toasts Container -->
+    <div id="toast-container" class="position-fixed top-0 end-0 p-3" style="z-index: 1060; pointer-events: none;">
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
-                    <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
-                        {{ message }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                <div class="toast align-items-center text-bg-{{ 'danger' if category == 'error' else category }} border-0" role="alert" aria-live="assertive" aria-atomic="true" style="pointer-events: auto;">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            {{ message }}
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
                     </div>
+                </div>
                 {% endfor %}
             {% endif %}
         {% endwith %}
+    </div>
 
+    <!-- Main Content -->
+    <div class="container mt-3" id="main-content">
+        {% block breadcrumbs %}{% endblock %}
         {% block content %}{% endblock %}
     </div>
 
-    <footer class="mt-5 py-3 bg-light">
+    <!-- Confirmation Modal -->
+    {% include "components/modal_confirm.html" %}
+
+    <!-- Footer -->
+    <footer class="mt-5 py-3" role="contentinfo">
         <div class="container text-center">
-            <p class="text-muted">Gehenna API - V:TES Card Management</p>
+            <p class="text-muted mb-1">Gehenna API — V:TES Card Management</p>
+            <p class="text-muted mb-0" style="font-size: 0.75rem;">
+                <a href="https://vdb.im" target="_blank" rel="noopener" class="text-muted">VDB</a> ·
+                <a href="https://krcg.org" target="_blank" rel="noopener" class="text-muted">KRCG</a> ·
+                <a href="https://static.krcg.org" target="_blank" rel="noopener" class="text-muted">Card Images</a>
+            </p>
         </div>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='js/cache.js') }}"></script>
     <script src="{{ url_for('static', filename='js/cards.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/theme-toggle.js') }}"></script>
     {% block extra_js %}{% endblock %}
 </body>
 </html>

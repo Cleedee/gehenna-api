@@ -1,0 +1,299 @@
+{
+  "deck_id": 174,
+  "name": "UnnaDelicia",
+  "creator": "",
+  "date": "2024-11-20",
+  "format": "other",
+  "description": "https://vdb.im/decks/7e7c09d6c",
+  "all_reviewed": false,
+  "cards": [
+    {
+      "codevdb": 100085,
+      "name": "Archon Investigation",
+      "tipo": "Master",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "",
+      "card_path": "gehenna_api/data/cards/library/100085.json"
+    },
+    {
+      "codevdb": 100106,
+      "name": "Ashur Tablets",
+      "tipo": "Master",
+      "quantity": 6,
+      "needs_review": false,
+      "notes": "",
+      "card_path": "gehenna_api/data/cards/library/100106.json"
+    },
+    {
+      "codevdb": 100362,
+      "name": "Cloak the Gathering",
+      "tipo": "Action Modifier",
+      "quantity": 2,
+      "needs_review": false,
+      "notes": "",
+      "card_path": "gehenna_api/data/cards/library/100362.json"
+    },
+    {
+      "codevdb": 100418,
+      "name": "Contagion",
+      "tipo": "Action",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "",
+      "card_path": "gehenna_api/data/cards/library/100418.json"
+    },
+    {
+      "codevdb": 100484,
+      "name": "D'habi Revenant",
+      "tipo": "Retainer",
+      "quantity": 2,
+      "needs_review": false,
+      "notes": "",
+      "card_path": "gehenna_api/data/cards/library/100484.json"
+    },
+    {
+      "codevdb": 100588,
+      "name": "Dreams of the Sphinx",
+      "tipo": "Master",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "",
+      "card_path": "gehenna_api/data/cards/library/100588.json"
+    },
+    {
+      "codevdb": 100617,
+      "name": "Elder Impersonation",
+      "tipo": "Action Modifier",
+      "quantity": 2,
+      "needs_review": false,
+      "notes": "",
+      "card_path": "gehenna_api/data/cards/library/100617.json"
+    },
+    {
+      "codevdb": 100628,
+      "name": "Eluding the Arms of Morpheus",
+      "tipo": "Reaction",
+      "quantity": 2,
+      "needs_review": false,
+      "notes": "",
+      "card_path": "gehenna_api/data/cards/library/100628.json"
+    },
+    {
+      "codevdb": 100645,
+      "name": "Enkil Cog",
+      "tipo": "Action Modifier",
+      "quantity": 3,
+      "needs_review": false,
+      "notes": "",
+      "card_path": "gehenna_api/data/cards/library/100645.json"
+    },
+    {
+      "codevdb": 100652,
+      "name": "Entrancement",
+      "tipo": "Action",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "",
+      "card_path": "gehenna_api/data/cards/library/100652.json"
+    },
+    {
+      "codevdb": 100668,
+      "name": "Evil Eye",
+      "tipo": "Combat/Reaction",
+      "quantity": 7,
+      "needs_review": false,
+      "notes": "",
+      "card_path": "gehenna_api/data/cards/library/100668.json"
+    },
+    {
+      "codevdb": 100687,
+      "name": "Faceless Night",
+      "tipo": "Action Modifier",
+      "quantity": 2,
+      "needs_review": false,
+      "notes": "",
+      "card_path": "gehenna_api/data/cards/library/100687.json"
+    },
+    {
+      "codevdb": 100771,
+      "name": "Form of Mist",
+      "tipo": "Combat",
+      "quantity": 3,
+      "needs_review": false,
+      "notes": "",
+      "card_path": "gehenna_api/data/cards/library/100771.json"
+    },
+    {
+      "codevdb": 100824,
+      "name": "Giant's Blood",
+      "tipo": "Master",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "",
+      "card_path": "gehenna_api/data/cards/library/100824.json"
+    },
+    {
+      "codevdb": 100854,
+      "name": "Greater Curse",
+      "tipo": "Action",
+      "quantity": 8,
+      "needs_review": false,
+      "notes": "",
+      "card_path": "gehenna_api/data/cards/library/100854.json"
+    },
+    {
+      "codevdb": 100932,
+      "name": "Homunculus",
+      "tipo": "Retainer",
+      "quantity": 2,
+      "needs_review": false,
+      "notes": "",
+      "card_path": "gehenna_api/data/cards/library/100932.json"
+    },
+    {
+      "codevdb": 100947,
+      "name": "I am Legion",
+      "tipo": "Action Modifier",
+      "quantity": 3,
+      "needs_review": false,
+      "notes": "",
+      "card_path": "gehenna_api/data/cards/library/100947.json"
+    },
+    {
+      "codevdb": 100994,
+      "name": "Instantaneous Transformation",
+      "tipo": "Action Modifier",
+      "quantity": 4,
+      "needs_review": false,
+      "notes": "",
+      "card_path": "gehenna_api/data/cards/library/100994.json"
+    },
+    {
+      "codevdb": 101125,
+      "name": "Lost in Crowds",
+      "tipo": "Action Modifier",
+      "quantity": 4,
+      "needs_review": false,
+      "notes": "",
+      "card_path": "gehenna_api/data/cards/library/101125.json"
+    },
+    {
+      "codevdb": 101149,
+      "name": "Maleficia",
+      "tipo": "Master",
+      "quantity": 8,
+      "needs_review": false,
+      "notes": "",
+      "card_path": "gehenna_api/data/cards/library/101149.json"
+    },
+    {
+      "codevdb": 101207,
+      "name": "Metro Underground",
+      "tipo": "Master",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "",
+      "card_path": "gehenna_api/data/cards/library/101207.json"
+    },
+    {
+      "codevdb": 101238,
+      "name": "Monastery of Shadows",
+      "tipo": "Master",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "",
+      "card_path": "gehenna_api/data/cards/library/101238.json"
+    },
+    {
+      "codevdb": 101384,
+      "name": "Pentex(TM) Subversion",
+      "tipo": "Master",
+      "quantity": 2,
+      "needs_review": false,
+      "notes": "",
+      "card_path": "gehenna_api/data/cards/library/101384.json"
+    },
+    {
+      "codevdb": 101388,
+      "name": "Perfectionist",
+      "tipo": "Master",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "",
+      "card_path": "gehenna_api/data/cards/library/101388.json"
+    },
+    {
+      "codevdb": 101505,
+      "name": "Psalm of the Damned",
+      "tipo": "Action Modifier",
+      "quantity": 4,
+      "needs_review": false,
+      "notes": "",
+      "card_path": "gehenna_api/data/cards/library/101505.json"
+    },
+    {
+      "codevdb": 101711,
+      "name": "Secure Haven",
+      "tipo": "Master",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "",
+      "card_path": "gehenna_api/data/cards/library/101711.json"
+    },
+    {
+      "codevdb": 102076,
+      "name": "Unleash Hell's Fury",
+      "tipo": "Action",
+      "quantity": 3,
+      "needs_review": false,
+      "notes": "",
+      "card_path": "gehenna_api/data/cards/library/102076.json"
+    },
+    {
+      "codevdb": 102113,
+      "name": "Vessel",
+      "tipo": "Master",
+      "quantity": 2,
+      "needs_review": false,
+      "notes": "",
+      "card_path": "gehenna_api/data/cards/library/102113.json"
+    },
+    {
+      "codevdb": 102180,
+      "name": "Wider View",
+      "tipo": "Master",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "",
+      "card_path": "gehenna_api/data/cards/library/102180.json"
+    },
+    {
+      "codevdb": 200605,
+      "name": "Horde, The",
+      "tipo": "Vampire",
+      "quantity": 7,
+      "needs_review": false,
+      "notes": "",
+      "card_path": "gehenna_api/data/cards/crypt/200605.json"
+    },
+    {
+      "codevdb": 201411,
+      "name": "unnamed, The",
+      "tipo": "Vampire",
+      "quantity": 5,
+      "needs_review": false,
+      "notes": "",
+      "card_path": "gehenna_api/data/cards/crypt/201411.json"
+    },
+    {
+      "codevdb": 201480,
+      "name": "Xeper, Sultan of Lepers",
+      "tipo": "Vampire",
+      "quantity": 1,
+      "needs_review": false,
+      "notes": "",
+      "card_path": "gehenna_api/data/cards/crypt/201480.json"
+    }
+  ]
+}

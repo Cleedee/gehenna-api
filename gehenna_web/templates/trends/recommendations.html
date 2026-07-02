@@ -2,172 +2,223 @@
 
 {% block title %}Recommendations - Gehenna{% endblock %}
 
-{% block content %}
-<h1>Recommendations for {{ session.username }}</h1>
+{% block breadcrumbs %}
+{% set breadcrumbs = [('Home', 'index'), ('Recommendations', 'trends.recommendations')] %}
+{% include "components/breadcrumb.html" %}
+{% endblock %}
 
-<p class="text-muted">
-    Cards from tournament winning decks that you may need.
-    Total trending cards: {{ total_trending }}
+{% block content %}
+<div class="page-header">
+    <h1>Deck Recommendations</h1>
+    <p class="page-subtitle">
+        TWDA decks scored by how many cards you already own.
+        Searched <strong>{{ total_analyzed }}</strong> TWDA decks across <strong>{{ total_trending }}</strong> trending cards.
+    </p>
+</div>
+
+<!-- Filters -->
+<div class="card-vdb mb-4">
+    <form method="GET" class="row g-3 align-items-end">
+        <div class="col-md-3">
+            <label class="form-label">Minimum completeness</label>
+            <select name="min_completeness" class="form-select">
+                <option value="0.05" {{ 'selected' if min_completeness == 0.05 }}>≥ 5% (all decks)</option>
+                <option value="0.1" {{ 'selected' if min_completeness == 0.1 }}>≥ 10% (relaxed)</option>
+                <option value="0.3" {{ 'selected' if min_completeness == 0.3 }}>≥ 30% (any match)</option>
+                <option value="0.5" {{ 'selected' if min_completeness == 0.5 }}>≥ 50% (halfway)</option>
+                <option value="0.7" {{ 'selected' if min_completeness == 0.7 }}>≥ 70% (most cards)</option>
+                <option value="0.85" {{ 'selected' if min_completeness == 0.85 }}>≥ 85% (nearly complete)</option>
+                <option value="0.95" {{ 'selected' if min_completeness == 0.95 }}>≥ 95% (almost there!)</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label">Format</label>
+            <select name="format" class="form-select">
+                <option value="">All formats</option>
+                <option value="2R+F" {{ 'selected' if format == '2R+F' }}>2R+F</option>
+                <option value="3R+F" {{ 'selected' if format == '3R+F' }}>3R+F</option>
+                <option value="1R" {{ 'selected' if format == '1R' }}>1R</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label">Year</label>
+            <select name="year" class="form-select">
+                <option value="">All years</option>
+                {% for y in range(2025, 2000, -1) %}
+                <option value="{{ y }}" {{ 'selected' if year == y }}>{{ y }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label">Results</label>
+            <select name="limit" class="form-select">
+                <option value="10" {{ 'selected' if limit == 10 }}>10</option>
+                <option value="20" {{ 'selected' if limit == 20 }}>20</option>
+                <option value="50" {{ 'selected' if limit == 50 }}>50</option>
+            </select>
+        </div>
+        <div class="col-md-1">
+            <button type="submit" class="btn btn-primary w-100">Filter</button>
+        </div>
+        <div class="col-md-2">
+            <a href="{{ url_for('trends.recommendations') }}" class="btn btn-secondary w-100">Reset</a>
+        </div>
+    </form>
+</div>
+
+{% if decks %}
+<p class="text-muted mb-3">
+    Showing {{ decks|length }} deck(s) with at least {{ (min_completeness * 100)|int }}% completeness
+    (out of {{ total_analyzed }} TWDA decks searched).
 </p>
 
-<div class="row mt-3 mb-4">
-    <div class="col-md-12">
-        <div class="card border-primary">
-            <div class="card-header bg-primary text-white">
-                <h5 class="mb-0">Auto-Import TWDA Decks</h5>
-            </div>
-            <div class="card-body">
-                <p>Import the best TWDA decks based on your collection (decks you can almost build).</p>
-                <form method="POST" action="{{ url_for('trends.auto_import') }}" class="row g-3">
-                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                    <div class="col-md-3">
-                        <label class="form-label">Max decks to import</label>
-                        <input type="number" name="limit_decks" class="form-control" value="5" min="1" max="20">
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label">Minimum cards you have</label>
-                        <input type="number" name="min_card_overlap" class="form-control" value="10" min="1">
-                    </div>
-                    <div class="col-md-3 d-flex align-items-end">
-                        <button type="submit" class="btn btn-success">Import Matching Decks</button>
-                    </div>
-                </form>
+{% for deck in decks %}
+<div class="card-vdb mb-3">
+    <!-- Deck Header -->
+    <div class="card-vdb-header">
+        <div>
+            <h3 class="card-vdb-title" style="font-size: 1.15rem;">
+                <a href="{{ url_for('trends.deck_detail', deck_id=deck.id) }}" class="text-decoration-none" style="color: var(--link);">
+                    {{ deck.name or '(unnamed)' }}
+                </a>
+            </h3>
+            <div class="deck-meta" style="margin-top: 4px;">
+                <span class="deck-meta-item">
+                    <span class="deck-meta-label">Player</span>
+                    <span class="deck-meta-value">{{ deck.player or '-' }}</span>
+                </span>
+                <span class="deck-meta-item">
+                    <span class="deck-meta-label">Event</span>
+                    <span class="deck-meta-value">{{ deck.event or '-' }}</span>
+                </span>
+                <span class="deck-meta-item">
+                    <span class="deck-meta-label">Date</span>
+                    <span class="deck-meta-value">{{ deck.date }}</span>
+                </span>
+                <span class="deck-meta-item">
+                    <span class="deck-meta-label">Format</span>
+                    <span class="deck-meta-value">{{ deck.tournament_format }}</span>
+                </span>
             </div>
         </div>
+        <div class="d-flex gap-2 flex-wrap align-items-start">
+            <form method="POST" action="{{ url_for('trends.import_deck', deck_id=deck.id) }}" style="display:inline;">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                <button type="submit" class="btn btn-primary btn-sm">Import Deck</button>
+            </form>
+        </div>
     </div>
-</div>
 
-<div class="row mt-4">
-    <div class="col-md-12">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="mb-0">Cards to Get</h5>
-            </div>
-            <div class="card-body">
-                {% if cards %}
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Card ID</th>
-                            <th>Name</th>
-                            <th>Needed</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for card in cards %}
-                        <tr>
-                            <td>{{ card.card_id }}</td>
-                            <td>
-                                <a href="{{ url_for('cards.detail', card_id=card.card_id) }}" target="_blank">
-                                    {{ card.name }}
-                                </a>
-                            </td>
-                            <td>
-                                <span class="badge bg-{{ 'warning' if card.needed == 1 else ('orange' if card.needed == 2 else 'danger') }}">
-                                    {{ card.needed }}
-                                </span>
-                            </td>
-                            <td>
-                                <a href="{{ url_for('cards.detail', card_id=card.card_id) }}" class="btn btn-sm btn-outline-primary" target="_blank">
-                                    View
-                                </a>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-                {% else %}
-                <p class="text-muted">No recommendations available.</p>
-                {% endif %}
+    <!-- Progress Bar -->
+    <div class="mb-3">
+        <div class="d-flex justify-content-between mb-1">
+            <span style="font-size: 0.85rem; color: var(--text-secondary);">
+                <strong>{{ deck.owned_unique }}</strong> of <strong>{{ deck.total_unique }}</strong> unique cards owned
+                ({{ deck.missing_unique }} missing)
+            </span>
+            <span style="font-size: 0.85rem; font-weight: 600; color: var(--accent);">
+                {{ (deck.completeness * 100)|round(1) }}%
+            </span>
+        </div>
+        <div class="progress" style="height: 8px; background: var(--bg-elevated);">
+            {% set pct = (deck.completeness * 100)|round %}
+            {% if pct >= 85 %}
+                {% set bar_class = 'bg-success' %}
+            {% elif pct >= 70 %}
+                {% set bar_class = 'bg-info' %}
+            {% elif pct >= 50 %}
+                {% set bar_class = 'bg-warning' %}
+            {% else %}
+                {% set bar_class = 'bg-danger' %}
+            {% endif %}
+            <div class="progress-bar {{ bar_class }}" role="progressbar"
+                 style="width: {{ pct }}%;"
+                 aria-valuenow="{{ pct }}" aria-valuemin="0" aria-valuemax="100">
             </div>
         </div>
     </div>
-</div>
 
-{% if gaps %}
-<div class="row mt-4">
-    <div class="col-md-12">
-        <div class="card border-danger">
-            <div class="card-header bg-danger text-white">
-                <h5 class="mb-0">Gaps (Cards You Don't Have)</h5>
-            </div>
-            <div class="card-body">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Card ID</th>
-                            <th>Name</th>
-                            <th>Needed</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for card in gaps %}
-                        <tr>
-                            <td>{{ card.card_id }}</td>
-                            <td>
-                                <a href="{{ url_for('cards.detail', card_id=card.card_id) }}" target="_blank">
-                                    {{ card.name }}
-                                </a>
-                            </td>
-                            <td>
-                                <span class="badge bg-danger">{{ card.needed }}</span>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+    <!-- Stats row -->
+    <div class="deck-stats" style="margin-top: 0; padding-top: 0; border-top: none;">
+        <div class="deck-stat">
+            <span class="deck-stat-value" style="font-size: 1rem;">{{ deck.owned_copies }}</span>
+            <span class="deck-stat-label">Copies Owned</span>
+        </div>
+        <div class="deck-stat">
+            <span class="deck-stat-value" style="font-size: 1rem;">{{ deck.total_copies }}</span>
+            <span class="deck-stat-label">Copies Needed</span>
+        </div>
+        <div class="deck-stat">
+            <span class="deck-stat-value" style="font-size: 1rem; color: var(--danger);">{{ deck.missing_copies }}</span>
+            <span class="deck-stat-label">Missing Copies</span>
         </div>
     </div>
+
+    <!-- Missing Cards -->
+    {% if deck.missing_cards %}
+    <details class="mt-2">
+        <summary style="cursor: pointer; color: var(--link); font-size: 0.85rem; font-weight: 500;">
+            Missing cards ({{ deck.missing_cards|length }})
+        </summary>
+        <div class="mt-2">
+            <table class="table table-sm deck-table" style="font-size: 0.82rem;">
+                <thead>
+                    <tr>
+                        <th style="width: 40px;">Have</th>
+                        <th style="width: 50px;">Need</th>
+                        <th>Card</th>
+                        <th style="width: 60px;">Missing</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for card in deck.missing_cards %}
+                    <tr>
+                        <td class="text-center">{{ card.owned }}</td>
+                        <td class="text-center">{{ card.needed }}</td>
+                        <td>
+                            <a href="{{ url_for('cards.detail', card_id=card.card_id) }}"
+                               class="card-link"
+                               data-card-name="{{ card.name }}"
+                               class="text-decoration-none"
+                               style="color: var(--link);">
+                                {{ card.name }}
+                            </a>
+                        </td>
+                        <td>
+                            <span class="badge bg-{{ 'danger' if card.owned == 0 else 'warning' }}">
+                                {{ card.needed - card.owned }}
+                            </span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </details>
+    {% else %}
+    <p class="text-success mt-2" style="font-size: 0.85rem;">
+        ✓ You have all the cards for this deck!
+    </p>
+    {% endif %}
+</div>
+{% endfor %}
+
+{% else %}
+<div class="card-vdb text-center py-5">
+    <h3 style="color: var(--text-muted);">No matching decks found</h3>
+    <p class="text-muted">
+        {% if total_analyzed == 0 %}
+            No TWDA decks could be analyzed. Make sure you have cards registered in your
+            <a href="{{ url_for('decks.my_decks') }}">collection</a> first,
+            then try again.
+        {% else %}
+            We searched <strong>{{ total_analyzed }}</strong> TWDA decks but none reached the
+            minimum completeness threshold (<strong>{{ (min_completeness * 100)|int }}%</strong>).
+            Try lowering the threshold or clearing the filters.
+        {% endif %}
+    </p>
+    <a href="{{ url_for('trends.recommendations') }}" class="btn btn-primary mt-2">Reset Filters</a>
 </div>
 {% endif %}
 
-{% if example_decks %}
-<div class="row mt-4">
-    <div class="col-md-12">
-        <div class="card border-info">
-            <div class="card-header bg-info text-white">
-                <h5 class="mb-0">Example Decks (Using Recommended Cards)</h5>
-            </div>
-            <div class="card-body">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Deck Name</th>
-                            <th>Player</th>
-                            <th>Date</th>
-                            <th>Format</th>
-                            <th>Matching Cards</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for deck in example_decks %}
-                        <tr>
-                            <td>{{ deck.name or '(unnamed)' }}</td>
-                            <td>{{ deck.player }}</td>
-                            <td>{{ deck.date }}</td>
-                            <td>{{ deck.format }}</td>
-                            <td>
-                                <span class="badge bg-info">{{ deck.cards_count }}</span>
-                            </td>
-                            <td>
-                                <a href="{{ url_for('trends.deck_detail', deck_id=deck.id) }}" class="btn btn-sm btn-outline-primary">View</a>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
-{% endif %}
-
-<div class="row mt-4">
-    <div class="col-md-12">
-        <a href="{{ url_for('cards.search') }}" class="btn btn-primary">Search Cards</a>
-    </div>
-</div>
 {% endblock %}

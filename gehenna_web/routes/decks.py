@@ -122,19 +122,44 @@ def list():
     if response.status_code == 200:
         data = response.json()
         decks = data.get("decks", [])
-    return render_template("decks/list.html", decks=decks, username=username)
+    return render_template(
+        "decks/list.html",
+        decks=decks,
+        username=username,
+        name=name,
+        card_name=card_name,
+        preconstructed=preconstructed,
+    )
 
 
 @bp.route("/my")
 @login_required
 def my_decks():
     username = session.get("username")
-    response = api_client.get_decks(username=username)
+    name = request.args.get("name")
+    card_name = request.args.get("card_name")
+    code = request.args.get("code")
+    preconstructed = request.args.get("preconstructed")
+
+    response = api_client.get_decks(
+        username=username,
+        name=name,
+        card_name=card_name,
+        code=code,
+        preconstructed=preconstructed,
+    )
     decks = []
     if response.status_code == 200:
         data = response.json()
         decks = data.get("decks", [])
-    return render_template("decks/list.html", decks=decks, username=username)
+    return render_template(
+        "decks/list.html",
+        decks=decks,
+        username=username,
+        name=name,
+        card_name=card_name,
+        preconstructed=preconstructed,
+    )
 
 
 @bp.route("/<int:deck_id>")

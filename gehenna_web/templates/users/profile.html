@@ -2,6 +2,11 @@
 
 {% block title %}{{ user.username if user else 'User' }}{% endblock %}
 
+{% block breadcrumbs %}
+{% set breadcrumbs = [('Home', 'index'), ('Users', 'users.list'), (user.username if user else 'User')] %}
+{% include "components/breadcrumb.html" %}
+{% endblock %}
+
 {% block content %}
 {% if user %}
 <div class="card">

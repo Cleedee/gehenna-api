@@ -48,7 +48,7 @@ def update_user(
 def get_users(
     skip: int = 0, limit: int = 100, session: Session = Depends(get_session)
 ):
-    lista = session.scalars(select(User).offset(skip).limit(limit))
+    lista = list(session.scalars(select(User).offset(skip).limit(limit)))
     return {'users': lista}
 
 
@@ -58,10 +58,14 @@ def get_user_by_name(
     session: Session = Depends(get_session),
 ):
     user = session.scalar(select(User).where(User.username == username))
+    if not user:
+        raise HTTPException(status_code=404, detail='User not found')
     return user
 
 
 @router.get('/{user_id}', response_model=UserPublic)
 def get_user_by_id(user_id: int, session: Session = Depends(get_session)):
     user = session.scalar(select(User).where(User.id == user_id))
+    if not user:
+        raise HTTPException(status_code=404, detail='User not found')
     return user

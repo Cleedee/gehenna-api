@@ -2,6 +2,11 @@
 
 {% block title %}Import Deck to Moviment{% endblock %}
 
+{% block breadcrumbs %}
+{% set breadcrumbs = [('Home', 'index'), ('Decks', 'decks.my_decks'), (deck.name if deck else 'Deck', 'decks.detail', {'deck_id': deck.id} if deck else {}), ('Import to Moviment')] %}
+{% include "components/breadcrumb.html" %}
+{% endblock %}
+
 {% block content %}
 {% if deck %}
 <div class="card">

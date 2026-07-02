@@ -1,6 +1,11 @@
 {% extends "base.html" %}
 
-{% block title %}{{ moviment.name if moviment else 'Moviment' }}{% endblock %}
+{% block title %}{{ moviment.name if moviment else 'Movement' }}{% endblock %}
+
+{% block breadcrumbs %}
+{% set breadcrumbs = [('Home', 'index'), ('Movements', 'moviments.list'), (moviment.name if moviment else 'Movement')] %}
+{% include "components/breadcrumb.html" %}
+{% endblock %}
 
 {% block content %}
 {% if moviment %}
@@ -8,9 +13,11 @@
     <div class="card-header d-flex justify-content-between align-items-center">
         <h3>{{ moviment.name }}</h3>
         <div>
-            <a href="{{ url_for('items.list', moviment_id=moviment.id) }}" class="btn btn-info btn-sm">Items</a>
-            <a href="{{ url_for('moviments.edit', moviment_id=moviment.id) }}" class="btn btn-warning btn-sm">Edit</a>
-            <a href="{{ url_for('moviments.delete', moviment_id=moviment.id) }}" class="btn btn-danger btn-sm" onclick="return confirm('Delete moviment?')">Delete</a>
+            <a href="{{ url_for('items.list', moviment_id=moviment.id) }}" class="btn btn-info btn-sm" aria-label="View items">Items</a>
+            <a href="{{ url_for('moviments.edit', moviment_id=moviment.id) }}" class="btn btn-warning btn-sm" aria-label="Edit movement">Edit</a>
+            <a href="{{ url_for('moviments.delete', moviment_id=moviment.id) }}" class="btn btn-danger btn-sm"
+   data-confirm="Delete movement '{{ moviment.name }}'?"
+   data-confirm-action="Delete" aria-label="Delete movement">Delete</a>
         </div>
     </div>
     <div class="card-body">

@@ -51,35 +51,35 @@ def recommendations():
     limit = request.args.get('limit', 20, type=int)
     format = request.args.get('format')
     year = request.args.get('year', type=int)
+    min_completeness = request.args.get('min_completeness', 0.1, type=float)
 
-    cards = []
-    gaps = []
+    decks = []
+    total_analyzed = 0
     total_trending = 0
-    example_decks = []
 
     response = api_client.get_trend_recommendations(
         session.get('username'),
         limit=limit,
         format=format,
-        year=year
+        year=year,
+        min_completeness=min_completeness,
     )
 
     if response.status_code == 200:
         data = response.json()
-        cards = data.get('cards', [])
-        gaps = data.get('gaps', [])
+        decks = data.get('decks', [])
+        total_analyzed = data.get('total_analyzed', 0)
         total_trending = data.get('total_trending', 0)
-        example_decks = data.get('example_decks', [])
 
     return render_template(
         'trends/recommendations.html',
-        cards=cards,
-        gaps=gaps,
+        decks=decks,
+        total_analyzed=total_analyzed,
         total_trending=total_trending,
-        example_decks=example_decks,
         limit=limit,
         format=format,
-        year=year
+        year=year,
+        min_completeness=min_completeness,
     )
 
 

@@ -2,6 +2,11 @@
 
 {% block title %}Missing Cards - {{ deck.name if deck else 'Deck' }}{% endblock %}
 
+{% block breadcrumbs %}
+{% set breadcrumbs = [('Home', 'index'), ('Decks', 'decks.list'), (deck.name if deck else 'Deck', 'decks.detail', {'deck_id': deck.id} if deck else {}), ('Missing Cards')] %}
+{% include "components/breadcrumb.html" %}
+{% endblock %}
+
 {% block content %}
 {% if deck %}
 <div class="card">
@@ -27,7 +32,7 @@
                 {% for card in missing.cards %}
                 <tr>
                     <td>
-                        <a href="{{ url_for('cards.detail', card_id=card.card_id) }}" target="_blank">
+                        <a href="{{ url_for('cards.detail', card_id=card.card_id) }}" target="_blank" rel="noopener noreferrer">
                             {{ card.name }}
                         </a>
                     </td>
@@ -36,7 +41,7 @@
                     <td>
                         {% if card.preconstructed_decks %}
                         {% for pdeck in card.preconstructed_decks %}
-                        <a href="{{ url_for('decks.detail', deck_id=pdeck.id) }}" class="badge bg-primary text-decoration-none" target="_blank">
+                        <a href="{{ url_for('decks.detail', deck_id=pdeck.id) }}" class="badge bg-primary text-decoration-none" target="_blank" rel="noopener noreferrer">
                             {{ pdeck.name }} ({{ pdeck.slots[0].quantity }}x)
                         </a>
                         {% endfor %}
@@ -56,6 +61,4 @@
 {% else %}
 <p class="text-muted">Deck not found.</p>
 {% endif %}
-
-<a href="{{ url_for('decks.detail', deck_id=deck.id) if deck else url_for('decks.list') }}" class="btn btn-secondary mt-3">Back to Deck</a>
 {% endblock %}

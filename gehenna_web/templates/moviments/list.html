@@ -1,11 +1,16 @@
 {% extends "base.html" %}
 
-{% block title %}Moviments{% endblock %}
+{% block title %}Movements{% endblock %}
+
+{% block breadcrumbs %}
+{% set breadcrumbs = [('Home', 'index'), ('Movements', 'moviments.list')] %}
+{% include "components/breadcrumb.html" %}
+{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>My Moviments</h2>
-    <a href="{{ url_for('moviments.create') }}" class="btn btn-primary">New Moviment</a>
+<div class="page-header">
+    <h2>Movements</h2>
+    <a href="{{ url_for('moviments.create') }}" class="btn btn-primary">New Movement</a>
 </div>
 
 <form method="GET" class="row g-3 mb-4">
@@ -23,6 +28,7 @@
 
 {% if moviments %}
 <table class="table table-striped">
+    <caption class="visually-hidden">Movement list</caption>
     <thead>
         <tr>
             <th>ID</th>
@@ -48,9 +54,11 @@
             <td>${{ mov.price }}</td>
             <td>{{ mov.code or '-' }}</td>
             <td>
-                <a href="{{ url_for('moviments.detail', moviment_id=mov.id) }}" class="btn btn-sm btn-info">View</a>
-                <a href="{{ url_for('moviments.edit', moviment_id=mov.id) }}" class="btn btn-sm btn-warning">Edit</a>
-                <a href="{{ url_for('moviments.delete', moviment_id=mov.id) }}" class="btn btn-sm btn-danger" onclick="return confirm('Delete moviment?')">Delete</a>
+                <a href="{{ url_for('moviments.detail', moviment_id=mov.id) }}" class="btn btn-sm btn-info" aria-label="View movement {{ mov.name }}">View</a>
+                <a href="{{ url_for('moviments.edit', moviment_id=mov.id) }}" class="btn btn-sm btn-warning" aria-label="Edit movement {{ mov.name }}">Edit</a>
+                <a href="{{ url_for('moviments.delete', moviment_id=mov.id) }}" class="btn btn-sm btn-danger"
+   data-confirm="Delete movement '{{ mov.name }}'?"
+   data-confirm-action="Delete" aria-label="Delete movement {{ mov.name }}">Delete</a>
             </td>
         </tr>
         {% endfor %}

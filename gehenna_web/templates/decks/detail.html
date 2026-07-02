@@ -2,37 +2,48 @@
 
 {% block title %}{{ deck.name if deck else 'Deck' }}{% endblock %}
 
+{% block breadcrumbs %}
+{% set breadcrumbs = [('Home', 'index'), ('Decks', 'decks.list'), (deck.name if deck else 'Deck')] %}
+{% include "components/breadcrumb.html" %}
+{% endblock %}
+
 {% block content %}
 {% if deck %}
-<div class="vdb-container">
-  <div class="vdb-header">
-    <div class="vdb-header-top">
-      <h1 class="vdb-deck-name">{{ deck.name }}</h1>
-      <div class="vdb-header-actions">
-        <button class="vdb-btn" onclick="copyDeckText({{ deck.id }})">Copy to VDB.im</button>
+<div class="deck-detail-container">
+  <div class="card-vdb">
+    <div class="card-vdb-header">
+      <h1 class="card-vdb-title">{{ deck.name }}</h1>
+      <div class="d-flex gap-2 flex-wrap">
+        <button class="btn-ghost" onclick="copyDeckText({{ deck.id }})" aria-label="Copy deck to VDB.im">
+          Copy to VDB.im
+        </button>
+        <button class="btn-ghost" onclick="downloadDeckJson({{ deck.id }}, '{{ deck.name|replace("'", "")|e }}')" aria-label="Download deck as JSON">
+          Export JSON
+        </button>
         {% if session.username and session.user_id == deck.owner_id %}
-        <a href="{{ url_for('decks.edit', deck_id=deck.id) }}" class="vdb-btn">Edit</a>
-        <a href="{{ url_for('decks.delete', deck_id=deck.id) }}" class="vdb-btn vdb-btn-danger"
-           onclick="return confirm('Delete deck?')">Delete</a>
+        <a href="{{ url_for('decks.edit', deck_id=deck.id) }}" class="btn-ghost">Edit</a>
+        <a href="{{ url_for('decks.delete', deck_id=deck.id) }}" class="btn-ghost btn-ghost-danger"
+           data-confirm="Delete deck '{{ deck.name }}'?"
+           data-confirm-action="Delete">Delete</a>
         {% endif %}
       </div>
     </div>
 
-    <div class="vdb-meta">
-      <div class="vdb-meta-item">
-        <span class="vdb-meta-label">Author</span>
-        <span class="vdb-meta-value">{{ deck.creator or deck.player or '-' }}</span>
+    <div class="deck-meta">
+      <div class="deck-meta-item">
+        <span class="deck-meta-label">Author</span>
+        <span class="deck-meta-value">{{ deck.creator or deck.player or '-' }}</span>
       </div>
-      <div class="vdb-meta-item">
-        <span class="vdb-meta-label">Type</span>
-        <span class="vdb-meta-value">{{ deck.tipo }}</span>
+      <div class="deck-meta-item">
+        <span class="deck-meta-label">Type</span>
+        <span class="deck-meta-value">{{ deck.tipo }}</span>
       </div>
       {% if deck.tags %}
-      <div class="vdb-meta-item">
-        <span class="vdb-meta-label">Tags</span>
-        <div class="vdb-tags">
+      <div class="deck-meta-item">
+        <span class="deck-meta-label">Tags</span>
+        <div class="tags-container">
           {% for tag in deck.tags.split(',') %}
-          <span class="vdb-tag">{{ tag.strip() }}</span>
+          <span class="tag">{{ tag.strip() }}</span>
           {% endfor %}
         </div>
       </div>
@@ -40,109 +51,113 @@
     </div>
 
     {% if deck.description %}
-    <div class="vdb-description">
+    <div class="deck-description">
       {{ deck.description }}
     </div>
     {% endif %}
 
-    <div class="vdb-stats">
-      <div class="vdb-stat">
-        <span class="vdb-stat-value">{{ crypt_total }}</span>
-        <span class="vdb-stat-label">Crypt</span>
+    <div class="deck-stats">
+      <div class="deck-stat">
+        <span class="deck-stat-value">{{ crypt_total }}</span>
+        <span class="deck-stat-label">Crypt</span>
       </div>
-      <div class="vdb-stat">
-        <span class="vdb-stat-value">{{ lib_total }}</span>
-        <span class="vdb-stat-label">Library</span>
+      <div class="deck-stat">
+        <span class="deck-stat-value">{{ lib_total }}</span>
+        <span class="deck-stat-label">Library</span>
       </div>
-      <div class="vdb-stat">
-        <span class="vdb-stat-value">{{ crypt_blood }}</span>
-        <span class="vdb-stat-label">
-          <img src="https://vdb.im/images/misc/bloodX.gif" alt="" class="vdb-icon-sm"> Total
+      <div class="deck-stat">
+        <span class="deck-stat-value">{{ crypt_blood }}</span>
+        <span class="deck-stat-label">
+          <img src="https://vdb.im/images/misc/bloodX.gif" alt="" class="icon-sm"> Total
         </span>
       </div>
-      <div class="vdb-stat">
-        <span class="vdb-stat-value">{{ lib_pool }}</span>
-        <span class="vdb-stat-label">
-          <img src="https://vdb.im/images/misc/poolX.gif" alt="" class="vdb-icon-sm"> Total
+      <div class="deck-stat">
+        <span class="deck-stat-value">{{ lib_pool }}</span>
+        <span class="deck-stat-label">
+          <img src="https://vdb.im/images/misc/poolX.gif" alt="" class="icon-sm"> Total
         </span>
       </div>
     </div>
 
-    <div class="vdb-actions">
-      <a href="{{ url_for('slots.list', deck_id=deck.id) }}" class="vdb-btn">Manage Cards</a>
+    <div class="deck-actions">
+      <a href="{{ url_for('slots.list', deck_id=deck.id) }}" class="btn-ghost">Manage Cards</a>
       {% if session.username and session.user_id == deck.owner_id %}
-      <a href="{{ url_for('slots.create', deck_id=deck.id) }}" class="vdb-btn">Add Card</a>
+      <a href="{{ url_for('slots.create', deck_id=deck.id) }}" class="btn-ghost">Add Card</a>
       {% endif %}
       {% if session.username %}
-      <a href="{{ url_for('decks.missing_cards', deck_id=deck.id) }}" class="vdb-btn">Missing Cards</a>
+      <a href="{{ url_for('decks.missing_cards', deck_id=deck.id) }}" class="btn-ghost">Missing Cards</a>
       {% if session.user_id == deck.owner_id %}
-      <a href="{{ url_for('decks.import_to_moviment', deck_id=deck.id) }}" class="vdb-btn">Import to Moviment</a>
+      <a href="{{ url_for('decks.import_to_moviment', deck_id=deck.id) }}" class="btn-ghost">Import to Moviment</a>
       {% endif %}
       {% endif %}
     </div>
   </div>
 
-  <div class="vdb-section">
-    <h2 class="vdb-section-title">
+  <div class="card-vdb">
+    <h2 class="card-vdb-title d-flex align-items-center gap-3" style="font-size: 1.1rem; margin-bottom: 0.75rem;">
       Crypt [{{ crypt_total }}]
-      <span class="vdb-section-sub">
-        <img src="https://vdb.im/images/misc/bloodX.gif" alt="" class="vdb-icon-sm"> {{ crypt_blood }}
+      <span class="card-vdb-subtitle">
+        <img src="https://vdb.im/images/misc/bloodX.gif" alt="" class="icon-sm"> {{ crypt_blood }}
       </span>
     </h2>
 
     {% if crypt %}
-    <table class="vdb-table">
+    <table class="table table-striped deck-table">
+      <caption class="visually-hidden">Crypt cards in this deck</caption>
       <thead>
         <tr>
-          <th class="vdb-col-qty">Qty</th>
-          <th class="vdb-col-cap">Cap</th>
-          <th class="vdb-col-disc">Disciplines</th>
-          <th class="vdb-col-name">Name</th>
-          <th class="vdb-col-clan">Clan/Group</th>
+          <th class="col-qty">Qty</th>
+          <th class="col-cap">Cap</th>
+          <th class="col-disc">Disciplines</th>
+          <th class="col-name">Name</th>
+          <th class="col-clan">Clan/Group</th>
         </tr>
       </thead>
       <tbody>
         {% for slot in crypt %}
         {% set c = slot.card %}
         <tr>
-          <td class="vdb-col-qty">{{ slot.quantity }}</td>
-          <td class="vdb-col-cap">
+          <td class="col-qty">{{ slot.quantity }}</td>
+          <td class="col-cap">
             <img src="https://vdb.im/images/misc/cap{{ c.capacity }}.gif"
                  onerror="this.src='https://vdb.im/images/misc/capX.gif'"
-                 alt="{{ c.capacity }}" class="vdb-cap-icon">
+                 alt="{{ c.capacity }}" class="icon-cap">
           </td>
-          <td class="vdb-col-disc">
+          <td class="col-disc">
             {% for disc in c.disc_list %}
             {% set icon = DISCIPLINE_ICON.get(disc) %}
             {% if icon %}
             <img src="https://vdb.im/images/disciplines/{{ icon }}sup.svg"
                  onerror="this.src='https://vdb.im/images/disciplines/any.svg'"
-                 alt="{{ disc }}" class="vdb-disc-icon" title="{{ disc }}">
+                 alt="{{ disc }}" class="icon-disc" title="{{ disc }}">
             {% else %}
-            <span class="vdb-disc-text">{{ disc }}</span>
+            <span class="disc-text">{{ disc }}</span>
             {% endif %}
             {% endfor %}
           </td>
-          <td class="vdb-col-name">
+          <td class="col-name">
             <a href="{{ url_for('cards.detail', card_id=c.id) }}"
                class="card-link"
                data-card-name="{{ c.name }}"
                data-group="{{ c.group }}"
-               data-advanced="{{ c.advanced|lower if c.advanced else 'false' }}">
+               data-advanced="{{ c.advanced|lower if c.advanced else 'false' }}"
+               data-tipo="{{ c.tipo or '' }}"
+               data-clan="{{ c.clan or '' }}"
+               data-cost="{{ c.cost or '' }}">
               {{ c.name }}
             </a>
           </td>
-          <td class="vdb-col-clan">
-            <div class="vdb-clan-inner">
+          <td class="col-clan">
+            <div class="clan-inner">
               {% set clan_icon = CLAN_ICON.get(c.clan) %}
               {% if clan_icon %}
               <img src="https://vdb.im/images/clans/{{ clan_icon }}.svg"
                    onerror="this.style.display='none'"
-                   alt="{{ c.clan }}" class="vdb-clan-icon" title="{{ c.clan }}">
+                   alt="{{ c.clan }}" class="icon-clan" title="{{ c.clan }}">
               {% endif %}
-              <span class="vdb-clan-text">{{ c.clan }}</span>
+              <span class="clan-text">{{ c.clan }}</span>
               {% if c.group %}
-              <span class="vdb-group-text">G{{ c.group }}</span>
+              <span class="group-text">G{{ c.group }}</span>
               {% endif %}
             </div>
           </td>
@@ -151,15 +166,15 @@
       </tbody>
     </table>
     {% else %}
-    <p class="vdb-empty">No crypt cards.</p>
+    <p class="table-empty">No crypt cards.</p>
     {% endif %}
   </div>
 
-  <div class="vdb-section">
-    <h2 class="vdb-section-title">
+  <div class="card-vdb">
+    <h2 class="card-vdb-title d-flex align-items-center gap-3" style="font-size: 1.1rem; margin-bottom: 0.75rem;">
       Library [{{ lib_total }}]
-      <span class="vdb-section-sub">
-        <img src="https://vdb.im/images/misc/poolX.gif" alt="" class="vdb-icon-sm"> {{ lib_pool }}
+      <span class="card-vdb-subtitle">
+        <img src="https://vdb.im/images/misc/poolX.gif" alt="" class="icon-sm"> {{ lib_pool }}
       </span>
     </h2>
 
@@ -167,45 +182,48 @@
     {% for tipo, group in library_groups.items() %}
     {% set slots = group.slots %}
     {% set sec_total = group.total %}
-    <div class="vdb-lib-group">
-      <h3 class="vdb-lib-type">{{ tipo }} [{{ sec_total }}]</h3>
-      <table class="vdb-table">
+    <div class="lib-group">
+      <h3 class="lib-type-header">{{ tipo }} [{{ sec_total }}]</h3>
+      <table class="table table-striped deck-table">
         <tbody>
           {% for slot in slots %}
           {% set c = slot.card %}
           <tr>
-            <td class="vdb-col-qty">{{ slot.quantity }}</td>
-            <td class="vdb-col-name">
+            <td class="col-qty">{{ slot.quantity }}</td>
+            <td class="col-name">
               <a href="{{ url_for('cards.detail', card_id=c.id) }}"
                  class="card-link"
                  data-card-name="{{ c.name }}"
                  data-group="{{ c.group }}"
-                 data-advanced="{{ c.advanced|lower if c.advanced else 'false' }}">
+                 data-advanced="{{ c.advanced|lower if c.advanced else 'false' }}"
+                 data-tipo="{{ c.tipo or '' }}"
+                 data-clan="{{ c.clan or '' }}"
+                 data-cost="{{ c.cost or '' }}">
                 {{ c.name }}
               </a>
             </td>
-            <td class="vdb-col-cost">
+            <td class="col-cost">
               {% if c.trifle %}
-              <img src="https://vdb.im/images/misc/trifle.svg" alt="trifle" class="vdb-cost-icon" title="Trifle">
+              <img src="https://vdb.im/images/misc/trifle.svg" alt="trifle" class="icon-cost" title="Trifle">
               {% elif c.blood and c.blood > 0 %}
               <img src="https://vdb.im/images/misc/blood{{ c.blood }}.gif"
                    onerror="this.src='https://vdb.im/images/misc/bloodX.gif'"
-                   alt="{{ c.blood }}" class="vdb-cost-icon" title="{{ c.blood }} blood">
+                   alt="{{ c.blood }}" class="icon-cost" title="{{ c.blood }} blood">
               {% elif c.pool and c.pool > 0 %}
               <img src="https://vdb.im/images/misc/pool{{ c.pool }}.gif"
                    onerror="this.src='https://vdb.im/images/misc/poolX.gif'"
-                   alt="{{ c.pool }}" class="vdb-cost-icon" title="{{ c.pool }} pool">
+                   alt="{{ c.pool }}" class="icon-cost" title="{{ c.pool }} pool">
               {% endif %}
             </td>
-            <td class="vdb-col-clan-sm">
+            <td class="col-clan-sm">
               {% if c.clan %}
               {% set clan_icon = CLAN_ICON.get(c.clan) %}
               {% if clan_icon %}
               <img src="https://vdb.im/images/clans/{{ clan_icon }}.svg"
                    onerror="this.style.display='none'"
-                   alt="{{ c.clan }}" class="vdb-clan-icon-sm" title="{{ c.clan }}">
+                   alt="{{ c.clan }}" class="icon-clan-sm" title="{{ c.clan }}">
               {% else %}
-              <span class="vdb-clan-text-sm">{{ c.clan }}</span>
+              <span class="clan-text-sm">{{ c.clan }}</span>
               {% endif %}
               {% endif %}
             </td>
@@ -216,25 +234,60 @@
     </div>
     {% endfor %}
     {% else %}
-    <p class="vdb-empty">No library cards.</p>
+    <p class="table-empty">No library cards.</p>
     {% endif %}
   </div>
 </div>
 {% else %}
-<p class="vdb-empty">Deck not found.</p>
+<p class="table-empty">Deck not found.</p>
 {% endif %}
-
-<a href="{{ url_for('decks.list') }}" class="vdb-btn vdb-btn-back mt-3">← Back to List</a>
 {% endblock %}
 
 {% block extra_js %}
 <script>
 function copyDeckText(deckId) {
     fetch('{{ url_for("decks.export_text", deck_id=999) }}'.replace('999', deckId))
-        .then(r => r.json())
-        .then(data => navigator.clipboard.writeText(data.text))
-        .then(() => alert('Deck copied! Paste it into VDB.im'))
-        .catch(err => alert('Error copying: ' + err.message));
+        .then(function (r) { return r.json(); })
+        .then(function (data) { return navigator.clipboard.writeText(data.text); })
+        .then(function () {
+            showToast('Deck copied! Paste it into VDB.im', 'success');
+        })
+        .catch(function (err) {
+            showToast('Error copying: ' + err.message, 'danger');
+        });
+}
+
+function downloadDeckJson(deckId, deckName) {
+    fetch('{{ url_for("decks.export_text", deck_id=999) }}'.replace('999', deckId))
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+            var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = (deckName || 'deck') + '.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast('Deck exported as JSON', 'success');
+        })
+        .catch(function (err) {
+            showToast('Error exporting: ' + err.message, 'danger');
+        });
+}
+
+function showToast(message, type) {
+    var container = document.getElementById('toast-container');
+    if (!container) return;
+    var el = document.createElement('div');
+    el.className = 'toast align-items-center text-bg-' + type + ' border-0';
+    el.setAttribute('role', 'alert');
+    el.innerHTML = '<div class="d-flex"><div class="toast-body">' + message + '</div><button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button></div>';
+    container.appendChild(el);
+    var t = new bootstrap.Toast(el, { autohide: true, delay: 4000 });
+    t.show();
+    setTimeout(function () { el.remove(); }, 4500);
 }
 </script>
 {% endblock %}

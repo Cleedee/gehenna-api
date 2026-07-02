@@ -2,8 +2,15 @@
 
 {% block title %}Cards Search{% endblock %}
 
+{% block breadcrumbs %}
+{% set breadcrumbs = [('Home', 'index'), ('Cards', 'cards.search')] %}
+{% include "components/breadcrumb.html" %}
+{% endblock %}
+
 {% block content %}
-<h2>Card Search</h2>
+<div class="page-header">
+    <h2>Card Search</h2>
+</div>
 
 <form method="GET" class="mb-4">
     <div class="row g-3 mb-3">
@@ -42,7 +49,8 @@
 
 {% if cards %}
 <p class="text-muted">Found {{ cards|length }} card(s)</p>
-<table class="table table-striped table-sm">
+<table class="table table-striped table-sm deck-table">
+    <caption class="visually-hidden">Card search results</caption>
     <thead>
         <tr>
             <th>Code</th>
@@ -63,6 +71,9 @@
                    data-card-name="{{ card.name }}"
                    data-group="{{ card.group }}"
                    {% if card.advanced %}data-advanced="true"{% endif %}
+                   data-tipo="{{ card.tipo or '' }}"
+                   data-clan="{{ card.clan or '' }}"
+                   data-cost="{{ card.cost or '' }}"
                    class="card-link">{{ card.name }}
                 </a>
             </td>
@@ -96,5 +107,11 @@
 <div class="alert alert-info">No cards found matching your criteria.</div>
 {% endif %}
 
-<a href="{{ url_for('index') }}" class="btn btn-secondary mt-3">Back</a>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+window.GEHENNA_API_URL = '{{ config.API_BASE_URL or "http://127.0.0.1:8002" }}';
+</script>
+<script src="{{ url_for('static', filename='js/autocomplete.js') }}"></script>
 {% endblock %}

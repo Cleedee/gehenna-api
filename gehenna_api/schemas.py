@@ -12,12 +12,16 @@ class UserSchema(BaseModel):
 
 
 class UserPublic(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: int
     username: str
-    email: EmailStr
+    email: str  # str, not EmailStr — DB may contain non-email values
 
 
 class UserList(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     users: list[UserPublic]
 
 
@@ -167,6 +171,8 @@ class DeckList(BaseModel):
 
 
 class SlotSchema(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     deck_id: int
     card_id: int
     quantity: int

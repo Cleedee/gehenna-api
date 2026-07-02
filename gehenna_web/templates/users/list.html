@@ -2,8 +2,13 @@
 
 {% block title %}Users{% endblock %}
 
+{% block breadcrumbs %}
+{% set breadcrumbs = [('Home', 'index'), ('Users')] %}
+{% include "components/breadcrumb.html" %}
+{% endblock %}
+
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
+<div class="page-header">
     <h2>Users</h2>
     <a href="{{ url_for('users.create') }}" class="btn btn-primary">Create User</a>
 </div>
