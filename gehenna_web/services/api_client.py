@@ -266,12 +266,14 @@ def get_statistics(owner_id=None):
     return api.get('/stocks/statistics', params=params)
 
 
-def get_trend_recommendations(username, limit=20, format=None, year=None, min_completeness=0.1):
+def get_trend_recommendations(username, limit=20, format=None, year_start=None, year_end=None, min_completeness=0.1):
     params = {'limit': limit, 'min_completeness': min_completeness}
     if format:
         params['format'] = format
-    if year:
-        params['year'] = year
+    if year_start:
+        params['year_start'] = year_start
+    if year_end:
+        params['year_end'] = year_end
     return api.get(f'/trends/recommendations/{username}', params=params)
 
 

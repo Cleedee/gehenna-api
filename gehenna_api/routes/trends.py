@@ -119,14 +119,17 @@ def _get_twda_data() -> list[dict]:
 def read_trends(
     limit: int = Query(default=100, le=500),
     format: Optional[str] = None,
-    year: Optional[int] = None,
+    year_start: Optional[int] = Query(default=None, alias='year_start'),
+    year_end: Optional[int] = Query(default=None, alias='year_end'),
 ):
     twda = _get_twda_data()
 
     if format:
         twda = [d for d in twda if d.get('tournament_format') == format]
-    if year:
-        twda = [d for d in twda if d.get('date', '').startswith(str(year))]
+    if year_start:
+        twda = [d for d in twda if d.get('date', '')[:4] >= str(year_start)]
+    if year_end:
+        twda = [d for d in twda if d.get('date', '')[:4] <= str(year_end)]
 
     card_counter: Counter[int] = Counter()
     clan_counter: Counter[str] = Counter()
@@ -189,7 +192,8 @@ def read_recommendations(
     username: str,
     limit: int = Query(default=20, le=100),
     format: Optional[str] = None,
-    year: Optional[int] = None,
+    year_start: Optional[int] = Query(default=None, alias='year_start'),
+    year_end: Optional[int] = Query(default=None, alias='year_end'),
     min_completeness: float = Query(default=0.1, alias='min_completeness', ge=0, le=1),
     session: Session = Depends(get_session),
 ):
@@ -237,8 +241,10 @@ def read_recommendations(
     twda = _get_twda_data()
     if format:
         twda = [d for d in twda if d.get('tournament_format') == format]
-    if year:
-        twda = [d for d in twda if d.get('date', '').startswith(str(year))]
+    if year_start:
+        twda = [d for d in twda if d.get('date', '')[:4] >= str(year_start)]
+    if year_end:
+        twda = [d for d in twda if d.get('date', '')[:4] <= str(year_end)]
 
     vtes = _load_vtes_lookup()
 

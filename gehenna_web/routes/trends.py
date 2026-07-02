@@ -50,7 +50,8 @@ def import_deck(deck_id):
 def recommendations():
     limit = request.args.get('limit', 20, type=int)
     format = request.args.get('format')
-    year = request.args.get('year', type=int)
+    year_start = request.args.get('year_start', type=int)
+    year_end = request.args.get('year_end', type=int)
     min_completeness = request.args.get('min_completeness', 0.1, type=float)
 
     decks = []
@@ -61,7 +62,8 @@ def recommendations():
         session.get('username'),
         limit=limit,
         format=format,
-        year=year,
+        year_start=year_start,
+        year_end=year_end,
         min_completeness=min_completeness,
     )
 
@@ -78,7 +80,8 @@ def recommendations():
         total_trending=total_trending,
         limit=limit,
         format=format,
-        year=year,
+        year_start=year_start,
+        year_end=year_end,
         min_completeness=min_completeness,
     )
 
