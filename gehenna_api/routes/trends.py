@@ -192,9 +192,9 @@ def read_recommendations(
     username: str,
     limit: int = Query(default=20, le=100),
     format: Optional[str] = None,
-    year_start: Optional[int] = Query(default=None, alias='year_start'),
-    year_end: Optional[int] = Query(default=None, alias='year_end'),
-    min_completeness: float = Query(default=0.1, alias='min_completeness', ge=0, le=1),
+    year_start: Optional[int] = None,
+    year_end: Optional[int] = None,
+    min_completeness: float = Query(default=0.1, ge=0, le=1),
     session: Session = Depends(get_session),
 ):
     """
