@@ -109,10 +109,13 @@ def _get_vampire_info(card_id: int) -> tuple[list[str], list[str]]:
 
 
 def _get_twda_data() -> list[dict]:
-    with Client() as client:
-        response = client.get(TWDA_URL)
-        response.raise_for_status()
-        return response.json()
+    import warnings
+    with warnings.catch_warnings():
+        warnings.simplefilter('ignore', ResourceWarning)
+        with Client(verify=False) as client:
+            response = client.get(TWDA_URL)
+            response.raise_for_status()
+            return response.json()
 
 
 @router.get('/', response_model=TrendResponse)
