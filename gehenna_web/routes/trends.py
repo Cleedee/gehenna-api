@@ -45,6 +45,30 @@ def import_deck(deck_id):
         return redirect(url_for('trends.deck_detail', deck_id=deck_id))
 
 
+@bp.route('/meta')
+@login_required
+def meta_trends():
+    from flask import make_response
+    period_months = request.args.get('period_months', 6, type=int)
+    limit = request.args.get('limit', 20, type=int)
+
+    data = None
+    response = api_client.get_meta_trends(period_months=period_months, limit=limit)
+    if response.status_code == 200:
+        data = response.json()
+
+    response = make_response(render_template(
+        'trends/meta.html',
+        data=data,
+        period_months=period_months,
+        limit=limit,
+    ))
+    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+    return response
+
+
 @bp.route('/recommendations')
 @login_required
 def recommendations():

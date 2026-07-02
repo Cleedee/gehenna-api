@@ -1,0 +1,260 @@
+{% extends "base.html" %}
+
+{% block title %}Meta Trends - Gehenna{% endblock %}
+
+{% block breadcrumbs %}
+{% set breadcrumbs = [('Home', 'index'), ('Meta Trends', 'trends.meta_trends')] %}
+{% include "components/breadcrumb.html" %}
+{% endblock %}
+
+{% block head %}
+<style>
+.bar-chart { display: flex; align-items: center; gap: 8px; margin: 2px 0; }
+.bar-label { min-width: 140px; text-align: right; font-size: 0.82rem; color: var(--text-secondary); }
+.bar-track { flex: 1; height: 20px; background: var(--bg-elevated); border-radius: 4px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 4px; transition: width 0.3s; }
+.bar-value { min-width: 40px; font-size: 0.82rem; font-weight: 600; color: var(--accent); }
+.stat-card { text-align: center; padding: 1rem; }
+.stat-card .stat-value { font-size: 1.8rem; font-weight: 700; color: var(--accent); }
+.stat-card .stat-label { font-size: 0.8rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
+.bg-clan-1 { background: #e74c3c; }
+.bg-clan-2 { background: #3498db; }
+.bg-clan-3 { background: #2ecc71; }
+.bg-clan-4 { background: #f39c12; }
+.bg-clan-5 { background: #9b59b6; }
+.bg-clan-6 { background: #1abc9c; }
+.bg-clan-7 { background: #e67e22; }
+.bg-clan-8 { background: #34495e; }
+.bg-clan-9 { background: #e91e63; }
+.bg-clan-10 { background: #00bcd4; }
+.bg-clan-other { background: #7f8c8d; }
+.period-selector { display: flex; gap: 8px; }
+.period-btn { padding: 4px 12px; border-radius: 4px; font-size: 0.82rem; cursor: pointer; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-secondary); }
+.period-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.period-btn:hover { border-color: var(--accent); }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>🏆 Meta Trends</h1>
+    <p class="page-subtitle">
+        Analyze the current V:TES meta: recent winning decks, clan & discipline distribution,
+        and most played cards.
+    </p>
+</div>
+
+{% if data %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card-vdb d-flex align-items-center gap-3 p-3 flex-wrap">
+            <span style="font-size: 0.85rem; font-weight: 500; color: var(--text-secondary);">Period:</span>
+            <div class="period-selector">
+                {% for months, label in [(3, '3M'), (6, '6M'), (12, '12M'), (24, '24M')] %}
+                <a href="{{ url_for('trends.meta_trends', period_months=months, limit=limit) }}"
+                   class="period-btn {{ 'active' if period_months == months }}">
+                    {{ label }}
+                </a>
+                {% endfor %}
+            </div>
+            <span style="font-size: 0.82rem; color: var(--text-muted); margin-left: auto;">
+                Updated: {{ data.last_update[:10] if data.last_update else '' }}
+            </span>
+        </div>
+    </div>
+</div>
+
+<!-- Stats Row -->
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card-vdb stat-card">
+            <div class="stat-value">{{ data.total_decks }}</div>
+            <div class="stat-label">Decks in Period</div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card-vdb stat-card">
+            <div class="stat-value">{{ data.clan_distribution|length }}</div>
+            <div class="stat-label">Clans Played</div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card-vdb stat-card">
+            <div class="stat-value">{{ data.recent_winners|length }}</div>
+            <div class="stat-label">Recent Winners</div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Clan Distribution -->
+    <div class="col-lg-6 mb-4">
+        <div class="card-vdb">
+            <h3 class="card-vdb-title" style="font-size: 1rem; margin-bottom: 12px;">
+                🏘️ Clan Distribution
+            </h3>
+            {% set clan_max = data.clan_distribution.values()|max %}
+            {% for clan, count in (data.clan_distribution|dictsort(by='value', reverse=True))[:15] %}
+            {% set pct = (count / clan_max * 100)|round %}
+            {% set color_idx = loop.index % 10 + 1 %}
+            <div class="bar-chart">
+                <span class="bar-label">{{ clan }}</span>
+                <div class="bar-track">
+                    <div class="bar-fill bg-clan-{{ color_idx if color_idx <= 10 else 'other' }}"
+                         style="width: {{ pct }}%;"></div>
+                </div>
+                <span class="bar-value">{{ count }}</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Discipline Distribution -->
+    <div class="col-lg-6 mb-4">
+        <div class="card-vdb">
+            <h3 class="card-vdb-title" style="font-size: 1rem; margin-bottom: 12px;">
+                ⚡ Discipline Distribution
+            </h3>
+            {% set disc_max = data.discipline_distribution.values()|max %}
+            {% for disc, count in (data.discipline_distribution|dictsort(by='value', reverse=True))[:15] %}
+            {% set pct = (count / disc_max * 100)|round %}
+            <div class="bar-chart">
+                <span class="bar-label">{{ disc }}</span>
+                <div class="bar-track">
+                    <div class="bar-fill" style="width: {{ pct }}%; background: var(--accent);"></div>
+                </div>
+                <span class="bar-value">{{ count }}</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Format Distribution -->
+    <div class="col-lg-6 mb-4">
+        <div class="card-vdb">
+            <h3 class="card-vdb-title" style="font-size: 1rem; margin-bottom: 12px;">
+                📋 Format Distribution
+            </h3>
+            {% set fmt_max = data.format_distribution.values()|max %}
+            {% for fmt, count in (data.format_distribution|dictsort(by='value', reverse=True)) %}
+            {% set pct = (count / fmt_max * 100)|round %}
+            <div class="bar-chart">
+                <span class="bar-label">{{ fmt if fmt else 'Unknown' }}</span>
+                <div class="bar-track">
+                    <div class="bar-fill" style="width: {{ pct }}%; background: #f39c12;"></div>
+                </div>
+                <span class="bar-value">{{ count }}</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Top Vampires -->
+    <div class="col-lg-6 mb-4">
+        <div class="card-vdb">
+            <h3 class="card-vdb-title" style="font-size: 1rem; margin-bottom: 12px;">
+                🧛 Top Vampires
+            </h3>
+            {% set vamp_max = data.top_vampires[0].count if data.top_vampires else 1 %}
+            {% for card in data.top_vampires[:15] %}
+            {% set pct = (card.count / vamp_max * 100)|round %}
+            <div class="bar-chart">
+                <span class="bar-label" style="min-width: 180px;">{{ card.name }}</span>
+                <div class="bar-track">
+                    <div class="bar-fill" style="width: {{ pct }}%; background: #9b59b6;"></div>
+                </div>
+                <span class="bar-value">{{ card.count }}</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- Top Library Cards -->
+<div class="row">
+    <div class="col-12 mb-4">
+        <div class="card-vdb">
+            <h3 class="card-vdb-title" style="font-size: 1rem; margin-bottom: 12px;">
+                📄 Top Library Cards
+            </h3>
+            <div class="table-responsive">
+                <table class="table table-sm deck-table" style="font-size: 0.85rem;">
+                    <thead>
+                        <tr>
+                            <th style="width: 60px;">#</th>
+                            <th>Card</th>
+                            <th style="width: 80px;">Type</th>
+                            <th style="width: 60px;">Count</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for card in data.top_library_cards[:30] %}
+                        <tr>
+                            <td class="text-muted">{{ loop.index }}</td>
+                            <td>{{ card.name }}</td>
+                            <td><span class="badge bg-secondary">{{ card.type }}</span></td>
+                            <td><strong>{{ card.count }}</strong></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Winners -->
+<div class="row">
+    <div class="col-12 mb-4">
+        <div class="card-vdb">
+            <h3 class="card-vdb-title" style="font-size: 1rem; margin-bottom: 12px;">
+                🏅 Recent Winning Decks
+            </h3>
+            <div class="table-responsive">
+                <table class="table table-sm deck-table" style="font-size: 0.85rem;">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Deck</th>
+                            <th>Player</th>
+                            <th>Event</th>
+                            <th>Format</th>
+                            <th>Players</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for deck in data.recent_winners %}
+                        <tr>
+                            <td class="text-muted">{{ deck.date }}</td>
+                            <td>
+                                <a href="{{ url_for('trends.deck_detail', deck_id=deck.id) }}"
+                                   style="color: var(--link);">
+                                    {{ deck.name }}
+                                </a>
+                            </td>
+                            <td>{{ deck.player }}</td>
+                            <td>{{ deck.event }}</td>
+                            <td><span class="badge bg-info">{{ deck.tournament_format }}</span></td>
+                            <td>{{ deck.players_count }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% else %}
+<div class="card-vdb text-center py-5">
+    <h3 style="color: var(--text-muted);">No data available</h3>
+    <p class="text-muted">
+        Could not load meta trends. Make sure the API server is running and
+        try again.
+    </p>
+</div>
+{% endif %}
+
+{% endblock %}

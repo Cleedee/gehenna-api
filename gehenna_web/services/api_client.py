@@ -266,6 +266,11 @@ def get_statistics(owner_id=None):
     return api.get('/stocks/statistics', params=params)
 
 
+def get_meta_trends(period_months=6, limit=20):
+    params = {'period_months': period_months, 'limit': limit}
+    return api.get('/trends/meta', params=params)
+
+
 def get_trend_recommendations(username, limit=20, format=None, year_start=None, year_end=None, min_completeness=0.1):
     params = {'limit': limit, 'min_completeness': min_completeness}
     if format:

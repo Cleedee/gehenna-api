@@ -72,6 +72,36 @@ class TrendResponse(BaseModel):
     recent_decks: list[TrendDeck]
 
 
+class MetaTrendDeck(BaseModel):
+    id: str
+    event: str
+    date: str
+    player: str
+    name: str
+    tournament_format: str
+    players_count: int
+    place: str
+
+
+class TopCard(BaseModel):
+    id: str
+    name: str
+    count: int
+    type: str = ''
+
+
+class MetaTrendResponse(BaseModel):
+    last_update: str
+    period_months: int
+    total_decks: int
+    clan_distribution: dict[str, int]
+    discipline_distribution: dict[str, int]
+    format_distribution: dict[str, int]
+    top_vampires: list[TopCard]
+    top_library_cards: list[TopCard]
+    recent_winners: list[MetaTrendDeck]
+
+
 TWDA_URL = 'https://static.krcg.org/data/twda.json'
 VTES_LOOKUP = 'gehenna_api/data/vtes_lookup.json'
 VTES_URL = 'https://api.krcg.org/card'
@@ -197,6 +227,111 @@ def read_trends(
             )
             for d in recent
         ],
+    )
+
+
+@router.get('/meta', response_model=MetaTrendResponse)
+def read_meta_trends(
+    period_months: int = Query(default=6, alias='period_months', ge=1, le=24),
+    limit: int = Query(default=20, le=100),
+):
+    """
+    Analyze meta trends: recent winning decks, clan/discipline/format distribution,
+    and most played vampires and library cards.
+    """
+    twda = _get_twda_data()
+    vtes = _load_vtes_lookup()
+
+    # Filter by period
+    from datetime import timedelta
+    cutoff = (datetime.now() - timedelta(days=period_months * 30)).strftime('%Y-%m-%d')
+    recent = [d for d in twda if d.get('date', '') >= cutoff]
+
+    clan_counter: Counter[str] = Counter()
+    disc_counter: Counter[str] = Counter()
+    format_counter: Counter[str] = Counter()
+    vampire_counter: Counter[int] = Counter()
+    library_counter: Counter[int] = Counter()
+    library_types: dict[int, str] = {}
+
+    for deck in recent:
+        fmt = deck.get('tournament_format', 'Unknown')
+        format_counter[fmt] += 1
+
+        for vamp in deck.get('crypt', {}).get('cards', []):
+            card_id = vamp['id']
+            qty = vamp.get('count', 1)
+            vampire_counter[card_id] += qty
+            clans, disciplines = _get_vampire_info(card_id)
+            for clan in clans:
+                clan_counter[clan] += qty
+            for disc in disciplines:
+                disc_counter[disc.upper()] += qty
+
+        for section in deck.get('library', {}).get('cards', []):
+            section_type = section.get('type', 'Unknown')
+            for card in section.get('cards', []):
+                cid = card['id']
+                qty = card.get('count', 1)
+                library_counter[cid] += qty
+                if cid not in library_types:
+                    library_types[cid] = section_type
+
+    # Top vampires
+    top_vamps = []
+    for card_id, count in vampire_counter.most_common(limit):
+        card_data = vtes.get(str(card_id), {})
+        name = card_data.get('name', f'Card {card_id}')
+        top_vamps.append(TopCard(
+            id=str(card_id),
+            name=name,
+            count=count,
+            type='Vampire',
+        ))
+
+    # Top library cards
+    top_lib = []
+    for card_id, count in library_counter.most_common(limit):
+        card_data = vtes.get(str(card_id), {})
+        name = card_data.get('name', f'Card {card_id}')
+        top_lib.append(TopCard(
+            id=str(card_id),
+            name=name,
+            count=count,
+            type=library_types.get(card_id, ''),
+        ))
+
+    # Recent winners (top 3 per event, sorted by date)
+    events_seen: set[str] = set()
+    recent_winners = []
+    for deck in sorted(recent, key=lambda d: d.get('date', ''), reverse=True):
+        eid = deck.get('id', '')
+        if eid in events_seen:
+            continue
+        events_seen.add(eid)
+        recent_winners.append(MetaTrendDeck(
+            id=deck['id'],
+            event=deck.get('event', ''),
+            date=deck.get('date', ''),
+            player=deck.get('player', ''),
+            name=deck.get('name', ''),
+            tournament_format=deck.get('tournament_format', ''),
+            players_count=deck.get('players_count', 0),
+            place=str(deck.get('place', '')),
+        ))
+        if len(recent_winners) >= limit:
+            break
+
+    return MetaTrendResponse(
+        last_update=datetime.now().isoformat(),
+        period_months=period_months,
+        total_decks=len(recent),
+        clan_distribution=dict(clan_counter.most_common(20)),
+        discipline_distribution=dict(disc_counter.most_common(20)),
+        format_distribution=dict(format_counter.most_common()),
+        top_vampires=top_vamps,
+        top_library_cards=top_lib,
+        recent_winners=recent_winners,
     )
 
 
