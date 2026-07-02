@@ -119,16 +119,16 @@ def _get_twda_data() -> list[dict]:
 def read_trends(
     limit: int = Query(default=100, le=500),
     format: Optional[str] = None,
-    year_start: Optional[int] = Query(default=None, alias='year_start'),
-    year_end: Optional[int] = Query(default=None, alias='year_end'),
+    year_start: Optional[int] = None,
+    year_end: Optional[int] = None,
 ):
     twda = _get_twda_data()
 
     if format:
         twda = [d for d in twda if d.get('tournament_format') == format]
-    if year_start:
+    if year_start is not None:
         twda = [d for d in twda if d.get('date', '')[:4] >= str(year_start)]
-    if year_end:
+    if year_end is not None:
         twda = [d for d in twda if d.get('date', '')[:4] <= str(year_end)]
 
     card_counter: Counter[int] = Counter()
@@ -241,9 +241,9 @@ def read_recommendations(
     twda = _get_twda_data()
     if format:
         twda = [d for d in twda if d.get('tournament_format') == format]
-    if year_start:
+    if year_start is not None:
         twda = [d for d in twda if d.get('date', '')[:4] >= str(year_start)]
-    if year_end:
+    if year_end is not None:
         twda = [d for d in twda if d.get('date', '')[:4] <= str(year_end)]
 
     vtes = _load_vtes_lookup()

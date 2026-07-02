@@ -270,9 +270,9 @@ def get_trend_recommendations(username, limit=20, format=None, year_start=None, 
     params = {'limit': limit, 'min_completeness': min_completeness}
     if format:
         params['format'] = format
-    if year_start:
+    if year_start is not None:
         params['year_start'] = year_start
-    if year_end:
+    if year_end is not None:
         params['year_end'] = year_end
     return api.get(f'/trends/recommendations/{username}', params=params)
 

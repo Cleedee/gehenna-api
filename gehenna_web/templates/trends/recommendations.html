@@ -44,8 +44,8 @@
             <label class="form-label">Year from</label>
             <select name="year_start" class="form-select">
                 <option value="">Any</option>
-                {% for y in range(1995, 2026) %}
-                <option value="{{ y }}" {{ 'selected' if year_start == y }}>{{ y }}</option>
+                {% for y in range(1997, 2027) %}
+                <option value="{{ y }}" {{ 'selected' if year_start|string == y|string }}>{{ y }}</option>
                 {% endfor %}
             </select>
         </div>
@@ -53,8 +53,8 @@
             <label class="form-label">Year to</label>
             <select name="year_end" class="form-select">
                 <option value="">Any</option>
-                {% for y in range(1995, 2026) %}
-                <option value="{{ y }}" {{ 'selected' if year_end == y }}>{{ y }}</option>
+                {% for y in range(1997, 2027) %}
+                <option value="{{ y }}" {{ 'selected' if year_end|string == y|string }}>{{ y }}</option>
                 {% endfor %}
             </select>
         </div>
@@ -69,7 +69,7 @@
         <div class="col-md-1">
             <button type="submit" class="btn btn-primary w-100">Filter</button>
         </div>
-        <div class="col-md-2">
+        <div class="col-md-1">
             <a href="{{ url_for('trends.recommendations') }}" class="btn btn-secondary w-100">Reset</a>
         </div>
     </form>

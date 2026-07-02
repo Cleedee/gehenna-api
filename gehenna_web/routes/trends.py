@@ -48,6 +48,7 @@ def import_deck(deck_id):
 @bp.route('/recommendations')
 @login_required
 def recommendations():
+    from flask import make_response
     limit = request.args.get('limit', 20, type=int)
     format = request.args.get('format')
     year_start = request.args.get('year_start', type=int)
@@ -73,7 +74,7 @@ def recommendations():
         total_analyzed = data.get('total_analyzed', 0)
         total_trending = data.get('total_trending', 0)
 
-    return render_template(
+    response = make_response(render_template(
         'trends/recommendations.html',
         decks=decks,
         total_analyzed=total_analyzed,
@@ -83,7 +84,11 @@ def recommendations():
         year_start=year_start,
         year_end=year_end,
         min_completeness=min_completeness,
-    )
+    ))
+    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+    return response
 
 
 @bp.route('/auto-import', methods=['POST'])
