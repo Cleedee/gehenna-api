@@ -3,7 +3,7 @@ name = "gehenna-api"
 version = "0.4.0"
 description = "API Rest e Web UI para gerenciamento de coleções e decks de V:TES"
 authors = [{ name = "Claudio Torcato", email = "claudiotorcato@gmail.com" }]
-requires-python = ">=3.12,<4"
+requires-python = ">=3.12,<3.13"
 classifiers = [
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.12",
@@ -18,7 +18,7 @@ dependencies = [
     "pydantic-settings>=2.0.2,<3",
     "alembic>=1.11.2,<2",
     "python-jose[cryptography]>=3.3.0,<4",
-    "passlib[bcrypt]>=1.7.4,<2",
+    "bcrypt>=4.0,<5",
     "python-multipart>=0.0.6,<0.0.7",
     "tinydb>=4.8.0,<5",
     "bump-pydantic>=0.8.0,<0.9",
