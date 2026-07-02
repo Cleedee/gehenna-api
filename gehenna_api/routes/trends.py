@@ -77,6 +77,9 @@ VTES_LOOKUP = 'gehenna_api/data/vtes_lookup.json'
 VTES_URL = 'https://api.krcg.org/card'
 
 _vtes_cache: dict = {}
+_twda_cache: list[dict] | None = None
+_twda_cache_time: float = 0
+TWDA_CACHE_TTL: int = 300  # 5 minutes
 
 
 def _load_vtes_lookup() -> dict:
@@ -88,7 +91,7 @@ def _load_vtes_lookup() -> dict:
             with open(path) as f:
                 _vtes_cache = json.load(f)
         else:
-            with Client() as client:
+            with Client(verify=False) as client:
                 resp = client.get('https://static.krcg.org/data/vtes.json')
                 data = resp.json()
                 for card in data:
@@ -109,13 +112,20 @@ def _get_vampire_info(card_id: int) -> tuple[list[str], list[str]]:
 
 
 def _get_twda_data() -> list[dict]:
+    import time
     import warnings
+    global _twda_cache, _twda_cache_time
+    now = time.time()
+    if _twda_cache is not None and (now - _twda_cache_time) < TWDA_CACHE_TTL:
+        return _twda_cache
     with warnings.catch_warnings():
         warnings.simplefilter('ignore', ResourceWarning)
         with Client(verify=False) as client:
             response = client.get(TWDA_URL)
             response.raise_for_status()
-            return response.json()
+            _twda_cache = response.json()
+            _twda_cache_time = now
+            return _twda_cache
 
 
 @router.get('/', response_model=TrendResponse)
