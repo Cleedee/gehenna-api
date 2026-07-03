@@ -1,0 +1,352 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit' if tournament else 'New' }} Tournament{% endblock %}
+{% block content %}
+<div class="container mt-4">
+    <h1>{{ '✏️ Edit Tournament' if tournament else '✚ New Tournament' }}</h1>
+
+    <form method="POST" id="tournamentForm">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        <!-- Basic Info -->
+        <div class="card mb-3">
+            <div class="card-header"><h5 class="mb-0">📋 Tournament Info</h5></div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label for="name" class="form-label">Name *</label>
+                        <input type="text" class="form-control" id="name" name="name" required
+                               value="{{ tournament.name if tournament else '' }}"
+                               placeholder="e.g. VTES João Pessoa #7">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="date" class="form-label">Date *</label>
+                        <input type="date" class="form-control" id="date" name="date" required
+                               value="{{ tournament.date if tournament else '' }}">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="total_players" class="form-label">Total Players</label>
+                        <input type="number" class="form-control" id="total_players" name="total_players" min="1"
+                               value="{{ tournament.total_players if tournament else '' }}">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="location" class="form-label">Location</label>
+                        <input type="text" class="form-control" id="location" name="location"
+                               value="{{ tournament.location if tournament else '' }}"
+                               placeholder="e.g. Ludus Luderia">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="format" class="form-label">Format</label>
+                        <select class="form-select" id="format" name="format">
+                            <option value="">—</option>
+                            <option value="3R+F" {{ 'selected' if tournament and tournament.format == '3R+F' }}>3R+F</option>
+                            <option value="2R+F" {{ 'selected' if tournament and tournament.format == '2R+F' }}>2R+F</option>
+                            <option value="Constructed" {{ 'selected' if tournament and tournament.format == 'Constructed' }}>Constructed</option>
+                        </select>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="notes" class="form-label">Notes</label>
+                        <textarea class="form-control" id="notes" name="notes" rows="2">{{ tournament.notes if tournament else '' }}</textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Participants -->
+        <div class="card mb-3">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">👥 Participants</h5>
+                <button type="button" class="btn btn-sm btn-success" onclick="addParticipant()">+ Add</button>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-dark table-hover mb-0" id="participantsTable">
+                    <thead>
+                        <tr>
+                            <th>Player Name</th>
+                            <th>Deck</th>
+                            <th>Clan</th>
+                            <th>Archetype</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="participantsBody">
+                        {% if tournament and tournament.participants %}
+                        {% for p in tournament.participants %}
+                        <tr>
+                            <td><input type="text" class="form-control form-control-sm" name="p_name[]" value="{{ p.player_name }}" required></td>
+                            <td><input type="text" class="form-control form-control-sm" name="p_deckname[]" value="{{ p.deck_name or '' }}"></td>
+                            <td>
+                                <select class="form-select form-select-sm clan-select" name="p_clan[]">
+                                    <option value="">—</option>
+                                    {% for clan in clans %}
+                                    <option value="{{ clan }}" {{ 'selected' if p.clan == clan }}>{{ clan }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td><input type="text" class="form-control form-control-sm" name="p_archetype[]" value="{{ p.archetype or '' }}" placeholder="e.g. Hecata G6 Wall"></td>
+                            <td><button type="button" class="btn btn-sm btn-outline-danger" onclick="this.closest('tr').remove()">✕</button></td>
+                        </tr>
+                        {% endfor %}
+                        {% endif %}
+                    </tbody>
+                </table>
+                {% if not tournament or not tournament.participants %}
+                <div class="text-center py-3 text-muted" id="noParticipants">
+                    <p>Add at least one participant to continue.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Rounds -->
+        <div id="roundsContainer">
+            {% if tournament and tournament.rounds %}
+            {% for r in tournament.rounds %}
+            <div class="card mb-3 round-card">
+                <div class="card-header d-flex justify-content-between align-items-center 
+                    {{ 'bg-warning text-dark' if r.is_final else '' }}">
+                    <h5 class="mb-0">{{ '🏆 Final' if r.is_final else 'Round ' ~ r.round_number }}</h5>
+                    <div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" name="r_{{ loop.index0 }}_final" id="r_{{ loop.index0 }}_final"
+                                   onchange="toggleFinal({{ loop.index0 }})" {{ 'checked' if r.is_final }}>
+                            <label class="form-check-label" for="r_{{ loop.index0 }}_final">Final</label>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-danger" onclick="this.closest('.round-card').remove()">✕ Remove</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    {% set round_idx = loop.index0 %}
+                    <input type="hidden" name="r_{{ round_idx }}_number" value="{{ r.round_number }}">
+                    <div class="round-results" data-round="{{ round_idx }}">
+                        {% set tables = r.results|groupby('table_number') %}
+                        {% set ns = namespace(rc=0) %}
+                        {% for table_num, table_results in tables %}
+                        <div class="table-group mb-3">
+                            <h6 class="text-muted">Table {{ table_num }}</h6>
+                            <div class="table-responsive">
+                                <table class="table table-dark table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Pos</th>
+                                            <th>Player</th>
+                                            <th>VPs</th>
+                                            <th>GW</th>
+                                            {% if r.is_final %}<th>Rank</th>{% endif %}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for result in table_results|sort(attribute='seat_position') %}
+                                        {% set result_idx = ns.rc %}
+                                        {% set ns.rc = ns.rc + 1 %}
+                                        <tr>
+                                            <td>
+                                                <select class="form-select form-select-sm" name="r_{{ round_idx }}_result_{{ result_idx }}_seat" style="width:auto;">
+                                                    {% for pos in range(1, 6) %}
+                                                    <option value="{{ pos }}" {{ 'selected' if result.seat_position == pos }}>
+                                                        {{ pos }}{% if pos == 1 %} (Prey){% elif pos == 5 %} (Pred){% endif %}
+                                                    </option>
+                                                    {% endfor %}
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <select class="form-select form-select-sm participant-select" name="r_{{ round_idx }}_result_{{ result_idx }}_participant" style="min-width:150px;">
+                                                    <option value="">—</option>
+                                                    {% for p in tournament.participants %}
+                                                    <option value="{{ loop.index }}" {{ 'selected' if result.participant_id == p.id }}>
+                                                        {{ p.player_name }}
+                                                    </option>
+                                                    {% endfor %}
+                                                </select>
+                                            </td>
+                                            <td><input type="number" class="form-control form-control-sm" name="r_{{ round_idx }}_result_{{ result_idx }}_vps" value="{{ result.vps }}" step="0.5" min="0" style="width:80px;"></td>
+                                            <td>
+                                                <input type="checkbox" class="form-check-input" name="r_{{ round_idx }}_result_{{ result_idx }}_gw" {{ 'checked' if result.gw }}>
+                                            </td>
+                                            {% if r.is_final %}
+                                            <td>
+                                                <input type="number" class="form-control form-control-sm" name="r_{{ round_idx }}_result_{{ result_idx }}_rank" value="{{ result.final_rank or '' }}" min="1" max="5" style="width:70px;" placeholder="1-5">
+                                            </td>
+                                            {% endif %}
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            <button type="button" class="btn btn-outline-warning me-2" onclick="addRound()">+ Add Round</button>
+            <button type="button" class="btn btn-outline-info" onclick="addFinal()">🏆 Add Final</button>
+        </div>
+
+        <div class="d-flex justify-content-between">
+            <a href="{{ url_for('tournaments.list_tournaments') }}" class="btn btn-outline-secondary">Cancel</a>
+            <button type="submit" class="btn btn-success btn-lg">
+                {{ '💾 Save Changes' if tournament else '✚ Create Tournament' }}
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let participantCount = {{ (tournament.participants|length) if tournament and tournament.participants else 0 }};
+let roundCount = {{ (tournament.rounds|length) if tournament and tournament.rounds else 0 }};
+
+function distributePlayers(total) {
+    if (total <= 5) return [total];
+    const maxTables = Math.floor(total / 4);
+    const minTables = Math.ceil(total / 5);
+    for (let numTables = minTables; numTables <= maxTables; numTables++) {
+        const base = Math.floor(total / numTables);
+        const rem = total % numTables;
+        const sizes = [];
+        let ok = true;
+        for (let i = 0; i < numTables; i++) {
+            const size = base + (i < rem ? 1 : 0);
+            if (size < 4 || size > 5) { ok = false; break; }
+            sizes.push(size);
+        }
+        if (ok) return sizes;
+    }
+    return [total];
+}
+
+function addParticipant() {
+    const tbody = document.getElementById('participantsBody');
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+        <td><input type="text" class="form-control form-control-sm" name="p_name[]" required></td>
+        <td><input type="text" class="form-control form-control-sm" name="p_deckname[]"></td>
+        <td>
+            <select class="form-select form-select-sm clan-select" name="p_clan[]">
+                <option value="">—</option>
+                {% for clan in clans %}
+                <option value="{{ clan }}">{{ clan }}</option>
+                {% endfor %}
+            </select>
+        </td>
+        <td><input type="text" class="form-control form-control-sm" name="p_archetype[]" placeholder="e.g. Hecata G6 Wall"></td>
+        <td><button type="button" class="btn btn-sm btn-outline-danger" onclick="this.closest('tr').remove()">✕</button></td>
+    `;
+    tbody.appendChild(tr);
+    document.getElementById('noParticipants')?.remove();
+    participantCount++;
+}
+
+function getParticipants() {
+    const inputs = document.querySelectorAll('input[name="p_name[]"]');
+    return Array.from(inputs).map(inp => inp.value).filter(v => v.trim());
+}
+
+function addRound(isFinal = false) {
+    const container = document.getElementById('roundsContainer');
+    const r = roundCount;
+    roundCount++;
+
+    const participants = getParticipants();
+    const tableSizes = distributePlayers(participants.length);
+
+    const div = document.createElement('div');
+    div.className = 'card mb-3 round-card';
+
+    let tablesHtml = '';
+    let resIdx = 0;
+    tableSizes.forEach((size, ti) => {
+        const tableNum = ti + 1;
+        let rows = '';
+        for (let seat = 1; seat <= size; seat++) {
+            rows += `
+                <tr>
+                    <td>
+                        <select class="form-select form-select-sm" name="r_${r}_result_${resIdx}_seat" style="width:auto;">
+                            ${[1,2,3,4,5].map(p => `<option value="${p}" ${p === seat ? 'selected' : ''}>${p}${p === 1 ? ' (Prey)' : p === 5 ? ' (Pred)' : ''}</option>`).join('')}
+                        </select>
+                    </td>
+                    <td>
+                        <select class="form-select form-select-sm participant-select" name="r_${r}_result_${resIdx}_participant" style="min-width:150px;">
+                            <option value="">—</option>
+                            ${participants.map((name, idx) => `<option value="${idx + 1}">${name}</option>`).join('')}
+                        </select>
+                    </td>
+                    <td><input type="number" class="form-control form-control-sm" name="r_${r}_result_${resIdx}_vps" step="0.5" min="0" style="width:80px;"></td>
+                    <td><input type="checkbox" class="form-check-input" name="r_${r}_result_${resIdx}_gw"></td>
+                    ${isFinal ? `<td><input type="number" class="form-control form-control-sm" name="r_${r}_result_${resIdx}_rank" min="1" max="5" style="width:70px;" placeholder="1-5"></td>` : ''}
+                </tr>
+            `;
+            resIdx++;
+        }
+        tablesHtml += `
+            <div class="table-group mb-3">
+                <h6 class="text-muted">Table ${tableNum}</h6>
+                <div class="table-responsive">
+                    <table class="table table-dark table-sm">
+                        <thead><tr><th>Pos</th><th>Player</th><th>VPs</th><th>GW</th>${isFinal ? '<th>Rank</th>' : ''}</tr></thead>
+                        <tbody>${rows}</tbody>
+                    </table>
+                </div>
+            </div>
+        `;
+    });
+
+    div.innerHTML = `
+        <div class="card-header d-flex justify-content-between align-items-center ${isFinal ? 'bg-warning text-dark' : ''}">
+            <h5 class="mb-0">${isFinal ? '🏆 Final' : 'Round ' + (r + 1)}</h5>
+            <div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" name="r_${r}_final" id="r_${r}_final"
+                           onchange="toggleFinal(${r})" ${isFinal ? 'checked' : ''}>
+                    <label class="form-check-label" for="r_${r}_final">Final</label>
+                </div>
+                <button type="button" class="btn btn-sm btn-outline-danger" onclick="this.closest('.round-card').remove()">✕ Remove</button>
+            </div>
+        </div>
+        <div class="card-body">
+            <input type="hidden" name="r_${r}_number" value="${r + 1}">
+            <div class="round-results" data-round="${r}">${tablesHtml}</div>
+        </div>
+    `;
+    container.appendChild(div);
+}
+
+function addFinal() {
+    addRound(true);
+}
+
+function toggleFinal(r) {
+    const card = document.querySelector(`.round-card:nth-child(${r + 1})`);
+    const header = card?.querySelector('.card-header');
+    if (header) {
+        header.classList.toggle('bg-warning');
+        header.classList.toggle('text-dark');
+        const title = header.querySelector('h5');
+        if (title) {
+            const checkbox = header.querySelector(`#r_${r}_final`);
+            title.textContent = checkbox?.checked ? '🏆 Final' : 'Round ' + (r + 1);
+        }
+    }
+}
+
+document.addEventListener('change', function(e) {
+    if (e.target.classList.contains('clan-select')) {
+        const row = e.target.closest('tr');
+        if (row) {
+            const archInput = row.querySelector('input[name="p_archetype[]"]');
+            if (archInput && !archInput.value) {
+                const clan = e.target.value;
+                if (clan) {
+                    archInput.value = clan + ' G6 ';
+                }
+            }
+        }
+    }
+});
+</script>
+{% endblock %}

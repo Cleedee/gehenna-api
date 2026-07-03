@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}Tournaments{% endblock %}
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1>🏆 Tournaments</h1>
+        <a href="{{ url_for('tournaments.new_tournament') }}" class="btn btn-success">
+            ✚ New Tournament
+        </a>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="GET" class="row g-3">
+                <div class="col-auto">
+                    <label for="year" class="form-label">Year</label>
+                    <select name="year" id="year" class="form-select">
+                        <option value="">All</option>
+                        {% for y in range(2020, 2027) %}
+                        <option value="{{ y }}" {{ 'selected' if year == y }}>{{ y }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <label for="format" class="form-label">Format</label>
+                    <select name="format" id="format" class="form-select">
+                        <option value="">All</option>
+                        <option value="3R+F" {{ 'selected' if format == '3R+F' }}>3R+F</option>
+                        <option value="2R+F" {{ 'selected' if format == '2R+F' }}>2R+F</option>
+                        <option value="Constructed" {{ 'selected' if format == 'Constructed' }}>Constructed</option>
+                    </select>
+                </div>
+                <div class="col-auto d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary">Filter</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {% if tournaments %}
+    <div class="table-responsive">
+        <table class="table table-dark table-hover">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Name</th>
+                    <th>Format</th>
+                    <th>Players</th>
+                    <th>Winner</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for t in tournaments %}
+                <tr>
+                    <td>{{ t.date }}</td>
+                    <td>
+                        <a href="{{ url_for('tournaments.detail', tournament_id=t.id) }}" class="text-decoration-none">
+                            {{ t.name }}
+                        </a>
+                    </td>
+                    <td><span class="badge bg-secondary">{{ t.format or '—' }}</span></td>
+                    <td>{{ t.total_players or '—' }}</td>
+                    <td>
+                        {% if t.winner %}
+                        <span class="text-success fw-bold">{{ t.winner }}</span>
+                        {% else %}
+                        <span class="text-muted">—</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{{ url_for('tournaments.detail', tournament_id=t.id) }}" class="btn btn-sm btn-outline-info">View</a>
+                        <a href="{{ url_for('tournaments.edit_tournament', tournament_id=t.id) }}" class="btn btn-sm btn-outline-secondary">Edit</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <p class="text-muted fs-5">No tournaments registered yet.</p>
+        <a href="{{ url_for('tournaments.new_tournament') }}" class="btn btn-success btn-lg">
+            ✚ Register Your First Tournament
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

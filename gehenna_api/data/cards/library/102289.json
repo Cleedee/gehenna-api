@@ -1,0 +1,31 @@
+{
+  "codevdb": 102289,
+  "name": "Family Gathering",
+  "tipo": "Master",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [],
+      "context": "MASTER",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "text": "Reveal top crypt card. If Hecata, draw +1 blood; else bottom."
+          },
+          "text": ""
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": false,
+  "notes": "",
+  "disciplines": [
+    ""
+  ],
+  "special_effects": [
+    "trifle"
+  ]
+}

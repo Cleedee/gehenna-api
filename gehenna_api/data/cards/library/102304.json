@@ -1,0 +1,45 @@
+{
+  "codevdb": 102304,
+  "name": "Rotting Behemoth",
+  "tipo": "Ally",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "obl"
+      ],
+      "context": "PLAY",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "text": "Burn unless remove ally/vamp from ash heap"
+          },
+          "text": ""
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "OBL"
+      ],
+      "context": "COMBAT",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "text": "First round only - damage"
+          },
+          "text": ""
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": false,
+  "notes": "",
+  "disciplines": [
+    "obl"
+  ]
+}

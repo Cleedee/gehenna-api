@@ -1,0 +1,21 @@
+{
+  "codevdb": 201724,
+  "name": "Mora, the Death Seer",
+  "tipo": "vampire",
+  "source": "cardbase_crypt.json",
+  "abilities": [],
+  "modifiers": {
+    "bleed": 1
+  },
+  "default_strike": null,
+  "needs_review": false,
+  "notes": "",
+  "disciplines": [
+    "ani",
+    "AUS",
+    "FOR",
+    "OBL"
+  ],
+  "is_unique": true,
+  "group": 6
+}

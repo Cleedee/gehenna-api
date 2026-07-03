@@ -1,0 +1,47 @@
+{
+  "codevdb": 102293,
+  "name": "Bone Shambler",
+  "tipo": "Ally",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "obl"
+      ],
+      "context": "BLEED",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "text": "Lock another copy to give +1 bleed"
+          },
+          "text": ""
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "OBL"
+      ],
+      "context": "BLEED",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "text": "Hecata can burn 1 blood for +1 bleed"
+          },
+          "text": ""
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "bleed": 1
+  },
+  "default_strike": null,
+  "needs_review": false,
+  "notes": "",
+  "disciplines": [
+    "obl"
+  ]
+}

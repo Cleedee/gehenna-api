@@ -1,0 +1,51 @@
+{
+  "codevdb": 102296,
+  "name": "Spectral Servitor",
+  "tipo": "Ally",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "obl"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "text": "Can act the turn recruited"
+          },
+          "text": ""
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "OBL"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "text": "Can act the turn recruited. Unlock vampire"
+          },
+          "text": ""
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 0
+  },
+  "default_strike": null,
+  "needs_review": false,
+  "notes": "",
+  "disciplines": [
+    "obl"
+  ],
+  "special_effects": [
+    "can_act_first_turn",
+    "obl_use_as_vampire"
+  ]
+}

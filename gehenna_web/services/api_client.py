@@ -303,3 +303,53 @@ def auto_import_decks(username, limit_decks=5, min_card_overlap=5):
             'min_card_overlap': min_card_overlap
         }
     )
+
+
+# ── Tournament API ─────────────────────────────────────────────────────
+
+
+def create_tournament(data: dict):
+    return api.post('/tournaments/', json=data)
+
+
+def get_tournaments(year=None, format=None, limit=50):
+    params = {'limit': limit}
+    if year:
+        params['year'] = year
+    if format:
+        params['format'] = format
+    return api.get('/tournaments/', params=params)
+
+
+def get_tournament(tournament_id: int):
+    return api.get(f'/tournaments/{tournament_id}')
+
+
+def update_tournament(tournament_id: int, data: dict):
+    return api.put(f'/tournaments/{tournament_id}', json=data)
+
+
+def delete_tournament(tournament_id: int):
+    return api.delete(f'/tournaments/{tournament_id}')
+
+
+def get_local_meta_stats(months: int = 12, limit: int = 10):
+    params = {'months': months, 'limit': limit}
+    return api.get('/tournaments/stats/local', params=params)
+
+
+def get_tournament_clans():
+    """Get list of known clans for archetype suggestions."""
+    # Return from the API stats or a predefined list
+    return [
+        'Hecata', 'Banu Haqim', 'Lasombra', 'Tremere', 'Gangrel',
+        'Malkavian', 'Nosferatu', 'Toreador', 'Venture', 'Brujah',
+        'Assamite', 'Followers of Set', 'Giovanni', 'Ravnos',
+        'Tzimisce', 'Ventrue antitribu', 'Brujah antitribu',
+        'Malkavian antitribu', 'Nosferatu antitribu', 'Toreador antitribu',
+        'Tremere antitribu', 'Lasombra', 'Baali', 'Blood Brother',
+        'Daughter of Cacophony', 'Gargoyle', 'Harbinger of Skulls',
+        'Ishtarri', 'Kiasyd', 'Nagaraja', 'Osebo', 'Salubri',
+        'Samedi', 'True Brujah', 'Abomination', 'Imbued', 'Caitiff',
+        'Pander', 'Independent', 'Sabbat', 'Camarilla',
+    ]

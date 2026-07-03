@@ -22,6 +22,7 @@ import gehenna_web.routes.users as users
 import gehenna_web.routes.slots as slots
 import gehenna_web.routes.items as items
 import gehenna_web.routes.trends as trends
+import gehenna_web.routes.tournaments as tournaments
 
 app.register_blueprint(auth.bp)
 app.register_blueprint(decks.bp)
@@ -31,6 +32,7 @@ app.register_blueprint(users.bp)
 app.register_blueprint(slots.bp)
 app.register_blueprint(items.bp)
 app.register_blueprint(trends.bp)
+app.register_blueprint(tournaments.bp)
 
 
 @app.route('/')

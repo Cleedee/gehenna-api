@@ -1,0 +1,30 @@
+{
+  "codevdb": 102297,
+  "name": "Split the Veil",
+  "tipo": "Action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "text": "Put in play with 2 counters. Burn counters to recur wraith/zombie."
+          },
+          "text": ""
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": false,
+  "notes": "",
+  "disciplines": [
+    ""
+  ]
+}

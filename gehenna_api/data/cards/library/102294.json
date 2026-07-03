@@ -1,0 +1,41 @@
+{
+  "codevdb": 102294,
+  "name": "Shadow Sentinel",
+  "tipo": "Reaction",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "obl"
+      ],
+      "context": "REACTION",
+      "effects": [
+        {
+          "function": "combat.wake",
+          "params": {},
+          "text": "Wake locked vampire"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "OBL"
+      ],
+      "context": "REACTION",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {},
+          "text": "Wake locked wraith/zombie ally"
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": false,
+  "notes": "",
+  "disciplines": [
+    "obl"
+  ]
+}

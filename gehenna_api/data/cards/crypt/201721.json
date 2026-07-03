@@ -1,0 +1,20 @@
+{
+  "codevdb": 201721,
+  "name": "Lenelle, Mambo of Birmingham",
+  "tipo": "vampire",
+  "source": "cardbase_crypt.json",
+  "abilities": [],
+  "modifiers": {
+    "stealth": 1
+  },
+  "default_strike": null,
+  "needs_review": false,
+  "notes": "",
+  "disciplines": [
+    "aus",
+    "FOR",
+    "OBL"
+  ],
+  "is_unique": true,
+  "group": 6
+}

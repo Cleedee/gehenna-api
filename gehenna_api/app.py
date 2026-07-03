@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from gehenna_api.engine.server import router as game_router
-from gehenna_api.routes import auth, cards, decks, slots, stocks, users, trends
+from gehenna_api.routes import auth, cards, decks, slots, stocks, users, trends, tournaments
 
 app = FastAPI()
 
@@ -21,6 +21,7 @@ app.include_router(decks.router)
 app.include_router(cards.router)
 app.include_router(slots.router)
 app.include_router(trends.router)
+app.include_router(tournaments.router)
 app.include_router(game_router)
 
 @app.get('/')

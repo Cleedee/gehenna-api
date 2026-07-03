@@ -1,0 +1,45 @@
+{
+  "codevdb": 102295,
+  "name": "Shroud of Decay",
+  "tipo": "Action",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [
+        "obl"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "combat.bleed",
+          "params": {
+            "bleed": 2
+          },
+          "text": "Bleed with +1, target discards 2"
+        }
+      ]
+    },
+    {
+      "disciplines": [
+        "OBL"
+      ],
+      "context": "ACTION",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "damage": 3
+          },
+          "text": "Remove 7 ash heap cards to burn 3 pool"
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": false,
+  "notes": "",
+  "disciplines": [
+    "obl"
+  ]
+}

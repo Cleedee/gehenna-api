@@ -1,0 +1,32 @@
+{
+  "codevdb": 102298,
+  "name": "Cappadocian Crypt",
+  "tipo": "Master",
+  "source": "cardbase_lib.json",
+  "abilities": [
+    {
+      "disciplines": [],
+      "context": "MASTER",
+      "effects": [
+        {
+          "function": "effect.raw",
+          "params": {
+            "text": "Lock after successful action requiring Hecata/OBL to add blood"
+          },
+          "text": ""
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": false,
+  "notes": "",
+  "disciplines": [
+    ""
+  ],
+  "special_effects": [
+    "unique",
+    "location"
+  ]
+}

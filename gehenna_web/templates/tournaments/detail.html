@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+{% block title %}{{ tournament.name }}{% endblock %}
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-start mb-3">
+        <div>
+            <h1>🏆 {{ tournament.name }}</h1>
+            <p class="text-muted">
+                {{ tournament.date }}
+                {% if tournament.location %} · 📍 {{ tournament.location }}{% endif %}
+                {% if tournament.format %} · <span class="badge bg-secondary">{{ tournament.format }}</span>{% endif %}
+                {% if tournament.total_players %} · {{ tournament.total_players }} players{% endif %}
+            </p>
+        </div>
+        <div>
+            <a href="{{ url_for('tournaments.edit_tournament', tournament_id=tournament.id) }}" class="btn btn-outline-secondary">Edit</a>
+            <form method="POST" action="{{ url_for('tournaments.delete', tournament_id=tournament.id) }}" class="d-inline"
+                  onsubmit="return confirm('Delete this tournament?')">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                <button type="submit" class="btn btn-outline-danger">Delete</button>
+            </form>
+        </div>
+    </div>
+
+    {% if tournament.notes %}
+    <div class="card mb-4">
+        <div class="card-body">
+            <p class="mb-0">{{ tournament.notes }}</p>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Participants -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">👥 Participants ({{ tournament.participants|length }})</h5>
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-dark table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Player</th>
+                        <th>Deck</th>
+                        <th>Clan</th>
+                        <th>Archetype</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for p in tournament.participants %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td class="fw-bold">{{ p.player_name }}</td>
+                        <td>{{ p.deck_name or '—' }}</td>
+                        <td>
+                            {% if p.clan %}
+                            <span class="badge bg-info text-dark">{{ p.clan }}</span>
+                            {% else %}
+                            <span class="text-muted">—</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if p.archetype %}
+                            <span class="badge bg-warning text-dark">{{ p.archetype }}</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Rounds -->
+    {% for r in tournament.rounds %}
+    <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center 
+            {{ 'bg-warning text-dark' if r.is_final else '' }}">
+            <h5 class="mb-0">
+                {% if r.is_final %}🏆 Final{% else %}Round {{ r.round_number }}{% endif %}
+            </h5>
+            {% if r.is_final %}
+            <span class="badge bg-dark text-warning">Final</span>
+            {% endif %}
+        </div>
+        <div class="card-body">
+            {% set tables = r.results|groupby('table_number') %}
+            {% for table_num, table_results in tables %}
+            <div class="mb-3">
+                <h6 class="text-muted">Table {{ table_num }}</h6>
+                <div class="table-responsive">
+                    <table class="table table-dark table-sm table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>Pos</th>
+                                <th>Player</th>
+                                <th>Deck</th>
+                                <th>Clan</th>
+                                <th>VPs</th>
+                                <th>GW</th>
+                                {% if r.is_final %}
+                                <th>Rank</th>
+                                {% endif %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for result in table_results|sort(attribute='seat_position') %}
+                            <tr class="{{ 'table-success' if result.gw else '' }}">
+                                <td>
+                                    {% if result.seat_position == 1 %}
+                                    <span class="text-info">① Prey</span>
+                                    {% elif result.seat_position == 5 %}
+                                    <span class="text-danger">⑤ Pred</span>
+                                    {% else %}
+                                    {{ result.seat_position }}
+                                    {% endif %}
+                                </td>
+                                <td class="fw-bold">
+                                    {{ result.participant.player_name if result.participant else '?' }}
+                                </td>
+                                <td><small>{{ result.participant.deck_name if result.participant else '—' }}</small></td>
+                                <td>
+                                    {% if result.participant and result.participant.clan %}
+                                    <span class="badge bg-info text-dark">{{ result.participant.clan }}</span>
+                                    {% endif %}
+                                </td>
+                                <td class="fw-bold">{{ result.vps }}</td>
+                                <td>
+                                    {% if result.gw %}
+                                    <span class="text-success fw-bold">✅ GW</span>
+                                    {% endif %}
+                                </td>
+                                {% if r.is_final %}
+                                <td>
+                                    {% if result.final_rank %}
+                                    <strong>
+                                    {% if result.final_rank == 1 %}🥇
+                                    {% elif result.final_rank == 2 %}🥈
+                                    {% elif result.final_rank == 3 %}🥉
+                                    {% else %}{{ result.final_rank }}º{% endif %}
+                                    </strong>
+                                    {% endif %}
+                                </td>
+                                {% endif %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+
+    <a href="{{ url_for('tournaments.list_tournaments') }}" class="btn btn-outline-secondary">← Back to Tournaments</a>
+</div>
+{% endblock %}

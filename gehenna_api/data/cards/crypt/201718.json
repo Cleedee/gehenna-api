@@ -1,0 +1,18 @@
+{
+  "codevdb": 201718,
+  "name": "Gebeyehu Abdu",
+  "tipo": "vampire",
+  "source": "cardbase_crypt.json",
+  "abilities": [],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": false,
+  "notes": "",
+  "disciplines": [
+    "for",
+    "AUS",
+    "OBL"
+  ],
+  "is_unique": true,
+  "group": 6
+}
