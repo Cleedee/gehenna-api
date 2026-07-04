@@ -258,10 +258,15 @@ def read_meta_trends(
         fmt = deck.get('tournament_format', 'Unknown')
         format_counter[fmt] += 1
 
+        seen_vamps: set[int] = set()
         for vamp in deck.get('crypt', {}).get('cards', []):
             card_id = vamp['id']
             qty = vamp.get('count', 1)
-            vampire_counter[card_id] += qty
+            # Vampire counter: presence only (1 per deck), not total copies
+            if card_id not in seen_vamps:
+                vampire_counter[card_id] += 1
+                seen_vamps.add(card_id)
+            # Clan/discipline counters: keep summing copies
             clans, disciplines = _get_vampire_info(card_id)
             for clan in clans:
                 clan_counter[clan] += qty

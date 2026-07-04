@@ -64,6 +64,8 @@ class TournamentUpdate(BaseModel):
     format: Optional[str] = None
     total_players: Optional[int] = None
     notes: Optional[str] = None
+    participants: Optional[list[ParticipantCreate]] = None
+    rounds: Optional[list[RoundCreate]] = None
 
 
 # ── Responses ─────────────────────────────────────────────────────────
@@ -326,6 +328,73 @@ def update_tournament(
         t.total_players = data.total_players
     if data.notes is not None:
         t.notes = data.notes
+
+    # Replace participants and rounds if provided
+    if data.participants is not None:
+        # Delete existing rounds, results, participants
+        existing_rounds = session.scalars(
+            select(TournamentRound).where(
+                TournamentRound.tournament_id == tournament_id
+            )
+        ).all()
+        for r in existing_rounds:
+            session.execute(
+                delete(TournamentResult).where(
+                    TournamentResult.round_id == r.id
+                )
+            )
+            session.delete(r)
+        session.execute(
+            delete(TournamentParticipant).where(
+                TournamentParticipant.tournament_id == tournament_id
+            )
+        )
+        session.flush()
+
+        # Recreate participants
+        participant_list = []
+        for p in data.participants:
+            participant = TournamentParticipant(
+                tournament_id=tournament_id,
+                player_name=p.player_name,
+                user_id=p.user_id,
+                deck_id=p.deck_id,
+                deck_name=p.deck_name,
+                clan=p.clan,
+                archetype=p.archetype,
+            )
+            session.add(participant)
+            session.flush()
+            participant_list.append(participant)
+
+        # Recreate rounds + results
+        if data.rounds is not None:
+            for r in data.rounds:
+                round_ = TournamentRound(
+                    tournament_id=tournament_id,
+                    round_number=r.round_number,
+                    is_final=r.is_final,
+                )
+                session.add(round_)
+                session.flush()
+
+                for res in r.results:
+                    idx = res.participant_id - 1
+                    actual_pid = (
+                        participant_list[idx].id
+                        if 0 <= idx < len(participant_list)
+                        else res.participant_id
+                    )
+                    result = TournamentResult(
+                        round_id=round_.id,
+                        participant_id=actual_pid,
+                        table_number=res.table_number,
+                        seat_position=res.seat_position,
+                        vps=res.vps,
+                        gw=res.gw,
+                        final_rank=res.final_rank,
+                    )
+                    session.add(result)
 
     session.commit()
     return _load_tournament(tournament_id, session)

@@ -338,6 +338,18 @@ def get_local_meta_stats(months: int = 12, limit: int = 10):
     return api.get('/tournaments/stats/local', params=params)
 
 
+def create_tournament_round(tournament_id: int, data: dict):
+    return api.post(f'/tournaments/{tournament_id}/rounds', json=data)
+
+
+def update_tournament_result(result_id: int, data: dict):
+    return api.put(f'/tournaments/results/{result_id}', json=data)
+
+
+def delete_tournament_result(result_id: int):
+    return api.delete(f'/tournaments/results/{result_id}')
+
+
 def get_tournament_clans():
     """Get list of known clans for archetype suggestions."""
     # Return from the API stats or a predefined list

@@ -92,18 +92,45 @@ def edit_tournament(tournament_id):
     tournament = response.json()
 
     if request.method == 'POST':
-        # Update basic info
-        update_data = {
-            'name': request.form.get('name'),
-            'date': request.form.get('date'),
-            'location': request.form.get('location', ''),
-            'format': request.form.get('format', ''),
-            'total_players': int(request.form.get('total_players', 0)),
-            'notes': request.form.get('notes', ''),
-        }
-        api_client.update_tournament(tournament_id, update_data)
-        flash('Tournament updated!', 'success')
-        return redirect(url_for('tournaments.detail', tournament_id=tournament_id))
+        data = _parse_tournament_form(request.form)
+        if data:
+            # Build name → form index mapping from the NEW form data
+            name_to_idx = {}
+            for idx, p in enumerate(data.get('participants', [])):
+                name_to_idx[p['player_name']] = idx + 1
+
+            # Also build DB id → name from existing data
+            id_to_name = {}
+            for p in tournament.get('participants', []):
+                id_to_name[p['id']] = p['player_name']
+
+            # Preserve existing rounds, converting participant DB ids to form indices
+            existing_rounds = []
+            for r in tournament.get('rounds', []):
+                r_results = []
+                for res in r.get('results', []):
+                    p_name = id_to_name.get(res['participant_id'])
+                    form_idx = name_to_idx.get(p_name, 1) if p_name else 1
+                    r_results.append({
+                        'table_number': res['table_number'],
+                        'seat_position': res['seat_position'],
+                        'participant_id': form_idx,
+                        'vps': res.get('vps', 0),
+                        'gw': res.get('gw', False),
+                        'final_rank': res.get('final_rank'),
+                    })
+                existing_rounds.append({
+                    'round_number': r['round_number'],
+                    'is_final': r.get('is_final', False),
+                    'results': r_results,
+                })
+            data['rounds'] = existing_rounds
+
+            api_client.update_tournament(tournament_id, data)
+            flash('Tournament updated!', 'success')
+            return redirect(url_for('tournaments.detail', tournament_id=tournament_id))
+        else:
+            flash('Please fill in required fields', 'danger')
 
     clans = api_client.get_tournament_clans()
     return render_template('tournaments/form.html', tournament=tournament, clans=clans)
@@ -115,6 +142,247 @@ def delete(tournament_id):
     api_client.delete_tournament(tournament_id)
     flash('Tournament deleted', 'success')
     return redirect(url_for('tournaments.list_tournaments'))
+
+
+# ── Round management ──────────────────────────────────────────────────
+
+
+@bp.route('/<int:tournament_id>/rounds/add', methods=['GET', 'POST'])
+@login_required
+def add_round(tournament_id):
+    """Add a new round with matches to a tournament."""
+    response = api_client.get_tournament(tournament_id)
+    if response.status_code != 200:
+        flash('Tournament not found', 'danger')
+        return redirect(url_for('tournaments.list_tournaments'))
+
+    tournament = response.json()
+    participants = tournament.get('participants', [])
+
+    if request.method == 'POST':
+        round_number = request.form.get('round_number', type=int)
+        is_final = request.form.get('is_final') == 'on'
+
+        if not round_number:
+            flash('Round number is required', 'danger')
+        else:
+            # Build mapping: form index → participant DB id
+            idx_to_pid = {}
+            for idx, p in enumerate(participants):
+                idx_to_pid[idx + 1] = p['id']
+
+            # Parse tables from form (participant_id = form index 1-based)
+            tables = _parse_round_tables(request.form, len(participants))
+            round_data = {
+                'round_number': round_number,
+                'is_final': is_final,
+                'results': [],
+            }
+            for table in tables:
+                for result in table['results']:
+                    # Convert form index → database ID for the API
+                    result['participant_id'] = idx_to_pid.get(
+                        result['participant_id'],
+                        result['participant_id'],
+                    )
+                    round_data['results'].append(result)
+
+            resp = api_client.create_tournament_round(tournament_id, round_data)
+            if resp.status_code == 201:
+                flash(f'Round {round_number} added successfully!', 'success')
+                return redirect(url_for('tournaments.detail', tournament_id=tournament_id))
+            else:
+                flash(f'Error creating round: {resp.text}', 'danger')
+
+    # Pre-compute table distribution for the form
+    table_sizes = _distribute_players(len(participants))
+    return render_template(
+        'tournaments/round_form.html',
+        tournament=tournament,
+        participants=participants,
+        table_sizes=table_sizes,
+        round=None,
+        results_by_table={},
+    )
+
+
+@bp.route('/<int:tournament_id>/rounds/<int:round_id>/edit', methods=['GET', 'POST'])
+@login_required
+def edit_round(tournament_id, round_id):
+    """Edit an existing round's matches and results."""
+    response = api_client.get_tournament(tournament_id)
+    if response.status_code != 200:
+        flash('Tournament not found', 'danger')
+        return redirect(url_for('tournaments.list_tournaments'))
+
+    tournament = response.json()
+    participants = tournament.get('participants', [])
+
+    # Find the round
+    round_data = None
+    for r in tournament.get('rounds', []):
+        if r.get('id') == round_id:
+            round_data = r
+            break
+
+    if not round_data:
+        flash('Round not found', 'danger')
+        return redirect(url_for('tournaments.detail', tournament_id=tournament_id))
+
+    if request.method == 'POST':
+        round_number = request.form.get('round_number', type=int)
+        is_final = request.form.get('is_final') == 'on'
+
+        if not round_number:
+            flash('Round number is required', 'danger')
+        else:
+            tables = _parse_round_tables(request.form, len(participants))
+            round_update = {
+                'round_number': round_number,
+                'is_final': is_final,
+                'results': [],
+            }
+            for table in tables:
+                for result in table['results']:
+                    round_update['results'].append(result)
+
+            # Recreate the round by deleting old and creating new
+            # We use the main tournament update endpoint
+            resp = api_client.get_tournament(tournament_id)
+            if resp.status_code == 200:
+                current = resp.json()
+
+                # Build mapping: participant DB id → form index (1-based)
+                pid_to_idx = {}
+                for idx, p in enumerate(current.get('participants', [])):
+                    pid_to_idx[p['id']] = idx + 1
+
+                # Remove this round from the list
+                other_rounds = [
+                    r for r in current.get('rounds', [])
+                    if r.get('id') != round_id
+                ]
+                # Build the full update payload
+                # Only send participants + rounds; basic fields are omitted
+                # (they default to None in TournamentUpdate and won't be changed)
+                update_data = {
+                    'participants': [
+                        {
+                            'player_name': p['player_name'],
+                            'deck_name': p.get('deck_name', ''),
+                            'clan': p.get('clan', ''),
+                            'archetype': p.get('archetype', ''),
+                        }
+                        for p in current.get('participants', [])
+                    ],
+                    'rounds': [],
+                }
+                # Add other rounds, converting participant DB ids to form indices
+                for r in other_rounds:
+                    r_results = []
+                    for res in r.get('results', []):
+                        r_results.append({
+                            'table_number': res['table_number'],
+                            'seat_position': res['seat_position'],
+                            'participant_id': pid_to_idx.get(res['participant_id'], 1),
+                            'vps': res.get('vps', 0),
+                            'gw': res.get('gw', False),
+                            'final_rank': res.get('final_rank'),
+                        })
+                    update_data['rounds'].append({
+                        'round_number': r['round_number'],
+                        'is_final': r.get('is_final', False),
+                        'results': r_results,
+                    })
+                # Add the updated round (already has form indices)
+                update_data['rounds'].append(round_update)
+
+                upd_resp = api_client.update_tournament(tournament_id, update_data)
+                if upd_resp.status_code == 200:
+                    flash(f'Round {round_number} updated!', 'success')
+                    return redirect(url_for('tournaments.detail', tournament_id=tournament_id))
+                else:
+                    flash(f'Error updating round: {upd_resp.text}', 'danger')
+            else:
+                flash('Could not reload tournament data', 'danger')
+
+    # Organize existing results into tables for display
+    table_sizes = _distribute_players(len(participants))
+    results_by_table: dict[int, list] = {}
+    for res in round_data.get('results', []):
+        tn = res.get('table_number', 1)
+        if tn not in results_by_table:
+            results_by_table[tn] = []
+        results_by_table[tn].append(res)
+
+    return render_template(
+        'tournaments/round_form.html',
+        tournament=tournament,
+        participants=participants,
+        table_sizes=table_sizes,
+        round=round_data,
+        results_by_table=results_by_table,
+    )
+
+
+@bp.route('/<int:tournament_id>/rounds/<int:round_id>/delete', methods=['POST'])
+@login_required
+def delete_round(tournament_id, round_id):
+    """Delete a round from a tournament."""
+    response = api_client.get_tournament(tournament_id)
+    if response.status_code != 200:
+        flash('Tournament not found', 'danger')
+        return redirect(url_for('tournaments.list_tournaments'))
+
+    current = response.json()
+
+    # Build mapping: participant DB id → form index (1-based)
+    pid_to_idx = {}
+    for idx, p in enumerate(current.get('participants', [])):
+        pid_to_idx[p['id']] = idx + 1
+
+    other_rounds = [
+        r for r in current.get('rounds', [])
+        if r.get('id') != round_id
+    ]
+
+    update_data = {
+        'participants': [
+            {
+                'player_name': p['player_name'],
+                'deck_name': p.get('deck_name', ''),
+                'clan': p.get('clan', ''),
+                'archetype': p.get('archetype', ''),
+            }
+            for p in current.get('participants', [])
+        ],
+        'rounds': [],
+    }
+
+    for r in other_rounds:
+        r_results = []
+        for res in r.get('results', []):
+            r_results.append({
+                'table_number': res['table_number'],
+                'seat_position': res['seat_position'],
+                'participant_id': pid_to_idx.get(res['participant_id'], 1),
+                'vps': res.get('vps', 0),
+                'gw': res.get('gw', False),
+                'final_rank': res.get('final_rank'),
+            })
+        update_data['rounds'].append({
+            'round_number': r['round_number'],
+            'is_final': r.get('is_final', False),
+            'results': r_results,
+        })
+
+    upd_resp = api_client.update_tournament(tournament_id, update_data)
+    if upd_resp.status_code == 200:
+        flash('Round deleted!', 'success')
+    else:
+        flash(f'Error deleting round: {upd_resp.text}', 'danger')
+
+    return redirect(url_for('tournaments.detail', tournament_id=tournament_id))
 
 
 @bp.route('/local-meta')
@@ -141,7 +409,9 @@ def local_meta():
 
 
 def _parse_tournament_form(form):
-    """Parse the tournament creation form into the API JSON format."""
+    """Parse the tournament creation form into the API JSON format.
+    Now only handles basic info + participants (rounds are managed separately).
+    """
     tournament = {
         'name': form.get('name', '').strip(),
         'date': form.get('date', ''),
@@ -150,7 +420,6 @@ def _parse_tournament_form(form):
         'total_players': int(form.get('total_players', 0)),
         'notes': form.get('notes', '').strip(),
         'participants': [],
-        'rounds': [],
     }
 
     if not tournament['name'] or not tournament['date']:
@@ -178,40 +447,81 @@ def _parse_tournament_form(form):
     if not tournament['participants']:
         return None
 
-    # Parse rounds (prefix = "r_NUMBER", "r_IS_FINAL", "r_TABLE_...")
-    i = 0
-    while True:
-        r_num = form.get(f'r_{i}_number', type=int)
-        if r_num is None:
-            break
-
-        is_final = form.get(f'r_{i}_final') == 'on'
-        round_data = {
-            'round_number': r_num,
-            'is_final': is_final,
-            'results': [],
-        }
-
-        # Parse results for this round
-        j = 0
-        while True:
-            seat = form.get(f'r_{i}_result_{j}_seat', type=int)
-            if seat is None:
-                break
-
-            pidx = form.get(f'r_{i}_result_{j}_participant', type=int)
-            if pidx is not None and pidx < len(tournament['participants']):
-                round_data['results'].append({
-                    'table_number': form.get(f'r_{i}_result_{j}_table', 1, type=int),
-                    'seat_position': seat,
-                    'participant_id': pidx,  # 1-indexed, resolved to DB id by API
-                    'vps': form.get(f'r_{i}_result_{j}_vps', 0, type=float),
-                    'gw': form.get(f'r_{i}_result_{j}_gw') == 'on',
-                    'final_rank': form.get(f'r_{i}_result_{j}_rank', type=int),
-                })
-            j += 1
-
-        tournament['rounds'].append(round_data)
-        i += 1
-
     return tournament
+
+
+# ── Round & Match helpers ─────────────────────────────────────────────
+
+
+def _distribute_players(total_players: int) -> list[int]:
+    """Distribute players into tables of 4-5 players each.
+    Returns a list of table sizes.
+    """
+    if total_players <= 5:
+        return [total_players]
+    max_tables = total_players // 4
+    min_tables = (total_players + 4) // 5
+    for num_tables in range(min_tables, max_tables + 1):
+        base = total_players // num_tables
+        rem = total_players % num_tables
+        sizes = []
+        ok = True
+        for i in range(num_tables):
+            size = base + (1 if i < rem else 0)
+            if size < 4 or size > 5:
+                ok = False
+                break
+            sizes.append(size)
+        if ok:
+            return sizes
+    return [total_players]
+
+
+def _parse_round_tables(form, num_participants: int) -> list[dict]:
+    """Parse submitted table/result data from a round form.
+    Uses a hidden 'num_results' field to know how many result rows to expect.
+    Returns a list of tables, each with 'table_number' and 'results'.
+    """
+    num_results = form.get('num_results', type=int)
+    if num_results is None:
+        # Fallback: iterate until we find a gap
+        num_results = 0
+        while form.get(f'result_{num_results}_participant', type=int) is not None:
+            num_results += 1
+
+    tables: dict[int, list] = {}
+    for i in range(num_results):
+        participant_idx = form.get(f'result_{i}_participant', type=int)
+        if participant_idx is None or participant_idx < 1:
+            # Empty or unselected row — skip but continue
+            continue
+
+        table_num = form.get(f'result_{i}_table', 1, type=int)
+        seat = form.get(f'result_{i}_seat', type=int)
+        vps = form.get(f'result_{i}_vps', 0, type=float)
+        gw = form.get(f'result_{i}_gw') == 'on'
+        final_rank = form.get(f'result_{i}_rank', type=int)
+
+        if seat is None:
+            continue
+
+        # participant_idx is 1-based, must be <= num_participants
+        if participant_idx > num_participants:
+            continue
+
+        if table_num not in tables:
+            tables[table_num] = {
+                'table_number': table_num,
+                'results': [],
+            }
+
+        tables[table_num]['results'].append({
+            'table_number': table_num,
+            'seat_position': seat,
+            'participant_id': participant_idx,
+            'vps': vps,
+            'gw': gw,
+            'final_rank': final_rank,
+        })
+
+    return list(tables.values())
