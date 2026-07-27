@@ -30,9 +30,9 @@
         {% for item in items %}
         <tr>
             <td>{{ item.quantity }}</td>
-            <td>{{ item.card.name }}</td>
-            <td>{{ item.card.tipo or '-' }}</td>
-            <td>{{ item.card.clan or '-' }}</td>
+            <td>{{ item.card.name if item.card else '???' }}</td>
+            <td>{{ item.card.tipo or '-' if item.card else '-' }}</td>
+            <td>{{ item.card.clan or '-' if item.card else '-' }}</td>
             <td>{{ item.code }}</td>
             <td>
                 <a href="{{ url_for('items.edit', item_id=item.id, moviment_id=moviment_id) }}" class="btn btn-sm btn-warning" aria-label="Edit item">Edit</a>

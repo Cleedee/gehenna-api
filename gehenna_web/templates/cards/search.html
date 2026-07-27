@@ -53,7 +53,7 @@
     <caption class="visually-hidden">Card search results</caption>
     <thead>
         <tr>
-            <th>Code</th>
+            <th>ID</th>
             <th>Name</th>
             <th>Type</th>
             <th>Clan</th>
@@ -65,7 +65,7 @@
     <tbody>
         {% for card in cards %}
         <tr>
-            <td>{{ card.code }}</td>
+            <td>{{ card.id }}</td>
             <td>
                 <a href="{{ url_for('cards.detail', card_id=card.id) }}"
                    data-card-name="{{ card.name }}"

@@ -177,7 +177,9 @@ def detail(deck_id):
     crypt = []
     library = []
     for s in slots:
-        card = s["card"]
+        card = s.get("card")
+        if card is None:
+            continue
         card["disc_list"] = [
             d.strip().upper()
             for d in card.get("disciplines", "").split("|") if d.strip()
@@ -392,10 +394,12 @@ def export_text(deck_id):
     slots = slots_resp.json().get("slots", []) if slots_resp.status_code == 200 else []
 
     crypt = [
-        s for s in slots if s["card"]["tipo"].strip().lower().startswith("vampire")
+        s for s in slots
+        if s.get("card") and s["card"]["tipo"].strip().lower().startswith("vampire")
     ]
     library = [
-        s for s in slots if not s["card"]["tipo"].strip().lower().startswith("vampire")
+        s for s in slots
+        if s.get("card") and not s["card"]["tipo"].strip().lower().startswith("vampire")
     ]
 
     lines = []

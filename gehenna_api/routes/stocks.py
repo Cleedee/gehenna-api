@@ -165,6 +165,15 @@ def delete_moviment(id: int, session: Session = Depends(get_session)):
 
 @router.post('/items', status_code=201, response_model=ItemPublic)
 def create_item(item: ItemSchema, session: Session = Depends(get_session)):
+    q = select(Moviment).where(Moviment.id == item.moviment_id)
+    moviment = session.scalar(q)
+    if moviment is None:
+        raise HTTPException(status_code=404, detail='Moviment not found')
+    c = select(Card).where(Card.id == item.card_id)
+    card = session.scalar(c)
+    if card is None:
+        msg = f'Card id {item.card_id} not found'
+        raise HTTPException(status_code=400, detail=msg)
     db_item = Item(
         quantity=item.quantity,
         moviment_id=item.moviment_id,
@@ -187,10 +196,21 @@ def read_item(
     return item
 
 @router.put('/items', response_model=ItemPublic)
-def update_item(item_id: int, item: ItemSchema, session: Session = Depends(get_session)):
+def update_item(
+    item_id: int, item: ItemSchema, session: Session = Depends(get_session)
+):
     db_item = session.scalar(select(Item).where(Item.id == item_id))
     if db_item is None:
         raise HTTPException(status_code=404, detail='Item not found')
+    q = select(Moviment).where(Moviment.id == item.moviment_id)
+    moviment = session.scalar(q)
+    if moviment is None:
+        raise HTTPException(status_code=404, detail='Moviment not found')
+    c = select(Card).where(Card.id == item.card_id)
+    card = session.scalar(c)
+    if card is None:
+        msg = f'Card id {item.card_id} not found'
+        raise HTTPException(status_code=400, detail=msg)
     db_item.card_id = item.card_id
     db_item.moviment_id = item.moviment_id
     db_item.quantity = item.quantity

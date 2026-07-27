@@ -116,6 +116,7 @@
       <tbody>
         {% for slot in crypt %}
         {% set c = slot.card %}
+        {% if c %}
         <tr>
           <td class="col-qty">{{ slot.quantity }}</td>
           <td class="col-cap">
@@ -162,6 +163,7 @@
             </div>
           </td>
         </tr>
+        {% endif %}
         {% endfor %}
       </tbody>
     </table>
@@ -188,6 +190,7 @@
         <tbody>
           {% for slot in slots %}
           {% set c = slot.card %}
+          {% if c %}
           <tr>
             <td class="col-qty">{{ slot.quantity }}</td>
             <td class="col-name">
@@ -228,6 +231,7 @@
               {% endif %}
             </td>
           </tr>
+          {% endif %}
           {% endfor %}
         </tbody>
       </table>

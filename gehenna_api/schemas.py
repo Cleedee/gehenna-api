@@ -56,6 +56,13 @@ class CardSchema(BaseModel):
     aka: Optional[str] = ''
     model_config = ConfigDict(from_attributes=True)
 
+    @field_validator('blood', 'pool', 'conviction', 'twd', mode='before')
+    @classmethod
+    def normalize_int(cls, v):
+        if v is None or v == '' or v == 'X' or v == 'x':
+            return 0
+        return v
+
 
 class CardPublic(CardSchema):
     id: int
@@ -124,7 +131,7 @@ class ItemSchema(BaseModel):
 
 class ItemPublic(ItemSchema):
     id: int
-    card: CardSimplePublic
+    card: Optional[CardSimplePublic] = None
 
 
 class ItemDB(ItemSchema):
@@ -186,7 +193,7 @@ class SlotQuantitySchema(BaseModel):
 
 class SlotPublic(SlotSchema):
     id: int
-    card: CardPublic
+    card: Optional[CardPublic] = None
 
 
 class SlotList(BaseModel):
