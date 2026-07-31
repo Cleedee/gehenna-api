@@ -2868,9 +2868,6 @@ class PhaseManager:
                     data={'player_id': player.id},
                 )
             )
-                self._log_action(
-                    player, f'{inst.name} moves to ready (blood {inst.blood}/{inst.capacity})'
-                )
 
         # 3. Bring vampire from crypt to uncontrolled (4 transfers + 1 pool)
         if player.transfers >= 4 and player.pool >= 1 and player.crypt:
@@ -2895,6 +2892,17 @@ class PhaseManager:
                         data={'card': inst.name, 'transfers': 4},
                     )
                 )
+
+        # 3b. Check if player is ousted (pool reached 0)
+        if player.pool <= 0 and not player.is_ousted:
+            self.state.oust_player(player.id)
+            self.events.emit(
+                GameEvent(
+                    type=EventType.player_ousted,
+                    player_id=player.id,
+                    data={'player_id': player.id},
+                )
+            )
 
         self._log_action(
             player,
