@@ -87,7 +87,6 @@ class PhaseAdjustments:
     bleed_modifier: float = 0.0
     rush_modifier: float = 0.0
     vote_modifier: float = 0.0
-    govern_modifier: float = 0.0
     shroud_modifier: float = 0.0
     stealth_modifier: float = 0.0
     control_modifier: float = 0.0
@@ -104,7 +103,7 @@ class PhaseAdjustments:
             bleed_modifier=data.get("bleed_modifier", 0.0),
             rush_modifier=data.get("rush_modifier", 0.0),
             vote_modifier=data.get("vote_modifier", 0.0),
-            govern_modifier=data.get("govern_modifier", 0.0),
+
             shroud_modifier=data.get("shroud_modifier", 0.0),
             stealth_modifier=data.get("stealth_modifier", 0.0),
             control_modifier=data.get("control_modifier", 0.0),
@@ -126,7 +125,10 @@ class DeckStrategy:
     bleed_priority: float = 1.0
     rush_priority: float = 0.0
     vote_priority: float = 0.0
-    govern_priority: float = 0.0
+    # govern_priority removed: Govern serves two purposes:
+    # 1. Blood acceleration (early game, uncontrolled vampires)
+    # 2. Bleed action (mid/late game)
+    # This is handled by bleed_priority + phase logic
     shroud_priority: float = 0.0
     stealth_priority: float = 0.0
     control_priority: float = 0.0
@@ -191,7 +193,7 @@ class DeckStrategy:
             bleed_priority=data.get("bleed_priority", 1.0),
             rush_priority=data.get("rush_priority", 0.0),
             vote_priority=data.get("vote_priority", 0.0),
-            govern_priority=data.get("govern_priority", 0.0),
+
             shroud_priority=data.get("shroud_priority", 0.0),
             stealth_priority=data.get("stealth_priority", 0.0),
             control_priority=data.get("control_priority", 0.0),
@@ -281,9 +283,7 @@ class StrategyEngine:
             "vote_priority": strategy.get_adjusted_priority(
                 strategy.vote_priority, adj.vote_modifier
             ),
-            "govern_priority": strategy.get_adjusted_priority(
-                strategy.govern_priority, adj.govern_modifier
-            ),
+
             "shroud_priority": strategy.get_adjusted_priority(
                 strategy.shroud_priority, adj.shroud_modifier
             ),
@@ -410,10 +410,20 @@ class StrategyEngine:
                 if self._has_control_card(state, player):
                     return "action_card"
 
-        # 4. Govern if available and vampire
-        if is_vampire and adjusted["govern_priority"] > 0:
-            if self._has_govern_card(state, player):
-                if state.random.random() < adjusted["govern_priority"] * 0.4:
+        # 4. Action cards (bleed, Govern, Shroud, etc.)
+        # Logic varies by phase:
+        # - Early: Prefer blood acceleration (if uncontrolled vampires)
+        # - Mid/Late: Prefer bleed actions
+        if is_vampire and self._has_action_cards(state, player):
+            if phase == GamePhase.EARLY:
+                # Early game: Check if we have uncontrolled vampires needing blood
+                if self._has_uncontrolled_needing_blood(state, player):
+                    # Use action card for blood acceleration
+                    if state.random.random() < adjusted["bleed_priority"] * 0.4:
+                        return "action_card"
+            else:
+                # Mid/Late: Use action cards for bleed
+                if state.random.random() < adjusted["bleed_priority"] * 0.3:
                     return "action_card"
 
         # 5. Vote if available and vampire with title
@@ -482,7 +492,7 @@ class StrategyEngine:
                     n in name
                     for n in (
                         "shroud",
-                        "govern",
+
                         "pentex",
                         "misdirection",
                     )
@@ -490,13 +500,7 @@ class StrategyEngine:
                     return True
         return False
 
-    def _has_govern_card(self, state: GameState, player: Any) -> bool:
-        """Check if player has Govern the Unaligned."""
-        for cid in player.hand:
-            card = state.card_by_id(cid)
-            if card and "govern" in card.name.lower():
-                return True
-        return False
+
 
     def _has_political_card(self, state: GameState, player: Any) -> bool:
         """Check if player has political action card."""
@@ -522,6 +526,28 @@ class StrategyEngine:
                     )
                 ):
                     return True
+        return False
+
+    def _has_action_cards(self, state: GameState, player: Any) -> bool:
+        """Check if player has any action cards (bleed, Govern, etc.)."""
+        for cid in player.hand:
+            card = state.card_by_id(cid)
+            if card:
+                t = card.tipo.strip().lower()
+                if t in ('action', 'political action'):
+                    return True
+        return False
+
+    def _has_uncontrolled_needing_blood(self, state: GameState, player: Any) -> bool:
+        """Check if player has uncontrolled vampires that need blood."""
+        for cid in player.crypt:
+            card = state.card_by_id(cid)
+            if (
+                card
+                and card.position == CardPosition.uncontrolled
+                and card.blood < card.capacity
+            ):
+                return True
         return False
 
     def choose_target(
@@ -593,7 +619,7 @@ DEFAULT_STRATEGIES = {
         name="Path of Death Ally Toolbox",
         bleed_priority=0.6,
         rush_priority=0.5,
-        govern_priority=0.4,
+    
         shroud_priority=0.5,
         control_priority=0.4,
         bloat_priority=0.3,
