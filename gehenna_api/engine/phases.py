@@ -2519,6 +2519,7 @@ class PhaseManager:
             effects = getattr(chosen, 'effects', None) or []
 
         effect_desc_parts: list[str] = []
+        context: dict = {}  # Stores effects to apply later (e.g., shroud_discard)
         for eff in effects:
             if isinstance(eff, dict):
                 func = eff.get('function', '')
