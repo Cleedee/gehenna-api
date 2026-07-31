@@ -1,0 +1,35 @@
+{
+  "deck_id": 1,
+  "name": "Rush Deck",
+  "description": "Aggressive rush deck focused on combat",
+
+  "bleed_priority": 0.4,
+  "rush_priority": 0.9,
+  "vote_priority": 0.0,
+  "govern_priority": 0.0,
+  "shroud_priority": 0.0,
+  "stealth_priority": 0.2,
+  "control_priority": 0.3,
+  "bloat_priority": 0.2,
+
+  "rush_threshold": 3.0,
+  "control_threshold": 5.0,
+  "bleed_threshold": 0.0,
+  "bloat_threshold": 10.0,
+
+  "preferred_cards": [
+    "Bum's Rush",
+    "Freakish Conglomeration",
+    "Deep Song"
+  ],
+
+  "avoided_cards": [],
+
+  "target_types": ["vampire", "ally"],
+  "target_min_pool": 0,
+  "target_prefer_low_pool": false,
+
+  "adapt_to_counters": true,
+  "stealth_if_blocked": false,
+  "rush_if_no_block": true
+}

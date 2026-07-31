@@ -1,0 +1,36 @@
+{
+  "deck_id": 275,
+  "name": "Path of Death Ally Toolbox",
+  "description": "Ally-based toolbox with rush, bleed, and control via Govern and Shroud",
+
+  "bleed_priority": 0.6,
+  "rush_priority": 0.5,
+  "govern_priority": 0.4,
+  "shroud_priority": 0.5,
+  "stealth_priority": 0.3,
+  "control_priority": 0.4,
+  "bloat_priority": 0.3,
+
+  "rush_threshold": 5.0,
+  "control_threshold": 6.0,
+  "bleed_threshold": 0.0,
+  "bloat_threshold": 12.0,
+
+  "preferred_cards": [
+    "Freakish Conglomeration",
+    "Govern the Unaligned",
+    "Shroud of Decay",
+    "Where the Veil Thins",
+    "Deflection"
+  ],
+
+  "avoided_cards": [],
+
+  "target_types": ["vampire", "ally"],
+  "target_min_pool": 0,
+  "target_prefer_low_pool": false,
+
+  "adapt_to_counters": true,
+  "stealth_if_blocked": true,
+  "rush_if_no_block": true
+}

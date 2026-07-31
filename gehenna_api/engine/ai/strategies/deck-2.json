@@ -1,0 +1,35 @@
+{
+  "deck_id": 2,
+  "name": "Vote Deck",
+  "description": "Vote-based deck focused on political actions",
+
+  "bleed_priority": 0.5,
+  "rush_priority": 0.1,
+  "vote_priority": 0.9,
+  "govern_priority": 0.0,
+  "shroud_priority": 0.0,
+  "stealth_priority": 0.3,
+  "control_priority": 0.2,
+  "bloat_priority": 0.3,
+
+  "rush_threshold": 7.0,
+  "control_threshold": 6.0,
+  "bleed_threshold": 0.0,
+  "bloat_threshold": 12.0,
+
+  "preferred_cards": [
+    "Parliament of Shadows",
+    "Blood Hunt",
+    "Ancient Influence"
+  ],
+
+  "avoided_cards": [],
+
+  "target_types": ["vampire"],
+  "target_min_pool": 0,
+  "target_prefer_low_pool": false,
+
+  "adapt_to_counters": true,
+  "stealth_if_blocked": true,
+  "rush_if_no_block": false
+}
