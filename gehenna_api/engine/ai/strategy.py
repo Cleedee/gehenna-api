@@ -9,11 +9,20 @@ from __future__ import annotations
 import json
 import os
 from dataclasses import dataclass, field
+from enum import Enum
 from pathlib import Path
 from typing import Any
 
 from gehenna_api.engine.card_instance import CardInstance, CardPosition
 from gehenna_api.engine.state import GameState
+
+
+class GamePhase(str, Enum):
+    """Game phases for strategy adaptation."""
+    EARLY = "early"      # Turns 1-5: Development, setup
+    MID = "mid"          # Turns 6-15: Balanced play
+    LATE = "late"        # Turns 16+: Aggressive, endgame
+    FINAL = "final"      # Last 2 players: All-out attack
 
 
 @dataclass
@@ -73,13 +82,47 @@ class ActionPriority:
 
 
 @dataclass
+class PhaseAdjustments:
+    """Priority adjustments for a specific game phase."""
+    bleed_modifier: float = 0.0
+    rush_modifier: float = 0.0
+    vote_modifier: float = 0.0
+    govern_modifier: float = 0.0
+    shroud_modifier: float = 0.0
+    stealth_modifier: float = 0.0
+    control_modifier: float = 0.0
+    bloat_modifier: float = 0.0
+
+    # Threshold adjustments
+    rush_threshold_modifier: float = 0.0
+    control_threshold_modifier: float = 0.0
+    bloat_threshold_modifier: float = 0.0
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> PhaseAdjustments:
+        return cls(
+            bleed_modifier=data.get("bleed_modifier", 0.0),
+            rush_modifier=data.get("rush_modifier", 0.0),
+            vote_modifier=data.get("vote_modifier", 0.0),
+            govern_modifier=data.get("govern_modifier", 0.0),
+            shroud_modifier=data.get("shroud_modifier", 0.0),
+            stealth_modifier=data.get("stealth_modifier", 0.0),
+            control_modifier=data.get("control_modifier", 0.0),
+            bloat_modifier=data.get("bloat_modifier", 0.0),
+            rush_threshold_modifier=data.get("rush_threshold_modifier", 0.0),
+            control_threshold_modifier=data.get("control_threshold_modifier", 0.0),
+            bloat_threshold_modifier=data.get("bloat_threshold_modifier", 0.0),
+        )
+
+
+@dataclass
 class DeckStrategy:
     """Strategy configuration for a specific deck."""
 
     deck_id: int
     name: str = ""
 
-    # Action priorities (higher = more likely)
+    # Base action priorities (higher = more likely)
     bleed_priority: float = 1.0
     rush_priority: float = 0.0
     vote_priority: float = 0.0
@@ -89,11 +132,17 @@ class DeckStrategy:
     control_priority: float = 0.0
     bloat_priority: float = 0.0
 
-    # Thresholds
+    # Base thresholds
     rush_threshold: float = 5.0  # Min threat to rush
     control_threshold: float = 6.0  # Min threat to control
     bleed_threshold: float = 0.0  # Always bleed
     bloat_threshold: float = 10.0  # Pool below this = bloat
+
+    # Phase-specific adjustments
+    early_phase: PhaseAdjustments = field(default_factory=PhaseAdjustments)
+    mid_phase: PhaseAdjustments = field(default_factory=PhaseAdjustments)
+    late_phase: PhaseAdjustments = field(default_factory=PhaseAdjustments)
+    final_phase: PhaseAdjustments = field(default_factory=PhaseAdjustments)
 
     # Card preferences
     preferred_cards: list[str] = field(default_factory=list)
@@ -109,9 +158,33 @@ class DeckStrategy:
     stealth_if_blocked: bool = True
     rush_if_no_block: bool = True
 
+    def get_phase_adjustments(self, phase: GamePhase) -> PhaseAdjustments:
+        """Get adjustments for a specific phase."""
+        if phase == GamePhase.EARLY:
+            return self.early_phase
+        elif phase == GamePhase.MID:
+            return self.mid_phase
+        elif phase == GamePhase.LATE:
+            return self.late_phase
+        elif phase == GamePhase.FINAL:
+            return self.final_phase
+        return PhaseAdjustments()
+
+    def get_adjusted_priority(
+        self, base: float, modifier: float
+    ) -> float:
+        """Apply phase modifier to base priority, clamped 0-1."""
+        return max(0.0, min(1.0, base + modifier))
+
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> DeckStrategy:
         """Create strategy from dictionary."""
+
+        def _parse_phase(data: dict | None) -> PhaseAdjustments:
+            if data:
+                return PhaseAdjustments.from_dict(data)
+            return PhaseAdjustments()
+
         return cls(
             deck_id=data.get("deck_id", 0),
             name=data.get("name", ""),
@@ -127,6 +200,10 @@ class DeckStrategy:
             control_threshold=data.get("control_threshold", 6.0),
             bleed_threshold=data.get("bleed_threshold", 0.0),
             bloat_threshold=data.get("bloat_threshold", 10.0),
+            early_phase=_parse_phase(data.get("early_phase")),
+            mid_phase=_parse_phase(data.get("mid_phase")),
+            late_phase=_parse_phase(data.get("late_phase")),
+            final_phase=_parse_phase(data.get("final_phase")),
             preferred_cards=data.get("preferred_cards", []),
             avoided_cards=data.get("avoided_cards", []),
             target_types=data.get("target_types", ["vampire"]),
@@ -167,6 +244,69 @@ class StrategyEngine:
         """Get strategy for a deck, or default."""
         return self.strategies.get(deck_id, DeckStrategy(deck_id=deck_id))
 
+    def determine_game_phase(self, state: GameState, player_id: int) -> GamePhase:
+        """Determine the current game phase based on turn and board state."""
+        turn = state.turn_number
+        alive = sum(1 for p in state.players if not p.is_ousted)
+        player = state.player_by_id(player_id)
+
+        # Final phase: only 2 players left
+        if alive <= 2:
+            return GamePhase.FINAL
+
+        # Late game: turn 16+ or player has 2+ VP
+        if turn >= 16 or (player and player.victory_points >= 2):
+            return GamePhase.LATE
+
+        # Mid game: turns 6-15
+        if turn >= 6:
+            return GamePhase.MID
+
+        # Early game: turns 1-5
+        return GamePhase.EARLY
+
+    def get_adjusted_strategy(
+        self, strategy: DeckStrategy, phase: GamePhase
+    ) -> dict[str, float]:
+        """Get phase-adjusted priorities and thresholds."""
+        adj = strategy.get_phase_adjustments(phase)
+
+        return {
+            "bleed_priority": strategy.get_adjusted_priority(
+                strategy.bleed_priority, adj.bleed_modifier
+            ),
+            "rush_priority": strategy.get_adjusted_priority(
+                strategy.rush_priority, adj.rush_modifier
+            ),
+            "vote_priority": strategy.get_adjusted_priority(
+                strategy.vote_priority, adj.vote_modifier
+            ),
+            "govern_priority": strategy.get_adjusted_priority(
+                strategy.govern_priority, adj.govern_modifier
+            ),
+            "shroud_priority": strategy.get_adjusted_priority(
+                strategy.shroud_priority, adj.shroud_modifier
+            ),
+            "stealth_priority": strategy.get_adjusted_priority(
+                strategy.stealth_priority, adj.stealth_modifier
+            ),
+            "control_priority": strategy.get_adjusted_priority(
+                strategy.control_priority, adj.control_modifier
+            ),
+            "bloat_priority": strategy.get_adjusted_priority(
+                strategy.bloat_priority, adj.bloat_modifier
+            ),
+            "rush_threshold": max(
+                0, strategy.rush_threshold + adj.rush_threshold_modifier
+            ),
+            "control_threshold": max(
+                0, strategy.control_threshold + adj.control_threshold_modifier
+            ),
+            "bloat_threshold": max(
+                0, strategy.bloat_threshold + adj.bloat_threshold_modifier
+            ),
+        }
+
     def choose_action_type(
         self,
         state: GameState,
@@ -196,6 +336,10 @@ class StrategyEngine:
         if is_vampire and minion.blood == 0:
             return "hunt"
 
+        # Determine game phase and get adjusted priorities
+        phase = self.determine_game_phase(state, player_id)
+        adjusted = self.get_adjusted_strategy(strategy, phase)
+
         # Assess threats
         prey = state.prey_of(player_id)
         predator = state.predator_of(player_id)
@@ -207,12 +351,14 @@ class StrategyEngine:
             self.threat_assessor.assess(state, predator.id) if predator else 0
         )
 
-        # Check own pool
-        own_pool_low = player.pool < strategy.bloat_threshold
+        # Check own pool with phase-adjusted threshold
+        own_pool_low = player.pool < adjusted["bloat_threshold"]
 
-        # Decide action based on priorities
+        # Decide action based on adjusted priorities
         return self._decide_action(
             strategy=strategy,
+            adjusted=adjusted,
+            phase=phase,
             minion=minion,
             player=player,
             state=state,
@@ -226,6 +372,8 @@ class StrategyEngine:
     def _decide_action(
         self,
         strategy: DeckStrategy,
+        adjusted: dict[str, float],
+        phase: GamePhase,
         minion: CardInstance,
         player: Any,
         state: GameState,
@@ -235,55 +383,55 @@ class StrategyEngine:
         is_vampire: bool,
         is_ally: bool,
     ) -> str:
-        """Core decision logic."""
+        """Core decision logic with phase-adjusted priorities."""
 
         # 1. Bloat if pool is low
-        if own_pool_low and strategy.bloat_priority > 0:
+        if own_pool_low and adjusted["bloat_priority"] > 0:
             if self._has_bloat_card(state, player):
                 return "action_card"
 
         # 2. Rush if ally with rush ability
-        if is_ally and strategy.rush_priority > 0:
+        if is_ally and adjusted["rush_priority"] > 0:
             if self._has_rush_ability(minion):
                 # Rush high-threat targets
-                if predator_threat >= strategy.rush_threshold:
+                if predator_threat >= adjusted["rush_threshold"]:
                     return "rush"
-                if prey_threat >= strategy.rush_threshold:
+                if prey_threat >= adjusted["rush_threshold"]:
                     return "rush"
                 # Random rush based on priority
-                if state.random.random() < strategy.rush_priority * 0.3:
+                if state.random.random() < adjusted["rush_priority"] * 0.3:
                     return "rush"
 
         # 3. Control if threat is high
-        if strategy.control_priority > 0:
+        if adjusted["control_priority"] > 0:
             max_threat = max(prey_threat, predator_threat)
-            if max_threat >= strategy.control_threshold:
+            if max_threat >= adjusted["control_threshold"]:
                 # Use control cards (Shroud, etc.)
                 if self._has_control_card(state, player):
                     return "action_card"
 
         # 4. Govern if available and vampire
-        if is_vampire and strategy.govern_priority > 0:
+        if is_vampire and adjusted["govern_priority"] > 0:
             if self._has_govern_card(state, player):
-                if state.random.random() < strategy.govern_priority * 0.4:
+                if state.random.random() < adjusted["govern_priority"] * 0.4:
                     return "action_card"
 
         # 5. Vote if available and vampire with title
         if (
             is_vampire
-            and strategy.vote_priority > 0
+            and adjusted["vote_priority"] > 0
             and player.has_title
         ):
             if self._has_political_card(state, player):
-                if state.random.random() < strategy.vote_priority * 0.3:
+                if state.random.random() < adjusted["vote_priority"] * 0.3:
                     return "political"
 
         # 6. Bleed (default)
-        if strategy.bleed_priority > 0:
+        if adjusted["bleed_priority"] > 0:
             # Check for stealth cards
-            if strategy.stealth_priority > 0:
+            if adjusted["stealth_priority"] > 0:
                 if self._has_stealth_card(state, player):
-                    if state.random.random() < strategy.stealth_priority * 0.5:
+                    if state.random.random() < adjusted["stealth_priority"] * 0.5:
                         return "action_card"
             return "bleed"
 
