@@ -3,24 +3,53 @@
   "name": "Vote Deck",
   "description": "Vote-based deck focused on political actions",
 
-  "bleed_priority": 0.5,
-  "rush_priority": 0.1,
+  "bleed_priority": 0.4,
+  "rush_priority": 0.0,
   "vote_priority": 0.9,
   "govern_priority": 0.0,
   "shroud_priority": 0.0,
-  "stealth_priority": 0.3,
+  "stealth_priority": 0.4,
   "control_priority": 0.2,
-  "bloat_priority": 0.3,
+  "bloat_priority": 0.4,
 
-  "rush_threshold": 7.0,
+  "rush_threshold": 8.0,
   "control_threshold": 6.0,
   "bleed_threshold": 0.0,
-  "bloat_threshold": 12.0,
+  "bloat_threshold": 15.0,
+
+  "early_phase": {
+    "vote_modifier": -0.2,
+    "bleed_modifier": -0.1,
+    "bloat_modifier": 0.3,
+    "bloat_threshold_modifier": 5.0
+  },
+
+  "mid_phase": {
+    "vote_modifier": 0.1,
+    "bleed_modifier": 0.0,
+    "stealth_modifier": 0.1
+  },
+
+  "late_phase": {
+    "vote_modifier": 0.1,
+    "bleed_modifier": 0.2,
+    "bloat_modifier": -0.2,
+    "bloat_threshold_modifier": -5.0
+  },
+
+  "final_phase": {
+    "vote_modifier": 0.0,
+    "bleed_modifier": 0.3,
+    "bloat_modifier": -0.3,
+    "control_modifier": 0.1
+  },
 
   "preferred_cards": [
     "Parliament of Shadows",
+    "Ancient Influence",
     "Blood Hunt",
-    "Ancient Influence"
+    "Domain Query",
+    "Kine Resources Held"
   ],
 
   "avoided_cards": [],
@@ -31,5 +60,11 @@
 
   "adapt_to_counters": true,
   "stealth_if_blocked": true,
-  "rush_if_no_block": false
+  "rush_if_no_block": false,
+
+  "vote_strategy": {
+    "prefer_big_referendums": true,
+    "min_votes_to_call": 2,
+    "target_title_holders": true
+  }
 }

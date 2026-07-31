@@ -423,7 +423,15 @@ class StrategyEngine:
             and player.has_title
         ):
             if self._has_political_card(state, player):
-                if state.random.random() < adjusted["vote_priority"] * 0.3:
+                # Higher chance to vote in mid/late game
+                vote_chance = adjusted["vote_priority"] * 0.5
+                # Increase if prey has high threat
+                if prey_threat > 5:
+                    vote_chance += 0.2
+                # Decrease if early game
+                if phase == GamePhase.EARLY:
+                    vote_chance *= 0.6
+                if state.random.random() < min(vote_chance, 0.9):
                     return "political"
 
         # 6. Bleed (default)
