@@ -106,6 +106,9 @@ def _make_card_instance(
     bleed_value = 0
     stealth_value = 0
     intercept_value = 0
+    # Defaults before enrichment (enriched data may be absent for cards
+    # without JSON files in data/cards/)
+    is_infernal = False
     try:
         from gehenna_api.engine.cardtext import parse_card_text
         parsed = parse_card_text(
