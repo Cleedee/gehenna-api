@@ -2814,12 +2814,14 @@ class PhaseManager:
         # Rules: Turn 1 - each player gets their position number (P1=1, P2=2, P3=3, P4=4)
         #        Turn 2+ - everyone gets 4 transfers
         turn = self.state.turn_number
+        num_players = len(self.state.active_players)
         
-        if turn == 0:  # First turn of the game
+        # First round: turn_number < num_players (turns 0, 1, 2, 3 for 4 players)
+        if turn < num_players:
             # Player gets transfers equal to their position (1-indexed)
             player.transfers = player.id
         else:
-            # After first turn, everyone gets 4 transfers
+            # After first round, everyone gets 4 transfers
             player.transfers = 4
 
         self._player_influence_phase(player, state)
@@ -2855,6 +2857,17 @@ class PhaseManager:
             if inst.blood >= inst.capacity:
                 inst.position = CardPosition.ready
                 inst.locked = False
+
+        # 2c. Check if player is ousted (pool reached 0)
+        if player.pool <= 0 and not player.is_ousted:
+            self.state.oust_player(player.id)
+            self.events.emit(
+                GameEvent(
+                    type=EventType.player_ousted,
+                    player_id=player.id,
+                    data={'player_id': player.id},
+                )
+            )
                 self._log_action(
                     player, f'{inst.name} moves to ready (blood {inst.blood}/{inst.capacity})'
                 )
