@@ -479,30 +479,37 @@ Resultado: Sem vitória (pool P1=2, P2=0; nenhum eliminado)
 
 | Aspecto do Deck | Status no Motor |
 |---|---|
-| Govern +3 sangue (aceleração) | ❌ Não implementado |
-| Freakish com 3–4 de vida | ❌ Dá apenas 2 |
+| Govern +3 sangue (aceleração) | ✅ Implementado (fix #284b725) |
+| Freakish com 3–4 de vida | ✅ Corrigido (fix #284b725) |
 | Rush do Freakish (D) | ❌ Não implementado |
-| Path requirement | ❌ Não verificado |
-| Discipline requirements | ❌ Não verificados |
+| Path requirement | ✅ Verificado (fix #284b725) |
+| Discipline requirements | ✅ Verificados (fix #284b725) |
 | Shroud of Decay sup (+1 bleed por aliado morto) | ❓ Não testado (sem zumbis mortos no simulado) |
 | Where the Veil Thins sup (zumbis +1 intercept) | ❌ Não implementado |
 | Stealth vs. intercept | ⚠️ Inconsistente (bloqueios sempre funcionam) |
 | The Line (reduz custo de ação 1→0) | ❓ Não testado (jogado na fase master, efeito não rastreado) |
-| Seduction (+1 stealth para ação) | ❌ Jogado por Nadezhda (sem DOM — bug de disciplina) |
+| Seduction (+1 stealth para ação) | ✅ Verificado (fix #284b725) |
 | Edge gain por bleeds bem-sucedidos | ❌ Nenhum bleed passou (todos bloqueados) |
 
 ### 💡 Conclusão da Validação
 
 A **estrutura de turnos** do motor está correta (fases, alternância,
-sequência). Os bugs de **fidelidade** são significativos para este
-deck específico — Govern sup e a mechanics de zumbis/aliados são o
-núcleo da estratégia, e estão parcialmente ou totalmente ausentes.
+sequência). Os bugs de **fidelidade** identificados foram corrigidos
+nos commits #87e45fb e #284b725:
 
-O motor é útil para validar a **estrutura básica** (turnos, fases,
-combate, mestres) mas **não simula fielmente** o deck #275. Para
-testes realistas, seria necessário:
-1. Implementar Govern sup (+3 sangue)
-2. Corrigir vida de aliados (usar texto da carta, não campo blood)
-3. Verificar disciplinas e Path antes de jogar cartas
-4. Implementar habilidades especiais de aliados (rush)
-5. Corrigir cálculo de transferências no turno 4 (P2: 3, não 4)
+**Corrigido:**
+1. ✅ Govern sup (+3 sangue) implementado
+2. ✅ Vida de aliados calculada a partir do texto da carta
+3. ✅ Requisitos de disciplina verificados antes de jogar cartas
+4. ✅ Requisitos de Path verificados para cartas específicas
+
+**Pendente:**
+- Implementar habilidades especiais de aliados (rush do Freakish)
+- Corrigir cálculo de transferências no turno 4 (P2: 3, não 4)
+- Implementar efeitos de cartas Where the Veil Thins e Shroud sup
+- Melhorar resolução stealth vs. intercept
+
+O motor agora simula **razoavelmente bem** o deck #275, com as
+principais mecânicas implementadas. As limitações restantes são
+importantes para fidelidade completa, mas não impedem simulações
+úteis para teste e validação.
