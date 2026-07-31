@@ -162,6 +162,17 @@ def _make_card_instance(
         ally_life = enriched.life
         ally_strength = enriched.strength
     
+    # Fallback: parse life and strength from card text if not available
+    if ally_life == 0 and card_data.get('text'):
+        import re
+        text = card_data['text']
+        life_match = re.search(r'(\d+)\s+life', text, re.IGNORECASE)
+        if life_match:
+            ally_life = int(life_match.group(1))
+        strength_match = re.search(r'(\d+)\s+strength', text, re.IGNORECASE)
+        if strength_match:
+            ally_strength = int(strength_match.group(1))
+    
     # Get path from database (for vampires)
     path = card_data.get('path', '') or ''
     
