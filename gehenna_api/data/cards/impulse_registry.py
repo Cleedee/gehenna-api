@@ -95,6 +95,60 @@ CARD_PLAYABILITY_REGISTRY: dict[str, CardPlayability] = {
         cost_type='pool',
         cost_amount=1,
     ),
+    # Stealth modifiers (action modifiers that give +1 stealth)
+    'Where the Veil Thins': CardPlayability(
+        windows=['block_attempt'],
+        conditions={},
+        effect='stealth_modifier',
+        cost_type='blood',
+        cost_amount=0,
+    ),
+    'Shadow Cloak': CardPlayability(
+        windows=['block_attempt'],
+        conditions={},
+        effect='stealth_modifier',
+        cost_type='blood',
+        cost_amount=0,
+    ),
+    'Shadow Sentinel': CardPlayability(
+        windows=['block_attempt'],
+        conditions={},
+        effect='stealth_modifier',
+        cost_type='blood',
+        cost_amount=0,
+    ),
+    'Veil the Legions': CardPlayability(
+        windows=['block_attempt'],
+        conditions={},
+        effect='stealth_modifier',
+        cost_type='blood',
+        cost_amount=0,
+    ),
+    'Psychic Veil': CardPlayability(
+        windows=['block_attempt'],
+        conditions={},
+        effect='stealth_modifier',
+        cost_type='blood',
+        cost_amount=0,
+    ),
+    'Seduction': CardPlayability(
+        windows=['block_attempt'],
+        conditions={},
+        effect='stealth_modifier',
+        cost_type='blood',
+        cost_amount=0,
+    ),
+    # Intercept reactions
+    'On the Qui Vive': CardPlayability(
+        windows=['block_attempt'],
+        conditions={},
+        effect='intercept_reaction',
+    ),
+    'Wake with Evening\'s Freshness': CardPlayability(
+        windows=['block_attempt'],
+        conditions={},
+        effect='intercept_reaction',
+    ),
 }
 
 # =============================================================================

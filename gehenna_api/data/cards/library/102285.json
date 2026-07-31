@@ -24,7 +24,22 @@
         "OBL"
       ],
       "context": "ACTION MODIFIER",
-      "effects": []
+      "effects": [
+        {
+          "function": "modifier.stealth",
+          "params": {
+            "value": 1
+          },
+          "text": "+1 stealth"
+        },
+        {
+          "function": "veil.tax",
+          "params": {
+            "blood_cost": 1
+          },
+          "text": "Minions without Oblivion must burn 1 blood to block"
+        }
+      ]
     }
   ],
   "modifiers": {

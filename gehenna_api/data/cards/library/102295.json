@@ -11,11 +11,12 @@
       "context": "ACTION",
       "effects": [
         {
-          "function": "combat.bleed",
+          "function": "shroud.bleed",
           "params": {
-            "bleed": 2
+            "bleed_bonus": 1,
+            "discard": 2
           },
-          "text": "Bleed with +1, target discards 2"
+          "text": "Bleed with +1 bleed, target discards 2 cards"
         }
       ]
     },
@@ -26,11 +27,12 @@
       "context": "ACTION",
       "effects": [
         {
-          "function": "effect.raw",
+          "function": "shroud.burn",
           "params": {
-            "damage": 3
+            "ash_heap_cost": 7,
+            "pool_damage": 3
           },
-          "text": "Remove 7 ash heap cards to burn 3 pool"
+          "text": "Remove 7 cards from prey's ash heap to burn 3 of their pool"
         }
       ]
     }

@@ -1273,6 +1273,15 @@ class PhaseManager:
                 'directed': False,
                 'resolve': lambda m, p, b: self._resolve_political_action(m, p),
             }
+        elif action_type == 'rush':
+            # Ally rush ability: enter combat with a minion as a (D) action
+            target = self._find_rush_target(minion, player)
+            return {
+                'name': f'rush {target.name}' if target else 'rush',
+                'stealth': 0,  # Rush is a (D) action, no stealth
+                'directed': True,  # Directed action
+                'resolve': lambda m, p, b: self._resolve_rush(m, p, target),
+            }
         else:
             return {
                 'name': 'action',
@@ -2551,6 +2560,49 @@ class PhaseManager:
                     effect_desc_parts.append(f'+{added} blood to {target_vampire.name}')
                 else:
                     effect_desc_parts.append('no younger vampire in uncontrolled')
+            elif func == 'veil.tax':
+                # Where the Veil Thins superior: minions without OBL must burn 1 blood to block
+                # This is applied during block attempts - store the effect
+                blood_cost = params.get('blood_cost', 1)
+                # Store the veil tax effect for block resolution
+                context['veil_tax'] = {
+                    'active': True,
+                    'blood_cost': blood_cost,
+                    'minion_name': minion.name,
+                }
+                effect_desc_parts.append(f'minions without OBL must burn {blood_cost} blood to block')
+            elif func == 'shroud.bleed':
+                # Shroud of Decay basic: Bleed with +1 bleed, target discards 2
+                bleed_bonus = params.get('bleed_bonus', 1)
+                discard_count = params.get('discard', 2)
+                minion.bleed += bleed_bonus
+                # Store the discard effect for after bleed resolution
+                context['shroud_discard'] = {
+                    'active': True,
+                    'count': discard_count,
+                }
+                effect_desc_parts.append(f'+{bleed_bonus} bleed, target discards {discard_count}')
+            elif func == 'shroud.burn':
+                # Shroud of Decay superior: Remove 7 ash heap cards to burn 3 pool
+                ash_cost = params.get('ash_heap_cost', 7)
+                pool_damage = params.get('pool_damage', 3)
+                # Find prey's ash heap
+                prey = self.state.prey_of(player.id)
+                if prey:
+                    # Count cards in prey's ash heap
+                    ash_cards = [c for c in self.state.cards.values() 
+                                if c.id.startswith(f'p{prey.id}_') and c.position == CardPosition.ash_heap]
+                    if len(ash_cards) >= ash_cost:
+                        # Remove 7 cards from ash heap
+                        for c in ash_cards[:ash_cost]:
+                            c.position = CardPosition.removed
+                        # Burn 3 pool from prey
+                        prey.pool -= pool_damage
+                        effect_desc_parts.append(f'removed {ash_cost} ash heap cards, {prey.username} loses {pool_damage} pool')
+                    else:
+                        effect_desc_parts.append(f'not enough ash heap cards ({len(ash_cards)}/{ash_cost})')
+                else:
+                    effect_desc_parts.append('no prey found')
             else:
                 if text:
                     effect_desc_parts.append(text)
@@ -2662,6 +2714,48 @@ class PhaseManager:
             self.draw_cards(player, 1)
         self._log_action(player, f'{minion.name} recruits {card.name}')
 
+    def _find_rush_target(self, minion: CardInstance, player: PlayerState) -> Optional[CardInstance]:
+        """Find a target for rush ability (enter combat with a minion).
+        
+        Rush targets: any ready minion controlled by another Methuselah.
+        """
+        targets = []
+        
+        # Find all ready minions controlled by other players
+        for c in self.state.cards.values():
+            if c.id == minion.id:
+                continue
+            if c.position != CardPosition.ready:
+                continue
+            if c.tipo not in ('Vampire', 'vampire', 'Imbued', 'Ally'):
+                continue
+            # Check if controlled by another player
+            target_player_id = self._player_id_for_minion(c)
+            if target_player_id and target_player_id != player.id:
+                targets.append(c)
+        
+        if not targets:
+            return None
+        
+        # Prefer vampires, then allies
+        vampires = [t for t in targets if t.tipo in ('Vampire', 'vampire', 'Imbued')]
+        if vampires:
+            return self.state.random.choice(vampires)
+        return self.state.random.choice(targets)
+
+    def _resolve_rush(self, minion: CardInstance, player: PlayerState, target: CardInstance) -> None:
+        """Resolve a rush ability (enter combat with a minion).
+        
+        This is a (D) action that puts the ally into combat with the target.
+        """
+        if target is None:
+            self._log_action(player, f'{minion.name} rush - no valid target')
+            return
+        
+        self._log_action(player, f'{minion.name} rushes {target.name}')
+        # Rush is a (D) action - enters combat directly
+        self._start_combat(minion, target)
+
     def _grant_edge(self, player: PlayerState) -> None:
         """Grant the Edge to the specified player.
         If another player has it, take it first.
@@ -2716,9 +2810,27 @@ class PhaseManager:
                 data={'phase': 'influence'},
             )
         )
+        # Calculate transfers based on player's turn count
+        # Rules: First player gets 1, 3, 4, 4... Second gets 2, 3, 4, 4...
+        # Both get 4 from turn 5 onwards
         turn = self.state.turn_number
-        if turn <= 2:
-            player.transfers = turn + 1
+        player_index = (player.id - 1) % 2  # 0 for first player, 1 for second
+        
+        # Calculate how many turns this player has had
+        # First player: turns 0, 2, 4, ... (even turn numbers)
+        # Second player: turns 1, 3, 5, ... (odd turn numbers)
+        if player_index == 0:
+            # First player: turn numbers 0, 2, 4, ...
+            player_turn = turn // 2
+        else:
+            # Second player: turn numbers 1, 3, 5, ...
+            player_turn = (turn - 1) // 2 if turn >= 1 else 0
+        
+        # Assign transfers based on player's turn count
+        if player_turn == 0:
+            player.transfers = 1 if player_index == 0 else 2
+        elif player_turn == 1:
+            player.transfers = 3  # Both get 3 on their second turn
         else:
             player.transfers = 4
 

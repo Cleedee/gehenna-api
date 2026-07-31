@@ -17,13 +17,14 @@ class Bot(ABC):
         """Choose which action type a minion should perform.
 
         Returns: 'bleed', 'hunt', 'leave_torpor', 'rescue', 'diablerie',
-                 'action_card', 'burn_card'
+                 'action_card', 'burn_card', 'rush'
         """
         minion = state.card_by_id(minion_id)
         if not minion:
             return 'bleed'
 
         is_vampire = minion.tipo in ('Vampire', 'vampire', 'Imbued')
+        is_ally = minion.tipo == 'Ally'
         player = state.player_by_id(player_id)
 
         # Leave torpor: mandatory if in torpor and have 2+ blood
@@ -38,6 +39,11 @@ class Bot(ABC):
                 return 'hunt'
             if minion.blood <= 2 and state.random.random() < 0.3:
                 return 'hunt'
+
+        # Allies with rush ability can enter combat as (D) action
+        if is_ally and self._has_rush_ability(minion):
+            if state.random.random() < 0.4:  # 40% chance to rush
+                return 'rush'
 
         # Check for action cards in hand
         has_action_cards = self._has_action_cards(state, player_id)
@@ -86,6 +92,34 @@ class Bot(ABC):
             card = state.card_by_id(cid)
             if card and card.tipo.strip().lower() == 'political action':
                 return True
+        return False
+
+    def _has_rush_ability(self, minion: CardInstance) -> bool:
+        """Check if an ally has a rush ability (enter combat as (D) action).
+        
+        Examples: Freakish Conglomeration, Amam the Devourer, etc.
+        """
+        if minion.tipo != 'Ally':
+            return False
+        
+        # Check card text for rush ability
+        # Common patterns: 'enter combat with a minion as a (D) action'
+        #                  'can enter combat with a ready minion'
+        text = getattr(minion, 'text', '') or ''
+        text_lower = text.lower()
+        
+        # Check for rush ability patterns
+        rush_patterns = [
+            'enter combat with a minion as a (d) action',
+            'enter combat with a ready minion',
+            'can enter combat with a minion',
+            'may enter combat with a minion',
+        ]
+        
+        for pattern in rush_patterns:
+            if pattern in text_lower:
+                return True
+        
         return False
 
     def _has_action_cards(self, state: GameState, player_id: int) -> bool:
