@@ -49,8 +49,13 @@
 ### 5.2 Action Card Actions (require card in hand)
 - 🔄 Equip (attach equipment, costs blood or pool)
 - ✅ Employ Retainer (attach retainer with life, costs blood)
-- ✅ Recruit Ally (create ally in ready, locked first turn, costs blood)
+- ✅ Recruit Ally (create ally in ready, locked first turn, costs blood, stats parsed from text)
 - ✅ Political Action (call referendum, costs blood)
+
+### 5.2b Card Verification
+- ✅ Discipline check (cards verify minion has required discipline)
+- ✅ Path check (cards verify minion has required Path)
+- ✅ Ally stats parsing (life/strength extracted from card text)
 
 ### 5.3 Action Resolution
 - ✅ Announce action (lock acting minion)
@@ -91,6 +96,7 @@
 ### 6.4 Combat Cards
 - ✅ Weapons (grant maneuvers via equipment attachments)
 - 🔄 Maneuvers from cards (change range close ↔ long)
+- ✅ Rush from allies (e.g., Freakish Conglomeration enters combat)
 - ❌ Press cards (continue/end combat with cards)
 - ❌ Damage Prevention cards (prevent damage)
 - ❌ Additional Strike cards (extra strikes per round)
@@ -164,6 +170,9 @@
 - ✅ Blood Hunt referendum (after diablerie)
 - ❌ Votes from Edge (burn Edge for 1 vote)
 - ❌ Votes from political action cards (1 vote each)
+- ✅ Govern the Unaligned superior (+3 blood to younger vampire)
+- 🔄 Where the Veil Thins superior (veil tax - minions without OBL pay blood to block)
+- 🔄 Shroud of Decay (bleed +target discards / burn ash to deal pool damage)
 
 ## 15. Titles
 - ✅ Primogen (1 vote)
@@ -206,9 +215,9 @@
 | Unlock Phase | 3 | 3 | 100% |
 | Master Phase | 4 | 6 | 67% |
 | Minion Phase (Basic) | 5 | 5 | 100% |
-| Minion Phase (Cards) | 4 | 4 | 100% |
+| Minion Phase (Cards) | 7 | 7 | 100% |
 | Action Resolution | 9 | 9 | 100% |
-| Combat System | 19 | 27 | 70% |
+| Combat System | 20 | 27 | 74% |
 | Influence Phase | 4 | 4 | 100% |
 | Discard Phase | 2 | 2 | 100% |
 | Edge Mechanics | 5 | 6 | 83% |
@@ -216,26 +225,26 @@
 | Ousting/Victory | 8 | 8 | 100% |
 | Reaction Cards | 5 | 6 | 83% |
 | Action Modifiers | 4 | 5 | 80% |
-| Political System | 5 | 7 | 71% |
+| Political System | 7 | 9 | 78% |
 | Titles | 4 | 6 | 67% |
 | Advanced Rules | 0 | 4 | 0% |
 | Persistence | 0 | 3 | 0% |
 | CLI/Interface | 1 | 4 | 25% |
 | Testing | 1 | 3 | 33% |
 
-**Overall Progress: ~75% (99/132 features)**
+**Overall Progress: ~79% (109/138 features)**
 
 ---
 
 ## Next Steps (Priority Order)
 
-1. **Reflex Cards** - Cancel specific card types as played
-2. **Advanced Rules** - Advanced vampires, contested cards, Red List
-3. **Edge for Vote** - Burn Edge for 1 vote in referendum
-4. **Persistence** - Save/load game state
-5. **CLI/Human Interface** - Human player input
-6. **Integration Tests** - Full game simulation
-7. **Damage Prevention Cards** - Combat card subtype
-8. **Additional Strike Cards** - Combat card subtype
-9. **Press Cards** - Combat card subtype
-10. **Master Locations/Disciplines** - Permanent master cards
+1. **Shroud of Decay superior** - Complete burn ash heap to deal pool damage
+2. **Where the Veil Thins superior** - Apply veil tax during block resolution
+3. **Reflex Cards** - Cancel specific card types as played
+4. **Advanced Rules** - Advanced vampires, contested cards, Red List
+5. **Edge for Vote** - Burn Edge for 1 vote in referendum
+6. **Persistence** - Save/load game state
+7. **CLI/Human Interface** - Human player input
+8. **Integration Tests** - Full game simulation
+9. **Damage Prevention Cards** - Combat card subtype
+10. **Press Cards** - Combat card subtype
