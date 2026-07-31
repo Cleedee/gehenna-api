@@ -2810,28 +2810,16 @@ class PhaseManager:
                 data={'phase': 'influence'},
             )
         )
-        # Calculate transfers based on player's turn count
-        # Rules: First player gets 1, 3, 4, 4... Second gets 2, 3, 4, 4...
-        # Both get 4 from turn 5 onwards
+        # Calculate transfers based on turn number
+        # Rules: Turn 1 - each player gets their position number (P1=1, P2=2, P3=3, P4=4)
+        #        Turn 2+ - everyone gets 4 transfers
         turn = self.state.turn_number
-        player_index = (player.id - 1) % 2  # 0 for first player, 1 for second
         
-        # Calculate how many turns this player has had
-        # First player: turns 0, 2, 4, ... (even turn numbers)
-        # Second player: turns 1, 3, 5, ... (odd turn numbers)
-        if player_index == 0:
-            # First player: turn numbers 0, 2, 4, ...
-            player_turn = turn // 2
+        if turn == 0:  # First turn of the game
+            # Player gets transfers equal to their position (1-indexed)
+            player.transfers = player.id
         else:
-            # Second player: turn numbers 1, 3, 5, ...
-            player_turn = (turn - 1) // 2 if turn >= 1 else 0
-        
-        # Assign transfers based on player's turn count
-        if player_turn == 0:
-            player.transfers = 1 if player_index == 0 else 2
-        elif player_turn == 1:
-            player.transfers = 3  # Both get 3 on their second turn
-        else:
+            # After first turn, everyone gets 4 transfers
             player.transfers = 4
 
         self._player_influence_phase(player, state)
