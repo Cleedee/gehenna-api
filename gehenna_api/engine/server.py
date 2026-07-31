@@ -63,6 +63,7 @@ def _load_deck(deck_id: int) -> tuple[list[dict], list[dict]]:
             'codevdb': card.codevdb or 0,
             'blood': card.blood or 0,
             'pool': card.pool or 0,
+            'path': getattr(card, 'path', '') or '',
         }
         entry = {'card': card_data, 'quantity': slot.quantity}
         tl = card.tipo.strip().lower()
@@ -154,6 +155,16 @@ def _make_card_instance(
     if enriched and enriched.tipo:
         tipo = enriched.tipo
 
+    # Get life and strength from enriched data (for allies/wraiths)
+    ally_life = 0
+    ally_strength = 0
+    if enriched:
+        ally_life = enriched.life
+        ally_strength = enriched.strength
+    
+    # Get path from database (for vampires)
+    path = card_data.get('path', '') or ''
+    
     return CardInstance(
         id=f'{prefix}_{card_data["id"]}_{card_index}',
         card_id=card_data['id'],
@@ -162,6 +173,8 @@ def _make_card_instance(
         tipo=tipo,
         pool_cost=pool_cost,
         capacity=_safe_int(card_data.get('capacity')) or _safe_int(card_data.get('blood')) or 0,
+        life=ally_life,
+        strength=ally_strength,
         stealth=stealth_value,
         intercept=intercept_value,
         bleed=bleed_value,
@@ -173,6 +186,7 @@ def _make_card_instance(
         effects=effects,
         disciplines=card_data.get('disciplines', ''),
         sect=card_data.get('sect', ''),
+        path=path,
     )
 
 

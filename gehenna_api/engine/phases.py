@@ -28,6 +28,115 @@ TRIFLE_TIPOS = {'trifle', 'master/trifle'}
 # All playable master cards (regular masters + trifles)
 ALL_MASTER_TIPOS = MASTER_TIPOS | TRIFLE_TIPOS
 
+
+def _minion_has_discipline(minion: CardInstance, discipline: str) -> bool:
+    """Check if a minion has a specific discipline.
+    
+    For vampires: check the disciplines string (pipe-delimited).
+    For allies/wraiths: they generally don't have disciplines unless
+    the card text says they can play cards requiring that discipline.
+    
+    Args:
+        minion: The minion to check
+        discipline: Discipline code (e.g., 'dom', 'DOM', 'obl', 'OBL')
+    
+    Returns:
+        True if the minion has the discipline at the required level
+    """
+    if not minion.disciplines:
+        return False
+    
+    # Parse disciplines string (pipe-delimited, e.g., '|dom|DOM|obl|')
+    # Check for superior (uppercase) or basic (lowercase)
+    if discipline.isupper():
+        # Superior required - check if minion has superior (uppercase)
+        return f'|{discipline}|' in minion.disciplines
+    else:
+        # Basic required - check if minion has basic (lowercase) or superior (uppercase)
+        return (f'|{discipline}|' in minion.disciplines or 
+                f'|{discipline.upper()}|' in minion.disciplines)
+
+
+def _check_path_requirement(minion: CardInstance, card: CardInstance) -> tuple[bool, str]:
+    """Check if a minion meets the Path requirement for an action card.
+    
+    Some cards require the acting minion to have a specific Path
+    (e.g., 'Path of Death and the Soul').
+    
+    Returns:
+        (meets_requirement, error_message)
+    """
+    # Get required path from card's path field or text
+    card_path = getattr(card, 'path', '') or ''
+    card_text = getattr(card, 'text', '') or ''
+    
+    # Check for Path requirements in card's path field first
+    required_path = None
+    if card_path:
+        required_path = card_path
+    elif 'Path of Death and the Soul' in card_text:
+        required_path = 'Death and the Soul'
+    elif 'Path of Blood' in card_text:
+        required_path = 'Blood'
+    elif 'Path of Heaven' in card_text:
+        required_path = 'Heaven'
+    elif 'Path of Paradox' in card_text:
+        required_path = 'Paradox'
+    elif 'Path of Night' in card_text:
+        required_path = 'Night'
+    
+    if not required_path:
+        # No Path requirement found
+        return True, ''
+    
+    # Check if minion has the required Path
+    minion_path = getattr(minion, 'path', '') or ''
+    if required_path.lower() in minion_path.lower():
+        return True, ''
+    
+    return False, f' (requires Path of {required_path})'
+
+
+def _check_discipline_requirements(minion: CardInstance, card: CardInstance) -> tuple[bool, str]:
+    """Check if a minion meets the discipline requirements for an action card.
+    
+    Returns:
+        (meets_requirements, error_message)
+    """
+    # Get abilities from the card
+    abilities = getattr(card, 'abilities', []) or []
+    if not abilities:
+        # No abilities defined - assume no discipline requirement
+        return True, ''
+    
+    # Check each ability's discipline requirements
+    for ab in abilities:
+        if isinstance(ab, dict):
+            disciplines = ab.get('disciplines', [])
+        else:
+            disciplines = getattr(ab, 'disciplines', None) or []
+        
+        if not disciplines:
+            continue
+        
+        # Check if minion has any of the required disciplines
+        for disc in disciplines:
+            if _minion_has_discipline(minion, disc):
+                return True, ''
+    
+    # No matching discipline found
+    required = []
+    for ab in abilities:
+        if isinstance(ab, dict):
+            disciplines = ab.get('disciplines', [])
+        else:
+            disciplines = getattr(ab, 'disciplines', None) or []
+        required.extend(disciplines)
+    
+    if required:
+        return False, f' (requires {"/".join(required)})'
+    return True, ''
+
 # Basic intrinsic actions (no action card required)
 # These are natural powers of minions
 BASIC_ACTIONS = {
@@ -2311,6 +2420,21 @@ class PhaseManager:
 
         tipo_lower = (inst.tipo or '').lower()
 
+        # Check discipline and Path requirements before playing action cards
+        # (except for bleed which has no discipline requirement)
+        if tipo_lower not in ('bleed',) and inst.abilities:
+            meets_req, error_msg = _check_discipline_requirements(minion, inst)
+            if not meets_req:
+                self._log_action(player, f'{minion.name} cannot play {inst.name}{error_msg}')
+                return
+        
+        # Check Path requirement (for cards like Gifts From Hereafter)
+        if tipo_lower not in ('bleed',):
+            meets_path, path_error = _check_path_requirement(minion, inst)
+            if not meets_path:
+                self._log_action(player, f'{minion.name} cannot play {inst.name}{path_error}')
+                return
+
         if 'bleed' in tipo_lower:
             self._resolve_bleed_with_card(minion, player, inst)
         elif 'equipment' in tipo_lower or 'equip' in tipo_lower:
@@ -2408,6 +2532,25 @@ class PhaseManager:
                 bonus = params.get('value', 1)
                 minion.intercept += bonus
                 effect_desc_parts.append(f'+{bonus} intercept')
+            elif func == 'govern.blood':
+                # Govern the Unaligned superior: +3 blood to younger vampire in uncontrolled
+                blood_amount = params.get('value', 3)
+                # Find a younger vampire in uncontrolled region
+                prefix = f'p{player.id}_'
+                target_vampire = None
+                for c in self.state.cards.values():
+                    if (c.id.startswith(prefix) and 
+                        c.position == CardPosition.uncontrolled and
+                        c.tipo.lower() in ('vampire', 'imbued') and
+                        c.capacity < minion.capacity):
+                        # Prefer vampire with most blood (closest to ready)
+                        if target_vampire is None or c.blood > target_vampire.blood:
+                            target_vampire = c
+                if target_vampire:
+                    added = target_vampire.add_blood(blood_amount)
+                    effect_desc_parts.append(f'+{added} blood to {target_vampire.name}')
+                else:
+                    effect_desc_parts.append('no younger vampire in uncontrolled')
             else:
                 if text:
                     effect_desc_parts.append(text)
@@ -2497,6 +2640,8 @@ class PhaseManager:
             minion.blood -= cost
 
         # Place ally in ready region with starting life
+        # Use life from card text if available, otherwise fall back to capacity
+        starting_life = card.life if card.life > 0 else card.capacity
         ally_id = f'p{player.id}_ally_{card.card_id}'
         ally = CardInstance(
             id=ally_id,
@@ -2505,7 +2650,7 @@ class PhaseManager:
             position=CardPosition.ready,
             tipo='Ally',
             capacity=card.capacity,
-            life=card.capacity,  # Start with full life
+            life=starting_life,  # Start with full life from card text
             blood=0,
             locked=True,  # Cannot act this turn
             strength=card.strength if card.strength > 0 else 1,

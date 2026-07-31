@@ -65,6 +65,8 @@ class CardData:
     effects: list = field(default_factory=list)
     needs_review: bool = False
     notes: str = ''
+    life: int = 0  # Ally/wraith life (parsed from card text)
+    strength: int = 0  # Ally strength (parsed from card text)
 
 
 def _load_json(path: str) -> Optional[dict]:
@@ -109,6 +111,34 @@ def _is_infernal(text: str) -> bool:
     if not text:
         return False
     return 'infernal' in text.lower()
+
+
+def _parse_ally_stats(text: str) -> tuple[int, int]:
+    """Parse life and strength from ally card text.
+    
+    Examples:
+        'Zombie with 3 life. 3 strength, 1 bleed.' -> (3, 3)
+        'Mortal with 1 life. 0 strength, 0 bleed.' -> (1, 0)
+        'Unique wraith with 2 life. 1 strength, 0 bleed.' -> (2, 1)
+    """
+    import re
+    if not text:
+        return 0, 0
+    
+    life = 0
+    strength = 0
+    
+    # Match patterns like '3 life', '1 life', etc.
+    life_match = re.search(r'(\d+)\s+life', text, re.IGNORECASE)
+    if life_match:
+        life = int(life_match.group(1))
+    
+    # Match patterns like '3 strength', '0 strength', etc.
+    strength_match = re.search(r'(\d+)\s+strength', text, re.IGNORECASE)
+    if strength_match:
+        strength = int(strength_match.group(1))
+    
+    return life, strength
 
 
 def _parse_abilities(raw: list) -> list[CardAbility]:
@@ -165,22 +195,28 @@ def load_card(codevdb: int) -> Optional[CardData]:
         # Check if this is a known non-unique vampire
         is_unique = not _is_non_unique_vampire(name)
     
+    # Parse ally/wraith stats from card text
+    card_text = raw.get('text', '')
+    ally_life, ally_strength = _parse_ally_stats(card_text)
+    
     card = CardData(
         codevdb=raw.get('codevdb', codevdb),
         name=raw.get('name', ''),
         tipo=tipo,
         cost=raw.get('cost', ''),
-        text=raw.get('text', ''),
+        text=card_text,
         abilities=_parse_abilities(raw.get('abilities', [])),
         modifiers=dict(raw.get('modifiers', {})),
         default_strike=_parse_strikes(raw.get('default_strike')),
         disciplines=raw.get('disciplines', []),
         special_effects=list(raw.get('special_effects', [])),
         is_unique=is_unique,
-        is_infernal=_is_infernal(raw.get('text', '')),
+        is_infernal=_is_infernal(card_text),
         master_type=raw.get('master_type', None),
         needs_review=raw.get('needs_review', False),
         notes=raw.get('notes', ''),
+        life=ally_life,
+        strength=ally_strength,
     )
 
     # Apply overrides from file (if any)

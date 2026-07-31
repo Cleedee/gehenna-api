@@ -58,6 +58,8 @@ class CardInstance(BaseModel):
     abilities_used_this_turn: set[str] = Field(default_factory=set)
     # Unique card flag (contests with same-named cards)
     is_unique: bool = False
+    # Vampire path (e.g., 'Death and the Soul')
+    path: str = ''
     # Infernal trait (does not unlock normally, costs 1 pool to unlock)
     is_infernal: bool = False
     # Master card type: 'permanent', 'attached', or None (burned after effect)

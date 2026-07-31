@@ -31,6 +31,13 @@
             "value": 1
           },
           "text": "+1 stealth"
+        },
+        {
+          "function": "govern.blood",
+          "params": {
+            "value": 3
+          },
+          "text": "+3 blood to younger vampire in uncontrolled"
         }
       ]
     }
