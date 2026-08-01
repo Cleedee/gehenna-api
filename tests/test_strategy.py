@@ -263,7 +263,7 @@ class TestCardKnowledge:
 class TestCardTiming:
     """Tests for CardTiming."""
 
-    def test_should_play_deflection(self):
+    def test_should_play_redirect(self):
         from gehenna_api.engine.ai.strategy import CardTiming
         from gehenna_api.engine.state import GameState, PlayerState
 
@@ -285,10 +285,10 @@ class TestCardTiming:
 
         timing = CardTiming(state, player_id=1)
 
-        # Should deflect big bleeds
-        assert timing.should_play_deflection(3) is True
-        assert timing.should_play_deflection(2) is True  # Pool <= 15
-        assert timing.should_play_deflection(1) is False
+        # Should redirect big bleeds
+        assert timing.should_play_redirect(3) is True
+        assert timing.should_play_redirect(2) is True  # Pool <= 15
+        assert timing.should_play_redirect(1) is False
 
     def test_should_play_stealth(self):
         from gehenna_api.engine.ai.strategy import CardTiming

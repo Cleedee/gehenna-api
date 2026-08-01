@@ -200,32 +200,43 @@ class StrategyBot(Bot):
             if knowledge.should_hold_card(card) and priority < 80:
                 continue
             
-            name = card.name.lower()
-            tipo = card.tipo.strip().lower()
+            # Check by effect (from JSON)
+            abilities = getattr(card, 'abilities', None) or []
+            for ab in abilities:
+                effects = getattr(ab, 'effects', None) or []
+                for eff in effects:
+                    func = getattr(eff, 'function', '')
+                    
+                    # Redirect bleed - only play against big bleeds
+                    if func == 'reaction.redirect_bleed':
+                        if player.pool <= 10:
+                            return card.id
+                        continue
             
-            # Deflection - only play against big bleeds
-            if 'deflection' in name:
+            # Check by category (fallback)
+            category = knowledge.get_card_category(card)
+            
+            if category == 'defense':
                 if player.pool <= 10:
                     return card.id
                 continue
             
-            # Stealth cards - play when needed
-            if any(n in name for n in ('cloak', 'seduction', 'where the veil')):
+            if category == 'stealth':
                 if timing.should_play_stealth(action_type):
                     return card.id
                 continue
             
-            # Action modifiers - play after action confirmed
-            if tipo == 'action modifier':
+            if category == 'modifier':
                 if timing.should_play_modifier():
                     return card.id
                 continue
             
             # Action cards - play based on action type
+            tipo = card.tipo.strip().lower()
             if tipo == 'action':
-                if action_type == 'bleed' and 'bleed' in name:
+                if action_type == 'bleed' and category == 'bleed':
                     return card.id
-                if action_type == 'rush' and 'rush' in name.lower():
+                if action_type == 'rush' and category == 'rush':
                     return card.id
                 continue
             
@@ -258,24 +269,35 @@ class StrategyBot(Bot):
             return False
         
         timing = CardTiming(state, player_id)
+        knowledge = CardKnowledge(state, player_id)
         player = state.player_by_id(player_id)
         if not player:
             return False
         
-        name = card.name.lower()
+        # Check by effect (from JSON)
+        abilities = getattr(card, 'abilities', None) or []
+        for ab in abilities:
+            effects = getattr(ab, 'effects', None) or []
+            for eff in effects:
+                func = getattr(eff, 'function', '')
+                
+                # Redirect bleed
+                if func == 'reaction.redirect_bleed':
+                    bleed_amount = context.get('bleed_amount', 0)
+                    return timing.should_play_redirect(bleed_amount)
         
-        # Deflection
-        if 'deflection' in name:
+        # Check by category (fallback)
+        category = knowledge.get_card_category(card)
+        
+        if category == 'defense':
             bleed_amount = context.get('bleed_amount', 0)
-            return timing.should_play_deflection(bleed_amount)
+            return timing.should_play_redirect(bleed_amount)
         
-        # Stealth
-        if any(n in name for n in ('cloak', 'seduction', 'where the veil')):
+        if category == 'stealth':
             action_type = context.get('action_type', 'bleed')
             return timing.should_play_stealth(action_type)
         
-        # Modifiers
-        if card.tipo.strip().lower() == 'action modifier':
+        if category == 'modifier':
             return timing.should_play_modifier()
         
         # Default: play the card

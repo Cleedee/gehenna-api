@@ -226,7 +226,15 @@ class CardKnowledge:
     - When to hold cards for later
     """
     
-    # Card categories and their uses
+    # Card effects that indicate categories
+    EFFECT_CATEGORIES = {
+        'reaction.redirect_bleed': ['defense', 'redirect'],
+        'action.bleed': ['bleed'],
+        'action.rush': ['rush', 'combat'],
+        'master.bloat': ['bloat', 'pool'],
+    }
+    
+    # Card categories by name (fallback for cards without JSON)
     CARD_CATEGORIES = {
         # Defense
         'deflection': ['defense', 'redirect'],
@@ -267,18 +275,32 @@ class CardKnowledge:
         self.player = state.player_by_id(player_id)
     
     def get_card_category(self, card: CardInstance) -> str:
-        """Get the primary category of a card."""
+        """Get the primary category of a card.
+        
+        Checks:
+        1. Card effects (from JSON abilities)
+        2. Card name (fallback)
+        3. Card type (last resort)
+        """
         if not card:
             return 'unknown'
         
-        name_lower = card.name.lower()
+        # Check by effects (from JSON)
+        abilities = getattr(card, 'abilities', None) or []
+        for ab in abilities:
+            effects = getattr(ab, 'effects', None) or []
+            for eff in effects:
+                func = getattr(eff, 'function', '')
+                if func in self.EFFECT_CATEGORIES:
+                    return self.EFFECT_CATEGORIES[func][0]
         
-        # Check by name pattern
+        # Check by name pattern (fallback)
+        name_lower = card.name.lower()
         for key, categories in self.CARD_CATEGORIES.items():
             if key.replace('_', ' ') in name_lower:
                 return categories[0]
         
-        # Check by type
+        # Check by type (last resort)
         tipo = card.tipo.strip().lower()
         if tipo == 'action':
             return 'bleed'
@@ -418,8 +440,8 @@ class CardTiming:
         self.player_id = player_id
         self.player = state.player_by_id(player_id)
     
-    def should_play_deflection(self, bleed_amount: int) -> bool:
-        """Decide whether to play Deflection.
+    def should_play_redirect(self, bleed_amount: int) -> bool:
+        """Decide whether to play a redirect card (Deflection, etc.).
         
         Rules:
         - Only play against bleeds >= 2 (not worth it for small bleeds)
@@ -429,15 +451,15 @@ class CardTiming:
         if not self.player:
             return False
         
-        # Always deflect big bleeds
+        # Always redirect big bleeds
         if bleed_amount >= 3:
             return True
         
-        # Deflect medium bleeds if pool is low
+        # Redirect medium bleeds if pool is low
         if bleed_amount >= 2 and self.player.pool <= 15:
             return True
         
-        # Don't waste deflection on small bleeds
+        # Don't waste redirect on small bleeds
         return False
     
     def should_play_stealth(self, action_type: str = 'bleed') -> bool:
