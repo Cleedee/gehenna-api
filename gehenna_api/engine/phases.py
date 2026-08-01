@@ -1844,7 +1844,7 @@ class PhaseManager:
         - additional_strike: extra strike this round
         """
         name = (card.name or '').lower()
-        text = (card.text or '').lower()
+        text = (getattr(card, 'text', '') or '').lower()
         
         # Check card text for strike effects
         # Strike: dodge
