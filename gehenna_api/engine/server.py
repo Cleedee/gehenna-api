@@ -10,6 +10,8 @@ from pydantic import BaseModel
 
 from gehenna_api.database import get_session
 from gehenna_api.engine.ai.random_bot import RandomBot
+from gehenna_api.engine.ai.strategy_bot import StrategyBot
+from gehenna_api.engine.ai.deck_q_agent import DeckQLearningAgent
 from gehenna_api.engine.card_instance import CardInstance, CardPosition
 from gehenna_api.engine.engine import GameEngine
 from gehenna_api.engine.state import GameState, PlayerState
@@ -26,6 +28,7 @@ class CreateGameRequest(BaseModel):
     player_names: list[str]
     deck_ids: list[int]
     bots: bool = True
+    trained: bool = False  # Use trained StrategyBot instead of RandomBot
     seed: Optional[int] = None
 
 
@@ -280,10 +283,21 @@ def create_game(req: CreateGameRequest) -> dict:
         )
         state.players.append(player_state)
 
-    bots_dict: dict[int, RandomBot] = {}
+    bots_dict: dict[int, RandomBot | StrategyBot] = {}
     if req.bots:
-        for p in state.players:
-            bots_dict[p.id] = RandomBot()
+        # Create shared RL agent for trained bots
+        rl_agent = DeckQLearningAgent() if req.trained else None
+        
+        for i, p in enumerate(state.players):
+            if req.trained:
+                deck_id = deck_ids[i]
+                bots_dict[p.id] = StrategyBot(
+                    deck_id=deck_id,
+                    use_rl=True,
+                    rl_agent=rl_agent,
+                )
+            else:
+                bots_dict[p.id] = RandomBot()
 
     engine = GameEngine(state, bots=bots_dict)
     games[game_id] = engine

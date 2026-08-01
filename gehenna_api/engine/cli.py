@@ -46,8 +46,8 @@ class GameAPI:
     def __init__(self, base_url: str = API_BASE) -> None:
         self.client = httpx.Client(base_url=base_url, timeout=15)
 
-    def create_game(self, player_names: list[str], deck_ids: list[int], seed: int | None = None) -> dict:
-        body = {'player_names': player_names, 'deck_ids': deck_ids}
+    def create_game(self, player_names: list[str], deck_ids: list[int], seed: int | None = None, trained: bool = False) -> dict:
+        body = {'player_names': player_names, 'deck_ids': deck_ids, 'trained': trained}
         if seed is not None:
             body['seed'] = seed
         r = self.client.post(
@@ -235,13 +235,15 @@ def run_simulation(
     max_turns: int = 30,
     delay: float = 0.5,
     seed: int | None = None,
+    trained: bool = False,
 ) -> None:
     if num_players is None:
         num_players = len(deck_ids)
     names = [f'Bot-{chr(65 + i)}' for i in range(num_players)]
 
-    print(green(bold('\n=== BOT SIMULATION ===')))
-    result = api.create_game(names, deck_ids, seed=seed)
+    bot_type = 'Trained' if trained else 'Random'
+    print(green(bold(f'\n=== {bot_type.upper()} BOT SIMULATION ===')))
+    result = api.create_game(names, deck_ids, seed=seed, trained=trained)
     if 'error' in result:
         print(red(f'Error: {result["error"]}'))
         return
@@ -419,6 +421,7 @@ def main() -> None:
         '--delay', type=float, default=0.5, help='Delay between turns'
     )
     p_sim.add_argument('--seed', type=int, default=42, help='Seed for reproducibility (default: 42)')
+    p_sim.add_argument('--trained', action='store_true', help='Use trained StrategyBot instead of RandomBot')
 
     args = parser.parse_args()
     api = GameAPI(args.api)
@@ -430,7 +433,8 @@ def main() -> None:
             run_human_game(api, args.decks, args.bots, args.turns, seed=args.seed)
         elif args.command == 'simulate':
             run_simulation(
-                api, args.decks, args.players, args.turns, args.delay, seed=args.seed
+                api, args.decks, args.players, args.turns, args.delay, seed=args.seed,
+                trained=args.trained,
             )
     finally:
         api.close()
