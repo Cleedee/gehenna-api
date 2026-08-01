@@ -354,6 +354,118 @@ class TestCardTiming:
         assert timing.get_card_priority(bleed) == 40
 
 
+class TestComboSystem:
+    """Tests for ComboSystem."""
+
+    def test_detect_available_combos(self):
+        from gehenna_api.engine.ai.strategy import ComboSystem
+        from gehenna_api.engine.state import GameState, PlayerState
+
+        state = GameState(game_id="test")
+        ps = PlayerState(
+            id=1,
+            username="Player 1",
+            pool=30,
+            hand=[],
+            crypt=[],
+            library=[],
+            ash_heap=[],
+            has_edge=False,
+            transfers=0,
+            victory_points=0,
+        )
+        state.players.append(ps)
+
+        combo = ComboSystem(state, player_id=1)
+        available = combo.detect_available_combos()
+        
+        # Should return a list (may be empty)
+        assert isinstance(available, list)
+
+    def test_get_combo_priority(self):
+        from gehenna_api.engine.ai.strategy import ComboSystem
+        from gehenna_api.engine.state import GameState, PlayerState
+
+        state = GameState(game_id="test")
+        ps = PlayerState(
+            id=1,
+            username="Player 1",
+            pool=30,
+            hand=[],
+            crypt=[],
+            library=[],
+            ash_heap=[],
+            has_edge=False,
+            transfers=0,
+            victory_points=0,
+        )
+        state.players.append(ps)
+
+        combo = ComboSystem(state, player_id=1)
+        priority = combo.get_combo_priority()
+        
+        # Should return an integer
+        assert isinstance(priority, int)
+        assert priority >= 0
+
+
+class TestLearningSystem:
+    """Tests for LearningSystem."""
+
+    def test_record_action(self):
+        from gehenna_api.engine.ai.strategy import LearningSystem
+
+        learning = LearningSystem()
+        learning.record_action(
+            action_type='bleed',
+            card_name='Govern',
+            situation='aggressive',
+            outcome='success',
+        )
+        
+        assert len(learning.action_history) == 1
+        assert learning.action_history[0]['action_type'] == 'bleed'
+
+    def test_get_card_effectiveness(self):
+        from gehenna_api.engine.ai.strategy import LearningSystem
+
+        learning = LearningSystem()
+        
+        # Record some actions
+        for _ in range(7):
+            learning.record_action('bleed', 'Govern', 'aggressive', 'success')
+        for _ in range(3):
+            learning.record_action('bleed', 'Govern', 'aggressive', 'fail')
+        
+        effectiveness = learning.get_card_effectiveness('Govern')
+        assert effectiveness == 0.7  # 7/10 success
+
+    def test_get_situation_adjustment(self):
+        from gehenna_api.engine.ai.strategy import LearningSystem
+
+        learning = LearningSystem()
+        
+        # Record successful situation
+        for _ in range(8):
+            learning.record_action('bleed', None, 'aggressive', 'success')
+        for _ in range(2):
+            learning.record_action('bleed', None, 'aggressive', 'fail')
+        
+        adjustment = learning.get_situation_adjustment('aggressive')
+        assert adjustment == 0.1  # High win rate
+
+    def test_reset(self):
+        from gehenna_api.engine.ai.strategy import LearningSystem
+
+        learning = LearningSystem()
+        learning.record_action('bleed', 'Govern', 'aggressive', 'success')
+        
+        learning.reset()
+        
+        assert len(learning.action_history) == 0
+        assert len(learning.card_effectiveness) == 0
+
+
 class TestGameStateAnalyzer:
     """Tests for GameStateAnalyzer."""
 

@@ -9,6 +9,8 @@ from gehenna_api.engine.ai.base import Bot
 from gehenna_api.engine.ai.strategy import (
     CardKnowledge,
     CardTiming,
+    ComboSystem,
+    LearningSystem,
     DeckStrategy,
     StrategyEngine,
     DEFAULT_STRATEGIES,
@@ -29,6 +31,10 @@ class StrategyBot(Bot):
         self.cards_played: list[str] = []
         self.cards_seen: dict[int, list[str]] = {}  # player_id -> cards
         self.turns_played: int = 0
+        
+        # New systems
+        self.learning = LearningSystem()
+        self.combo_system: ComboSystem | None = None
 
     def choose_action(
         self, state: GameState, player_id: int
@@ -44,6 +50,22 @@ class StrategyBot(Bot):
     ) -> str:
         """Choose action type based on strategy."""
         self.turns_played = state.turn_number
+        
+        # Initialize combo system if needed
+        if self.combo_system is None:
+            self.combo_system = ComboSystem(state, player_id)
+        
+        # Check for available combos
+        combos = self.combo_system.detect_available_combos()
+        if combos:
+            # Prioritize combo plays
+            best_combo = max(combos, key=lambda x: x['priority'])
+            if best_combo['priority'] > 80:
+                # Play combo cards
+                action = self._get_combo_action(best_combo, state, player_id)
+                if action:
+                    self.cards_played.append(action)
+                    return action
 
         # Use strategy engine
         action = self.engine.choose_action_type(
@@ -57,6 +79,21 @@ class StrategyBot(Bot):
         self.cards_played.append(action)
 
         return action
+    
+    def _get_combo_action(
+        self, combo: dict, state: GameState, player_id: int
+    ) -> str | None:
+        """Get action type for a combo."""
+        benefit = combo.get('benefit', '')
+        
+        if benefit == 'acceleration':
+            return 'action_card'  # Use Govern for acceleration
+        elif benefit == '5_damage':
+            return 'rush'  # Rush with Freakish
+        elif benefit == 'guaranteed_bleed':
+            return 'bleed'  # Bleed with stealth
+        
+        return None
 
     def choose_block(
         self,

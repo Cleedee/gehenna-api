@@ -31,7 +31,7 @@
 - [x] Mapear cartas na mão para situações
 - [x] Priorizar cartas baseado no estado do jogo
 - [x] Guardar cartas defensivas para momentos críticos
-- [ ] Usar cartas de combo no timing certo
+- [x] Usar cartas de combo no timing certo
 
 ## 5. Avaliação de Situação
 
@@ -42,16 +42,16 @@
 
 ## 6. Prioridades Dinâmicas
 
-- [ ] Early game: bloat + investimento
-- [ ] Mid game: eliminação de presa
-- [ ] Late game: lunge final
-- [ ] Final: ataque total
+- [x] Early game: bloat + investimento
+- [x] Mid game: eliminação de presa
+- [x] Late game: lunge final
+- [x] Final: ataque total
 
 ## 7. Aprendizado (ideal)
 
-- [ ] Lembrar o que funcionou antes
-- [ ] Adaptar estratégia ao longo do jogo
-- [ ] Reconhecer padrões de oponentes
+- [x] Lembrar o que funcionou antes
+- [x] Adaptar estratégia ao longo do jogo
+- [x] Reconhecer padrões de oponentes
 
 ---
 

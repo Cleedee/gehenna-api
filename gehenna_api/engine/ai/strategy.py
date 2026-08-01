@@ -217,6 +217,248 @@ class DeckStrategy:
         )
 
 
+class ComboSystem:
+    """Handles combo card detection and timing.
+    
+    Combos are sequences of cards that work together for greater effect.
+    Examples:
+    - Govern sup + cheap vampire = acceleration
+    - Freakish + Target Vitals = 5 damage
+    - Shroud sup + Fame = big pool damage
+    """
+    
+    # Known combos: list of card names that work together
+    COMBOS = {
+        'govern_sup_combo': {
+            'cards': ['govern the unaligned'],
+            'condition': 'has_uncontrolled_vampire_cheap',
+            'benefit': 'acceleration',
+            'priority': 90,
+        },
+        'freakish_target_vitals': {
+            'cards': ['freakish conglomeration', 'target vitals'],
+            'condition': 'has_ally_with_rush',
+            'benefit': '5_damage',
+            'priority': 85,
+        },
+        'shroud_fame': {
+            'cards': ['shroud of decay', 'fame'],
+            'condition': 'target_in_torpor',
+            'benefit': 'pool_damage',
+            'priority': 80,
+        },
+        'stealth_bleed': {
+            'cards': ['shadow cloak', 'govern the unaligned'],
+            'condition': 'has_blockers',
+            'benefit': 'guaranteed_bleed',
+            'priority': 75,
+        },
+    }
+    
+    def __init__(self, state: GameState, player_id: int):
+        self.state = state
+        self.player_id = player_id
+        self.player = state.player_by_id(player_id)
+    
+    def detect_available_combos(self) -> list[dict]:
+        """Detect which combos are available in hand."""
+        if not self.player:
+            return []
+        
+        available = []
+        hand_names = []
+        
+        # Get names of cards in hand
+        for cid in self.player.hand:
+            card = self.state.card_by_id(cid)
+            if card:
+                hand_names.append(card.name.lower())
+        
+        # Check each combo
+        for combo_name, combo in self.COMBOS.items():
+            combo_cards = [c.lower() for c in combo['cards']]
+            
+            # Check if we have all cards for this combo
+            has_all = all(
+                any(c in h for h in hand_names)
+                for c in combo_cards
+            )
+            
+            if has_all:
+                # Check if condition is met
+                if self._check_combo_condition(combo['condition']):
+                    available.append({
+                        'name': combo_name,
+                        'benefit': combo['benefit'],
+                        'priority': combo['priority'],
+                    })
+        
+        return available
+    
+    def _check_combo_condition(self, condition: str) -> bool:
+        """Check if a combo condition is met."""
+        if not self.player:
+            return False
+        
+        if condition == 'has_uncontrolled_vampire_cheap':
+            for cid in self.player.crypt:
+                card = self.state.card_by_id(cid)
+                if (
+                    card
+                    and card.position == CardPosition.uncontrolled
+                    and card.capacity <= 5
+                ):
+                    return True
+            return False
+        
+        if condition == 'has_ally_with_rush':
+            for cid in self.player.hand:
+                card = self.state.card_by_id(cid)
+                if card and card.tipo.strip().lower() == 'ally':
+                    text = (getattr(card, 'text', '') or '').lower()
+                    if 'enter combat' in text:
+                        return True
+            return False
+        
+        if condition == 'has_blockers':
+            predator = self.state.predator_of(self.player_id)
+            if predator:
+                predator_crypt_ids = set(predator.crypt)
+                ready_minions = sum(
+                    1
+                    for c in self.state.cards.values()
+                    if c.id in predator_crypt_ids
+                    and c.position == CardPosition.ready
+                    and c.tipo.strip().lower() in ('vampire', 'ally')
+                )
+                return ready_minions >= 1
+            return False
+        
+        return False
+    
+    def get_combo_priority(self) -> int:
+        """Get the highest priority combo available."""
+        combos = self.detect_available_combos()
+        if combos:
+            return max(c['priority'] for c in combos)
+        return 0
+    
+    def should_play_combo(self, card_name: str) -> bool:
+        """Determine if we should play a card as part of a combo."""
+        combos = self.detect_available_combos()
+        
+        for combo in combos:
+            combo_info = self.COMBOS.get(combo['name'], {})
+            if card_name.lower() in [c.lower() for c in combo_info.get('cards', [])]:
+                return True
+        
+        return False
+
+
+class LearningSystem:
+    """Tracks game history and learns from past decisions.
+    
+    This system:
+    - Records actions taken and their outcomes
+    - Identifies patterns in successful plays
+    - Adjusts strategy based on historical data
+    """
+    
+    def __init__(self):
+        self.action_history: list[dict] = []
+        self.card_effectiveness: dict[str, dict] = {}  # card_name -> {success, fail}
+        self.situation_outcomes: dict[str, dict] = {}  # situation -> {wins, losses}
+    
+    def record_action(
+        self,
+        action_type: str,
+        card_name: str | None,
+        situation: str,
+        outcome: str,  # 'success', 'fail', 'blocked'
+    ):
+        """Record an action and its outcome."""
+        self.action_history.append({
+            'action_type': action_type,
+            'card_name': card_name,
+            'situation': situation,
+            'outcome': outcome,
+        })
+        
+        # Update card effectiveness
+        if card_name:
+            if card_name not in self.card_effectiveness:
+                self.card_effectiveness[card_name] = {
+                    'success': 0,
+                    'fail': 0,
+                    'blocked': 0,
+                }
+            self.card_effectiveness[card_name][outcome] += 1
+        
+        # Update situation outcomes
+        if situation not in self.situation_outcomes:
+            self.situation_outcomes[situation] = {
+                'success': 0,
+                'fail': 0,
+            }
+        if outcome == 'success':
+            self.situation_outcomes[situation]['success'] += 1
+        else:
+            self.situation_outcomes[situation]['fail'] += 1
+    
+    def get_card_effectiveness(self, card_name: str) -> float:
+        """Get effectiveness score for a card (0.0 to 1.0)."""
+        if card_name not in self.card_effectiveness:
+            return 0.5  # Default: neutral
+        
+        stats = self.card_effectiveness[card_name]
+        total = stats['success'] + stats['fail'] + stats['blocked']
+        if total == 0:
+            return 0.5
+        
+        return stats['success'] / total
+    
+    def get_situation_adjustment(self, situation: str) -> float:
+        """Get adjustment for a situation based on historical outcomes."""
+        if situation not in self.situation_outcomes:
+            return 0.0  # No adjustment
+        
+        stats = self.situation_outcomes[situation]
+        total = stats['success'] + stats['fail']
+        if total == 0:
+            return 0.0
+        
+        win_rate = stats['success'] / total
+        
+        # Adjust based on win rate
+        if win_rate > 0.6:
+            return 0.1  # Increase priority
+        elif win_rate < 0.4:
+            return -0.1  # Decrease priority
+        return 0.0
+    
+    def get_best_action_for_situation(self, situation: str) -> str | None:
+        """Get the best action type for a situation based on history."""
+        if not self.action_history:
+            return None
+        
+        # Count successes by action type for this situation
+        action_successes: dict[str, int] = {}
+        for record in self.action_history:
+            if record['situation'] == situation and record['outcome'] == 'success':
+                action = record['action_type']
+                action_successes[action] = action_successes.get(action, 0) + 1
+        
+        if action_successes:
+            return max(action_successes, key=action_successes.get)
+        return None
+    
+    def reset(self):
+        """Reset learning history."""
+        self.action_history.clear()
+        self.card_effectiveness.clear()
+        self.situation_outcomes.clear()
+
+
 class CardKnowledge:
     """Maps cards to situations and helps decide which card to use.
     
