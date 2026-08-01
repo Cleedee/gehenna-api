@@ -82,7 +82,7 @@
                                 </select>
                             </td>
                             <td><input type="text" class="form-control form-control-sm" name="p_archetype[]" value="{{ p.archetype or '' }}" placeholder="e.g. Hecata G6 Wall"></td>
-                            <td><button type="button" class="btn btn-sm btn-outline-danger" onclick="this.closest('tr').remove()">✕</button></td>
+                            <td><button type="button" class="btn btn-sm btn-outline-danger" onclick="removeParticipant(this)">✕</button></td>
                         </tr>
                         {% endfor %}
                         {% endif %}
@@ -125,11 +125,27 @@ function addParticipant() {
             </select>
         </td>
         <td><input type="text" class="form-control form-control-sm" name="p_archetype[]" placeholder="e.g. Hecata G6 Wall"></td>
-        <td><button type="button" class="btn btn-sm btn-outline-danger" onclick="this.closest('tr').remove()">✕</button></td>
+        <td><button type="button" class="btn btn-sm btn-outline-danger" onclick="removeParticipant(this)">✕</button></td>
     `;
     tbody.appendChild(tr);
     document.getElementById('noParticipants')?.remove();
     participantCount++;
+}
+
+function removeParticipant(btn) {
+    const row = btn.closest('tr');
+    if (row) {
+        const nameInput = row.querySelector('input[name="p_name[]"]');
+        if (nameInput && nameInput.value) {
+            const hidden = document.createElement('input');
+            hidden.type = 'hidden';
+            hidden.name = 'p_remove[]';
+            hidden.value = nameInput.value;
+            document.getElementById('tournamentForm').appendChild(hidden);
+        }
+        row.remove();
+        participantCount = Math.max(0, participantCount - 1);
+    }
 }
 
 document.addEventListener('change', function(e) {

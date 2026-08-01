@@ -29,6 +29,7 @@ class ResultCreate(BaseModel):
     vps: float = 0.0
     gw: bool = False
     final_rank: Optional[int] = None
+    qualification_order: Optional[int] = None
 
 
 class RoundCreate(BaseModel):
@@ -93,6 +94,7 @@ class ResultOut(BaseModel):
     vps: float
     gw: bool
     final_rank: Optional[int] = None
+    qualification_order: Optional[int] = None
     participant: Optional[ParticipantOut] = None
 
     class Config:
@@ -122,6 +124,7 @@ class TournamentOut(BaseModel):
     created_at: Optional[datetime] = None
     participants: list[ParticipantOut] = []
     rounds: list[RoundOut] = []
+    winner: Optional[str] = None
 
     class Config:
         from_attributes = True
@@ -485,6 +488,9 @@ def add_round(
     if not t:
         raise HTTPException(404, 'Tournament not found')
 
+    if data.is_final and len(data.results) != 5:
+        raise HTTPException(400, 'Final round must have exactly 5 players')
+
     round_ = TournamentRound(
         tournament_id=tournament_id,
         round_number=data.round_number,
@@ -497,13 +503,28 @@ def add_round(
         result = TournamentResult(
             round_id=round_.id,
             participant_id=res.participant_id,
-            table_number=res.table_number,
+            table_number=1 if data.is_final else res.table_number,
             seat_position=res.seat_position,
             vps=res.vps,
             gw=res.gw,
             final_rank=res.final_rank,
+            qualification_order=res.qualification_order,
         )
         session.add(result)
+
+    session.flush()
+
+    if data.is_final:
+        results_for_rank = session.scalars(
+            select(TournamentResult).where(
+                TournamentResult.round_id == round_.id
+            ).order_by(
+                TournamentResult.vps.desc(),
+                TournamentResult.qualification_order.asc().nullslast(),
+            )
+        ).all()
+        for rank, r in enumerate(results_for_rank, start=1):
+            r.final_rank = rank
 
     session.commit()
     return _load_round(round_.id, session)
@@ -519,11 +540,13 @@ def update_result(
     if not r:
         raise HTTPException(404, 'Result not found')
 
+    r.participant_id = data.participant_id
     r.table_number = data.table_number
     r.seat_position = data.seat_position
     r.vps = data.vps
     r.gw = data.gw
     r.final_rank = data.final_rank
+    r.qualification_order = data.qualification_order
 
     session.commit()
     return _load_result(result_id, session)
@@ -802,11 +825,14 @@ def _get_winner(tournament_id: int, session: Session) -> Optional[str]:
             if part:
                 return part.player_name
 
-        # Fallback: highest VPs in final
+        # Fallback: highest VPs (tiebreak by qualification order)
         final_results = session.scalars(
             select(TournamentResult).where(
                 TournamentResult.round_id == final_round.id
-            ).order_by(TournamentResult.vps.desc())
+            ).order_by(
+                TournamentResult.vps.desc(),
+                TournamentResult.qualification_order.asc().nullslast(),
+            )
         ).all()
         if final_results:
             part = session.get(TournamentParticipant, final_results[0].participant_id)
@@ -880,6 +906,7 @@ def _load_tournament(tournament_id: int, session: Session) -> Optional[Tournamen
                 vps=res.vps,
                 gw=res.gw,
                 final_rank=res.final_rank,
+                qualification_order=res.qualification_order,
                 participant=part_out,
             ))
 
@@ -916,6 +943,7 @@ def _load_tournament(tournament_id: int, session: Session) -> Optional[Tournamen
         created_at=t.created_at,
         participants=participants_out,
         rounds=rounds_out,
+        winner=_get_winner(t.id, session),
     )
 
 
@@ -989,5 +1017,6 @@ def _load_result(result_id: int, session: Session) -> Optional[ResultOut]:
         vps=res.vps,
         gw=res.gw,
         final_rank=res.final_rank,
+        qualification_order=res.qualification_order,
         participant=part_out,
     )

@@ -79,6 +79,7 @@ class TournamentResult(Base):
     vps: Mapped[float] = mapped_column(Float, default=0.0)
     gw: Mapped[bool] = mapped_column(Boolean, default=False)  # game win
     final_rank: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)  # 1-5, only in final
+    qualification_order: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)  # prelim ranking for tiebreak
 
     # relationships
     round: Mapped['TournamentRound'] = relationship(back_populates='results')

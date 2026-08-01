@@ -94,17 +94,44 @@ def edit_tournament(tournament_id):
     if request.method == 'POST':
         data = _parse_tournament_form(request.form)
         if data:
-            # Build name → form index mapping from the NEW form data
+            # ── Merge form participants with existing ones ──────────────
+            form_participants = {
+                p['player_name']: p
+                for p in data.get('participants', [])
+            }
+            removed = set(request.form.getlist('p_remove[]'))
+
+            merged_participants = []
+            for existing in tournament.get('participants', []):
+                if existing['player_name'] in removed:
+                    continue
+                p = existing.copy()
+                form_p = form_participants.get(p['player_name'])
+                if form_p:
+                    p['deck_name'] = form_p.get('deck_name', '')
+                    p['clan'] = form_p.get('clan', '')
+                    p['archetype'] = form_p.get('archetype', '')
+                merged_participants.append(p)
+
+            # Also add any form-only participants (new players)
+            existing_names = {p['player_name'] for p in merged_participants}
+            for fp in data.get('participants', []):
+                if fp['player_name'] not in existing_names:
+                    merged_participants.append(fp)
+
+            data['participants'] = merged_participants
+
+            # Build name → index mapping from the MERGED list
             name_to_idx = {}
-            for idx, p in enumerate(data.get('participants', [])):
+            for idx, p in enumerate(merged_participants):
                 name_to_idx[p['player_name']] = idx + 1
 
-            # Also build DB id → name from existing data
+            # Build DB id → name from existing data
             id_to_name = {}
             for p in tournament.get('participants', []):
                 id_to_name[p['id']] = p['player_name']
 
-            # Preserve existing rounds, converting participant DB ids to form indices
+            # Convert existing rounds to use merged participant indices
             existing_rounds = []
             for r in tournament.get('rounds', []):
                 r_results = []
@@ -126,9 +153,17 @@ def edit_tournament(tournament_id):
                 })
             data['rounds'] = existing_rounds
 
-            api_client.update_tournament(tournament_id, data)
-            flash('Tournament updated!', 'success')
-            return redirect(url_for('tournaments.detail', tournament_id=tournament_id))
+            # Pop date — Pydantic v2.7 has a bug with Optional[date] = None
+            # that rejects ANY value (even valid date strings). Since the
+            # edit form doesn't change the date, omit it entirely.
+            data.pop('date', None)
+
+            resp = api_client.update_tournament(tournament_id, data)
+            if resp.status_code != 200:
+                flash(f'API error ({resp.status_code}): {resp.text[:200]}', 'danger')
+            else:
+                flash('Tournament updated!', 'success')
+                return redirect(url_for('tournaments.detail', tournament_id=tournament_id))
         else:
             flash('Please fill in required fields', 'danger')
 
@@ -288,6 +323,7 @@ def edit_round(tournament_id, round_id):
                             'vps': res.get('vps', 0),
                             'gw': res.get('gw', False),
                             'final_rank': res.get('final_rank'),
+                            'qualification_order': res.get('qualification_order'),
                         })
                     update_data['rounds'].append({
                         'round_number': r['round_number'],
@@ -501,6 +537,7 @@ def _parse_round_tables(form, num_participants: int) -> list[dict]:
         vps = form.get(f'result_{i}_vps', 0, type=float)
         gw = form.get(f'result_{i}_gw') == 'on'
         final_rank = form.get(f'result_{i}_rank', type=int)
+        qual = form.get(f'result_{i}_qual', type=int)
 
         if seat is None:
             continue
@@ -522,6 +559,7 @@ def _parse_round_tables(form, num_participants: int) -> list[dict]:
             'vps': vps,
             'gw': gw,
             'final_rank': final_rank,
+            'qualification_order': qual,
         })
 
     return list(tables.values())
