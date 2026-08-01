@@ -465,12 +465,8 @@ class PhaseManager:
         # Trifle only grants +1 action if it's the FIRST master card played
         master_card_played = False
 
-        # V:TES Rule: Draw 1 card at the start of master phase
-        drawn = self.draw_cards(player, 1)
-        if drawn:
-            card = self.state.card_by_id(drawn[0])
-            if card:
-                self._log_action(player, f'draw: {card.name}')
+        # V:TES Rule: NO automatic draw in master phase
+        # Draw only happens when you discard during discard phase
 
         # Calculate master phase actions: default 1
         # -1 if out-of-turn master was played last turn
@@ -3070,6 +3066,12 @@ class PhaseManager:
     def execute_discard(
         self, player: PlayerState, bots: dict[int, Bot]
     ) -> None:
+        """Execute discard phase.
+        
+        V:TES Rule: You get 1 discard phase action.
+        You can discard 1 card and draw 1 replacement.
+        If you don't use it, the action is lost.
+        """
         self.events.emit(
             GameEvent(
                 type=EventType.phase_changed,
@@ -3077,6 +3079,7 @@ class PhaseManager:
             )
         )
 
+        # Check for events first (must play immediately)
         events = _has_type(player.hand, self.state, _is_event)
         if events:
             inst = self.state.card_by_id(events[0])
@@ -3085,28 +3088,35 @@ class PhaseManager:
                 self._play_card(player, inst, 'ash_heap')
                 return
 
-        # No events to play - normal discard down to hand size
-        max_hand = player.hand_size
-        if len(player.hand) <= max_hand:
-            self._log_action(player, 'discard - skip')
+        # V:TES Rule: 1 discard phase action - discard 1 card, draw 1
+        # Only if hand has cards and library has cards
+        if not player.hand or not player.library:
+            self._log_action(player, 'discard - skip (no cards)')
             return
 
         bot = bots.get(player.id)
         if not bot:
-            excess = len(player.hand) - max_hand
-            player.hand = player.hand[:-excess]
-            self._log_action(player, f'discard - auto ({excess} cards)')
-            return
-
-        to_discard = len(player.hand) - max_hand
-        for _ in range(to_discard):
-            if not player.hand:
-                break
+            # Auto-discard first card
+            choice = player.hand[0]
+        else:
             choice = bot.choose_discard(self.state, player.id, player.hand)
-            if choice in player.hand:
-                player.hand.remove(choice)
-                player.ash_heap.append(choice)
-        self._log_action(player, f'discard - {to_discard} cards')
+        
+        if choice and choice in player.hand:
+            player.hand.remove(choice)
+            player.ash_heap.append(choice)
+            inst = self.state.card_by_id(choice)
+            card_name = inst.name if inst else choice
+            
+            # Draw replacement
+            drawn = self.draw_cards(player, 1)
+            drawn_name = ''
+            if drawn:
+                drawn_inst = self.state.card_by_id(drawn[0])
+                drawn_name = drawn_inst.name if drawn_inst else drawn[0]
+            
+            self._log_action(player, f'discard: {card_name} → draw: {drawn_name}')
+        else:
+            self._log_action(player, 'discard - skip')
 
     # ── Helpers ────────────────────────────────────────────────────
 
