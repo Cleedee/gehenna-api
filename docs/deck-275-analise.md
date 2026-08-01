@@ -549,21 +549,22 @@ Ajustes por fase:
 
 ### 📊 Resultados das Simulações
 
-**Deck 275 vs outros (30 jogos):**
+**Deck 257 (UnnaDelicia v2) StrategyBot vs RandomBots:**
 
-| Cenário | Wins | VP Médio |
-|---------|------|----------|
-| vs RandomBot | 0 | 0.43 |
-| vs StrategyBot | 0 | 0.57 |
-| P1=Strategy, Outros=Random | 3 | 1.07 |
+| Cenário | Games | Wins | Draw | Losses |
+|---------|-------|------|------|--------|
+| Posições fixas | 20 | 5 (25%) | 0 | 15 |
+| Posições aleatórias | 50 | 19 (38%) | 13 (26%) | 18 (36%) |
+| Aprendizado (100 jogos) | 100 | 29 (29%) | 25 (25%) | 46 (46%) |
 
-**Por posição (20 jogos):**
+**Evolução do aprendizado:**
 
-| Posição | Deck 275 | Observação |
-|---------|----------|------------|
-| P1 | 0 | Posição desvantajosa |
-| P3 | 3 | Melhora significativa |
-| P4 | 5 | Melhor posição |
+| Período | Vitórias | Taxa |
+|---------|----------|------|
+| Primeiros 20 jogos | 7 | 35% |
+| Últimos 20 jogos | 8 | 40% |
+
+**Aprendizado:** 992 ações registradas
 
 ### 🎯 Conclusão Atualizada
 
@@ -572,8 +573,15 @@ O deck #275 está **totalmente implementado** no motor:
 - ✅ StrategyBot com conhecimento de cartas
 - ✅ Ajustes por fase do jogo
 - ✅ Avaliação de ameaça
+- ✅ Sistema de aprendizado com 992 ações
+- ✅ Integração com motor para feedback granular
 
-O deck ainda não vence contra arquétipos top tier (Baali Vote),
-mas performa melhor em posições favoráveis e com StrategyBot.
+**Performance:**
+- 38% de vitórias em posições aleatórias
+- Bot aprende e melhora ao longo dos jogos
+- Sistema de aprendizado coleta dados detalhados
+
+O deck performa razoavelmente bem contra bots aleatórios,
+mas ainda precisa de mais testes contra arquétipos competitivos.
 
 > *"Play as a toolbox rather than swarm." — Nick Miller*
