@@ -948,6 +948,11 @@ class PhaseManager:
             self._log_action(
                 player, f'{action_info["name"]} cancelled'
             )
+            # Record cancelled action for learning
+            if bot and hasattr(bot, 'record_action_outcome'):
+                bot.record_action_outcome(
+                    self.state, player.id, action_type, 'cancelled'
+                )
             minion.unlock()
             minion.has_acted_this_turn = False
             return
@@ -963,6 +968,11 @@ class PhaseManager:
             self._log_action(
                 player, f'{action_info["name"]} blocked by {blocker.name}'
             )
+            # Record blocked action for learning
+            if bot and hasattr(bot, 'record_action_outcome'):
+                bot.record_action_outcome(
+                    self.state, player.id, action_type, 'blocked'
+                )
             self._start_combat(minion, blocker)
             minion.has_acted_this_turn = True
             return
@@ -989,6 +999,19 @@ class PhaseManager:
             action_info['resolve'](minion, player, bot, action_info)
         else:
             action_info['resolve'](minion, player, bot)
+        
+        # Record successful action for learning
+        if bot and hasattr(bot, 'record_action_outcome'):
+            # Get card name if used
+            card_name = None
+            if '_action_card' in action_info:
+                card = self.state.card_by_id(action_info['_action_card'])
+                if card:
+                    card_name = card.name
+            bot.record_action_outcome(
+                self.state, player.id, action_type, 'success', card_name
+            )
+        
         minion.has_acted_this_turn = True
 
     def _play_stealth_modifiers(

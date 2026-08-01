@@ -281,6 +281,39 @@ class StrategyBot(Bot):
 
         return best.id if best else None
 
+    def record_action_outcome(
+        self,
+        state: GameState,
+        player_id: int,
+        action_type: str,
+        outcome: str,
+        card_name: str | None = None,
+    ):
+        """Record the outcome of an action for learning.
+        
+        Args:
+            state: Current game state
+            player_id: ID of the player
+            action_type: Type of action taken
+            outcome: 'success', 'fail', 'blocked', or 'cancelled'
+            card_name: Name of card used (if any)
+        """
+        # Get strategic position
+        analyzer = GameStateAnalyzer(state, player_id)
+        strategic_position = analyzer.get_strategic_position(self.engine.threat_assessor)
+        
+        # Get game phase
+        phase = self.engine.determine_game_phase(state, player_id)
+        
+        # Record the outcome
+        self.learning.record_action(
+            action_type=action_type,
+            card_name=card_name,
+            situation=strategic_position,
+            outcome=outcome,
+            phase=phase.value,
+        )
+
     def choose_card_to_play(
         self,
         state: GameState,
