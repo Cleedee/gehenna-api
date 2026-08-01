@@ -617,17 +617,24 @@ class CardKnowledge:
         
         priority = priority_map.get((category, situation), 0)
         
-        # Bonus for superior cards
-        if card.is_superior:
-            priority += 20
+        # Bonus for superior cards (check if abilities have superior discipline)
+        abilities = getattr(card, 'abilities', None) or []
+        for ab in abilities:
+            disciplines = getattr(ab, 'disciplines', None) or []
+            for disc in disciplines:
+                if disc and disc.isupper():  # Superior is uppercase
+                    priority += 20
+                    break
         
         # Bonus for cards with bleed
-        if card.bleed > 0:
-            priority += card.bleed * 10
+        bleed = getattr(card, 'bleed', 0) or 0
+        if bleed > 0:
+            priority += bleed * 10
         
         # Bonus for cards with stealth
-        if card.stealth > 0:
-            priority += card.stealth * 10
+        stealth = getattr(card, 'stealth', 0) or 0
+        if stealth > 0:
+            priority += stealth * 10
         
         return priority
     
