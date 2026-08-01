@@ -23,6 +23,7 @@ DECK_ARCHETYPES: dict[int, str] = {
     174: 'rush',         # UnnaDelicia (Rush + Allies)
     249: 'vote',         # Ministry (Vote + Bleed)
     275: 'rush',         # Path of Death (Allies + Rush)
+    195: 'stealth_combat',  # Kalinda S&B (Stealth + Combat)
 }
 
 

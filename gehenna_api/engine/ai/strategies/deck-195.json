@@ -1,0 +1,79 @@
+{
+  "deck_id": 195,
+  "name": "Kalinda S&B",
+  "archetype": "stealth_combat",
+  "description": "Kalinda Stealth & Bleed with Combat",
+  "playstyle": "Stealth actions with combat backup",
+  
+  "preferred_cards": [
+    "Kalinda",
+    "Swallowed by the Night",
+    "Faceless Night",
+    "Lost in Crowds",
+    "Pursuit",
+    "Hunger of Marduk",
+    "Elder Impersonation"
+  ],
+  
+  "avoided_cards": [],
+  
+  "action_priority": {
+    "bleed": 80,
+    "rush": 60,
+    "control": 40,
+    "vote": 30,
+    "bloat": 50
+  },
+  
+  "combat_strategy": {
+    "type": "aggressive",
+    "prefer_stealth": true,
+    "prefer_combat": true,
+    "strike_priority": [
+      "handstrike",
+      "steal_blood",
+      "aggravated"
+    ]
+  },
+  
+  "defense_strategy": {
+    "block_threshold": 3,
+    "prefer_redirect": true,
+    "prefer_combat_ends": false
+  },
+  
+  "phases": {
+    "early": {
+      "focus": "stealth",
+      "actions": ["bleed", "stealth"]
+    },
+    "mid": {
+      "focus": "bleed",
+      "actions": ["bleed", "rush"]
+    },
+    "late": {
+      "focus": "aggressive",
+      "actions": ["rush", "bleed"]
+    },
+    "final": {
+      "focus": "kill",
+      "actions": ["rush", "bleed"]
+    }
+  },
+  
+  "disciplines": {
+    "CEL": "combat",
+    "OBF": "stealth",
+    "QUI": "combat",
+    "PRE": "bleed"
+  },
+  
+  "counters": {
+    "bleed": "rush",
+    "rush": "combat",
+    "combat": "bleed",
+    "vote": "stealth",
+    "stealth": "bleed",
+    "toolbox": "bleed"
+  }
+}
