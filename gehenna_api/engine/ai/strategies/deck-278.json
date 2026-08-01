@@ -1,0 +1,90 @@
+{
+  "deck_id": 278,
+  "name": "Fat Fighter Anarch Wall",
+  "archetype": "wall",
+  "description": "Anarch Wall with intercept and combat defense",
+  "playstyle": "Defensive wall that blocks and punishes",
+  
+  "preferred_cards": [
+    "Matasuntha",
+    "Anarch Convert",
+    "Eyes of Argus",
+    "Telepathic Misdirection",
+    "Diversion",
+    "Ashur Tablets",
+    "Villein",
+    "Smiling Jack, The Anarch"
+  ],
+  
+  "avoided_cards": [
+    "Make the Misere"
+  ],
+  
+  "action_priority": {
+    "bleed": 40,
+    "rush": 30,
+    "control": 60,
+    "vote": 50,
+    "bloat": 70
+  },
+  
+  "combat_strategy": {
+    "type": "defensive",
+    "prefer_stealth": false,
+    "prefer_combat": true,
+    "strike_priority": [
+      "handstrike",
+      "aggravated",
+      "steal_blood"
+    ]
+  },
+  
+  "defense_strategy": {
+    "block_threshold": 2,
+    "prefer_redirect": true,
+    "prefer_intercept": true,
+    "prefer_combat_ends": true
+  },
+  
+  "phases": {
+    "early": {
+      "focus": "setup",
+      "actions": ["control", "bloat"]
+    },
+    "mid": {
+      "focus": "block",
+      "actions": ["control", "bleed"]
+    },
+    "late": {
+      "focus": "attrition",
+      "actions": ["control", "bleed"]
+    },
+    "final": {
+      "focus": "kill",
+      "actions": ["bleed", "rush"]
+    }
+  },
+  
+  "disciplines": {
+    "AUS": "intercept",
+    "CEL": "combat",
+    "FOR": "combat",
+    "PRE": "vote"
+  },
+  
+  "counters": {
+    "bleed": "intercept",
+    "rush": "combat",
+    "combat": "combat_ends",
+    "vote": "stealth",
+    "stealth": "intercept",
+    "toolbox": "bleed"
+  },
+  
+  "wall_strategy": {
+    "block_all_actions": true,
+    "punish_combat": true,
+    "pool_drain": true,
+    "attrition": true
+  }
+}
