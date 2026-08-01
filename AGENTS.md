@@ -81,6 +81,18 @@ uv lock              # Update uv.lock after changing pyproject.toml
 - Run single test: `pytest tests/test_app.py::test_name -v`
 - Coverage report: `coverage html` (outputs to `htmlcov/`)
 
+### Test Requirements
+
+- **Write unit tests for all new features**
+- **Write tests before committing**
+- **Run `uv run task test` before committing**
+- Tests should cover:
+  - Happy path (feature works correctly)
+  - Edge cases
+  - Error handling
+- Engine features: test in `tests/test_engine.py`
+- API features: test in `tests/test_*.py`
+
 ## Linting/Formatting Order
 
 - Run `task lint` before committing
