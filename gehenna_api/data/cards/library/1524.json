@@ -1,0 +1,25 @@
+{
+  "codevdb": 1524,
+  "name": "Big Game",
+  "tipo": "Action",
+  "abilities": [
+    {
+      "disciplines": [],
+      "context": "",
+      "effects": [
+        {
+          "function": "action.rush",
+          "params": {
+            "target": "any_minion",
+            "maneuver": true,
+            "red_list_bonus": true
+          },
+          "text": "(D) Enter combat with a ready minion controlled by another Methuselah. If that minion is a Red List minion, this minion gets an optional maneuver or press in that combat."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "needs_review": false,
+  "notes": "Rush action card - bonus against Red List"
+}

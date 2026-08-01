@@ -1,0 +1,56 @@
+{
+  "codevdb": 1687,
+  "name": "Charge of the Buffalo",
+  "tipo": "Action",
+  "abilities": [
+    {
+      "disciplines": ["for"],
+      "context": "basic",
+      "effects": [
+        {
+          "function": "action.rush",
+          "params": {
+            "target": "tapped_minion",
+            "maneuver": false
+          },
+          "text": "[for] (D) Enter combat with a tapped minion."
+        }
+      ]
+    },
+    {
+      "disciplines": ["spi"],
+      "context": "basic",
+      "effects": [
+        {
+          "function": "action.rush",
+          "params": {
+            "target": "any_minion",
+            "maneuver": true,
+            "close_range": true,
+            "bonus_damage": 1
+          },
+          "text": "[spi] (D) Enter combat with a minion. The first round of that combat, range is automatically close, and this vampire's initial strike is strike: hand strike at +1 damage."
+        }
+      ]
+    },
+    {
+      "disciplines": ["SPI"],
+      "context": "superior",
+      "effects": [
+        {
+          "function": "action.rush",
+          "params": {
+            "target": "any_minion",
+            "maneuver": true,
+            "close_range": true,
+            "bonus_damage": 2
+          },
+          "text": "[SPI] As [spi] above, but the strike is at +2 damage."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "needs_review": false,
+  "notes": "Rush action card - requires Fortitude or Spirit"
+}

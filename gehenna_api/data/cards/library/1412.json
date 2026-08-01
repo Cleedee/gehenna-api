@@ -1,0 +1,24 @@
+{
+  "codevdb": 1412,
+  "name": "Ambush",
+  "tipo": "Action",
+  "abilities": [
+    {
+      "disciplines": [],
+      "context": "",
+      "effects": [
+        {
+          "function": "action.rush",
+          "params": {
+            "target": "tapped_minion",
+            "maneuver": true
+          },
+          "text": "(D) Enter combat with a ready tapped minion controlled by another Methuselah. The acting minion gets an optional maneuver during this combat."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "needs_review": false,
+  "notes": "Rush action card - targets tapped minions only"
+}

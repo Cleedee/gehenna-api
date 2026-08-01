@@ -390,9 +390,19 @@ class StrategyEngine:
             if self._has_bloat_card(state, player):
                 return "action_card"
 
-        # 2. Rush if ally with rush ability
-        if is_ally and adjusted["rush_priority"] > 0:
-            if self._has_rush_ability(minion):
+        # 2. Rush if ally with rush ability OR has rush card in hand
+        if adjusted["rush_priority"] > 0:
+            can_rush = False
+            
+            # Check if minion has rush ability (ally)
+            if is_ally and self._has_rush_ability(minion):
+                can_rush = True
+            
+            # Check if player has rush action card in hand
+            if self._has_rush_card(state, player):
+                can_rush = True
+            
+            if can_rush:
                 # Rush high-threat targets
                 if predator_threat >= adjusted["rush_threshold"]:
                     return "rush"
@@ -468,6 +478,24 @@ class StrategyEngine:
             "may enter combat with a minion",
         ]
         return any(p in text for p in rush_patterns)
+
+    def _has_rush_card(self, state: GameState, player: Any) -> bool:
+        """Check if player has rush action cards in hand.
+        
+        Rush cards have 'action.rush' effect in their JSON data.
+        Examples: Ambush, Big Game, Bum's Rush, Charge of the Buffalo.
+        """
+        for cid in player.hand:
+            card = state.card_by_id(cid)
+            if card:
+                # Check abilities for action.rush effect
+                abilities = getattr(card, 'abilities', None) or []
+                for ab in abilities:
+                    effects = getattr(ab, 'effects', None) or []
+                    for eff in effects:
+                        if getattr(eff, 'function', '') == 'action.rush':
+                            return True
+        return False
 
     def _has_bloat_card(self, state: GameState, player: Any) -> bool:
         """Check if player has bloat cards in hand."""

@@ -1,0 +1,24 @@
+{
+  "codevdb": 1625,
+  "name": "Bum's Rush",
+  "tipo": "Action",
+  "abilities": [
+    {
+      "disciplines": [],
+      "context": "",
+      "effects": [
+        {
+          "function": "action.rush",
+          "params": {
+            "target": "any_minion",
+            "maneuver": true
+          },
+          "text": "(D) Enter combat with a ready minion controlled by another Methuselah. The acting minion gets an optional maneuver during this combat."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "needs_review": false,
+  "notes": "Rush action card - standard rush"
+}
