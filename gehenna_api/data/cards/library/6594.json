@@ -1,0 +1,25 @@
+{
+  "codevdb": 6594,
+  "name": "Bait and Switch",
+  "tipo": "reaction",
+  "source": "database",
+  "abilities": [
+    {
+      "disciplines": ["for"],
+      "context": "REACTION",
+      "effects": [
+        {
+          "function": "reaction.redirect_bleed",
+          "params": {
+            "lock": true
+          },
+          "text": "Lock this reacting vampire. Change the target of the bleed to another Methuselah other than the acting minion's controller."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": false,
+  "notes": "Requires a baron. [for] redirect bleed + lock."
+}

@@ -1,0 +1,26 @@
+{
+  "codevdb": 3352,
+  "name": "Two Wrongs",
+  "tipo": "master",
+  "source": "database",
+  "abilities": [
+    {
+      "disciplines": [],
+      "context": "MASTER",
+      "effects": [
+        {
+          "function": "reaction.redirect_bleed",
+          "params": {
+            "lock": false,
+            "cancel_redirect": true
+          },
+          "text": "Play when a minion controlled by a Methuselah other than your predator is bleeding you. That minion is now bleeding his or her prey. The next card that would change the target of this bleed is canceled as it is played."
+        }
+      ]
+    }
+  ],
+  "modifiers": {},
+  "default_strike": null,
+  "needs_review": false,
+  "notes": "Master: out-of-turn. Trifle. Redirect bleed + cancel next redirect."
+}
