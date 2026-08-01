@@ -113,3 +113,58 @@ Cartas que recuperam sangue de vampiros:
 - Manter sangue em vampiros > 1
 - Usar Villein/Minion Tap quando possível
 - Caçar apenas em último caso
+
+---
+
+## 7. Configuração do StrategyBot
+
+### Estrutura do JSON
+
+```json
+{
+  "deck_id": 275,
+  "name": "Deck Name",
+  "bleed_priority": 0.6,
+  "rush_priority": 0.5,
+  "vote_priority": 0.0,
+  "control_priority": 0.4,
+  "bloat_priority": 0.3,
+  "early_phase": { "bleed_modifier": -0.1 },
+  "mid_phase": { "bleed_modifier": 0.1 },
+  "late_phase": { "bleed_modifier": 0.2 },
+  "final_phase": { "bleed_modifier": 0.3 }
+}
+```
+
+### Prioridades por Arquétipo
+
+| Arquétipo | bleed | rush | vote | control | bloat |
+|-----------|-------|------|------|---------|-------|
+| **Stealth & Bleed** | 0.8 | 0.0 | 0.0 | 0.2 | 0.3 |
+| **Powerbleed** | 0.9 | 0.0 | 0.0 | 0.1 | 0.4 |
+| **Vote** | 0.4 | 0.0 | 0.9 | 0.2 | 0.4 |
+| **Rush** | 0.3 | 0.9 | 0.0 | 0.3 | 0.2 |
+| **Wall** | 0.2 | 0.1 | 0.0 | 0.8 | 0.5 |
+| **Toolbox** | 0.5 | 0.3 | 0.2 | 0.5 | 0.3 |
+| **Swarm** | 0.4 | 0.5 | 0.0 | 0.3 | 0.6 |
+| **Ally Toolbox** | 0.5 | 0.5 | 0.0 | 0.4 | 0.3 |
+
+### Ajustes por Fase
+
+| Fase | Prioridade | Ajuste Típico |
+|------|------------|---------------|
+| **Early** (1-5) | Bloat | +0.2 bloat, -0.2 rush |
+| **Mid** (6-15) | Equilibrado | Base |
+| **Late** (16+) | Agressivo | +0.2 bleed/rush, -0.2 bloat |
+| **Final** (2 jogadores) | Ataque total | +0.3 bleed/rush, -0.3 bloat |
+
+### Cartas Reconhecidas
+
+O bot reconhece automaticamente:
+
+| Tipo | Exemplos | Efeito |
+|------|----------|--------|
+| **Rush Action** | Ambush, Bum's Rush | action.rush |
+| **Bleed Action** | Govern, Deep Song | bleed no texto |
+| **Bleed Modifier** | Conditioning, Bonding | +bleed no texto |
+| **Ally** | Freakish Conglomeration | tipo='Ally' |

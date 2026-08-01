@@ -125,3 +125,59 @@ O deck **"Path of Death Ally Toolbox"** (ID 275) se enquadra em:
 - Freakish Conglomeração dá capacidade de rush
 - Govern sup + Shroud de Decay = controle
 - Poderia ser otimizado para estilo mais competitivo
+
+---
+
+## Configuração de Bot por Arquétipo
+
+### Stealth & Bleed
+```json
+{
+  "bleed_priority": 0.8,
+  "stealth_priority": 0.7,
+  "rush_priority": 0.0,
+  "vote_priority": 0.0
+}
+```
+
+### Vote
+```json
+{
+  "bleed_priority": 0.4,
+  "vote_priority": 0.9,
+  "stealth_priority": 0.4,
+  "early_phase": { "vote_modifier": -0.2 }
+}
+```
+
+### Rush
+```json
+{
+  "bleed_priority": 0.3,
+  "rush_priority": 0.9,
+  "rush_threshold": 3.0,
+  "early_phase": { "rush_modifier": -0.2 }
+}
+```
+
+### Wall
+```json
+{
+  "bleed_priority": 0.2,
+  "control_priority": 0.8,
+  "bloat_priority": 0.5,
+  "late_phase": { "control_modifier": 0.2 }
+}
+```
+
+### Ally Toolbox (Deck 275)
+```json
+{
+  "bleed_priority": 0.5,
+  "rush_priority": 0.5,
+  "control_priority": 0.4,
+  "bloat_priority": 0.3,
+  "early_phase": { "bloat_modifier": 0.2, "rush_modifier": -0.2 },
+  "late_phase": { "bleed_modifier": 0.2, "rush_modifier": 0.2 }
+}
+```
