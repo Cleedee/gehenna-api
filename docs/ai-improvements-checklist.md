@@ -20,11 +20,11 @@
 
 ## 3. Timing de Cartas
 
-- [ ] Usar modifiers só após confirmação de bloqueio
-- [ ] Usar stealth quando há blockers perigosos
-- [ ] Usar deflection contra bleeds grandes
-- [ ] Usar rush só contra ameaças reais
-- [ ] Usar Govern sup quando há vampiro barato no uncontrolled
+- [x] Usar modifiers só após confirmação de bloqueio
+- [x] Usar stealth quando há blockers perigosos
+- [x] Usar deflection contra bleeds grandes
+- [x] Usar rush só contra ameaças reais
+- [x] Usar Govern sup quando há vampiro barato no uncontrolled
 
 ## 4. Card Knowledge (saber qual carta usar)
 
