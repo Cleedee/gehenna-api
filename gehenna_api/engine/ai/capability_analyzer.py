@@ -21,28 +21,35 @@ COMBAT_CATEGORIES = {
     'defensive': [
         'maneuver', 'dodge', 'prevent', 'combat_ends',
         'armor', 'shield', 'fortitude',
+        'skin of the', 'toughness',
     ],
     'aggressive': [
         'damage', 'aggravated', 'press', 'strike',
-        'claws', 'strength',
+        'claws', 'strength', 'immortal grapple',
+        'flesh of marble', 'earth meld',
     ],
     'utility': [
         'stealth_combat', 'intercept', 'redirection',
+        'quick strike', 'acrobatic leap',
     ],
 }
 
 REACTION_CATEGORIES = {
     'bounce': [
         'redirect', 'deflection', 'bounce', 'misdirection',
+        'two wrongs', 'bait and switch',
     ],
     'intercept': [
         'intercept', 'awake', 'sense_vitality',
+        'on the qtv', 'enhanced senses',
     ],
     'stealth_reaction': [
         'secret_passage', 'elder_visions',
+        'lost in crowds', 'faceless night',
     ],
     'combat_ends_reaction': [
-        'side_step', 'lightning_reflexes',
+        'side step', 'lightning reflexes',
+        'swiftness', 'blur',
     ],
 }
 
@@ -183,18 +190,19 @@ class CapabilityAnalyzer:
         all_cards = self._get_all_player_cards()
         
         for card in all_cards:
-            card_name = card.name.lower()
-            card_text = (getattr(card, 'text', '') or '').lower()
+            # Get all keywords from card
+            card_keywords = self._get_card_keywords(card)
+            card_text = ' '.join(card_keywords)
             
             # Check for defensive cards
             for keyword in COMBAT_CATEGORIES['defensive']:
-                if keyword in card_name or keyword in card_text:
+                if keyword in card_text:
                     module.defensive_score += 1.0
                     self._count_combat_card(module, keyword)
             
             # Check for aggressive cards
             for keyword in COMBAT_CATEGORIES['aggressive']:
-                if keyword in card_name or keyword in card_text:
+                if keyword in card_text:
                     module.aggressive_score += 1.0
                     self._count_combat_card(module, keyword)
         
@@ -223,8 +231,9 @@ class CapabilityAnalyzer:
         all_cards = self._get_all_player_cards()
         
         for card in all_cards:
-            card_name = card.name.lower()
-            card_text = (getattr(card, 'text', '') or '').lower()
+            # Get all keywords from card
+            card_keywords = self._get_card_keywords(card)
+            card_text = ' '.join(card_keywords)
             card_tipo = card.tipo.strip().lower()
             
             # Only count reaction cards
@@ -233,22 +242,22 @@ class CapabilityAnalyzer:
             
             # Check for bounce
             for keyword in REACTION_CATEGORIES['bounce']:
-                if keyword in card_name or keyword in card_text:
+                if keyword in card_text:
                     reactions.bounce_count += 1
             
             # Check for intercept
             for keyword in REACTION_CATEGORIES['intercept']:
-                if keyword in card_name or keyword in card_text:
+                if keyword in card_text:
                     reactions.intercept_count += 1
             
             # Check for stealth reactions
             for keyword in REACTION_CATEGORIES['stealth_reaction']:
-                if keyword in card_name or keyword in card_text:
+                if keyword in card_text:
                     reactions.stealth_reaction_count += 1
             
             # Check for combat ends
             for keyword in REACTION_CATEGORIES['combat_ends_reaction']:
-                if keyword in card_name or keyword in card_text:
+                if keyword in card_text:
                     reactions.combat_ends_count += 1
         
         # Calculate probabilities
@@ -279,33 +288,34 @@ class CapabilityAnalyzer:
         press_count = 0
         
         for card in all_cards:
-            card_name = card.name.lower()
-            card_text = (getattr(card, 'text', '') or '').lower()
+            # Get all keywords from card
+            card_keywords = self._get_card_keywords(card)
+            card_text = ' '.join(card_keywords)
             
             # Bounce/redirect
             for keyword in REACTION_CATEGORIES['bounce']:
-                if keyword in card_name or keyword in card_text:
+                if keyword in card_text:
                     bounce_count += 1
                     redirect_count += 1
             
             # Combat ends
-            for keyword in ['combat_ends', 'side_step']:
-                if keyword in card_name or keyword in card_text:
+            for keyword in ['combat_ends', 'side_step', 'combat', 'ends']:
+                if keyword in card_text:
                     combat_ends_count += 1
             
             # Prevent
-            for keyword in ['prevent', 'damage_prevention']:
-                if keyword in card_name or keyword in card_text:
+            for keyword in ['prevent', 'damage_prevention', 'prevent_damage']:
+                if keyword in card_text:
                     prevent_count += 1
             
             # Aggravated
             for keyword in ['aggravated', 'aggravated_damage']:
-                if keyword in card_name or keyword in card_text:
+                if keyword in card_text:
                     aggravated_count += 1
             
             # Press
             for keyword in ['press', 'additional_press']:
-                if keyword in card_name or keyword in card_text:
+                if keyword in card_text:
                     press_count += 1
         
         # Calculate probabilities
@@ -331,9 +341,9 @@ class CapabilityAnalyzer:
             'total_combat_cards': combat.total_combat_cards,
             'bounce_probability': reactions.bounce_probability,
             'intercept_probability': reactions.intercept_probability,
-            'can_bleed_safely': probabilities.has_bounce < 0.3,
+            'can_bleed_safely': reactions.bounce_probability < 0.3,
             'can_rush_safely': probabilities.has_combat_ends < 0.4,
-            'needs_stealth': probabilities.has_intercept > 0.5,
+            'needs_stealth': reactions.intercept_probability > 0.5,
         }
     
     def _get_all_player_cards(self) -> list[CardInstance]:
@@ -362,6 +372,60 @@ class CapabilityAnalyzer:
                 cards.append(card)
         
         return cards
+    
+    def _get_card_keywords(self, card: CardInstance) -> list[str]:
+        """Extract keywords from card name, text, and abilities."""
+        keywords = []
+        
+        # Check card name
+        name = card.name.lower()
+        keywords.extend(name.split())
+        
+        # Check card text
+        text = (getattr(card, 'text', '') or '').lower()
+        if text:
+            keywords.extend(text.split())
+        else:
+            # Try to load from database
+            db_text = self._load_card_text_from_db(card.card_id)
+            if db_text:
+                keywords.extend(db_text.lower().split())
+        
+        # Check abilities and effects
+        abilities = getattr(card, 'abilities', None) or []
+        for ab in abilities:
+            effects = getattr(ab, 'effects', None) or []
+            for eff in effects:
+                func = getattr(eff, 'function', '')
+                if func:
+                    keywords.extend(func.lower().split('.'))
+                    keywords.extend(func.lower().split('_'))
+                
+                # Check effect text
+                eff_text = getattr(eff, 'text', '') or ''
+                keywords.extend(eff_text.lower().split())
+        
+        return keywords
+    
+    def _load_card_text_from_db(self, card_id: int) -> str:
+        """Load card text from database."""
+        try:
+            import sqlite3
+            from pathlib import Path
+            
+            db_path = Path(__file__).parent.parent.parent.parent / 'database.db'
+            if not db_path.exists():
+                return ''
+            
+            conn = sqlite3.connect(str(db_path))
+            cursor = conn.cursor()
+            cursor.execute('SELECT text FROM cards WHERE code = ?', (card_id,))
+            row = cursor.fetchone()
+            conn.close()
+            
+            return row[0] if row else ''
+        except Exception:
+            return ''
     
     def _get_combat_disciplines(self) -> list[str]:
         """Get combat-related disciplines for a player."""
@@ -407,39 +471,44 @@ class CapabilityAnalyzer:
     ) -> float:
         """Calculate probability of player having a card type.
         
-        Uses hypergeometric distribution approximation:
-        - Total cards in deck: ~60
-        - Cards in hand: up to 7
+        Uses hypergeometric distribution:
+        - Total cards in deck: ~80
         - Cards seen: in ash heap
+        - Cards remaining: library + hand
         """
         if not self.player:
             return 0.0
         
-        # Estimate total cards of this type in deck
-        # Typical deck has ~10-15 reactions, ~8-12 combat cards
-        estimated_total = {
-            'reaction': 12,
-            'combat': 10,
-            'any': 20,
-        }.get(card_type, 10)
+        # Total cards in deck
+        total_deck = len(self.player.library) + len(self.player.ash_heap) + len(self.player.hand)
         
-        # Cards remaining in library
-        library_size = len(self.player.library)
-        total_remaining = library_size + len(self.player.hand)
-        
-        if total_remaining == 0:
+        if total_deck == 0:
             return 0.0
         
-        # Probability of having at least one in hand
-        # P(at least 1) = 1 - P(none in hand)
-        hand_size = len(self.player.hand)
+        # Estimate total cards of this type in full deck
+        # Based on typical deck composition
+        estimated_total_in_deck = {
+            'reaction': 15,  # ~15% of deck
+            'combat': 12,    # ~12% of deck
+            'any': 25,       # ~25% of deck
+        }.get(card_type, 15)
         
-        if hand_size == 0 or estimated_total == 0:
+        # If we've seen cards in ash heap, adjust estimate
+        # P(having at least one in remaining cards) = 1 - P(none in remaining)
+        remaining_cards = len(self.player.library) + len(self.player.hand)
+        
+        if remaining_cards == 0:
             return 0.0
         
-        # Simple approximation
+        # Probability of at least one in remaining cards
+        # Using complement: P(at least 1) = 1 - P(none)
         p_none = 1.0
-        for i in range(hand_size):
-            p_none *= (1 - (estimated_total / (total_remaining - i)))
+        cards_of_type_remaining = max(0, estimated_total_in_deck - cards_seen)
         
-        return max(0.0, min(1.0, 1.0 - p_none))
+        if cards_of_type_remaining == 0:
+            return 0.0
+        
+        # Simple approximation: probability decreases as we see more cards
+        p_has_card = min(1.0, cards_of_type_remaining / remaining_cards)
+        
+        return max(0.0, min(1.0, p_has_card))
