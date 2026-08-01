@@ -60,7 +60,7 @@ class VerboseStrategyBot(StrategyBot):
         return block
 
 
-def simulate_with_decisions(deck_ids: list[int], num_turns: int = 20, seed: int = 42):
+def simulate_with_decisions(deck_ids: list[int], num_turns: int = 20, seed: int = 42, observe_player: int = 1):
     """Run simulation with decision logging."""
     print("=" * 60)
     print("SIMULAÇÃO COM DECISÕES DO BOT")
@@ -74,6 +74,7 @@ def simulate_with_decisions(deck_ids: list[int], num_turns: int = 20, seed: int 
     
     print(f"\nDecks: {deck_ids}")
     print(f"Turnos: {num_turns}")
+    print(f"Observando: Jogador {observe_player}")
     
     # Create bots
     rl_agent = DeckQLearningAgent()
@@ -81,8 +82,8 @@ def simulate_with_decisions(deck_ids: list[int], num_turns: int = 20, seed: int 
     
     for i, deck_id in enumerate(deck_ids):
         player_id = i + 1
-        if player_id == 1:
-            # Player 1 is verbose
+        if player_id == observe_player:
+            # Observed player is verbose
             bots[player_id] = VerboseStrategyBot(
                 deck_id=deck_id,
                 use_rl=True,
@@ -154,7 +155,7 @@ def simulate_with_decisions(deck_ids: list[int], num_turns: int = 20, seed: int 
         print(f"\nEmpate!")
     
     # Show bot's decisions
-    verbose_bot = bots[1]
+    verbose_bot = bots[observe_player]
     if isinstance(verbose_bot, VerboseStrategyBot):
         print("\n" + "=" * 60)
         print("RESUMO DAS DECISÕES DO BOT")
@@ -198,6 +199,7 @@ def main():
     parser.add_argument('--turns', type=int, default=20, help='Number of turns')
     parser.add_argument('--seed', type=int, default=42, help='Random seed')
     parser.add_argument('--deck', type=int, nargs='+', default=[275, 241, 244, 242], help='Deck IDs')
+    parser.add_argument('--player', type=int, default=1, help='Player to observe (1-4)')
     
     args = parser.parse_args()
     
@@ -205,6 +207,7 @@ def main():
         deck_ids=args.deck,
         num_turns=args.turns,
         seed=args.seed,
+        observe_player=args.player,
     )
 
 
