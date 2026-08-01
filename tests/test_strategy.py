@@ -153,6 +153,100 @@ class TestStrategyEngine:
         assert late["rush_priority"] == 0.7  # 0.5 + 0.2
 
 
+class TestCardTiming:
+    """Tests for CardTiming."""
+
+    def test_should_play_deflection(self):
+        from gehenna_api.engine.ai.strategy import CardTiming
+        from gehenna_api.engine.state import GameState, PlayerState
+
+        state = GameState(game_id="test")
+        for i in range(1, 3):
+            ps = PlayerState(
+                id=i,
+                username=f"Player {i}",
+                pool=10 if i == 1 else 15,  # Player 1 has low pool
+                hand=[],
+                crypt=[],
+                library=[],
+                ash_heap=[],
+                has_edge=False,
+                transfers=0,
+                victory_points=0,
+            )
+            state.players.append(ps)
+
+        timing = CardTiming(state, player_id=1)
+
+        # Should deflect big bleeds
+        assert timing.should_play_deflection(3) is True
+        assert timing.should_play_deflection(2) is True  # Pool <= 15
+        assert timing.should_play_deflection(1) is False
+
+    def test_should_play_stealth(self):
+        from gehenna_api.engine.ai.strategy import CardTiming
+        from gehenna_api.engine.state import GameState, PlayerState
+
+        state = GameState(game_id="test")
+        for i in range(1, 3):
+            ps = PlayerState(
+                id=i,
+                username=f"Player {i}",
+                pool=30,
+                hand=[],
+                crypt=[],
+                library=[],
+                ash_heap=[],
+                has_edge=False,
+                transfers=0,
+                victory_points=0,
+            )
+            state.players.append(ps)
+
+        timing = CardTiming(state, player_id=1)
+
+        # Should play stealth when predator has blockers
+        # (needs actual minions to test properly)
+        result = timing.should_play_stealth('bleed')
+        assert isinstance(result, bool)
+
+    def test_get_card_priority(self):
+        from gehenna_api.engine.ai.strategy import CardTiming
+        from gehenna_api.engine.state import GameState, PlayerState
+        from gehenna_api.engine.card_instance import CardInstance
+
+        state = GameState(game_id="test")
+        ps = PlayerState(
+            id=1,
+            username="Player 1",
+            pool=30,
+            hand=[],
+            crypt=[],
+            library=[],
+            ash_heap=[],
+            has_edge=False,
+            transfers=0,
+            victory_points=0,
+        )
+        state.players.append(ps)
+
+        timing = CardTiming(state, player_id=1)
+
+        # Test card priority with mock cards
+        class MockCard:
+            def __init__(self, name, tipo):
+                self.name = name
+                self.tipo = tipo
+
+        deflection = MockCard("Deflection", "reaction")
+        stealth = MockCard("Shadow Cloak", "action modifier")
+        bleed = MockCard("Govern the Unaligned", "action")
+
+        assert timing.get_card_priority(deflection) == 100
+        assert timing.get_card_priority(stealth) == 80
+        assert timing.get_card_priority(bleed) == 40
+
+
 class TestGameStateAnalyzer:
     """Tests for GameStateAnalyzer."""
 

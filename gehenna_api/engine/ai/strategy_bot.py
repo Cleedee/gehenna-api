@@ -7,6 +7,7 @@ from pathlib import Path
 
 from gehenna_api.engine.ai.base import Bot
 from gehenna_api.engine.ai.strategy import (
+    CardTiming,
     DeckStrategy,
     StrategyEngine,
     DEFAULT_STRATEGIES,
@@ -164,6 +165,124 @@ class StrategyBot(Bot):
                 best_blood = card.blood
 
         return best.id if best else None
+
+    def choose_card_to_play(
+        self,
+        state: GameState,
+        player_id: int,
+        action_type: str = 'bleed',
+    ) -> str | None:
+        """Choose which card to play from hand based on timing rules.
+        
+        Args:
+            state: Current game state
+            player_id: ID of the player
+            action_type: Type of action being attempted ('bleed', 'rush', etc.)
+        
+        Returns:
+            Card ID to play, or None if no card should be played
+        """
+        player = state.player_by_id(player_id)
+        if not player or not player.hand:
+            return None
+        
+        timing = CardTiming(state, player_id)
+        
+        # Sort cards by priority
+        playable_cards = []
+        for cid in player.hand:
+            card = state.card_by_id(cid)
+            if card:
+                priority = timing.get_card_priority(card)
+                playable_cards.append((card, priority))
+        
+        # Sort by priority (highest first)
+        playable_cards.sort(key=lambda x: -x[1])
+        
+        # Return highest priority card that should be played
+        for card, priority in playable_cards:
+            name = card.name.lower()
+            tipo = card.tipo.strip().lower()
+            
+            # Deflection - only play against big bleeds
+            if 'deflection' in name:
+                # This would need context about incoming bleed
+                # For now, keep in hand unless critical
+                if player.pool <= 10:
+                    return card.id
+                continue
+            
+            # Stealth cards - play when needed
+            if any(n in name for n in ('cloak', 'seduction', 'where the veil')):
+                if timing.should_play_stealth(action_type):
+                    return card.id
+                continue
+            
+            # Action modifiers - play after action confirmed
+            if tipo == 'action modifier':
+                if timing.should_play_modifier():
+                    return card.id
+                continue
+            
+            # Action cards - play based on action type
+            if tipo == 'action':
+                if action_type == 'bleed' and 'bleed' in name:
+                    return card.id
+                if action_type == 'rush' and 'rush' in name.lower():
+                    return card.id
+                continue
+            
+            # Political actions
+            if tipo == 'political action':
+                return card.id
+        
+        return None
+
+    def should_play_card(
+        self,
+        state: GameState,
+        player_id: int,
+        card_id: str,
+        context: dict,
+    ) -> bool:
+        """Decide whether to play a specific card.
+        
+        Args:
+            state: Current game state
+            player_id: ID of the player
+            card_id: ID of the card to play
+            context: Additional context (e.g., {'bleed_amount': 3})
+        
+        Returns:
+            True if card should be played
+        """
+        card = state.card_by_id(card_id)
+        if not card:
+            return False
+        
+        timing = CardTiming(state, player_id)
+        player = state.player_by_id(player_id)
+        if not player:
+            return False
+        
+        name = card.name.lower()
+        
+        # Deflection
+        if 'deflection' in name:
+            bleed_amount = context.get('bleed_amount', 0)
+            return timing.should_play_deflection(bleed_amount)
+        
+        # Stealth
+        if any(n in name for n in ('cloak', 'seduction', 'where the veil')):
+            action_type = context.get('action_type', 'bleed')
+            return timing.should_play_stealth(action_type)
+        
+        # Modifiers
+        if card.tipo.strip().lower() == 'action modifier':
+            return timing.should_play_modifier()
+        
+        # Default: play the card
+        return True
 
 
 def create_strategy_bot(

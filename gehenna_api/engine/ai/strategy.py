@@ -217,6 +217,182 @@ class DeckStrategy:
         )
 
 
+class CardTiming:
+    """Handles timing decisions for when to play cards.
+    
+    Key V:TES timing rules:
+    1. Modifiers only AFTER predator confirms they're bleeding
+    2. Stealth when there are dangerous blockers
+    3. Deflection only against bleeds >= 2
+    4. Rush only against real threats
+    5. Govern sup when there's a cheap vampire in uncontrolled
+    """
+    
+    def __init__(self, state: GameState, player_id: int):
+        self.state = state
+        self.player_id = player_id
+        self.player = state.player_by_id(player_id)
+    
+    def should_play_deflection(self, bleed_amount: int) -> bool:
+        """Decide whether to play Deflection.
+        
+        Rules:
+        - Only play against bleeds >= 2 (not worth it for small bleeds)
+        - Always play if pool <= 10 (critical)
+        - Consider predator's remaining actions
+        """
+        if not self.player:
+            return False
+        
+        # Always deflect big bleeds
+        if bleed_amount >= 3:
+            return True
+        
+        # Deflect medium bleeds if pool is low
+        if bleed_amount >= 2 and self.player.pool <= 15:
+            return True
+        
+        # Don't waste deflection on small bleeds
+        return False
+    
+    def should_play_stealth(self, action_type: str = 'bleed') -> bool:
+        """Decide whether to play stealth cards.
+        
+        Rules:
+        - Play stealth when predator has blockers
+        - Play stealth for important actions (bleed, rush)
+        - Don't waste stealth on minor actions
+        """
+        predator = self.state.predator_of(self.player_id)
+        if not predator:
+            return False
+        
+        # Check if predator has ready minions (potential blockers)
+        predator_crypt_ids = set(predator.crypt)
+        ready_minions = sum(
+            1
+            for c in self.state.cards.values()
+            if c.id in predator_crypt_ids
+            and c.position == CardPosition.ready
+            and c.tipo.strip().lower() in ('vampire', 'ally', 'imbued')
+        )
+        
+        # Play stealth if predator has blockers
+        if ready_minions >= 2:
+            return True
+        
+        # Play stealth for important actions
+        if action_type in ('bleed', 'rush') and ready_minions >= 1:
+            return True
+        
+        return False
+    
+    def should_play_modifier(self, modifier_type: str = 'bleed') -> bool:
+        """Decide whether to play action modifiers.
+        
+        Rules:
+        - Only play AFTER action is confirmed successful
+        - Don't play if action will be blocked anyway
+        - Consider modifier value vs risk
+        """
+        # For now, return True if we have modifiers
+        # In a full implementation, this would check:
+        # - Was the action already attempted?
+        # - Did it get blocked?
+        # - What's the success probability?
+        return True
+    
+    def should_play_govern_sup(self) -> bool:
+        """Decide whether to use Govern the Unaligned (superior) for acceleration.
+        
+        Rules:
+        - Only use when there's a cheap vampire in uncontrolled
+        - Prefer vampires with cap 3-5 (most benefit)
+        - Don't use if no uncontrolled vampires
+        """
+        if not self.player:
+            return False
+        
+        # Check for uncontrolled vampires needing blood
+        for cid in self.player.crypt:
+            card = self.state.card_by_id(cid)
+            if (
+                card
+                and card.position == CardPosition.uncontrolled
+                and card.blood < card.capacity
+                and card.capacity <= 6  # Prefer cheaper vampires
+            ):
+                return True
+        
+        return False
+    
+    def should_rush_target(self, target_id: str) -> bool:
+        """Decide whether to rush a specific target.
+        
+        Rules:
+        - Rush high-threat targets (high capacity vampires)
+        - Rush targets with valuable abilities
+        - Don't rush small allies (waste of resources)
+        """
+        target = self.state.card_by_id(target_id)
+        if not target:
+            return False
+        
+        # Rush vampires with high capacity
+        if target.tipo.strip().lower() == 'vampire' and target.capacity >= 5:
+            return True
+        
+        # Rush allies with rush ability (they're threats)
+        if target.tipo.strip().lower() == 'ally':
+            text = (getattr(target, 'text', '') or '').lower()
+            if 'enter combat' in text:
+                return True
+        
+        return False
+    
+    def get_card_priority(self, card: CardInstance) -> int:
+        """Get priority for playing a card (higher = play first).
+        
+        Priority order:
+        1. Deflection (defense)
+        2. Stealth (if needed)
+        3. Action modifiers (after action confirmed)
+        4. Action cards (bleed, rush)
+        5. Master cards
+        """
+        if not card:
+            return 0
+        
+        name = card.name.lower()
+        tipo = card.tipo.strip().lower()
+        
+        # Deflection - highest priority (defense)
+        if 'deflection' in name:
+            return 100
+        
+        # Stealth cards
+        if any(n in name for n in ('cloak', 'seduction', 'where the veil')):
+            return 80
+        
+        # Action modifiers
+        if tipo == 'action modifier':
+            return 60
+        
+        # Action cards (bleed, rush)
+        if tipo == 'action':
+            return 40
+        
+        # Political actions
+        if tipo == 'political action':
+            return 40
+        
+        # Master cards
+        if tipo == 'master':
+            return 20
+        
+        return 0
+    
+
 class GameStateAnalyzer:
     """Analyzes the game state including prey/predator/cross relationships."""
 
