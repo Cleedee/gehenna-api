@@ -2538,7 +2538,7 @@ class PhaseManager:
         action_cards = _has_type(player.hand, self.state, _is_action_card)
         if not action_cards:
             self._log_action(player, f'{minion.name} defaults to bleed (no action card)')
-            self._resolve_bleed(minion, player)
+            self._resolve_bleed_action(minion, player, {'bleed_bonus': 0})
             return
 
         # Use pre-selected card if available (from announcement phase)
