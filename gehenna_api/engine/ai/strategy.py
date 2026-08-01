@@ -412,7 +412,21 @@ class StrategyEngine:
                 if state.random.random() < adjusted["rush_priority"] * 0.3:
                     return "rush"
 
-        # 3. Control if threat is high
+        # 3. Recruit allies (especially in early game)
+        if self._has_ally_card(state, player):
+            # Early game: recruit cheap allies for board presence
+            if phase == GamePhase.EARLY:
+                if self._has_cheap_ally(state, player, max_cost=3):
+                    if state.random.random() < 0.4:
+                        return "action_card"
+            # Mid game: recruit allies if has rush potential
+            elif phase == GamePhase.MID:
+                ally_count = self.count_ally_cards(state, player)
+                if ally_count >= 2:  # Multiple allies = swarm potential
+                    if state.random.random() < 0.3:
+                        return "action_card"
+
+        # 4. Control if threat is high
         if adjusted["control_priority"] > 0:
             max_threat = max(prey_threat, predator_threat)
             if max_threat >= adjusted["control_threshold"]:
@@ -420,7 +434,7 @@ class StrategyEngine:
                 if self._has_control_card(state, player):
                     return "action_card"
 
-        # 4. Action cards (bleed, Govern, Shroud, etc.)
+        # 5. Action cards (bleed, Govern, Shroud, etc.)
         # Logic varies by phase:
         # - Early: Prefer blood acceleration (if uncontrolled vampires)
         # - Mid/Late: Prefer bleed actions
@@ -520,6 +534,39 @@ class StrategyEngine:
                     for eff in effects:
                         if getattr(eff, 'function', '') == 'action.rush':
                             return True
+        return False
+
+    def _has_ally_card(self, state: GameState, player: Any) -> bool:
+        """Check if player has ally cards in hand that can be recruited.
+        
+        Ally cards have tipo='Ally' and can be recruited as action.
+        Examples: Freakish Conglomeration, Raven Spy, etc.
+        """
+        for cid in player.hand:
+            card = state.card_by_id(cid)
+            if card:
+                tipo = card.tipo.strip().lower()
+                if tipo == 'ally':
+                    return True
+        return False
+
+    def count_ally_cards(self, state: GameState, player: Any) -> int:
+        """Count ally cards in hand."""
+        count = 0
+        for cid in player.hand:
+            card = state.card_by_id(cid)
+            if card and card.tipo.strip().lower() == 'ally':
+                count += 1
+        return count
+
+    def _has_cheap_ally(self, state: GameState, player: Any, max_cost: int = 3) -> bool:
+        """Check if player has low-cost ally cards in hand."""
+        for cid in player.hand:
+            card = state.card_by_id(cid)
+            if card and card.tipo.strip().lower() == 'ally':
+                cost = getattr(card, 'pool_cost', 0) or 0
+                if cost <= max_cost:
+                    return True
         return False
 
     def _has_bloat_card(self, state: GameState, player: Any) -> bool:
