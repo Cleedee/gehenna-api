@@ -1832,11 +1832,23 @@ class PhaseManager:
     def _classify_combat_strike(
         self, card: CardInstance, current_range: str, striker: CardInstance
     ) -> dict | None:
-        """Classify a combat card into a strike dict based on its name."""
+        """Classify a combat card into a strike dict based on its name.
+        
+        Strike types:
+        - dodge: 0 damage, protects from opponent's strike
+        - combat_ends: ends combat immediately
+        - torpor: send opposing vampire to torpor
+        - hand_strike: normal damage based on strength
+        - aggravated: aggravated damage (cannot be prevented)
+        - steal_blood: steal blood from opponent
+        - additional_strike: extra strike this round
+        """
         name = (card.name or '').lower()
-
+        text = (card.text or '').lower()
+        
+        # Check card text for strike effects
         # Strike: dodge
-        if 'mist' in name or 'dodge' in name:
+        if 'strike: dodge' in text or 'strike:dodge' in text:
             return {
                 'type': 'dodge',
                 'damage': 0,
@@ -1847,9 +1859,9 @@ class PhaseManager:
                 'first_strike': False,
                 'ranged': False,
             }
-
+        
         # Strike: combat ends
-        if any(kw in name for kw in ('meld', 'oubliette', 'shadow body', 'earth')):
+        if 'strike: combat ends' in text or 'strike:combat ends' in text:
             return {
                 'type': 'combat_ends',
                 'damage': 0,
@@ -1860,9 +1872,9 @@ class PhaseManager:
                 'first_strike': False,
                 'ranged': False,
             }
-
-        # Strike: torpor (send opposing vampire to torpor)
-        if 'entomb' in name or 'torpor' in name:
+        
+        # Strike: torpor
+        if 'send.*to torpor' in text or 'entomb' in name:
             return {
                 'type': 'torpor',
                 'damage': striker.strength,
@@ -1873,7 +1885,120 @@ class PhaseManager:
                 'first_strike': False,
                 'ranged': False,
             }
-
+        
+        # Strike: steal blood
+        if 'steal' in text and 'blood' in text:
+            steal_amount = 1
+            if 'steal 2' in text:
+                steal_amount = 2
+            elif 'steal 3' in text:
+                steal_amount = 3
+            return {
+                'type': 'steal_blood',
+                'damage': 0,
+                'aggravated': False,
+                'steal_amount': steal_amount,
+                'dodge': False,
+                'combat_ends': False,
+                'first_strike': False,
+                'ranged': 'ranged' in text,
+            }
+        
+        # Strike: aggravated damage
+        if 'aggravated' in text and 'strike' in text:
+            damage = 1
+            if '2' in text[:50]:  # Check first 50 chars for damage value
+                damage = 2
+            return {
+                'type': 'hand_strike',
+                'damage': damage,
+                'aggravated': True,
+                'steal_amount': 0,
+                'dodge': False,
+                'combat_ends': False,
+                'first_strike': False,
+                'ranged': 'ranged' in text,
+            }
+        
+        # Strike: additional strike
+        if 'additional strike' in text:
+            return {
+                'type': 'additional_strike',
+                'damage': 0,
+                'aggravated': False,
+                'steal_amount': 0,
+                'dodge': False,
+                'combat_ends': False,
+                'first_strike': False,
+                'ranged': False,
+            }
+        
+        # Strike: maneuver
+        if 'maneuver' in text:
+            return {
+                'type': 'maneuver',
+                'damage': 0,
+                'aggravated': False,
+                'steal_amount': 0,
+                'dodge': False,
+                'combat_ends': False,
+                'first_strike': False,
+                'ranged': False,
+            }
+        
+        # Strike: press
+        if 'press' in text:
+            return {
+                'type': 'press',
+                'damage': 0,
+                'aggravated': False,
+                'steal_amount': 0,
+                'dodge': False,
+                'combat_ends': False,
+                'first_strike': False,
+                'ranged': False,
+            }
+        
+        # Strike: prevent damage
+        if 'prevent' in text and 'damage' in text:
+            return {
+                'type': 'prevent',
+                'damage': 0,
+                'aggravated': False,
+                'steal_amount': 0,
+                'dodge': False,
+                'combat_ends': False,
+                'first_strike': False,
+                'ranged': False,
+            }
+        
+        # Fallback: check by name patterns
+        # Strike: dodge
+        if 'mist' in name or 'dodge' in name or 'shadow body' in name:
+            return {
+                'type': 'dodge',
+                'damage': 0,
+                'aggravated': False,
+                'steal_amount': 0,
+                'dodge': True,
+                'combat_ends': False,
+                'first_strike': False,
+                'ranged': False,
+            }
+        
+        # Strike: combat ends
+        if any(kw in name for kw in ('meld', 'oubliette', 'earth meld', 'pass through shadow')):
+            return {
+                'type': 'combat_ends',
+                'damage': 0,
+                'aggravated': False,
+                'steal_amount': 0,
+                'dodge': False,
+                'combat_ends': True,
+                'first_strike': False,
+                'ranged': False,
+            }
+        
         return None
 
     def _play_combat_before_strikes(
