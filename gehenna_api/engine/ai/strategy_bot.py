@@ -130,11 +130,17 @@ class StrategyBot(Bot):
             self.combo_system = ComboSystem(state, player_id)
         
         # Get strategic position for learning
-        analyzer = GameStateAnalyzer(state, player_id)
-        strategic_position = analyzer.get_strategic_position(self.engine.threat_assessor)
+        gs_analyzer = GameStateAnalyzer(state, player_id)
+        strategic_position = gs_analyzer.get_strategic_position(self.engine.threat_assessor)
         
         # Get game phase
         phase = self.engine.determine_game_phase(state, player_id)
+        
+        # Get prey's discipline profile for counter-strategy
+        prey = state.prey_of(player_id)
+        prey_counter = None
+        if prey and self.use_rl and self.rl_agent:
+            prey_counter = self.rl_agent.get_counter_strategy_for_disciplines(prey.id)
         
         # Try Q-Learning if enabled
         if self.use_rl and self.rl_agent:
@@ -169,13 +175,79 @@ class StrategyBot(Bot):
                     )
                     return action
 
-        # Use strategy engine
-        action = self.engine.choose_action_type(
-            state=state,
-            player_id=player_id,
-            minion_id=minion_id,
-            deck_id=self.deck_id,
+        # Use strategy engine with discipline-aware action selection
+        action = self._choose_action_with_disciplines(
+            state, player_id, minion_id, phase, prey_counter
         )
+        
+        # Track for adaptation
+        self.cards_played.append(action)
+        
+        # Record for learning
+        self.learning.record_action(
+            action, None, strategic_position, 'pending',
+            phase=phase.value
+        )
+
+        return action
+    
+    def _choose_action_with_disciplines(
+        self,
+        state: GameState,
+        player_id: int,
+        minion_id: str,
+        phase: str,
+        prey_counter: str | None,
+    ) -> str:
+        """Choose action type considering discipline analysis."""
+        player = state.player_by_id(player_id)
+        if not player:
+            return 'bleed'
+        
+        # Get our hand
+        hand_cards = []
+        for cid in player.hand:
+            card = state.card_by_id(cid)
+            if card:
+                hand_cards.append(card)
+        
+        # Count action types in hand
+        bleed_cards = sum(1 for c in hand_cards if c.tipo.strip().lower() == 'action')
+        stealth_mods = sum(1 for c in hand_cards if 'stealth' in c.name.lower())
+        combat_cards = sum(1 for c in hand_cards if c.tipo.strip().lower() == 'combat')
+        
+        # Base action selection
+        if bleed_cards > 0:
+            base_action = 'bleed'
+        elif combat_cards > 0:
+            base_action = 'rush'
+        else:
+            base_action = 'bleed'  # Default
+        
+        # Adjust based on prey's counter-strategy
+        if prey_counter == 'rush':
+            # Prey is vulnerable to rush, be aggressive
+            if combat_cards > 0:
+                return 'rush'
+        elif prey_counter == 'bleed':
+            # Prey is vulnerable to bleed
+            return 'bleed'
+        elif prey_counter == 'stealth':
+            # Prey can't intercept well, use stealth
+            if stealth_mods > 0:
+                return 'stealth'  # Will play stealth modifier
+        
+        # Phase-based adjustments
+        if phase == 'early':
+            # Early game: focus on setup
+            if bleed_cards > 0:
+                return 'bleed'
+        elif phase == 'late' or phase == 'final':
+            # Late game: be more aggressive
+            if combat_cards > 0 and prey_counter != 'combat':
+                return 'rush'
+        
+        return base_action
 
         # Track for adaptation
         self.cards_played.append(action)
@@ -269,6 +341,31 @@ class StrategyBot(Bot):
         if is_bleed and is_high_bleed:
             return True
 
+        # Use discipline analysis for blocking decisions
+        if self.use_rl and self.rl_agent:
+            # Get the attacker's disciplines
+            attacker_id = None
+            for p in state.players:
+                if p.id != player_id and not p.is_ousted:
+                    # Check if this player has the action
+                    for cid in p.crypt:
+                        card = state.card_by_id(cid)
+                        if card and card.position in ('ready', 'torpor'):
+                            attacker_id = p.id
+                            break
+                if attacker_id:
+                    break
+            
+            if attacker_id:
+                profile = self.rl_agent.get_discipline_profile(attacker_id)
+                if profile:
+                    # Block if attacker has combat disciplines
+                    if profile.has_combat and is_bleed:
+                        return True
+                    # Don't block if attacker has stealth (likely will pass anyway)
+                    if profile.has_stealth and not is_high_bleed:
+                        return False
+
         # Don't waste resources on small actions
         return False
 
@@ -292,6 +389,21 @@ class StrategyBot(Bot):
             card = state.card_by_id(cid)
             if card and getattr(card, "is_aggravated", False):
                 return card.id
+
+        # Use discipline analysis for strike selection
+        if self.use_rl and self.rl_agent:
+            # Get our disciplines
+            profile = self.rl_agent.get_discipline_profile(self.deck_id)
+            if profile:
+                # If we have POT, prioritize strength
+                if 'POT' in profile.disciplines:
+                    return "strength"
+                # If we have CEL, can do multiple strikes
+                if 'CEL' in profile.disciplines:
+                    return "handstrike"  # Will get extra strikes
+                # If we have PRO, can do aggravated
+                if 'PRO' in profile.disciplines:
+                    return "claws"
 
         # Default to hand strike
         return "handstrike"
