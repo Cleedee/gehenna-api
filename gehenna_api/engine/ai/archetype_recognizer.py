@@ -227,6 +227,28 @@ class ArchetypeRecognizer:
                     source=f'discipline:{disc}',
                 ))
         
+        # 2.5. Discipline combination evidence (stronger signal)
+        disciplines = self.observed_disciplines.get(player_id, [])
+        disc_combos = {
+            frozenset(['DOM', 'PRE']): ('vote', 0.5),
+            frozenset(['CEL', 'POT']): ('rush', 0.5),
+            frozenset(['CEL', 'FOR']): ('combat', 0.4),
+            frozenset(['PRO', 'POT']): ('rush', 0.4),
+            frozenset(['OBF', 'PRE']): ('stealth', 0.5),
+            frozenset(['DOM', 'OBF']): ('bleed', 0.5),
+            frozenset(['TEM', 'FOR']): ('toolbox', 0.4),
+            frozenset(['CEL', 'DAI']): ('combat', 0.4),
+        }
+        disc_set = frozenset(disciplines)
+        for combo, (arch, score) in disc_combos.items():
+            if combo.issubset(disc_set):
+                scores[arch] += score
+                evidence[arch].append(ArchetypeEvidence(
+                    archetype=arch,
+                    score=score,
+                    source=f'discipline_combo:{" ".join(combo)}',
+                ))
+        
         # 3. Card evidence
         for card_name in self.observed_cards.get(player_id, []):
             for card_pattern, archetypes in CARD_ARCHETYPES.items():

@@ -606,15 +606,21 @@ class StrategyBot(Bot):
                 
                 # Observe disciplines
                 disc_str = getattr(vampire, 'disciplines', '') or ''
-                # Parse discipline string (e.g., '|dom|DOM|'
+                # Parse discipline string (e.g., '|dom|DOM|')
+                # Format: lowercase=inferior, UPPERCASE=superior
                 discs = []
-                for i in range(0, len(disc_str) - 1, 3):
-                    if i + 1 < len(disc_str):
-                        disc = disc_str[i:i+2].upper()
-                        if disc.isalpha():
-                            discs.append(disc)
-                if discs:
-                    self.rl_agent.observe_discipline(player.id, discs[0])
+                for part in disc_str.split('|'):
+                    disc = part.strip()
+                    if disc and len(disc) >= 2 and disc[:2].isalpha():
+                        # Take first 3 chars as discipline code (e.g., 'DOM', 'pre')
+                        disc_code = disc[:3].upper()
+                        discs.append(disc_code)
+                # Observe unique disciplines
+                seen = set()
+                for disc in discs:
+                    if disc not in seen:
+                        self.rl_agent.observe_discipline(player.id, disc)
+                        seen.add(disc)
                 
                 self.observed_vampires[player.id].add(vampire_id)
     

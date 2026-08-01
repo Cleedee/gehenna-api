@@ -11,6 +11,7 @@ from typing import Any
 
 from gehenna_api.engine.ai.q_learning import QLearningAgent, QState, ACTIONS
 from gehenna_api.engine.ai.archetype_recognizer import ArchetypeRecognizer
+from gehenna_api.engine.ai.discipline_analyzer import DisciplineAnalyzer, DisciplineProfile
 
 
 # Deck → Archetype mapping
@@ -49,6 +50,9 @@ class DeckQLearningAgent:
         
         # Archetype recognizer
         self.recognizer = ArchetypeRecognizer()
+        
+        # Discipline analyzer
+        self.discipline_analyzer = DisciplineAnalyzer()
         
         # Hyperparameters
         self.learning_rate = learning_rate
@@ -123,6 +127,37 @@ class DeckQLearningAgent:
     def observe_discipline(self, player_id: int, discipline: str) -> None:
         """Observe a player's vampire discipline."""
         self.recognizer.observe_discipline(player_id, discipline)
+    
+    def get_discipline_profile(self, player_id: int) -> DisciplineProfile | None:
+        """Get discipline profile for a player."""
+        disciplines = self.recognizer.observed_disciplines.get(player_id, [])
+        if not disciplines:
+            return None
+        return self.discipline_analyzer.analyze_disciplines(disciplines)
+    
+    def get_counter_strategy_for_disciplines(self, player_id: int) -> str:
+        """Get counter strategy based on opponent's disciplines."""
+        disciplines = self.recognizer.observed_disciplines.get(player_id, [])
+        if not disciplines:
+            return 'bleed'  # Default
+        return self.discipline_analyzer.get_counter_strategy(disciplines)
+    
+    def record_game_outcome(
+        self,
+        deck_id: int,
+        outcome: str,
+        position: int,
+        vp: int,
+    ) -> None:
+        """Record game outcome for learning."""
+        # Get deck's disciplines from strategy
+        strategy = self.agents.get(deck_id)
+        if strategy:
+            # For now, use empty list
+            # TODO: Get actual disciplines from deck
+            self.discipline_analyzer.record_game_outcome(
+                [], outcome, position, vp
+            )
     
     def observe_card(self, player_id: int, card_name: str) -> None:
         """Observe a card played by a player."""

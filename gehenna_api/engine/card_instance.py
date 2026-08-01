@@ -43,6 +43,8 @@ class CardInstance(BaseModel):
     capacity: int = 0
     damage_taken: int = 0
     hunt: int = 1
+    clan: str = ''
+    disciplines: str = ''
     # Track actions performed this turn (reset each unlock phase)
     actions_this_turn: int = 0
     has_acted_this_turn: bool = False
