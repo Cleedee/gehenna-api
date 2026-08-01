@@ -53,6 +53,25 @@ REACTION_CATEGORIES = {
     ],
 }
 
+# Bleed and stealth card categories
+BLEED_STEALTH_CATEGORIES = {
+    'bleed_action': [
+        'bleed', 'govern', 'conditioning', 'instantaneous transformation',
+        'bonding', 'rapid', 'intimidation', 'scouting',
+        'lost in crowds', 'faceless night',
+    ],
+    'bleed_modifier': [
+        '+1 bleed', '+2 bleed', '+3 bleed', '+4 bleed',
+        'bleed modifier', 'additional bleed', 'bleed bonus',
+    ],
+    'stealth': [
+        'stealth', '+1 stealth', '+2 stealth', '+3 stealth',
+        'lost in crowds', 'faceless night', 'elder impersonation',
+        'cloak the gathering', 'instantaneous transformation',
+        'secret passage', 'elder visions',
+    ],
+}
+
 # Discipline → Card access mapping
 DISCIPLINE_CARDS = {
     'CEL': {  # Celerity
@@ -169,6 +188,51 @@ class CardProbabilities:
     has_prevent: float = 0.0
     has_aggravated: float = 0.0
     has_press: float = 0.0
+
+
+@dataclass
+class BleedStealthCapabilities:
+    """Analysis of a player's bleed and stealth capabilities."""
+    # Bleed cards
+    bleed_action_count: int = 0
+    bleed_modifier_count: int = 0
+    total_bleed_cards: int = 0
+    
+    # Stealth cards
+    stealth_count: int = 0
+    
+    # Probabilities
+    bleed_probability: float = 0.0
+    stealth_probability: float = 0.0
+    
+    # Average bleed bonus per card
+    avg_bleed_bonus: float = 0.0
+    
+    @property
+    def can_bleed(self) -> bool:
+        return self.bleed_action_count > 0 or self.bleed_modifier_count > 0
+    
+    @property
+    def can_stealth(self) -> bool:
+        return self.stealth_count > 0
+    
+    @property
+    def bleed_threat(self) -> str:
+        """Assess bleed threat level."""
+        if self.total_bleed_cards >= 5:
+            return 'high'
+        elif self.total_bleed_cards >= 3:
+            return 'medium'
+        return 'low'
+    
+    @property
+    def stealth_threat(self) -> str:
+        """Assess stealth threat level."""
+        if self.stealth_count >= 3:
+            return 'high'
+        elif self.stealth_count >= 1:
+            return 'medium'
+        return 'low'
 
 
 class CapabilityAnalyzer:
@@ -328,22 +392,96 @@ class CapabilityAnalyzer:
         
         return probs
     
+    def analyze_bleed_stealth(self) -> BleedStealthCapabilities:
+        """Analyze a player's bleed and stealth capabilities."""
+        caps = BleedStealthCapabilities()
+        
+        if not self.player:
+            return caps
+        
+        # Analyze all cards (hand + ash heap)
+        all_cards = self._get_all_player_cards()
+        
+        bleed_bonus_total = 0
+        
+        for card in all_cards:
+            # Get all keywords from card
+            card_keywords = self._get_card_keywords(card)
+            card_text = ' '.join(card_keywords)
+            card_tipo = card.tipo.strip().lower()
+            
+            # Check for bleed actions (action or action_modifier)
+            if card_tipo in ('action', 'action_modifier'):
+                for keyword in BLEED_STEALTH_CATEGORIES['bleed_action']:
+                    if keyword in card_text:
+                        caps.bleed_action_count += 1
+                        caps.total_bleed_cards += 1
+                        break
+            
+            # Check for bleed modifiers
+            for keyword in BLEED_STEALTH_CATEGORIES['bleed_modifier']:
+                if keyword in card_text:
+                    caps.bleed_modifier_count += 1
+                    caps.total_bleed_cards += 1
+                    
+                    # Extract bleed bonus value
+                    if '+1 bleed' in card_text:
+                        bleed_bonus_total += 1
+                    elif '+2 bleed' in card_text:
+                        bleed_bonus_total += 2
+                    elif '+3 bleed' in card_text:
+                        bleed_bonus_total += 3
+                    elif '+4 bleed' in card_text:
+                        bleed_bonus_total += 4
+                    break
+            
+            # Check for stealth
+            for keyword in BLEED_STEALTH_CATEGORIES['stealth']:
+                if keyword in card_text:
+                    caps.stealth_count += 1
+                    break
+        
+        # Calculate probabilities
+        caps.bleed_probability = self._calculate_card_probability(
+            caps.total_bleed_cards, 'action'
+        )
+        caps.stealth_probability = self._calculate_card_probability(
+            caps.stealth_count, 'action_modifier'
+        )
+        
+        # Calculate average bleed bonus
+        if caps.bleed_modifier_count > 0:
+            caps.avg_bleed_bonus = bleed_bonus_total / caps.bleed_modifier_count
+        
+        return caps
+    
     def get_strategic_assessment(self) -> dict:
         """Get overall strategic assessment of a player."""
         combat = self.analyze_combat_module()
         reactions = self.analyze_reactions()
         probabilities = self.calculate_card_probabilities()
+        bleed_stealth = self.analyze_bleed_stealth()
         
         return {
+            # Combat
             'combat_module': combat.module_type,
             'defensive_strength': combat.defensive_score,
             'aggressive_strength': combat.aggressive_score,
             'total_combat_cards': combat.total_combat_cards,
+            # Reactions
             'bounce_probability': reactions.bounce_probability,
             'intercept_probability': reactions.intercept_probability,
+            # Bleed/Stealth
+            'bleed_cards': bleed_stealth.total_bleed_cards,
+            'bleed_threat': bleed_stealth.bleed_threat,
+            'stealth_cards': bleed_stealth.stealth_count,
+            'stealth_threat': bleed_stealth.stealth_threat,
+            'avg_bleed_bonus': bleed_stealth.avg_bleed_bonus,
+            # Strategic
             'can_bleed_safely': reactions.bounce_probability < 0.3,
             'can_rush_safely': probabilities.has_combat_ends < 0.4,
             'needs_stealth': reactions.intercept_probability > 0.5,
+            'should_block_bleed': bleed_stealth.bleed_threat == 'high',
         }
     
     def _get_all_player_cards(self) -> list[CardInstance]:
