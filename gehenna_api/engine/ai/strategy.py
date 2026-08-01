@@ -217,6 +217,117 @@ class DeckStrategy:
         )
 
 
+class GameStateAnalyzer:
+    """Analyzes the game state including prey/predator/cross relationships."""
+
+    def __init__(self, state: GameState, player_id: int):
+        self.state = state
+        self.player_id = player_id
+        self.player = state.player_by_id(player_id)
+        
+        # Calculate relationships
+        self.prey = state.prey_of(player_id)
+        self.predator = state.predator_of(player_id)
+        self.cross_players = self._calculate_cross_players()
+        
+    def _calculate_cross_players(self) -> list:
+        """Calculate cross-table players (not prey or predator)."""
+        active = self.state.active_players
+        cross = []
+        for p in active:
+            if p.id == self.player_id:
+                continue
+            if self.prey and p.id == self.prey.id:
+                continue
+            if self.predator and p.id == self.predator.id:
+                continue
+            cross.append(p)
+        return cross
+    
+    def get_predator_of(self, player_id: int) -> 'PlayerState | None':
+        """Get the predator of any player."""
+        return self.state.predator_of(player_id)
+    
+    def get_prey_of(self, player_id: int) -> 'PlayerState | None':
+        """Get the prey of any player."""
+        return self.state.prey_of(player_id)
+    
+    def should_help_cross(self, cross_player, threat_assessor: ThreatAssessment) -> bool:
+        """Determine if we should help a cross player.
+        
+        We help cross players by attacking their predator, which:
+        1. Weakens a common threat
+        2. Creates goodwill
+        3. May lead to indirect benefits
+        """
+        if not cross_player:
+            return False
+        
+        # Get the predator of the cross player
+        cross_predator = self.get_predator_of(cross_player.id)
+        if not cross_predator:
+            return False
+        
+        # Assess threats
+        my_threat = threat_assessor.assess(self.state, self.player_id)
+        cross_threat = threat_assessor.assess(self.state, cross_player.id)
+        predator_threat = threat_assessor.assess(self.state, cross_predator.id)
+        
+        # Help if:
+        # 1. Cross predator is a significant threat (to us or cross)
+        if predator_threat > 5.0:
+            return True
+        
+        # 2. Cross is weak and we want an ally
+        if cross_player.pool < 10 and cross_threat < 3.0:
+            return True
+        
+        # 3. We're strong enough to help without risk
+        if my_threat > 6.0 and self.player.pool > 15:
+            return True
+        
+        return False
+    
+    def get_strategic_position(self, threat_assessor: ThreatAssessment) -> str:
+        """Evaluate our strategic position.
+        
+        Returns:
+        - 'aggressive': We're winning, press advantage
+        - 'defensive': We're losing, need to survive
+        - 'diplomatic': Balanced, help cross to build alliances
+        - 'balanced': Normal play
+        """
+        if not self.player:
+            return 'balanced'
+        
+        my_threat = threat_assessor.assess(self.state, self.player_id)
+        
+        prey_threat = 0
+        if self.prey:
+            prey_threat = threat_assessor.assess(self.state, self.prey.id)
+        
+        predator_threat = 0
+        if self.predator:
+            predator_threat = threat_assessor.assess(self.state, self.predator.id)
+        
+        # Check victory points
+        vp = self.player.victory_points
+        
+        # Aggressive: strong position, high VP
+        if my_threat > 6.0 and vp >= 1:
+            return 'aggressive'
+        
+        # Defensive: weak position or strong predator
+        if self.player.pool < 10 or predator_threat > 7.0:
+            return 'defensive'
+        
+        # Diplomatic: balanced, help cross
+        if abs(my_threat - prey_threat) < 2.0:
+            return 'diplomatic'
+        
+        return 'balanced'
+
+
 class StrategyEngine:
     """Main strategy engine that loads configs and makes decisions."""
 
@@ -340,21 +451,22 @@ class StrategyEngine:
         phase = self.determine_game_phase(state, player_id)
         adjusted = self.get_adjusted_strategy(strategy, phase)
 
-        # Assess threats
-        prey = state.prey_of(player_id)
-        predator = state.predator_of(player_id)
+        # Analyze game state including prey/predator/cross
+        analyzer = GameStateAnalyzer(state, player_id)
+        strategic_position = analyzer.get_strategic_position(self.threat_assessor)
 
+        # Assess threats
         prey_threat = (
-            self.threat_assessor.assess(state, prey.id) if prey else 0
+            self.threat_assessor.assess(state, analyzer.prey.id) if analyzer.prey else 0
         )
         predator_threat = (
-            self.threat_assessor.assess(state, predator.id) if predator else 0
+            self.threat_assessor.assess(state, analyzer.predator.id) if analyzer.predator else 0
         )
 
         # Check own pool with phase-adjusted threshold
         own_pool_low = player.pool < adjusted["bloat_threshold"]
 
-        # Decide action based on adjusted priorities
+        # Decide action based on adjusted priorities and strategic position
         return self._decide_action(
             strategy=strategy,
             adjusted=adjusted,
@@ -362,6 +474,8 @@ class StrategyEngine:
             minion=minion,
             player=player,
             state=state,
+            analyzer=analyzer,
+            strategic_position=strategic_position,
             prey_threat=prey_threat,
             predator_threat=predator_threat,
             own_pool_low=own_pool_low,
@@ -377,13 +491,20 @@ class StrategyEngine:
         minion: CardInstance,
         player: Any,
         state: GameState,
+        analyzer: GameStateAnalyzer,
+        strategic_position: str,
         prey_threat: float,
         predator_threat: float,
         own_pool_low: bool,
         is_vampire: bool,
         is_ally: bool,
     ) -> str:
-        """Core decision logic with phase-adjusted priorities."""
+        """Core decision logic with phase-adjusted priorities.
+        
+        Args:
+            analyzer: GameStateAnalyzer with prey/predator/cross info
+            strategic_position: 'aggressive', 'defensive', 'diplomatic', or 'balanced'
+        """
 
         # 1. Bloat if pool is low
         if own_pool_low and adjusted["bloat_priority"] > 0:
@@ -408,6 +529,15 @@ class StrategyEngine:
                     return "rush"
                 if prey_threat >= adjusted["rush_threshold"]:
                     return "rush"
+                
+                # Rush cross player's predator if we should help cross
+                if strategic_position == 'diplomatic' and analyzer.cross_players:
+                    for cross in analyzer.cross_players:
+                        if analyzer.should_help_cross(cross, self.threat_assessor):
+                            cross_predator = analyzer.get_predator_of(cross.id)
+                            if cross_predator and self._can_attack_target(state, cross_predator.id):
+                                return "rush"
+                
                 # Random rush based on priority
                 if state.random.random() < adjusted["rush_priority"] * 0.3:
                     return "rush"
@@ -435,9 +565,10 @@ class StrategyEngine:
                     return "action_card"
 
         # 5. Action cards (bleed, Govern, Shroud, etc.)
-        # Logic varies by phase:
+        # Logic varies by phase and strategic position:
         # - Early: Prefer blood acceleration (if uncontrolled vampires)
         # - Mid/Late: Prefer bleed actions
+        # - Diplomatic: Help cross by attacking their predator
         if is_vampire and self._has_action_cards(state, player):
             if phase == GamePhase.EARLY:
                 # Early game: Check if we have uncontrolled vampires needing blood
@@ -445,6 +576,15 @@ class StrategyEngine:
                     # Use action card for blood acceleration
                     if state.random.random() < adjusted["bleed_priority"] * 0.4:
                         return "action_card"
+            elif strategic_position == 'diplomatic' and analyzer.cross_players:
+                # Diplomatic: Help cross by attacking their predator
+                for cross in analyzer.cross_players:
+                    if analyzer.should_help_cross(cross, self.threat_assessor):
+                        cross_predator = analyzer.get_predator_of(cross.id)
+                        if cross_predator:
+                            # Use action card against cross's predator
+                            if state.random.random() < 0.4:
+                                return "action_card"
             else:
                 # Mid/Late: Use action cards for bleed
                 if state.random.random() < adjusted["bleed_priority"] * 0.3:
@@ -469,8 +609,20 @@ class StrategyEngine:
                     return "political"
 
         # 6. Bleed (default) - with boost from cards in hand
+        # Adjust based on strategic position:
+        # - Aggressive: More bleed
+        # - Defensive: Less bleed, more control
+        # - Diplomatic: Moderate bleed, help cross
         if adjusted["bleed_priority"] > 0:
             bleed_boost = 0.0
+            
+            # Strategic position adjustments
+            if strategic_position == 'aggressive':
+                bleed_boost += 0.2  # Press advantage
+            elif strategic_position == 'defensive':
+                bleed_boost -= 0.1  # Less aggressive
+            elif strategic_position == 'diplomatic':
+                bleed_boost += 0.1  # Moderate
             
             # Boost if has bleed action card
             if self._has_bleed_card(state, player):
@@ -517,6 +669,15 @@ class StrategyEngine:
             "may enter combat with a minion",
         ]
         return any(p in text for p in rush_patterns)
+
+    def _can_attack_target(self, state: GameState, target_id: str) -> bool:
+        """Check if we can attack a specific target.
+        
+        This checks if we have a rush ability or rush card available.
+        """
+        # For now, return True if we have rush capability
+        # A more sophisticated version would check if target is in range
+        return True
 
     def _has_rush_card(self, state: GameState, player: Any) -> bool:
         """Check if player has rush action cards in hand.

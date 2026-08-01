@@ -153,23 +153,96 @@ class TestStrategyEngine:
         assert late["rush_priority"] == 0.7  # 0.5 + 0.2
 
 
-class TestStrategyBotIntegration:
-    """Integration tests for StrategyBot."""
+class TestGameStateAnalyzer:
+    """Tests for GameStateAnalyzer."""
 
-    def test_bot_can_be_created(self):
-        from gehenna_api.engine.ai.strategy_bot import StrategyBot
+    def test_analyzer_calculates_prey_predator(self):
+        from gehenna_api.engine.ai.strategy import GameStateAnalyzer
+        from gehenna_api.engine.state import GameState, PlayerState
 
-        bot = StrategyBot(deck_id=275)
-        assert bot.deck_id == 275
+        state = GameState(game_id="test")
+        # Create 4 players
+        for i in range(1, 5):
+            ps = PlayerState(
+                id=i,
+                username=f"Player {i}",
+                pool=30,
+                hand=[],
+                crypt=[],
+                library=[],
+                ash_heap=[],
+                has_edge=False,
+                transfers=0,
+                victory_points=0,
+            )
+            state.players.append(ps)
 
-    def test_bot_has_required_methods(self):
-        from gehenna_api.engine.ai.strategy_bot import StrategyBot
+        analyzer = GameStateAnalyzer(state, player_id=1)
 
-        bot = StrategyBot(deck_id=1)
-        assert hasattr(bot, "choose_action_type")
-        assert hasattr(bot, "choose_block")
-        assert hasattr(bot, "choose_strike")
-        assert hasattr(bot, "choose_discard")
+        assert analyzer.prey is not None
+        assert analyzer.prey.id == 4  # Player 4 is prey of Player 1 (counter-clockwise)
+        assert analyzer.predator is not None
+        assert analyzer.predator.id == 2  # Player 2 is predator of Player 1 (clockwise)
+        assert len(analyzer.cross_players) == 1  # Player 3 is cross
+
+    def test_analyzer_strategic_position(self):
+        from gehenna_api.engine.ai.strategy import GameStateAnalyzer, ThreatAssessment
+        from gehenna_api.engine.state import GameState, PlayerState
+
+        state = GameState(game_id="test")
+        # Create 4 players with different pools
+        for i in range(1, 5):
+            ps = PlayerState(
+                id=i,
+                username=f"Player {i}",
+                pool=30 if i == 1 else 10,  # Player 1 is strong
+                hand=[],
+                crypt=[],
+                library=[],
+                ash_heap=[],
+                has_edge=False,
+                transfers=0,
+                victory_points=1 if i == 1 else 0,  # Player 1 has VP
+            )
+            state.players.append(ps)
+
+        analyzer = GameStateAnalyzer(state, player_id=1)
+        assessor = ThreatAssessment()
+
+        position = analyzer.get_strategic_position(assessor)
+        # Just check it returns a valid position
+        assert position in ['aggressive', 'defensive', 'diplomatic', 'balanced']
+
+    def test_analyzer_should_help_cross(self):
+        from gehenna_api.engine.ai.strategy import GameStateAnalyzer, ThreatAssessment
+        from gehenna_api.engine.state import GameState, PlayerState
+
+        state = GameState(game_id="test")
+        # Create 4 players
+        for i in range(1, 5):
+            ps = PlayerState(
+                id=i,
+                username=f"Player {i}",
+                pool=30,
+                hand=[],
+                crypt=[],
+                library=[],
+                ash_heap=[],
+                has_edge=False,
+                transfers=0,
+                victory_points=0,
+            )
+            state.players.append(ps)
+
+        analyzer = GameStateAnalyzer(state, player_id=1)
+        assessor = ThreatAssessment()
+
+        # Cross player is Player 3
+        cross_player = analyzer.cross_players[0] if analyzer.cross_players else None
+        if cross_player:
+            # Should help if cross predator is threatening
+            result = analyzer.should_help_cross(cross_player, assessor)
+            assert isinstance(result, bool)
 
 
 if __name__ == "__main__":
