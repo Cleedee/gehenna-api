@@ -116,6 +116,22 @@ class DeckQLearningAgent:
         agent = self.get_agent(deck_id)
         agent.update(state, action, reward, next_state, done)
     
+    def observe_clan(self, player_id: int, clan: str) -> None:
+        """Observe a player's vampire clan."""
+        self.recognizer.observe_clan(player_id, clan)
+    
+    def observe_discipline(self, player_id: int, discipline: str) -> None:
+        """Observe a player's vampire discipline."""
+        self.recognizer.observe_discipline(player_id, discipline)
+    
+    def observe_card(self, player_id: int, card_name: str) -> None:
+        """Observe a card played by a player."""
+        self.recognizer.observe_card(player_id, card_name)
+    
+    def observe_action(self, player_id: int, action_type: str) -> None:
+        """Observe an action taken by a player."""
+        self.recognizer.observe_action(player_id, action_type)
+    
     def observe_opponent(
         self,
         player_id: int,
