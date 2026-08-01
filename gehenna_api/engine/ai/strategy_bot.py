@@ -16,6 +16,8 @@ from gehenna_api.engine.ai.strategy import (
     StrategyEngine,
     DEFAULT_STRATEGIES,
 )
+from gehenna_api.engine.ai.deck_q_agent import DeckQLearningAgent
+from gehenna_api.engine.ai.state_encoder import StateEncoder
 from gehenna_api.engine.card_instance import CardInstance, CardPosition
 from gehenna_api.engine.state import GameState
 
@@ -23,7 +25,13 @@ from gehenna_api.engine.state import GameState
 class StrategyBot(Bot):
     """Bot that uses strategy configurations for decision making."""
 
-    def __init__(self, deck_id: int = 0, strategies_dir: str | None = None):
+    def __init__(
+        self,
+        deck_id: int = 0,
+        strategies_dir: str | None = None,
+        use_rl: bool = False,
+        rl_agent: DeckQLearningAgent | None = None,
+    ):
         self.deck_id = deck_id
         self.engine = StrategyEngine(strategies_dir)
         self.strategy = self.engine.get_strategy(deck_id)
@@ -36,6 +44,11 @@ class StrategyBot(Bot):
         # New systems
         self.learning = LearningSystem()
         self.combo_system: ComboSystem | None = None
+        
+        # Q-Learning (optional)
+        self.use_rl = use_rl
+        self.rl_agent = rl_agent
+        self.rl_state_encoder: StateEncoder | None = None
 
     def choose_action(
         self, state: GameState, player_id: int
@@ -116,6 +129,17 @@ class StrategyBot(Bot):
         # Get game phase
         phase = self.engine.determine_game_phase(state, player_id)
         
+        # Try Q-Learning if enabled
+        if self.use_rl and self.rl_agent:
+            rl_action = self._try_rl_action(state, player_id, phase)
+            if rl_action:
+                self.cards_played.append(rl_action)
+                self.learning.record_action(
+                    rl_action, None, strategic_position, 'pending',
+                    phase=phase.value
+                )
+                return rl_action
+        
         # Check if we should adapt based on learning
         if self.learning.should_adapt_strategy():
             adaptation = self.learning.get_adaptation_suggestion()
@@ -156,6 +180,47 @@ class StrategyBot(Bot):
         )
 
         return action
+    
+    def _try_rl_action(
+        self,
+        state: GameState,
+        player_id: int,
+        phase: str,
+    ) -> str | None:
+        """Try to get action from Q-Learning agent."""
+        try:
+            # Encode state
+            encoder = StateEncoder(state, player_id)
+            q_state = encoder.encode()
+            
+            # Get opponent profiles for archetype recognition
+            opponent_profiles = {}
+            for p in state.players:
+                if p.id != player_id and not p.is_ousted:
+                    profile = self.rl_agent.get_opponent_profile(p.id)
+                    opponent_profiles[p.id] = profile
+            
+            # Get action from Q-Learning
+            action = self.rl_agent.choose_action(
+                self.deck_id,
+                q_state,
+                opponent_profiles,
+            )
+            
+            # Map Q-Learning action to strategy action
+            action_map = {
+                'bleed': 'bleed',
+                'rush': 'rush',
+                'control': 'control',
+                'bloat': 'action_card',  # Use Govern for bloat
+                'stealth': 'action_card',  # Play stealth card
+                'recruit': 'action_card',  # Recruit ally
+                'pass': 'bleed',  # Default to bleed
+            }
+            
+            return action_map.get(action, 'bleed')
+        except Exception:
+            return None
     
     def _get_combo_action(
         self, combo: dict, state: GameState, player_id: int
@@ -313,6 +378,51 @@ class StrategyBot(Bot):
             outcome=outcome,
             phase=phase.value,
         )
+        
+        # Record for Q-Learning if enabled
+        if self.use_rl and self.rl_agent:
+            self._record_rl_outcome(state, player_id, action_type, outcome)
+    
+    def _record_rl_outcome(
+        self,
+        state: GameState,
+        player_id: int,
+        action_type: str,
+        outcome: str,
+    ) -> None:
+        """Record outcome for Q-Learning agent."""
+        try:
+            # Calculate reward based on outcome
+            reward_map = {
+                'success': 0.3,
+                'blocked': -0.1,
+                'fail': -0.05,
+                'cancelled': -0.05,
+            }
+            base_reward = reward_map.get(outcome, 0.0)
+            
+            # Adjust reward based on action type
+            if action_type == 'bleed' and outcome == 'success':
+                base_reward = 0.4  # Higher reward for successful bleed
+            elif action_type == 'rush' and outcome == 'success':
+                base_reward = 0.3
+            elif action_type == 'oust' and outcome == 'success':
+                base_reward = 1.0  # Maximum reward for ousting
+            
+            # Record the outcome
+            encoder = StateEncoder(state, player_id)
+            q_state = encoder.encode()
+            
+            self.rl_agent.update(
+                self.deck_id,
+                q_state,
+                action_type,
+                base_reward,
+                q_state,  # Same state for now
+                done=state.is_finished,
+            )
+        except Exception:
+            pass
 
     def choose_card_to_play(
         self,

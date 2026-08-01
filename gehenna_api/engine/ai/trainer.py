@@ -33,43 +33,49 @@ class QLearningBot:
         self.deck_id = deck_id
         self.current_state: QState | None = None
         self.last_action: str | None = None
+        
+        # Use StrategyBot with Q-Learning enabled
+        from gehenna_api.engine.ai.strategy_bot import StrategyBot
+        self.strategy_bot = StrategyBot(
+            deck_id=deck_id,
+            use_rl=True,
+            rl_agent=agent,
+        )
     
     def choose_action_type(self, state: GameState, player_id: int, minion_id: str) -> str:
-        """Choose action using Q-Learning."""
-        encoder = StateEncoder(state, player_id)
-        self.current_state = encoder.encode()
-        
-        # Get opponent profiles
-        opponent_profiles = {}
-        for p in state.players:
-            if p.id != player_id and not p.is_ousted:
-                profile = self.agent.get_opponent_profile(p.id)
-                opponent_profiles[p.id] = profile
-        
-        self.last_action = self.agent.choose_action(
-            self.deck_id,
-            self.current_state,
-            opponent_profiles,
-        )
+        """Choose action using StrategyBot with Q-Learning."""
+        self.current_state = StateEncoder(state, player_id).encode()
+        self.last_action = self.strategy_bot.choose_action_type(state, player_id, minion_id)
         return self.last_action
     
     def choose_action(self, state: GameState, player_id: int) -> str:
         """Choose which card to play from hand."""
-        # For now, return empty to use default behavior
-        return ''
+        return self.strategy_bot.choose_action(state, player_id)
     
     def choose_block(self, state: GameState, player_id: int, action_id: str) -> bool:
         """Choose whether to block."""
-        # Don't block to keep it simple
-        return False
+        return self.strategy_bot.choose_block(state, player_id, action_id)
     
     def choose_strike(self, state: GameState, combatant_id: str) -> str:
         """Choose strike type."""
-        return 'handstrike'
+        return self.strategy_bot.choose_strike(state, combatant_id)
     
     def choose_discard(self, state: GameState, player_id: int, hand: list[str]) -> str:
         """Choose which card to discard."""
-        return hand[-1] if hand else ''
+        return self.strategy_bot.choose_discard(state, player_id, hand)
+    
+    def record_action_outcome(
+        self,
+        state: GameState,
+        player_id: int,
+        action_type: str,
+        outcome: str,
+        card_name: str | None = None,
+    ) -> None:
+        """Record action outcome for learning."""
+        self.strategy_bot.record_action_outcome(
+            state, player_id, action_type, outcome, card_name
+        )
     
     def record_outcome(self, state: GameState, player_id: int, reward: float) -> None:
         """Record outcome and update Q-values."""
@@ -83,7 +89,7 @@ class QLearningBot:
         done = state.is_finished
         
         # Update Q-values
-        self.agent.update(self.current_state, self.last_action, reward, next_state, done)
+        self.agent.update(self.deck_id, self.current_state, self.last_action, reward, next_state, done)
         
         # Reset for next action
         self.current_state = None
@@ -213,10 +219,23 @@ class Trainer:
                 if rl_bot.current_state and rl_bot.last_action:
                     encoder = StateEncoder(state, 1)
                     next_state = encoder.encode()
+                    
+                    # Map action to Q-Learning action
+                    action_map = {
+                        'bleed': 'bleed',
+                        'rush': 'rush',
+                        'control': 'control',
+                        'action_card': 'bloat',  # Map action_card to bloat
+                        'stealth': 'stealth',
+                        'recruit': 'recruit',
+                        'vote': 'control',
+                    }
+                    rl_action = action_map.get(rl_bot.last_action, 'bleed')
+                    
                     self.agent.update(
                         rl_bot.deck_id,
                         rl_bot.current_state,
-                        rl_bot.last_action,
+                        rl_action,
                         reward,
                         next_state,
                         done=False,
@@ -241,10 +260,23 @@ class Trainer:
         if rl_bot.current_state and rl_bot.last_action:
             encoder = StateEncoder(state, 1)
             next_state = encoder.encode()
+            
+            # Map action to Q-Learning action
+            action_map = {
+                'bleed': 'bleed',
+                'rush': 'rush',
+                'control': 'control',
+                'action_card': 'bloat',
+                'stealth': 'stealth',
+                'recruit': 'recruit',
+                'vote': 'control',
+            }
+            rl_action = action_map.get(rl_bot.last_action, 'bleed')
+            
             self.agent.update(
                 rl_bot.deck_id,
                 rl_bot.current_state,
-                rl_bot.last_action,
+                rl_action,
                 final_reward,
                 next_state,
                 done=True,
