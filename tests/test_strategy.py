@@ -153,6 +153,113 @@ class TestStrategyEngine:
         assert late["rush_priority"] == 0.7  # 0.5 + 0.2
 
 
+class TestCardKnowledge:
+    """Tests for CardKnowledge."""
+
+    def test_get_card_category(self):
+        from gehenna_api.engine.ai.strategy import CardKnowledge
+        from gehenna_api.engine.state import GameState, PlayerState
+
+        state = GameState(game_id="test")
+        ps = PlayerState(
+            id=1,
+            username="Player 1",
+            pool=30,
+            hand=[],
+            crypt=[],
+            library=[],
+            ash_heap=[],
+            has_edge=False,
+            transfers=0,
+            victory_points=0,
+        )
+        state.players.append(ps)
+
+        knowledge = CardKnowledge(state, player_id=1)
+
+        # Test with mock cards
+        class MockCard:
+            def __init__(self, name, tipo):
+                self.name = name
+                self.tipo = tipo
+                self.is_superior = False
+                self.bleed = 0
+                self.stealth = 0
+
+        deflection = MockCard("Deflection", "reaction")
+        govern = MockCard("Govern the Unaligned", "action")
+        stealth = MockCard("Shadow Cloak", "action modifier")
+
+        assert knowledge.get_card_category(deflection) == "defense"
+        assert knowledge.get_card_category(govern) == "bleed"
+        assert knowledge.get_card_category(stealth) == "stealth"
+
+    def test_get_useful_cards_for_situation(self):
+        from gehenna_api.engine.ai.strategy import CardKnowledge
+        from gehenna_api.engine.state import GameState, PlayerState
+
+        state = GameState(game_id="test")
+        ps = PlayerState(
+            id=1,
+            username="Player 1",
+            pool=30,
+            hand=[],
+            crypt=[],
+            library=[],
+            ash_heap=[],
+            has_edge=False,
+            transfers=0,
+            victory_points=0,
+        )
+        state.players.append(ps)
+
+        knowledge = CardKnowledge(state, player_id=1)
+
+        defense_cards = knowledge.get_useful_cards_for_situation("defense")
+        bleed_cards = knowledge.get_useful_cards_for_situation("bleed")
+
+        assert "deflection" in defense_cards
+        assert "govern" in bleed_cards
+
+    def test_should_hold_card(self):
+        from gehenna_api.engine.ai.strategy import CardKnowledge
+        from gehenna_api.engine.state import GameState, PlayerState
+
+        state = GameState(game_id="test")
+        ps = PlayerState(
+            id=1,
+            username="Player 1",
+            pool=30,
+            hand=[],
+            crypt=[],
+            library=[],
+            ash_heap=[],
+            has_edge=False,
+            transfers=0,
+            victory_points=0,
+        )
+        state.players.append(ps)
+
+        knowledge = CardKnowledge(state, player_id=1)
+
+        # Test with mock cards
+        class MockCard:
+            def __init__(self, name, bleed=0, stealth=0):
+                self.name = name
+                self.bleed = bleed
+                self.stealth = stealth
+                self.tipo = "action"
+                self.is_superior = False
+
+        deflection = MockCard("Deflection")
+        high_bleed = MockCard("Govern", bleed=3)
+        low_bleed = MockCard("Shroud", bleed=1)
+
+        assert knowledge.should_hold_card(deflection) is True
+        assert knowledge.should_hold_card(high_bleed) is True
+        assert knowledge.should_hold_card(low_bleed) is False
+
+
 class TestCardTiming:
     """Tests for CardTiming."""
 

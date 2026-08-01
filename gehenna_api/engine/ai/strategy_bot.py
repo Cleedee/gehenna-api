@@ -7,6 +7,7 @@ from pathlib import Path
 
 from gehenna_api.engine.ai.base import Bot
 from gehenna_api.engine.ai.strategy import (
+    CardKnowledge,
     CardTiming,
     DeckStrategy,
     StrategyEngine,
@@ -172,7 +173,7 @@ class StrategyBot(Bot):
         player_id: int,
         action_type: str = 'bleed',
     ) -> str | None:
-        """Choose which card to play from hand based on timing rules.
+        """Choose which card to play from hand based on timing and knowledge.
         
         Args:
             state: Current game state
@@ -186,28 +187,24 @@ class StrategyBot(Bot):
         if not player or not player.hand:
             return None
         
+        # Use CardKnowledge for intelligent card selection
+        knowledge = CardKnowledge(state, player_id)
         timing = CardTiming(state, player_id)
         
-        # Sort cards by priority
-        playable_cards = []
-        for cid in player.hand:
-            card = state.card_by_id(cid)
-            if card:
-                priority = timing.get_card_priority(card)
-                playable_cards.append((card, priority))
-        
-        # Sort by priority (highest first)
-        playable_cards.sort(key=lambda x: -x[1])
+        # Get prioritized cards for this situation
+        prioritized = knowledge.prioritize_cards_for_situation(action_type)
         
         # Return highest priority card that should be played
-        for card, priority in playable_cards:
+        for card, priority in prioritized:
+            # Check if we should hold this card
+            if knowledge.should_hold_card(card) and priority < 80:
+                continue
+            
             name = card.name.lower()
             tipo = card.tipo.strip().lower()
             
             # Deflection - only play against big bleeds
             if 'deflection' in name:
-                # This would need context about incoming bleed
-                # For now, keep in hand unless critical
                 if player.pool <= 10:
                     return card.id
                 continue

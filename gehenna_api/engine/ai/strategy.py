@@ -217,6 +217,191 @@ class DeckStrategy:
         )
 
 
+class CardKnowledge:
+    """Maps cards to situations and helps decide which card to use.
+    
+    This class provides intelligence about:
+    - Which cards are useful in which situations
+    - How to prioritize cards based on game state
+    - When to hold cards for later
+    """
+    
+    # Card categories and their uses
+    CARD_CATEGORIES = {
+        # Defense
+        'deflection': ['defense', 'redirect'],
+        'delaying_tactics': ['defense', 'vote'],
+        
+        # Stealth
+        'shadow_cloak': ['stealth', 'protection'],
+        'seduction': ['stealth', 'control'],
+        'where_the_veil': ['stealth', 'control'],
+        
+        # Bleed
+        'govern': ['bleed', 'acceleration'],
+        'shroud': ['bleed', 'control'],
+        'deep_song': ['bleed'],
+        
+        # Rush
+        'ambush': ['rush', 'combat'],
+        'bums_rush': ['rush', 'combat'],
+        'big_game': ['rush', 'combat'],
+        
+        # Control
+        'pentex': ['control', 'lock'],
+        'misdirection': ['control', 'redirect'],
+        
+        # Bloat
+        'villein': ['bloat', 'pool'],
+        'minion_tap': ['bloat', 'pool'],
+        'blood_doll': ['bloat', 'pool'],
+        
+        # Masters
+        'dreams': ['master', 'draw'],
+        'visit_capuchin': ['master', 'hand_size'],
+    }
+    
+    def __init__(self, state: GameState, player_id: int):
+        self.state = state
+        self.player_id = player_id
+        self.player = state.player_by_id(player_id)
+    
+    def get_card_category(self, card: CardInstance) -> str:
+        """Get the primary category of a card."""
+        if not card:
+            return 'unknown'
+        
+        name_lower = card.name.lower()
+        
+        # Check by name pattern
+        for key, categories in self.CARD_CATEGORIES.items():
+            if key.replace('_', ' ') in name_lower:
+                return categories[0]
+        
+        # Check by type
+        tipo = card.tipo.strip().lower()
+        if tipo == 'action':
+            return 'bleed'
+        elif tipo == 'action modifier':
+            return 'modifier'
+        elif tipo == 'reaction':
+            return 'defense'
+        elif tipo == 'political action':
+            return 'vote'
+        elif tipo == 'master':
+            return 'master'
+        
+        return 'unknown'
+    
+    def get_useful_cards_for_situation(self, situation: str) -> list[str]:
+        """Get card names useful for a specific situation.
+        
+        Situations:
+        - 'defense': incoming bleed or attack
+        - 'bleed': attacking prey
+        - 'rush': attacking a specific target
+        - 'bloat': need pool
+        - 'control': need to control board
+        - 'stealth': need to avoid blockers
+        """
+        useful = []
+        for name, categories in self.CARD_CATEGORIES.items():
+            if situation in categories:
+                useful.append(name)
+        return useful
+    
+    def prioritize_cards_for_situation(
+        self, situation: str
+    ) -> list[tuple[CardInstance, int]]:
+        """Prioritize cards in hand for a specific situation.
+        
+        Returns list of (card, priority) tuples sorted by priority.
+        """
+        if not self.player:
+            return []
+        
+        prioritized = []
+        for cid in self.player.hand:
+            card = self.state.card_by_id(cid)
+            if card:
+                category = self.get_card_category(card)
+                priority = self._calculate_priority(card, category, situation)
+                prioritized.append((card, priority))
+        
+        # Sort by priority (highest first)
+        prioritized.sort(key=lambda x: -x[1])
+        return prioritized
+    
+    def _calculate_priority(
+        self, card: CardInstance, category: str, situation: str
+    ) -> int:
+        """Calculate priority for a card in a given situation."""
+        priority = 0
+        
+        # Base priority by category-situation match
+        priority_map = {
+            ('defense', 'defense'): 100,
+            ('bleed', 'bleed'): 90,
+            ('rush', 'rush'): 90,
+            ('bloat', 'bloat'): 80,
+            ('control', 'control'): 80,
+            ('stealth', 'stealth'): 70,
+            ('modifier', 'bleed'): 60,
+            ('vote', 'vote'): 60,
+            ('master', 'any'): 50,
+        }
+        
+        priority = priority_map.get((category, situation), 0)
+        
+        # Bonus for superior cards
+        if card.is_superior:
+            priority += 20
+        
+        # Bonus for cards with bleed
+        if card.bleed > 0:
+            priority += card.bleed * 10
+        
+        # Bonus for cards with stealth
+        if card.stealth > 0:
+            priority += card.stealth * 10
+        
+        return priority
+    
+    def should_hold_card(self, card: CardInstance) -> bool:
+        """Determine if we should hold a card for later.
+        
+        Hold if:
+        - Card is high priority for future situations
+        - Card is unique/powerful
+        - We don't need it now
+        """
+        if not card:
+            return False
+        
+        # Always hold deflection unless critical
+        if 'deflection' in card.name.lower():
+            return True
+        
+        # Hold high-value cards
+        if card.bleed >= 2 or card.stealth >= 2:
+            return True
+        
+        return False
+    
+    def get_best_card_for_action(
+        self, action_type: str
+    ) -> CardInstance | None:
+        """Get the best card to play for a specific action type.
+        
+        Args:
+            action_type: 'bleed', 'rush', 'vote', etc.
+        """
+        prioritized = self.prioritize_cards_for_situation(action_type)
+        if prioritized:
+            return prioritized[0][0]
+        return None
+
+
 class CardTiming:
     """Handles timing decisions for when to play cards.
     
