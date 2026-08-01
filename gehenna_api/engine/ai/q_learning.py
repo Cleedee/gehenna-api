@@ -17,6 +17,7 @@ from typing import Any
 class QState:
     """Represents a game state as a tuple of features."""
     
+    # Basic state
     pool_ratio: float  # Our pool / 30
     prey_pool_ratio: float  # Prey pool / 30
     predator_pool_ratio: float  # Predator pool / 30
@@ -29,6 +30,22 @@ class QState:
     has_bleed_card: int  # Has bleed card (0/1)
     has_defense_card: int  # Has defense card (0/1)
     has_rush_card: int  # Has rush card (0/1)
+    
+    # New features: Combat module
+    prey_combat_module: int  # 0=balanced, 1=defensive, 2=aggressive
+    predator_combat_module: int  # 0=balanced, 1=defensive, 2=aggressive
+    
+    # New features: Reaction capabilities
+    prey_bounce_prob: float  # Probability prey has bounce (0-1)
+    predator_bounce_prob: float  # Probability predator has bounce (0-1)
+    prey_intercept_prob: float  # Probability prey has intercept (0-1)
+    predator_intercept_prob: float  # Probability predator has intercept (0-1)
+    
+    # New features: Card probabilities
+    prey_combat_ends_prob: float  # Probability prey has combat ends (0-1)
+    predator_combat_ends_prob: float  # Probability predator has combat ends (0-1)
+    prey_aggravated_prob: float  # Probability prey has aggravated (0-1)
+    predator_aggravated_prob: float  # Probability predator has aggravated (0-1)
     
     def to_tuple(self) -> tuple:
         """Convert to hashable tuple for Q-table."""
@@ -45,6 +62,16 @@ class QState:
             self.has_bleed_card,
             self.has_defense_card,
             self.has_rush_card,
+            self.prey_combat_module,
+            self.predator_combat_module,
+            round(self.prey_bounce_prob, 2),
+            round(self.predator_bounce_prob, 2),
+            round(self.prey_intercept_prob, 2),
+            round(self.predator_intercept_prob, 2),
+            round(self.prey_combat_ends_prob, 2),
+            round(self.predator_combat_ends_prob, 2),
+            round(self.prey_aggravated_prob, 2),
+            round(self.predator_aggravated_prob, 2),
         )
     
     @classmethod
@@ -63,6 +90,16 @@ class QState:
             has_bleed_card=data[9],
             has_defense_card=data[10],
             has_rush_card=data[11],
+            prey_combat_module=data[12],
+            predator_combat_module=data[13],
+            prey_bounce_prob=data[14],
+            predator_bounce_prob=data[15],
+            prey_intercept_prob=data[16],
+            predator_intercept_prob=data[17],
+            prey_combat_ends_prob=data[18],
+            predator_combat_ends_prob=data[19],
+            prey_aggravated_prob=data[20],
+            predator_aggravated_prob=data[21],
         )
 
 

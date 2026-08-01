@@ -6,6 +6,7 @@ Converts game state to feature vector for the Q-Learning agent.
 from __future__ import annotations
 
 from gehenna_api.engine.ai.q_learning import QState
+from gehenna_api.engine.ai.capability_analyzer import CapabilityAnalyzer
 from gehenna_api.engine.card_instance import CardPosition
 from gehenna_api.engine.state import GameState
 
@@ -27,7 +28,7 @@ class StateEncoder:
         prey = self.state.prey_of(self.player_id)
         predator = self.state.predator_of(self.player_id)
         
-        # Calculate features
+        # Calculate basic features
         pool_ratio = self.player.pool / 30.0
         prey_pool_ratio = (prey.pool / 30.0) if prey else 0.5
         predator_pool_ratio = (predator.pool / 30.0) if predator else 0.5
@@ -51,6 +52,42 @@ class StateEncoder:
         has_defense_card = 1 if self._has_card_type('defense') else 0
         has_rush_card = 1 if self._has_card_type('rush') else 0
         
+        # New features: Analyze prey and predator capabilities
+        prey_combat_module = 0  # 0=balanced, 1=defensive, 2=aggressive
+        predator_combat_module = 0
+        prey_bounce_prob = 0.0
+        predator_bounce_prob = 0.0
+        prey_intercept_prob = 0.0
+        predator_intercept_prob = 0.0
+        prey_combat_ends_prob = 0.0
+        predator_combat_ends_prob = 0.0
+        prey_aggravated_prob = 0.0
+        predator_aggravated_prob = 0.0
+        
+        if prey:
+            prey_analyzer = CapabilityAnalyzer(self.state, prey.id)
+            prey_combat = prey_analyzer.analyze_combat_module()
+            prey_reactions = prey_analyzer.analyze_reactions()
+            prey_probs = prey_analyzer.calculate_card_probabilities()
+            
+            prey_combat_module = 1 if prey_combat.is_defensive else (2 if prey_combat.is_aggressive else 0)
+            prey_bounce_prob = prey_reactions.bounce_probability
+            prey_intercept_prob = prey_reactions.intercept_probability
+            prey_combat_ends_prob = prey_probs.has_combat_ends
+            prey_aggravated_prob = prey_probs.has_aggravated
+        
+        if predator:
+            pred_analyzer = CapabilityAnalyzer(self.state, predator.id)
+            pred_combat = pred_analyzer.analyze_combat_module()
+            pred_reactions = pred_analyzer.analyze_reactions()
+            pred_probs = pred_analyzer.calculate_card_probabilities()
+            
+            predator_combat_module = 1 if pred_combat.is_defensive else (2 if pred_combat.is_aggressive else 0)
+            predator_bounce_prob = pred_reactions.bounce_probability
+            predator_intercept_prob = pred_reactions.intercept_probability
+            predator_combat_ends_prob = pred_probs.has_combat_ends
+            predator_aggravated_prob = pred_probs.has_aggravated
+        
         return QState(
             pool_ratio=pool_ratio,
             prey_pool_ratio=prey_pool_ratio,
@@ -64,6 +101,16 @@ class StateEncoder:
             has_bleed_card=has_bleed_card,
             has_defense_card=has_defense_card,
             has_rush_card=has_rush_card,
+            prey_combat_module=prey_combat_module,
+            predator_combat_module=predator_combat_module,
+            prey_bounce_prob=prey_bounce_prob,
+            predator_bounce_prob=predator_bounce_prob,
+            prey_intercept_prob=prey_intercept_prob,
+            predator_intercept_prob=predator_intercept_prob,
+            prey_combat_ends_prob=prey_combat_ends_prob,
+            predator_combat_ends_prob=predator_combat_ends_prob,
+            prey_aggravated_prob=prey_aggravated_prob,
+            predator_aggravated_prob=predator_aggravated_prob,
         )
     
     def _default_state(self) -> QState:
@@ -81,6 +128,16 @@ class StateEncoder:
             has_bleed_card=0,
             has_defense_card=0,
             has_rush_card=0,
+            prey_combat_module=0,
+            predator_combat_module=0,
+            prey_bounce_prob=0.0,
+            predator_bounce_prob=0.0,
+            prey_intercept_prob=0.0,
+            predator_intercept_prob=0.0,
+            prey_combat_ends_prob=0.0,
+            predator_combat_ends_prob=0.0,
+            prey_aggravated_prob=0.0,
+            predator_aggravated_prob=0.0,
         )
     
     def _calculate_threat(self, player_id: int) -> float:

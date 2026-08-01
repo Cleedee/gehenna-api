@@ -28,9 +28,21 @@ class TestQState:
             has_bleed_card=1,
             has_defense_card=0,
             has_rush_card=1,
+            prey_combat_module=0,
+            predator_combat_module=1,
+            prey_bounce_prob=0.3,
+            predator_bounce_prob=0.2,
+            prey_intercept_prob=0.4,
+            predator_intercept_prob=0.1,
+            prey_combat_ends_prob=0.2,
+            predator_combat_ends_prob=0.3,
+            prey_aggravated_prob=0.1,
+            predator_aggravated_prob=0.2,
         )
         assert state.pool_ratio == 0.8
         assert state.hand_size == 5
+        assert state.prey_combat_module == 0
+        assert state.predator_bounce_prob == 0.2
     
     def test_qstate_to_tuple(self):
         state = QState(
@@ -46,16 +58,28 @@ class TestQState:
             has_bleed_card=1,
             has_defense_card=0,
             has_rush_card=1,
+            prey_combat_module=0,
+            predator_combat_module=1,
+            prey_bounce_prob=0.3,
+            predator_bounce_prob=0.2,
+            prey_intercept_prob=0.4,
+            predator_intercept_prob=0.1,
+            prey_combat_ends_prob=0.2,
+            predator_combat_ends_prob=0.3,
+            prey_aggravated_prob=0.1,
+            predator_aggravated_prob=0.2,
         )
         t = state.to_tuple()
-        assert len(t) == 12
+        assert len(t) == 22
         assert isinstance(t, tuple)
     
     def test_qstate_from_tuple(self):
-        t = (0.8, 0.6, 0.5, 3.0, 4.0, 5.0, 0.5, 2, 5, 1, 0, 1)
+        t = (0.8, 0.6, 0.5, 3.0, 4.0, 5.0, 0.5, 2, 5, 1, 0, 1, 0, 1, 0.3, 0.2, 0.4, 0.1, 0.2, 0.3, 0.1, 0.2)
         state = QState.from_tuple(t)
         assert state.pool_ratio == 0.8
         assert state.hand_size == 5
+        assert state.prey_combat_module == 0
+        assert state.predator_bounce_prob == 0.2
 
 
 class TestQLearningAgent:
@@ -82,6 +106,16 @@ class TestQLearningAgent:
             has_bleed_card=1,
             has_defense_card=0,
             has_rush_card=1,
+            prey_combat_module=0,
+            predator_combat_module=1,
+            prey_bounce_prob=0.3,
+            predator_bounce_prob=0.2,
+            prey_intercept_prob=0.4,
+            predator_intercept_prob=0.1,
+            prey_combat_ends_prob=0.2,
+            predator_combat_ends_prob=0.3,
+            prey_aggravated_prob=0.1,
+            predator_aggravated_prob=0.2,
         )
         q_values = agent.get_q_values(state)
         assert len(q_values) == len(ACTIONS)
@@ -101,6 +135,16 @@ class TestQLearningAgent:
             has_bleed_card=1,
             has_defense_card=0,
             has_rush_card=1,
+            prey_combat_module=0,
+            predator_combat_module=1,
+            prey_bounce_prob=0.3,
+            predator_bounce_prob=0.2,
+            prey_intercept_prob=0.4,
+            predator_intercept_prob=0.1,
+            prey_combat_ends_prob=0.2,
+            predator_combat_ends_prob=0.3,
+            prey_aggravated_prob=0.1,
+            predator_aggravated_prob=0.2,
         )
         action = agent.choose_action(state)
         assert action in ACTIONS
@@ -120,6 +164,16 @@ class TestQLearningAgent:
             has_bleed_card=1,
             has_defense_card=0,
             has_rush_card=1,
+            prey_combat_module=0,
+            predator_combat_module=1,
+            prey_bounce_prob=0.3,
+            predator_bounce_prob=0.2,
+            prey_intercept_prob=0.4,
+            predator_intercept_prob=0.1,
+            prey_combat_ends_prob=0.2,
+            predator_combat_ends_prob=0.3,
+            prey_aggravated_prob=0.1,
+            predator_aggravated_prob=0.2,
         )
         state2 = QState(
             pool_ratio=0.7,
@@ -134,6 +188,16 @@ class TestQLearningAgent:
             has_bleed_card=1,
             has_defense_card=0,
             has_rush_card=0,
+            prey_combat_module=1,
+            predator_combat_module=0,
+            prey_bounce_prob=0.4,
+            predator_bounce_prob=0.3,
+            prey_intercept_prob=0.5,
+            predator_intercept_prob=0.2,
+            prey_combat_ends_prob=0.3,
+            predator_combat_ends_prob=0.4,
+            prey_aggravated_prob=0.2,
+            predator_aggravated_prob=0.3,
         )
         
         # Get initial Q-value
@@ -161,6 +225,16 @@ class TestQLearningAgent:
             has_bleed_card=1,
             has_defense_card=0,
             has_rush_card=1,
+            prey_combat_module=0,
+            predator_combat_module=1,
+            prey_bounce_prob=0.3,
+            predator_bounce_prob=0.2,
+            prey_intercept_prob=0.4,
+            predator_intercept_prob=0.1,
+            prey_combat_ends_prob=0.2,
+            predator_combat_ends_prob=0.3,
+            prey_aggravated_prob=0.1,
+            predator_aggravated_prob=0.2,
         )
         
         # Train a bit
