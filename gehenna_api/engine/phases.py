@@ -465,6 +465,13 @@ class PhaseManager:
         # Trifle only grants +1 action if it's the FIRST master card played
         master_card_played = False
 
+        # V:TES Rule: Draw 1 card at the start of master phase
+        drawn = self.draw_cards(player, 1)
+        if drawn:
+            card = self.state.card_by_id(drawn[0])
+            if card:
+                self._log_action(player, f'draw: {card.name}')
+
         # Calculate master phase actions: default 1
         # -1 if out-of-turn master was played last turn
         actions = 1

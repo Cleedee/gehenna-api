@@ -119,9 +119,9 @@ class VerboseStrategyBot(StrategyBot):
         if details:
             print(f"         {details}")
     
-    def choose_discard(self, state, player_id) -> str:
+    def choose_discard(self, state, player_id, hand) -> str:
         """Choose which card to discard."""
-        card_id = super().choose_discard(state, player_id)
+        card_id = super().choose_discard(state, player_id, hand)
         
         if card_id:
             card = state.card_by_id(card_id)
@@ -204,24 +204,23 @@ def simulate_with_decisions(deck_ids: list[int], num_turns: int = 20,
         print(f"🔄 TURNO {state.turn_number + 1}")
         print(f"{'─' * 70}")
         
-        # Show player states before turn
-        print("\n📊 Estado dos jogadores:")
-        for player in state.players:
-            status = "❌ ELIMINADO" if player.is_ousted else f"💚 {player.pool} pool"
-            hand = len(player.hand) if not player.is_ousted else 0
-            vamps = sum(1 for cid in player.crypt 
-                       if state.card_by_id(cid) and 
-                       state.card_by_id(cid).position == CardPosition.ready)
-            print(f"  {player.username}: {status} | {vamps} vampiros prontos | {hand} cartas")
-        
         # Run turn
         engine.run_turn()
         
-        # Show what happened after turn
-        print(f"\n📝 Resumo do turno:")
+        # Show player states AFTER turn (more accurate)
+        print("\n📊 Estado dos jogadores:")
         for player in state.players:
-            if not player.is_ousted:
-                print(f"  {player.username}: {player.pool} pool")
+            if player.is_ousted:
+                print(f"  {player.username}: ❌ ELIMINADO")
+            else:
+                # Count ready minions
+                prefix = f'p{player.id}_'
+                ready = sum(1 for c in state.cards.values()
+                          if c.id.startswith(prefix)
+                          and c.is_ready
+                          and c.tipo.strip() in {'Vampire', 'vampire', 'Imbued', 'Ally'})
+                hand = len(player.hand)
+                print(f"  {player.username}: 💚 {player.pool} pool | {ready} vampiros prontos | {hand} cartas")
     
     # Show final state
     print("\n" + "=" * 70)

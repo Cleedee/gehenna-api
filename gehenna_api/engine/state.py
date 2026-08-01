@@ -266,8 +266,8 @@ class GameState(BaseModel):
             return None
         for i, p in enumerate(active):
             if p.id == player_id:
-                # Predator is the next player in the list (to the right)
-                return active[(i + 1) % len(active)]
+                # Predator is the previous player in the list (to the right)
+                return active[(i - 1) % len(active)]
         return None
 
     def prey_of(self, player_id: int) -> Optional[PlayerState]:
@@ -278,8 +278,8 @@ class GameState(BaseModel):
             return None
         for i, p in enumerate(active):
             if p.id == player_id:
-                # Prey is the previous player in the list (to the left)
-                return active[(i - 1) % len(active)]
+                # Prey is the next player in the list (to the left)
+                return active[(i + 1) % len(active)]
         return None
 
     def check_winner(self) -> Optional[PlayerState]:
