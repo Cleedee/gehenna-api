@@ -8,13 +8,13 @@
 
 - [x] Saber quem é presa, predador e cross
 - [x] Avaliar ameaça de cada jogador
-- [ ] Avaliar força relativa (quem é mais forte)
-- [ ] Avaliar posição na mesa (quem ataca quem)
+- [x] Avaliar força relativa (quem é mais forte)
+- [x] Avaliar posição na mesa (quem ataca quem)
 
 ## 2. Lógica de Cross-Table
 
-- [ ] Identificar predador de cada cross
-- [ ] Decidir quando ajudar cross (atacar predador dele)
+- [x] Identificar predador de cada cross
+- [x] Decidir quando ajudar cross (atacar predador dele)
 - [ ] Priorizar ações que beneficiam múltiplos aliados
 - [ ] Não atacar cross sem razão
 
@@ -35,10 +35,10 @@
 
 ## 5. Avaliação de Situação
 
-- [ ] Estou ganhando? (agressivo)
-- [ ] Estou perdendo? (defensivo)
-- [ ] Mesa está equilibrada? (diplomático)
-- [ ] Qual a melhor ação para cada situação?
+- [x] Estou ganhando? (agressivo)
+- [x] Estou perdendo? (defensivo)
+- [x] Mesa está equilibrada? (diplomático)
+- [x] Qual a melhor ação para cada situação?
 
 ## 6. Prioridades Dinâmicas
 
