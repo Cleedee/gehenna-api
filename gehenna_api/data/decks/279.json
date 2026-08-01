@@ -1,0 +1,240 @@
+{
+  "deck_id": 279,
+  "name": "Ladies of Power",
+  "cards": [
+    {
+      "codevdb": 2186,
+      "name": "Govern the Unaligned",
+      "tipo": "Action",
+      "quantity": 7
+    },
+    {
+      "codevdb": 4130,
+      "name": "Dominant Personality",
+      "tipo": "Action Modifier",
+      "quantity": 4
+    },
+    {
+      "codevdb": 1994,
+      "name": "Enkil Cog",
+      "tipo": "Action Modifier",
+      "quantity": 2
+    },
+    {
+      "codevdb": 2133,
+      "name": "Freak Drive",
+      "tipo": "Action Modifier",
+      "quantity": 4
+    },
+    {
+      "codevdb": 2340,
+      "name": "Iron Glare",
+      "tipo": "Action Modifier",
+      "quantity": 4
+    },
+    {
+      "codevdb": 2709,
+      "name": "Perfect Paragon",
+      "tipo": "Action Modifier",
+      "quantity": 4
+    },
+    {
+      "codevdb": 4151,
+      "name": "Relentlessness",
+      "tipo": "Action Modifier",
+      "quantity": 4
+    },
+    {
+      "codevdb": 4160,
+      "name": "Unthinkable Humiliation",
+      "tipo": "Action Modifier",
+      "quantity": 4
+    },
+    {
+      "codevdb": 3426,
+      "name": "Voter Captivation",
+      "tipo": "Action Modifier",
+      "quantity": 5
+    },
+    {
+      "codevdb": 2474,
+      "name": "Majesty",
+      "tipo": "Combat",
+      "quantity": 4
+    },
+    {
+      "codevdb": 2241,
+      "name": "Heart of Nizchetus",
+      "tipo": "Equipment",
+      "quantity": 1
+    },
+    {
+      "codevdb": 1800,
+      "name": "Creepshow Casino",
+      "tipo": "Master",
+      "quantity": 1
+    },
+    {
+      "codevdb": 1940,
+      "name": "Dreams of the Sphinx",
+      "tipo": "Master",
+      "quantity": 2
+    },
+    {
+      "codevdb": 1895,
+      "name": "D\u00eda de los Muertos",
+      "tipo": "Master",
+      "quantity": 1
+    },
+    {
+      "codevdb": 1970,
+      "name": "Elder Library",
+      "tipo": "Master",
+      "quantity": 1
+    },
+    {
+      "codevdb": 2167,
+      "name": "Giant's Blood",
+      "tipo": "Master",
+      "quantity": 1
+    },
+    {
+      "codevdb": 2211,
+      "name": "Gurchon Hall",
+      "tipo": "Master",
+      "quantity": 1
+    },
+    {
+      "codevdb": 2318,
+      "name": "Information Highway",
+      "tipo": "Master",
+      "quantity": 2
+    },
+    {
+      "codevdb": 2565,
+      "name": "Monastery of Shadows",
+      "tipo": "Master",
+      "quantity": 1
+    },
+    {
+      "codevdb": 2672,
+      "name": "Papillon",
+      "tipo": "Master",
+      "quantity": 1
+    },
+    {
+      "codevdb": 3021,
+      "name": "Secure Haven",
+      "tipo": "Master",
+      "quantity": 1
+    },
+    {
+      "codevdb": 3405,
+      "name": "Ventrue Headquarters",
+      "tipo": "Master",
+      "quantity": 1
+    },
+    {
+      "codevdb": 3417,
+      "name": "Villein",
+      "tipo": "Master",
+      "quantity": 5
+    },
+    {
+      "codevdb": 1425,
+      "name": "Anarchist Uprising",
+      "tipo": "Political Action",
+      "quantity": 1
+    },
+    {
+      "codevdb": 1431,
+      "name": "Ancilla Empowerment",
+      "tipo": "Political Action",
+      "quantity": 1
+    },
+    {
+      "codevdb": 1497,
+      "name": "Banishment",
+      "tipo": "Political Action",
+      "quantity": 2
+    },
+    {
+      "codevdb": 4126,
+      "name": "Cold War",
+      "tipo": "Political Action",
+      "quantity": 6
+    },
+    {
+      "codevdb": 4132,
+      "name": "Empires Fall",
+      "tipo": "Political Action",
+      "quantity": 1
+    },
+    {
+      "codevdb": 2739,
+      "name": "Political Stranglehold",
+      "tipo": "Political Action",
+      "quantity": 1
+    },
+    {
+      "codevdb": 4162,
+      "name": "War of Ages",
+      "tipo": "Political Action",
+      "quantity": 1
+    },
+    {
+      "codevdb": 1872,
+      "name": "Deflection",
+      "tipo": "Reaction",
+      "quantity": 6
+    },
+    {
+      "codevdb": 2644,
+      "name": "On the Qui Vive",
+      "tipo": "Reaction",
+      "quantity": 2
+    },
+    {
+      "codevdb": 2894,
+      "name": "Redirection",
+      "tipo": "Reaction",
+      "quantity": 2
+    },
+    {
+      "codevdb": 6311,
+      "name": "Dark Selina",
+      "tipo": "Vampire",
+      "quantity": 2
+    },
+    {
+      "codevdb": 4074,
+      "name": "Aaradhya, The Callous Tyrant",
+      "tipo": "vampire",
+      "quantity": 4
+    },
+    {
+      "codevdb": 4101,
+      "name": "Khin Aye",
+      "tipo": "vampire",
+      "quantity": 1
+    },
+    {
+      "codevdb": 4111,
+      "name": "Rexton \"Savage\" Abernathy",
+      "tipo": "vampire",
+      "quantity": 1
+    },
+    {
+      "codevdb": 4117,
+      "name": "V\u011bnceslava, The Implacable",
+      "tipo": "vampire",
+      "quantity": 2
+    },
+    {
+      "codevdb": 4116,
+      "name": "\u00dcress\u00e9g",
+      "tipo": "vampire",
+      "quantity": 2
+    }
+  ]
+}

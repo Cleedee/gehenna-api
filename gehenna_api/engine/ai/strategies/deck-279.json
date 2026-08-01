@@ -1,0 +1,85 @@
+{
+  "deck_id": 279,
+  "name": "Ladies of Power",
+  "archetype": "vote",
+  "description": "Vote/Bleed with Věnceslava and Dark Selina",
+  "playstyle": "Political actions with bleed acceleration",
+  
+  "preferred_cards": [
+    "Věnceslava, The Implacable",
+    "Dark Selina",
+    "Govern the Unaligned",
+    "Deflection",
+    "Majesty",
+    "Villein",
+    "Dreams of the Sphinx"
+  ],
+  
+  "avoided_cards": [],
+  
+  "action_priority": {
+    "bleed": 85,
+    "rush": 20,
+    "control": 50,
+    "vote": 90,
+    "bloat": 60
+  },
+  
+  "combat_strategy": {
+    "type": "defensive",
+    "prefer_stealth": false,
+    "prefer_combat_ends": true,
+    "strike_priority": [
+      "handstrike",
+      "aggravated",
+      "steal_blood"
+    ]
+  },
+  
+  "defense_strategy": {
+    "block_threshold": 3,
+    "prefer_redirect": true,
+    "prefer_combat_ends": true
+  },
+  
+  "phases": {
+    "early": {
+      "focus": "setup",
+      "actions": ["bleed", "control"]
+    },
+    "mid": {
+      "focus": "bleed",
+      "actions": ["bleed", "vote"]
+    },
+    "late": {
+      "focus": "aggressive",
+      "actions": ["bleed", "vote"]
+    },
+    "final": {
+      "focus": "kill",
+      "actions": ["bleed", "vote"]
+    }
+  },
+  
+  "disciplines": {
+    "DOM": "bleed",
+    "PRE": "vote",
+    "OBF": "stealth",
+    "FOR": "combat"
+  },
+  
+  "counters": {
+    "bleed": "rush",
+    "rush": "combat_ends",
+    "combat": "bleed",
+    "vote": "stealth",
+    "stealth": "bleed",
+    "toolbox": "bleed"
+  },
+  
+  "vote_strategy": {
+    "call_votes": true,
+    "bleed_with_govern": true,
+    "redirect_bleeds": true
+  }
+}

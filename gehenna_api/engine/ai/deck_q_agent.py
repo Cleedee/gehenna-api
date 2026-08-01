@@ -25,6 +25,7 @@ DECK_ARCHETYPES: dict[int, str] = {
     275: 'rush',         # Path of Death (Allies + Rush)
     195: 'stealth_combat',  # Kalinda S&B (Stealth + Combat)
     278: 'wall',         # Fat Fighter Anarch Wall (Defense + Intercept)
+    279: 'vote',         # Ladies of Power (Vote + Bleed)
 }
 
 
