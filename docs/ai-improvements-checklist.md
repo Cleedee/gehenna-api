@@ -15,8 +15,8 @@
 
 - [x] Identificar predador de cada cross
 - [x] Decidir quando ajudar cross (atacar predador dele)
-- [ ] Priorizar ações que beneficiam múltiplos aliados
-- [ ] Não atacar cross sem razão
+- [x] Priorizar ações que beneficiam múltiplos aliados
+- [x] Não atacar cross sem razão
 
 ## 3. Timing de Cartas
 
@@ -28,9 +28,9 @@
 
 ## 4. Card Knowledge (saber qual carta usar)
 
-- [ ] Mapear cartas na mão para situações
-- [ ] Priorizar cartas baseado no estado do jogo
-- [ ] Guardar cartas defensivas para momentos críticos
+- [x] Mapear cartas na mão para situações
+- [x] Priorizar cartas baseado no estado do jogo
+- [x] Guardar cartas defensivas para momentos críticos
 - [ ] Usar cartas de combo no timing certo
 
 ## 5. Avaliação de Situação
