@@ -179,12 +179,20 @@ class Trainer:
             seed=game_num,
         )
         
-        # Create bots - RL bot as Player 1, Random bots for others
+        # Create bots - RL bot as Player 1, Strategy bots for others
         bots = {}
         rl_bot = QLearningBot(self.agent, deck_ids[0])
         bots[1] = rl_bot
-        for i in range(2, 5):  # Players 2-4
-            bots[i] = RandomBot()
+        
+        # Use other trained decks as opponents
+        from gehenna_api.engine.ai.strategy_bot import StrategyBot
+        for i in range(2, 5):
+            opponent_deck_id = deck_ids[i - 1]
+            bots[i] = StrategyBot(
+                deck_id=opponent_deck_id,
+                use_rl=True,
+                rl_agent=self.agent,
+            )
         
         # Run game
         engine = GameEngine(state, bots=bots)
