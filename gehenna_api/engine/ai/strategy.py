@@ -454,13 +454,38 @@ class StrategyEngine:
                 if state.random.random() < min(vote_chance, 0.9):
                     return "political"
 
-        # 6. Bleed (default)
+        # 6. Bleed (default) - with boost from cards in hand
         if adjusted["bleed_priority"] > 0:
+            bleed_boost = 0.0
+            
+            # Boost if has bleed action card
+            if self._has_bleed_card(state, player):
+                bleed_boost += 0.15
+            
+            # Boost if has bleed modifier
+            if self._has_bleed_modifier(state, player):
+                bleed_boost += 0.15
+            
+            # Extra boost if has multiple modifiers (powerbleed)
+            modifier_count = sum(
+                1 for cid in player.hand
+                if state.card_by_id(cid)
+                and state.card_by_id(cid).tipo.strip().lower() == 'action modifier'
+            )
+            if modifier_count >= 2:
+                bleed_boost += 0.1
+            
             # Check for stealth cards
             if adjusted["stealth_priority"] > 0:
                 if self._has_stealth_card(state, player):
                     if state.random.random() < adjusted["stealth_priority"] * 0.5:
                         return "action_card"
+            
+            # Apply boost to bleed priority
+            final_bleed_chance = adjusted["bleed_priority"] + bleed_boost
+            if state.random.random() < min(final_bleed_chance, 0.9):
+                return "bleed"
+            
             return "bleed"
 
         # Default
@@ -565,6 +590,70 @@ class StrategyEngine:
                 if t in ('action', 'political action'):
                     return True
         return False
+
+    def _has_bleed_card(self, state: GameState, player: Any) -> bool:
+        """Check if player has action cards that bleed.
+        
+        These cards have 'bleed' in their text or effects.
+        Examples: Govern the Unaligned, Deep Song, Computer Hacking.
+        """
+        for cid in player.hand:
+            card = state.card_by_id(cid)
+            if card:
+                # Check by text pattern
+                text = (getattr(card, 'text', '') or '').lower()
+                if 'bleed' in text and card.tipo.strip().lower() == 'action':
+                    return True
+                # Check abilities for bleed effects
+                abilities = getattr(card, 'abilities', None) or []
+                for ab in abilities:
+                    effects = getattr(ab, 'effects', None) or []
+                    for eff in effects:
+                        func = getattr(eff, 'function', '')
+                        if 'bleed' in func.lower():
+                            return True
+        return False
+
+    def _has_bleed_modifier(self, state: GameState, player: Any) -> bool:
+        """Check if player has action modifiers that increase bleed.
+        
+        These cards have '+X bleed' in their text.
+        Examples: Conditioning, Bonding, Command of the Beast.
+        """
+        for cid in player.hand:
+            card = state.card_by_id(cid)
+            if card and card.tipo.strip().lower() == 'action modifier':
+                text = (getattr(card, 'text', '') or '').lower()
+                # Check for bleed increase
+                if '+bleed' in text or '+1 bleed' in text or '+2 bleed' in text:
+                    return True
+                # Check abilities
+                abilities = getattr(card, 'abilities', None) or []
+                for ab in abilities:
+                    effects = getattr(ab, 'effects', None) or []
+                    for eff in effects:
+                        func = getattr(eff, 'function', '')
+                        if 'bleed' in func.lower():
+                            return True
+        return False
+
+    def count_bleed_bonus(self, state: GameState, player: Any) -> int:
+        """Count total bleed bonus available from modifiers in hand."""
+        total = 0
+        for cid in player.hand:
+            card = state.card_by_id(cid)
+            if card and card.tipo.strip().lower() == 'action modifier':
+                # Check card's bleed value
+                total += getattr(card, 'bleed', 0)
+                # Check abilities for bleed bonus
+                abilities = getattr(card, 'abilities', None) or []
+                for ab in abilities:
+                    effects = getattr(ab, 'effects', None) or []
+                    for eff in effects:
+                        params = getattr(eff, 'params', {})
+                        if isinstance(params, dict):
+                            total += params.get('bleed_bonus', 0)
+        return total
 
     def _has_uncontrolled_needing_blood(self, state: GameState, player: Any) -> bool:
         """Check if player has uncontrolled vampires that need blood."""
