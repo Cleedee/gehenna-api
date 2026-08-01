@@ -36,6 +36,39 @@ def list_available_decks() -> list[dict[str, Any]]:
     return decks
 
 
+def _get_vampire_info_from_db(codevdb: int, card_name: str) -> dict:
+    """Get vampire clan and disciplines from database."""
+    import sqlite3
+    
+    result = {"clan": "", "disciplines": ""}
+    
+    try:
+        conn = sqlite3.connect(str(Path(__file__).parent.parent.parent / "database.db"))
+        cursor = conn.cursor()
+        
+        # Try by code first
+        cursor.execute("SELECT clan, disciplines FROM cards WHERE code = ?", (codevdb,))
+        row = cursor.fetchone()
+        
+        # If not found, try by name
+        if not row and card_name:
+            cursor.execute(
+                "SELECT clan, disciplines FROM cards WHERE name = ? LIMIT 1",
+                (card_name,),
+            )
+            row = cursor.fetchone()
+        
+        if row:
+            result["clan"] = row[0] or ""
+            result["disciplines"] = row[1] or ""
+        
+        conn.close()
+    except Exception:
+        pass
+    
+    return result
+
+
 def _get_card_capacity(codevdb: int, card_name: str, card_type: str) -> int:
     """Get card capacity from database."""
     import sqlite3
@@ -106,6 +139,14 @@ def load_deck_from_json(
                     if v:
                         mod_list.append(f"{k}:{v}")
                 
+                # Get clan and disciplines from database for vampires
+                clan = ""
+                disciplines = ""
+                if card_type.lower() in ("vampire", "imbued"):
+                    db_info = _get_vampire_info_from_db(codevdb, card_data.get("name", ""))
+                    clan = db_info.get("clan", "")
+                    disciplines = db_info.get("disciplines", "")
+                
                 instance = CardInstance(
                     id=card_id,
                     card_id=codevdb,
@@ -122,9 +163,19 @@ def load_deck_from_json(
                     is_infernal=card_info.is_infernal,
                     abilities=card_info.abilities,
                     modifiers=mod_list,
+                    clan=clan,
+                    disciplines=disciplines,
                 )
             else:
                 # Fallback: use data from deck file
+                # Get clan and disciplines from database for vampires
+                clan = ""
+                disciplines = ""
+                if card_type.lower() in ("vampire", "imbued"):
+                    db_info = _get_vampire_info_from_db(codevdb, card_data.get("name", ""))
+                    clan = db_info.get("clan", "")
+                    disciplines = db_info.get("disciplines", "")
+                
                 instance = CardInstance(
                     id=card_id,
                     card_id=codevdb,
@@ -133,6 +184,8 @@ def load_deck_from_json(
                     tipo=card_type,
                     capacity=capacity,
                     blood=capacity if card_type.lower() == "vampire" else 0,
+                    clan=clan,
+                    disciplines=disciplines,
                 )
             
             # Separate crypt and library
