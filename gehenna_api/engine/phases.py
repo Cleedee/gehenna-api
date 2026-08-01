@@ -2108,7 +2108,7 @@ class PhaseManager:
         if prevented > 0:
             self._log_action(
                 player,
-                f'{minion.name} prevents {minimized} damage',
+                f'{minion.name} prevents {prevented} damage',
             )
         return remaining
 
