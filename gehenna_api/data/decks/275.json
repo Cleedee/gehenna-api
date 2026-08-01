@@ -1,0 +1,276 @@
+{
+  "deck_id": 275,
+  "name": "Path of Death Ally Toolbox",
+  "cards": [
+    {
+      "codevdb": 4128,
+      "name": "Dance of the Dead",
+      "tipo": "Action",
+      "quantity": 2
+    },
+    {
+      "codevdb": 2186,
+      "name": "Govern the Unaligned",
+      "tipo": "Action",
+      "quantity": 7
+    },
+    {
+      "codevdb": 2942,
+      "name": "Revelations",
+      "tipo": "Action",
+      "quantity": 1
+    },
+    {
+      "codevdb": 4051,
+      "name": "Shroud of Decay",
+      "tipo": "Action",
+      "quantity": 5
+    },
+    {
+      "codevdb": 4139,
+      "name": "Gifts From Hereafter",
+      "tipo": "Action Modifier",
+      "quantity": 3
+    },
+    {
+      "codevdb": 3022,
+      "name": "Seduction",
+      "tipo": "Action Modifier",
+      "quantity": 1
+    },
+    {
+      "codevdb": 4048,
+      "name": "Shadow Cast",
+      "tipo": "Action Modifier",
+      "quantity": 2
+    },
+    {
+      "codevdb": 4049,
+      "name": "Shadow Cloak",
+      "tipo": "Action Modifier",
+      "quantity": 2
+    },
+    {
+      "codevdb": 4053,
+      "name": "Stygian Shroud",
+      "tipo": "Action Modifier",
+      "quantity": 4
+    },
+    {
+      "codevdb": 4056,
+      "name": "Where the Veil Thins",
+      "tipo": "Action Modifier",
+      "quantity": 3
+    },
+    {
+      "codevdb": 2583,
+      "name": "Murmur of the False Will",
+      "tipo": "Action Modifier/Reaction",
+      "quantity": 1
+    },
+    {
+      "codevdb": 4136,
+      "name": "Fiorella, Empty One",
+      "tipo": "Ally",
+      "quantity": 1
+    },
+    {
+      "codevdb": 4138,
+      "name": "Freakish Conglomeration",
+      "tipo": "Ally",
+      "quantity": 7
+    },
+    {
+      "codevdb": 3385,
+      "name": "Vagabond Mystic",
+      "tipo": "Ally",
+      "quantity": 2
+    },
+    {
+      "codevdb": 4045,
+      "name": "Pass Through Shadow",
+      "tipo": "Combat",
+      "quantity": 4
+    },
+    {
+      "codevdb": 3244,
+      "name": "Target Vitals",
+      "tipo": "Combat",
+      "quantity": 1
+    },
+    {
+      "codevdb": 2056,
+      "name": "FBI Special Affairs Division",
+      "tipo": "Event",
+      "quantity": 1
+    },
+    {
+      "codevdb": 3377,
+      "name": "Unmasking, The",
+      "tipo": "Event",
+      "quantity": 2
+    },
+    {
+      "codevdb": 4125,
+      "name": "Burial Site Hunting Ground",
+      "tipo": "Master",
+      "quantity": 1
+    },
+    {
+      "codevdb": 1899,
+      "name": "Direct Intervention",
+      "tipo": "Master",
+      "quantity": 1
+    },
+    {
+      "codevdb": 1940,
+      "name": "Dreams of the Sphinx",
+      "tipo": "Master",
+      "quantity": 2
+    },
+    {
+      "codevdb": 1979,
+      "name": "Elysian Fields",
+      "tipo": "Master",
+      "quantity": 1
+    },
+    {
+      "codevdb": 2045,
+      "name": "Fame",
+      "tipo": "Master",
+      "quantity": 1
+    },
+    {
+      "codevdb": 2167,
+      "name": "Giant's Blood",
+      "tipo": "Master",
+      "quantity": 1
+    },
+    {
+      "codevdb": 2435,
+      "name": "Life in the City",
+      "tipo": "Master",
+      "quantity": 1
+    },
+    {
+      "codevdb": 6640,
+      "name": "Line, The",
+      "tipo": "Master",
+      "quantity": 1
+    },
+    {
+      "codevdb": 2710,
+      "name": "Perfectionist",
+      "tipo": "Master",
+      "quantity": 2
+    },
+    {
+      "codevdb": 2761,
+      "name": "Powerbase: Montreal",
+      "tipo": "Master",
+      "quantity": 1
+    },
+    {
+      "codevdb": 3417,
+      "name": "Villein",
+      "tipo": "Master",
+      "quantity": 2
+    },
+    {
+      "codevdb": 3422,
+      "name": "Visit from the Capuchin",
+      "tipo": "Master",
+      "quantity": 1
+    },
+    {
+      "codevdb": 1872,
+      "name": "Deflection",
+      "tipo": "Reaction",
+      "quantity": 6
+    },
+    {
+      "codevdb": 1873,
+      "name": "Delaying Tactics",
+      "tipo": "Reaction",
+      "quantity": 1
+    },
+    {
+      "codevdb": 2644,
+      "name": "On the Qui Vive",
+      "tipo": "Reaction",
+      "quantity": 1
+    },
+    {
+      "codevdb": 4050,
+      "name": "Shadow Sentinel",
+      "tipo": "Reaction",
+      "quantity": 3
+    },
+    {
+      "codevdb": 4075,
+      "name": "Abderrahim, Death's Hand",
+      "tipo": "vampire",
+      "quantity": 1
+    },
+    {
+      "codevdb": 4014,
+      "name": "Aintzane Arriaga",
+      "tipo": "vampire",
+      "quantity": 1
+    },
+    {
+      "codevdb": 4015,
+      "name": "Alek K\u00f6nig",
+      "tipo": "vampire",
+      "quantity": 1
+    },
+    {
+      "codevdb": 4017,
+      "name": "Azucena",
+      "tipo": "vampire",
+      "quantity": 1
+    },
+    {
+      "codevdb": 4090,
+      "name": "El Monse\u00f1or",
+      "tipo": "vampire",
+      "quantity": 1
+    },
+    {
+      "codevdb": 4091,
+      "name": "Eulogio S\u00e1nchez de los Reyes",
+      "tipo": "vampire",
+      "quantity": 1
+    },
+    {
+      "codevdb": 4023,
+      "name": "Kamaluddin",
+      "tipo": "vampire",
+      "quantity": 1
+    },
+    {
+      "codevdb": 4106,
+      "name": "Nadezhda",
+      "tipo": "vampire",
+      "quantity": 1
+    },
+    {
+      "codevdb": 4030,
+      "name": "Parijat, the Dark Oracle",
+      "tipo": "vampire",
+      "quantity": 1
+    },
+    {
+      "codevdb": 4112,
+      "name": "Sakura, The Merciless",
+      "tipo": "vampire",
+      "quantity": 2
+    },
+    {
+      "codevdb": 4121,
+      "name": "Zbigniew, Hunter of Mekhet",
+      "tipo": "vampire",
+      "quantity": 1
+    }
+  ]
+}

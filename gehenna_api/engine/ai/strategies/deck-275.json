@@ -1,60 +1,85 @@
 {
   "deck_id": 275,
   "name": "Path of Death Ally Toolbox",
-  "description": "Ally-based toolbox with rush, bleed, and control via Govern and Shroud",
-  "bleed_priority": 0.6,
-  "rush_priority": 0.5,
-  "shroud_priority": 0.5,
-  "stealth_priority": 0.3,
-  "control_priority": 0.4,
-  "bloat_priority": 0.3,
-  "rush_threshold": 5.0,
-  "control_threshold": 6.0,
-  "bleed_threshold": 0.0,
-  "bloat_threshold": 12.0,
-  "early_phase": {
-    "bloat_modifier": 0.2,
-    "bleed_modifier": -0.1,
-    "rush_modifier": -0.2,
-    "control_modifier": -0.1,
-    "bloat_threshold_modifier": 3.0
-  },
-  "mid_phase": {
-    "bleed_modifier": 0.1,
-    "rush_modifier": 0.1,
-    "control_modifier": 0.1,
-    "bloat_modifier": -0.1
-  },
-  "late_phase": {
-    "bleed_modifier": 0.2,
-    "rush_modifier": 0.2,
-    "control_modifier": -0.1,
-    "bloat_modifier": -0.2,
-    "rush_threshold_modifier": -2.0
-  },
-  "final_phase": {
-    "bleed_modifier": 0.3,
-    "rush_modifier": 0.3,
-    "control_modifier": -0.2,
-    "bloat_modifier": -0.3,
-    "rush_threshold_modifier": -3.0,
-    "control_threshold_modifier": -2.0
-  },
+  "archetype": "toolbox",
+  "description": "Ally-based toolbox with combat and control",
+  "playstyle": "Versatile allies with multiple options",
+  
   "preferred_cards": [
-    "Freakish Conglomeration",
-    "Govern the Unaligned",
-    "Shroud of Decay",
-    "Where the Veil Thins",
-    "Deflection"
+    "Sakura, The Merciless",
+    "Parijat, the Dark Oracle",
+    "War Ghouls",
+    "Hellhound",
+    "Raven",
+    "Earth Meld",
+    "Shroud of Shadows"
   ],
+  
   "avoided_cards": [],
-  "target_types": [
-    "vampire",
-    "ally"
-  ],
-  "target_min_pool": 0,
-  "target_prefer_low_pool": false,
-  "adapt_to_counters": true,
-  "stealth_if_blocked": true,
-  "rush_if_no_block": true
+  
+  "action_priority": {
+    "bleed": 60,
+    "rush": 70,
+    "control": 50,
+    "vote": 40,
+    "bloat": 50
+  },
+  
+  "combat_strategy": {
+    "type": "aggressive",
+    "prefer_stealth": false,
+    "prefer_combat": true,
+    "strike_priority": [
+      "handstrike",
+      "aggravated",
+      "steal_blood"
+    ]
+  },
+  
+  "defense_strategy": {
+    "block_threshold": 3,
+    "prefer_redirect": true,
+    "prefer_combat_ends": true
+  },
+  
+  "phases": {
+    "early": {
+      "focus": "setup",
+      "actions": ["control", "bleed"]
+    },
+    "mid": {
+      "focus": "rush",
+      "actions": ["rush", "bleed"]
+    },
+    "late": {
+      "focus": "aggressive",
+      "actions": ["rush", "bleed"]
+    },
+    "final": {
+      "focus": "kill",
+      "actions": ["rush", "bleed"]
+    }
+  },
+  
+  "disciplines": {
+    "CEL": "combat",
+    "FOR": "combat",
+    "OBF": "stealth",
+    "PRE": "vote"
+  },
+  
+  "counters": {
+    "bleed": "rush",
+    "rush": "combat",
+    "combat": "bleed",
+    "vote": "stealth",
+    "stealth": "bleed",
+    "toolbox": "bleed"
+  },
+  
+  "ally_strategy": {
+    "recruit_allies": true,
+    "use_allies_for_rush": true,
+    "use_allies_for_block": true
+  }
 }

@@ -22,7 +22,7 @@ DECK_ARCHETYPES: dict[int, str] = {
     242: 'stealth',      # Me chame pelo meu nome (Allies + Stealth)
     174: 'rush',         # UnnaDelicia (Rush + Allies)
     249: 'vote',         # Ministry (Vote + Bleed)
-    275: 'rush',         # Path of Death (Allies + Rush)
+    275: 'toolbox',      # Path of Death Ally Toolbox (Allies + Rush)
     195: 'stealth_combat',  # Kalinda S&B (Stealth + Combat)
     278: 'wall',         # Fat Fighter Anarch Wall (Defense + Intercept)
     279: 'vote',         # Ladies of Power (Vote + Bleed)
