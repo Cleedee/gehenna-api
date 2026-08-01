@@ -5,6 +5,7 @@ Runs games to collect experience and train the Q-Learning agent.
 
 from __future__ import annotations
 
+import random as rng_random
 import sys
 from pathlib import Path
 
@@ -14,16 +15,22 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
 from gehenna_api.engine.ai.q_learning import QLearningAgent, QState
 from gehenna_api.engine.ai.state_encoder import StateEncoder
 from gehenna_api.engine.ai.reward import RewardCalculator
+from gehenna_api.engine.ai.deck_q_agent import DeckQLearningAgent
 from gehenna_api.engine.engine import GameEngine
 from gehenna_api.engine.state import GameState, PlayerState
 from gehenna_api.engine.ai.random_bot import RandomBot
+from gehenna_api.engine.deck_loader import (
+    list_available_decks,
+    create_game_with_json_decks,
+)
 
 
 class QLearningBot:
     """Bot that uses Q-Learning for decision making."""
     
-    def __init__(self, agent: QLearningAgent):
+    def __init__(self, agent: DeckQLearningAgent, deck_id: int):
         self.agent = agent
+        self.deck_id = deck_id
         self.current_state: QState | None = None
         self.last_action: str | None = None
     
@@ -31,7 +38,19 @@ class QLearningBot:
         """Choose action using Q-Learning."""
         encoder = StateEncoder(state, player_id)
         self.current_state = encoder.encode()
-        self.last_action = self.agent.choose_action(self.current_state)
+        
+        # Get opponent profiles
+        opponent_profiles = {}
+        for p in state.players:
+            if p.id != player_id and not p.is_ousted:
+                profile = self.agent.get_opponent_profile(p.id)
+                opponent_profiles[p.id] = profile
+        
+        self.last_action = self.agent.choose_action(
+            self.deck_id,
+            self.current_state,
+            opponent_profiles,
+        )
         return self.last_action
     
     def choose_action(self, state: GameState, player_id: int) -> str:
@@ -138,11 +157,109 @@ class Trainer:
     
     def _run_game(self, game_num: int) -> dict:
         """Run a single game and collect experience."""
-        # Create game state
-        state = GameState(game_id=f'train_{game_num}', seed=game_num)
-        rng = state.random
+        # Get available decks
+        available = list_available_decks()
+        if len(available) < 4:
+            # Fallback to simple decks
+            return self._run_simple_game(game_num)
         
-        # Create players with simple crypt/library
+        # Randomly select 4 decks
+        selected = rng_random.sample(available, 4)
+        deck_ids = [d['deck_id'] for d in selected]
+        
+        # Create game with real decks
+        state, _ = create_game_with_json_decks(
+            deck_ids=deck_ids,
+            seed=game_num,
+        )
+        
+        # Create bots - RL bot as Player 1, Random bots for others
+        bots = {}
+        rl_bot = QLearningBot(self.agent, deck_ids[0])
+        bots[1] = rl_bot
+        for i in range(2, 5):  # Players 2-4
+            bots[i] = RandomBot()
+        
+        # Run game
+        engine = GameEngine(state, bots=bots)
+        engine.start()
+        
+        total_reward = 0.0
+        
+        for turn in range(30):
+            # Track pool before turn
+            p1 = state.player_by_id(1)
+            prev_pool = p1.pool if p1 else 30
+            
+            # Run turn
+            engine.run_turn()
+            
+            if state.is_finished:
+                break
+            
+            # Calculate reward based on pool change
+            p1 = state.player_by_id(1)
+            current_pool = p1.pool if p1 else 30
+            pool_delta = current_pool - prev_pool
+            
+            if rl_bot.current_state:
+                reward = 0.0
+                if pool_delta > 0:
+                    reward = 0.2 * pool_delta  # Gained pool
+                elif pool_delta < 0:
+                    reward = -0.1 * abs(pool_delta)  # Lost pool
+                
+                # Record outcome
+                if rl_bot.current_state and rl_bot.last_action:
+                    encoder = StateEncoder(state, 1)
+                    next_state = encoder.encode()
+                    self.agent.update(
+                        rl_bot.deck_id,
+                        rl_bot.current_state,
+                        rl_bot.last_action,
+                        reward,
+                        next_state,
+                        done=False,
+                    )
+                total_reward += reward
+        
+        # Final reward based on game outcome
+        winner_id = engine.get_winner()
+        if winner_id and winner_id == 1:
+            final_reward = 1.0  # Win
+            winner_name = 'rl_bot'
+        elif winner_id:
+            final_reward = -0.5  # Loss
+            winner_name = 'other'
+        else:
+            final_reward = 0.0  # Draw
+            winner_name = None
+        
+        total_reward += final_reward
+        
+        # Record final outcome
+        if rl_bot.current_state and rl_bot.last_action:
+            encoder = StateEncoder(state, 1)
+            next_state = encoder.encode()
+            self.agent.update(
+                rl_bot.deck_id,
+                rl_bot.current_state,
+                rl_bot.last_action,
+                final_reward,
+                next_state,
+                done=True,
+            )
+        
+        return {
+            'winner': winner_name,
+            'total_reward': total_reward,
+            'turns': state.turn_number,
+        }
+    
+    def _run_simple_game(self, game_num: int) -> dict:
+        """Run a simple game with basic decks (fallback)."""
+        state = GameState(game_id=f'train_simple_{game_num}', seed=game_num)
+        
         num_players = 4
         for i in range(1, num_players + 1):
             ps = PlayerState(
@@ -158,87 +275,37 @@ class Trainer:
                 victory_points=0,
             )
             state.players.append(ps)
-            
-            # Add a simple vampire for each player
-            from gehenna_api.engine.card_instance import CardInstance, CardPosition
-            v = CardInstance(
-                id=f'p{i}_vamp_1',
-                card_id=1000 + i,
-                name=f'Vampire {i}',
-                tipo='vampire',
-                capacity=5,
-                blood=5,
-                pool_cost=5,
-                position=CardPosition.uncontrolled,
-                strength=1,
-                stealth=0,
-                intercept=0,
-                bleed=0,
-                disciplines='|dom|DOM|',
-            )
-            state.cards[v.id] = v
-            ps.crypt = [v.id]
         
-        # Create bots - RL bot as Player 1, Random bots for others
         bots = {}
         rl_bot = QLearningBot(self.agent)
         bots[1] = rl_bot
         for i in range(2, num_players + 1):
             bots[i] = RandomBot()
         
-        # Run game
         engine = GameEngine(state, bots=bots)
         engine.start()
         
         total_reward = 0.0
-        reward_calc = RewardCalculator(state, 1)
         
         for turn in range(30):
-            # Track pool before turn
-            prev_pool = state.player_by_id(1).pool if state.player_by_id(1) else 30
-            
-            # Run turn
             engine.run_turn()
-            
             if state.is_finished:
                 break
-            
-            # Calculate reward based on pool change
-            current_pool = state.player_by_id(1).pool if state.player_by_id(1) else 30
-            pool_delta = current_pool - prev_pool
-            
-            if rl_bot.current_state:
-                reward = 0.0
-                if pool_delta > 0:
-                    reward = 0.2 * pool_delta  # Gained pool
-                elif pool_delta < 0:
-                    reward = -0.1 * abs(pool_delta)  # Lost pool
-                
-                # Record outcome
-                rl_bot.record_outcome(state, 1, reward)
-                total_reward += reward
         
-        # Final reward based on game outcome
-        winner = engine.get_winner()
-        if winner and winner.id == 1:
-            final_reward = 1.0  # Win
+        winner_id = engine.get_winner()
+        if winner_id and winner_id == 1:
+            final_reward = 1.0
             winner_name = 'rl_bot'
-        elif winner:
-            final_reward = -0.5  # Loss
+        elif winner_id:
+            final_reward = -0.5
             winner_name = 'other'
         else:
-            final_reward = 0.0  # Draw
+            final_reward = 0.0
             winner_name = None
-        
-        total_reward += final_reward
-        
-        # Record final outcome
-        if rl_bot.current_state:
-            rl_bot.record_outcome(state, 1, final_reward)
         
         return {
             'winner': winner_name,
-            'total_reward': total_reward,
+            'total_reward': final_reward,
             'turns': state.turn_number,
         }
     
@@ -260,14 +327,10 @@ def train_agent(
     num_games: int = 100,
     save_path: str | None = None,
     verbose: bool = True,
-) -> QLearningAgent:
+) -> DeckQLearningAgent:
     """Convenience function to train an agent."""
-    agent = QLearningAgent()
-    
-    if save_path and Path(save_path).exists():
-        agent.load(save_path)
-        if verbose:
-            print(f"Loaded existing agent with {agent.games_played} games played")
+    agent = DeckQLearningAgent()
+    agent.load_all()
     
     trainer = Trainer(
         agent=agent,
@@ -281,7 +344,9 @@ def train_agent(
     if verbose:
         print("\nTraining complete!")
         print(f"Win rate: {stats['win_rate']:.1f}%")
-        print(f"Q-table size: {stats['agent_stats']['q_table_size']}")
+        deck_stats = stats.get('agent_stats', {}).get('agents', {})
+        for deck_id, ds in deck_stats.items():
+            print(f"  Deck {deck_id}: {ds['q_table_size']} entries")
     
     return agent
 
