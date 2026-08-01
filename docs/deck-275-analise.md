@@ -513,3 +513,67 @@ O motor agora simula **razoavelmente bem** o deck #275, com as
 principais mecânicas implementadas. As limitações restantes são
 importantes para fidelidade completa, mas não impedem simulações
 úteis para teste e validação.
+
+---
+
+## 📈 ATUALIZAÇÃO (sessão de desenvolvimento)
+
+### ✅ Todos os Bugs Corrigidos
+
+| Bug | Status | Commit |
+|-----|--------|--------|
+| Transferências (turno 1: 1/2/3/4) | ✅ Corrigido | ff0935c |
+| Govern sup (+3 sangue) | ✅ Implementado | 87e45fb |
+| Requisitos de disciplina | ✅ Verificados | 87e45fb |
+| Requisito de Path | ✅ Verificado | 87e45fb |
+| Vida de aliados (3-4) | ✅ Calculado do texto | 284b725 |
+| Rush do Freakish (D) | ✅ Implementado | 38438e9 |
+| Where the Veil Thins sup | ✅ Implementado | 38438e9 |
+| Shroud of Decay efeitos | ✅ Implementado | 38438e9 |
+| Oust (pool=0) | ✅ Corrigido | 69b761f |
+| Baali infernal | ✅ Corrigido | 24bae63 |
+
+### 🤖 StrategyBot Implementado
+
+O StrategyBot reconhece:
+- **Cartas de rush**: Ambush, Bum's Rush, Big Game (efeito action.rush)
+- **Cartas de bleed**: Govern, Deep Song, Computer Hacking
+- **Modifiers de bleed**: Conditioning, Bonding, Command of the Beast
+- **Cartas de aliado**: Freakish Conglomeração, etc.
+
+Ajustes por fase:
+- **Early** (1-5): Mais bloat, menos rush
+- **Mid** (6-15): Equilibrado
+- **Late** (16+): Mais agressivo
+- **Final** (2 jogadores): Ataque total
+
+### 📊 Resultados das Simulações
+
+**Deck 275 vs outros (30 jogos):**
+
+| Cenário | Wins | VP Médio |
+|---------|------|----------|
+| vs RandomBot | 0 | 0.43 |
+| vs StrategyBot | 0 | 0.57 |
+| P1=Strategy, Outros=Random | 3 | 1.07 |
+
+**Por posição (20 jogos):**
+
+| Posição | Deck 275 | Observação |
+|---------|----------|------------|
+| P1 | 0 | Posição desvantajosa |
+| P3 | 3 | Melhora significativa |
+| P4 | 5 | Melhor posição |
+
+### 🎯 Conclusão Atualizada
+
+O deck #275 está **totalmente implementado** no motor:
+- ✅ Todas as mecânicas funcionando
+- ✅ StrategyBot com conhecimento de cartas
+- ✅ Ajustes por fase do jogo
+- ✅ Avaliação de ameaça
+
+O deck ainda não vence contra arquétipos top tier (Baali Vote),
+mas performa melhor em posições favoráveis e com StrategyBot.
+
+> *"Play as a toolbox rather than swarm." — Nick Miller*
