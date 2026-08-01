@@ -958,6 +958,100 @@ class GameStateAnalyzer:
             return 'diplomatic'
         
         return 'balanced'
+    
+    def get_priority_adjustments(self, threat_assessor: ThreatAssessment) -> dict[str, float]:
+        """Calculate dynamic priority adjustments based on game state.
+        
+        Returns a dict of priority modifiers for each action type.
+        """
+        if not self.player:
+            return {}
+        
+        position = self.get_strategic_position(threat_assessor)
+        my_threat = threat_assessor.assess(self.state, self.player_id)
+        
+        prey_threat = 0
+        if self.prey:
+            prey_threat = threat_assessor.assess(self.state, self.prey.id)
+        
+        predator_threat = 0
+        if self.predator:
+            predator_threat = threat_assessor.assess(self.state, self.predator.id)
+        
+        adjustments = {
+            'bleed_priority': 0.0,
+            'rush_priority': 0.0,
+            'vote_priority': 0.0,
+            'control_priority': 0.0,
+            'bloat_priority': 0.0,
+            'stealth_priority': 0.0,
+        }
+        
+        # Pool-based adjustments
+        pool = self.player.pool
+        if pool <= 5:
+            # Critical: focus on survival
+            adjustments['bloat_priority'] += 0.3
+            adjustments['bleed_priority'] -= 0.2
+            adjustments['rush_priority'] -= 0.2
+        elif pool <= 10:
+            # Low: need bloat
+            adjustments['bloat_priority'] += 0.2
+            adjustments['bleed_priority'] -= 0.1
+        elif pool >= 20:
+            # High: can be aggressive
+            adjustments['bleed_priority'] += 0.1
+            adjustments['rush_priority'] += 0.1
+        
+        # Position-based adjustments
+        if position == 'aggressive':
+            adjustments['bleed_priority'] += 0.2
+            adjustments['rush_priority'] += 0.1
+            adjustments['bloat_priority'] -= 0.1
+        elif position == 'defensive':
+            adjustments['bleed_priority'] -= 0.1
+            adjustments['rush_priority'] -= 0.1
+            adjustments['control_priority'] += 0.2
+            adjustments['stealth_priority'] += 0.1
+        elif position == 'diplomatic':
+            adjustments['control_priority'] += 0.1
+            adjustments['bloat_priority'] += 0.1
+        
+        # Threat-based adjustments
+        if predator_threat > 6.0:
+            # Predator is dangerous: defend more
+            adjustments['control_priority'] += 0.1
+            adjustments['stealth_priority'] += 0.1
+            adjustments['bleed_priority'] -= 0.1
+        
+        if prey_threat > 6.0:
+            # Prey is dangerous: attack more
+            adjustments['bleed_priority'] += 0.1
+            adjustments['rush_priority'] += 0.1
+        
+        # Minion count adjustments
+        my_minions = sum(
+            1
+            for c in self.state.cards.values()
+            if c.owner == self.player_id
+            and c.position == CardPosition.ready
+            and c.tipo.strip().lower() in ('vampire', 'ally')
+        )
+        
+        if my_minions >= 4:
+            # Many minions: can be aggressive
+            adjustments['bleed_priority'] += 0.1
+            adjustments['rush_priority'] += 0.1
+        elif my_minions <= 1:
+            # Few minions: be careful
+            adjustments['bloat_priority'] += 0.1
+            adjustments['control_priority'] += 0.1
+        
+        # Clamp all adjustments to [-0.5, 0.5]
+        for key in adjustments:
+            adjustments[key] = max(-0.5, min(0.5, adjustments[key]))
+        
+        return adjustments
 
 
 class StrategyEngine:
@@ -1086,6 +1180,14 @@ class StrategyEngine:
         # Analyze game state including prey/predator/cross
         analyzer = GameStateAnalyzer(state, player_id)
         strategic_position = analyzer.get_strategic_position(self.threat_assessor)
+        
+        # Get dynamic priority adjustments based on game state
+        dynamic_adjustments = analyzer.get_priority_adjustments(self.threat_assessor)
+        
+        # Apply dynamic adjustments to priorities
+        for key in dynamic_adjustments:
+            if key in adjusted:
+                adjusted[key] = max(0.0, min(1.0, adjusted[key] + dynamic_adjustments[key]))
 
         # Assess threats
         prey_threat = (

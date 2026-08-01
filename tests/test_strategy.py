@@ -469,6 +469,38 @@ class TestLearningSystem:
 class TestGameStateAnalyzer:
     """Tests for GameStateAnalyzer."""
 
+    def test_analyzer_get_priority_adjustments(self):
+        from gehenna_api.engine.ai.strategy import GameStateAnalyzer, ThreatAssessment
+        from gehenna_api.engine.state import GameState, PlayerState
+
+        state = GameState(game_id="test")
+        # Create 4 players
+        for i in range(1, 5):
+            ps = PlayerState(
+                id=i,
+                username=f"Player {i}",
+                pool=30 if i == 1 else 10,  # Player 1 is strong
+                hand=[],
+                crypt=[],
+                library=[],
+                ash_heap=[],
+                has_edge=False,
+                transfers=0,
+                victory_points=1 if i == 1 else 0,  # Player 1 has VP
+            )
+            state.players.append(ps)
+
+        analyzer = GameStateAnalyzer(state, player_id=1)
+        assessor = ThreatAssessment()
+
+        adjustments = analyzer.get_priority_adjustments(assessor)
+        
+        # Should return a dict with priority adjustments
+        assert isinstance(adjustments, dict)
+        assert 'bleed_priority' in adjustments
+        assert 'rush_priority' in adjustments
+        assert 'bloat_priority' in adjustments
+
     def test_analyzer_calculates_prey_predator(self):
         from gehenna_api.engine.ai.strategy import GameStateAnalyzer
         from gehenna_api.engine.state import GameState, PlayerState
