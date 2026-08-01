@@ -1030,13 +1030,8 @@ class GameStateAnalyzer:
             adjustments['rush_priority'] += 0.1
         
         # Minion count adjustments
-        my_minions = sum(
-            1
-            for c in self.state.cards.values()
-            if c.owner == self.player_id
-            and c.position == CardPosition.ready
-            and c.tipo.strip().lower() in ('vampire', 'ally')
-        )
+        # Use crypt length as proxy for minion count
+        my_minions = len(self.player.crypt) if self.player else 0
         
         if my_minions >= 4:
             # Many minions: can be aggressive
