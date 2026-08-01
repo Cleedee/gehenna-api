@@ -1,0 +1,15 @@
+{
+  "codevdb": 121,
+  "name": "Arishat",
+  "tipo": "Vampire",
+  "clan": "Baali",
+  "capacity": 6,
+  "disciplines": ["DAI", "OBF", "PRE"],
+  "is_unique": true,
+  "is_infernal": true,
+  "modifiers": {},
+  "abilities": [],
+  "text": "Independent: Arishat has 1 vote (titled). Once each referendum, she may burn 1 blood to force a vampire to abstain. Infernal.",
+  "needs_review": false,
+  "notes": "Baali with 1 vote, Infernal"
+}

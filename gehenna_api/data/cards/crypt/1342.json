@@ -1,0 +1,15 @@
+{
+  "codevdb": 1342,
+  "name": "Xeper, Sultan of Lepers",
+  "tipo": "Vampire",
+  "clan": "Baali",
+  "capacity": 7,
+  "disciplines": ["ani", "dai", "pro", "OBF", "PRE"],
+  "is_unique": true,
+  "is_infernal": true,
+  "modifiers": {},
+  "abilities": [],
+  "text": "Independent: Xeper gets 1 additional vote for each ready unique infernal vampire you control. He may steal an ally controlled by another Methuselah as a (D) action. Infernal.",
+  "needs_review": false,
+  "notes": "Baali with vote bonus for infernal vampires, Infernal"
+}

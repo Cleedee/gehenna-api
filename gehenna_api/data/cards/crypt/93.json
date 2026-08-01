@@ -1,0 +1,17 @@
+{
+  "codevdb": 93,
+  "name": "Annazir",
+  "tipo": "Vampire",
+  "clan": "Baali",
+  "capacity": 9,
+  "disciplines": ["DAI", "OBF", "POT", "PRE"],
+  "is_unique": true,
+  "is_infernal": true,
+  "modifiers": {
+    "bleed": 1
+  },
+  "abilities": [],
+  "text": "Independent: Annazir has 2 votes (titled). He may burn a location or steal an equipment as a (D) action. +1 bleed. Infernal.",
+  "needs_review": false,
+  "notes": "Baali with 2 votes, Infernal"
+}

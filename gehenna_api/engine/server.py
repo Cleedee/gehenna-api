@@ -149,6 +149,11 @@ def _make_card_instance(
             is_unique = enriched.is_unique
     except Exception:
         is_infernal = False
+    
+    # Fallback: check database text for Infernal if not set
+    if not is_infernal and card_data.get('text'):
+        if 'Infernal' in (card_data.get('text') or ''):
+            is_infernal = True
 
     # Use enriched tipo from override if available (e.g., 'Master/Trifle')
     tipo = card_data.get('tipo', '')

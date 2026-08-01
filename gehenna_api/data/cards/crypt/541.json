@@ -1,0 +1,15 @@
+{
+  "codevdb": 541,
+  "name": "Horde, The",
+  "tipo": "Vampire",
+  "clan": "Baali",
+  "capacity": 3,
+  "disciplines": ["dai", "obf", "pre"],
+  "is_unique": false,
+  "is_infernal": true,
+  "modifiers": {},
+  "abilities": [],
+  "text": "Independent: Non-unique. The Horde may tap to give another infernal minion +1 bleed for the current action. Infernal.",
+  "needs_review": false,
+  "notes": "Baali non-unique, Infernal"
+}
