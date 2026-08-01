@@ -39,8 +39,61 @@ class StrategyBot(Bot):
     def choose_action(
         self, state: GameState, player_id: int
     ) -> str:
-        """Choose action for the player."""
-        return ""  # Not used directly
+        """Choose which action card to play from hand.
+        
+        This is called when the engine needs to select a specific card.
+        Returns card ID to play.
+        """
+        player = state.player_by_id(player_id)
+        if not player or not player.hand:
+            return ""
+        
+        # Use CardKnowledge for intelligent card selection
+        knowledge = CardKnowledge(state, player_id)
+        timing = CardTiming(state, player_id)
+        
+        # Get prioritized cards for bleed action (default)
+        prioritized = knowledge.prioritize_cards_for_situation('bleed')
+        
+        # Return highest priority card that should be played
+        for card, priority in prioritized:
+            # Check if we should hold this card
+            if knowledge.should_hold_card(card) and priority < 80:
+                continue
+            
+            # Check by effect (from JSON)
+            abilities = getattr(card, 'abilities', None) or []
+            for ab in abilities:
+                effects = getattr(ab, 'effects', None) or []
+                for eff in effects:
+                    func = getattr(eff, 'function', '')
+                    
+                    # Redirect bleed - don't play proactively
+                    if func == 'reaction.redirect_bleed':
+                        continue
+            
+            # Check by category
+            category = knowledge.get_card_category(card)
+            
+            # Skip defensive cards
+            if category == 'defense':
+                continue
+            
+            # Skip stealth unless needed
+            if category == 'stealth' and not timing.should_play_stealth('bleed'):
+                continue
+            
+            # Play action cards
+            if card.tipo.strip().lower() == 'action':
+                return card.id
+        
+        # If no good card found, return first action card
+        for cid in player.hand:
+            card = state.card_by_id(cid)
+            if card and card.tipo.strip().lower() == 'action':
+                return card.id
+        
+        return ""
 
     def choose_action_type(
         self,
@@ -55,6 +108,10 @@ class StrategyBot(Bot):
         if self.combo_system is None:
             self.combo_system = ComboSystem(state, player_id)
         
+        # Get strategic position for learning
+        analyzer = GameStateAnalyzer(state, player_id)
+        strategic_position = analyzer.get_strategic_position(self.engine.threat_assessor)
+        
         # Check for available combos
         combos = self.combo_system.detect_available_combos()
         if combos:
@@ -65,6 +122,10 @@ class StrategyBot(Bot):
                 action = self._get_combo_action(best_combo, state, player_id)
                 if action:
                     self.cards_played.append(action)
+                    # Record for learning
+                    self.learning.record_action(
+                        action, None, strategic_position, 'pending'
+                    )
                     return action
 
         # Use strategy engine
@@ -77,6 +138,11 @@ class StrategyBot(Bot):
 
         # Track for adaptation
         self.cards_played.append(action)
+        
+        # Record for learning
+        self.learning.record_action(
+            action, None, strategic_position, 'pending'
+        )
 
         return action
     
