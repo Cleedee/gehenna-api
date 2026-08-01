@@ -464,6 +464,48 @@ class TestLearningSystem:
         
         assert len(learning.action_history) == 0
         assert len(learning.card_effectiveness) == 0
+    
+    def test_get_phase_adjustment(self):
+        from gehenna_api.engine.ai.strategy import LearningSystem
+
+        learning = LearningSystem()
+        
+        # Record successful early game actions
+        for _ in range(8):
+            learning.record_action('bleed', None, 'aggressive', 'success', phase='early')
+        for _ in range(2):
+            learning.record_action('bleed', None, 'aggressive', 'fail', phase='early')
+        
+        adjustment = learning.get_phase_adjustment('early')
+        assert adjustment == 0.15  # High win rate in early phase
+    
+    def test_get_recent_trend(self):
+        from gehenna_api.engine.ai.strategy import LearningSystem
+
+        learning = LearningSystem()
+        
+        # Record 10 actions with improving trend
+        for _ in range(3):
+            learning.record_action('bleed', None, 'aggressive', 'fail')
+        for _ in range(7):
+            learning.record_action('bleed', None, 'aggressive', 'success')
+        
+        trend = learning.get_recent_trend()
+        assert trend > 0  # Positive trend
+    
+    def test_should_adapt_strategy(self):
+        from gehenna_api.engine.ai.strategy import LearningSystem
+
+        learning = LearningSystem()
+        
+        # Record 15 actions with declining trend
+        for _ in range(10):
+            learning.record_action('bleed', None, 'aggressive', 'success')
+        for _ in range(5):
+            learning.record_action('bleed', None, 'aggressive', 'fail')
+        
+        should_adapt = learning.should_adapt_strategy()
+        assert should_adapt is True  # Should adapt due to declining trend
 
 
 class TestGameStateAnalyzer:

@@ -362,12 +362,17 @@ class LearningSystem:
     - Records actions taken and their outcomes
     - Identifies patterns in successful plays
     - Adjusts strategy based on historical data
+    - Tracks recent performance for real-time adaptation
     """
     
     def __init__(self):
         self.action_history: list[dict] = []
         self.card_effectiveness: dict[str, dict] = {}  # card_name -> {success, fail}
         self.situation_outcomes: dict[str, dict] = {}  # situation -> {wins, losses}
+        self.recent_actions: list[dict] = []  # Last N actions for trend analysis
+        self.max_recent = 20  # Keep last 20 actions
+        self.phase_outcomes: dict[str, dict] = {}  # phase -> {success, fail}
+        self.opponent_patterns: dict[int, dict] = {}  # player_id -> {action_type: count}
     
     def record_action(
         self,
@@ -375,14 +380,24 @@ class LearningSystem:
         card_name: str | None,
         situation: str,
         outcome: str,  # 'success', 'fail', 'blocked'
+        phase: str = 'mid',  # 'early', 'mid', 'late', 'final'
+        opponent_id: int | None = None,
     ):
         """Record an action and its outcome."""
-        self.action_history.append({
+        record = {
             'action_type': action_type,
             'card_name': card_name,
             'situation': situation,
             'outcome': outcome,
-        })
+            'phase': phase,
+            'opponent_id': opponent_id,
+        }
+        self.action_history.append(record)
+        
+        # Update recent actions
+        self.recent_actions.append(record)
+        if len(self.recent_actions) > self.max_recent:
+            self.recent_actions.pop(0)
         
         # Update card effectiveness
         if card_name:
@@ -404,6 +419,24 @@ class LearningSystem:
             self.situation_outcomes[situation]['success'] += 1
         else:
             self.situation_outcomes[situation]['fail'] += 1
+        
+        # Update phase outcomes
+        if phase not in self.phase_outcomes:
+            self.phase_outcomes[phase] = {
+                'success': 0,
+                'fail': 0,
+            }
+        if outcome == 'success':
+            self.phase_outcomes[phase]['success'] += 1
+        else:
+            self.phase_outcomes[phase]['fail'] += 1
+        
+        # Update opponent patterns
+        if opponent_id is not None:
+            if opponent_id not in self.opponent_patterns:
+                self.opponent_patterns[opponent_id] = {}
+            self.opponent_patterns[opponent_id][action_type] = \
+                self.opponent_patterns[opponent_id].get(action_type, 0) + 1
     
     def get_card_effectiveness(self, card_name: str) -> float:
         """Get effectiveness score for a card (0.0 to 1.0)."""
@@ -436,6 +469,71 @@ class LearningSystem:
             return -0.1  # Decrease priority
         return 0.0
     
+    def get_phase_adjustment(self, phase: str) -> float:
+        """Get adjustment for a phase based on historical outcomes."""
+        if phase not in self.phase_outcomes:
+            return 0.0
+        
+        stats = self.phase_outcomes[phase]
+        total = stats['success'] + stats['fail']
+        if total == 0:
+            return 0.0
+        
+        win_rate = stats['success'] / total
+        
+        # Stronger adjustment for phases
+        if win_rate > 0.6:
+            return 0.15  # This phase works well
+        elif win_rate < 0.4:
+            return -0.15  # This phase is problematic
+        return 0.0
+    
+    def get_recent_trend(self) -> float:
+        """Get trend based on recent actions (positive = improving)."""
+        if len(self.recent_actions) < 5:
+            return 0.0  # Not enough data
+        
+        # Compare first half vs second half of recent actions
+        mid = len(self.recent_actions) // 2
+        first_half = self.recent_actions[:mid]
+        second_half = self.recent_actions[mid:]
+        
+        def calc_success_rate(actions):
+            if not actions:
+                return 0.5
+            successes = sum(1 for a in actions if a['outcome'] == 'success')
+            return successes / len(actions)
+        
+        first_rate = calc_success_rate(first_half)
+        second_rate = calc_success_rate(second_half)
+        
+        return second_rate - first_rate  # Positive = improving
+    
+    def get_opponent_adjustment(self, opponent_id: int) -> dict[str, float]:
+        """Get adjustments based on opponent's patterns."""
+        if opponent_id not in self.opponent_patterns:
+            return {}
+        
+        patterns = self.opponent_patterns[opponent_id]
+        total = sum(patterns.values())
+        
+        if total == 0:
+            return {}
+        
+        adjustments = {}
+        
+        # If opponent bleeds a lot, increase defense
+        bleed_count = patterns.get('bleed', 0)
+        if bleed_count / total > 0.5:
+            adjustments['defense_priority'] = 0.1
+        
+        # If opponent rushes a lot, increase control
+        rush_count = patterns.get('rush', 0)
+        if rush_count / total > 0.3:
+            adjustments['control_priority'] = 0.1
+        
+        return adjustments
+    
     def get_best_action_for_situation(self, situation: str) -> str | None:
         """Get the best action type for a situation based on history."""
         if not self.action_history:
@@ -447,6 +545,55 @@ class LearningSystem:
             if record['situation'] == situation and record['outcome'] == 'success':
                 action = record['action_type']
                 action_successes[action] = action_successes.get(action, 0) + 1
+        
+        if action_successes:
+            return max(action_successes, key=action_successes.get)
+        return None
+    
+    def should_adapt_strategy(self) -> bool:
+        """Determine if we should adapt our strategy based on recent performance."""
+        trend = self.get_recent_trend()
+        
+        # Adapt if we're doing worse
+        if trend < -0.2:
+            return True
+        
+        # Adapt if we have enough data
+        if len(self.recent_actions) >= 10:
+            return True
+        
+        return False
+    
+    def get_adaptation_suggestion(self) -> dict[str, float]:
+        """Get specific adaptations based on learning."""
+        suggestions = {}
+        
+        # Check recent trend
+        trend = self.get_recent_trend()
+        if trend < -0.2:
+            # Doing worse: be more conservative
+            suggestions['bleed_priority'] = -0.1
+            suggestions['bloat_priority'] = 0.1
+        elif trend > 0.2:
+            # Doing better: keep current strategy
+            pass
+        
+        # Check phase outcomes
+        for phase in ['early', 'mid', 'late']:
+            adj = self.get_phase_adjustment(phase)
+            if adj != 0:
+                suggestions[f'{phase}_phase_adjustment'] = adj
+        
+        return suggestions
+    
+    def reset(self):
+        """Reset learning history."""
+        self.action_history.clear()
+        self.card_effectiveness.clear()
+        self.situation_outcomes.clear()
+        self.recent_actions.clear()
+        self.phase_outcomes.clear()
+        self.opponent_patterns.clear()
         
         if action_successes:
             return max(action_successes, key=action_successes.get)

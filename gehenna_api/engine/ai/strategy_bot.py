@@ -113,6 +113,14 @@ class StrategyBot(Bot):
         analyzer = GameStateAnalyzer(state, player_id)
         strategic_position = analyzer.get_strategic_position(self.engine.threat_assessor)
         
+        # Get game phase
+        phase = self.engine.determine_game_phase(state, player_id)
+        
+        # Check if we should adapt based on learning
+        if self.learning.should_adapt_strategy():
+            adaptation = self.learning.get_adaptation_suggestion()
+            # Apply adaptation to strategy (simplified for now)
+        
         # Check for available combos
         combos = self.combo_system.detect_available_combos()
         if combos:
@@ -125,7 +133,8 @@ class StrategyBot(Bot):
                     self.cards_played.append(action)
                     # Record for learning
                     self.learning.record_action(
-                        action, None, strategic_position, 'pending'
+                        action, None, strategic_position, 'pending',
+                        phase=phase.value
                     )
                     return action
 
@@ -142,7 +151,8 @@ class StrategyBot(Bot):
         
         # Record for learning
         self.learning.record_action(
-            action, None, strategic_position, 'pending'
+            action, None, strategic_position, 'pending',
+            phase=phase.value
         )
 
         return action
