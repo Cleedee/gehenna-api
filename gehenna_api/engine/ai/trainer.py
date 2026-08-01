@@ -34,6 +34,24 @@ class QLearningBot:
         self.last_action = self.agent.choose_action(self.current_state)
         return self.last_action
     
+    def choose_action(self, state: GameState, player_id: int) -> str:
+        """Choose which card to play from hand."""
+        # For now, return empty to use default behavior
+        return ''
+    
+    def choose_block(self, state: GameState, player_id: int, action_id: str) -> bool:
+        """Choose whether to block."""
+        # Don't block to keep it simple
+        return False
+    
+    def choose_strike(self, state: GameState, combatant_id: str) -> str:
+        """Choose strike type."""
+        return 'handstrike'
+    
+    def choose_discard(self, state: GameState, player_id: int, hand: list[str]) -> str:
+        """Choose which card to discard."""
+        return hand[-1] if hand else ''
+    
     def record_outcome(self, state: GameState, player_id: int, reward: float) -> None:
         """Record outcome and update Q-values."""
         if self.current_state is None or self.last_action is None:
@@ -124,7 +142,7 @@ class Trainer:
         state = GameState(game_id=f'train_{game_num}', seed=game_num)
         rng = state.random
         
-        # Create players
+        # Create players with simple crypt/library
         num_players = 4
         for i in range(1, num_players + 1):
             ps = PlayerState(
@@ -140,6 +158,26 @@ class Trainer:
                 victory_points=0,
             )
             state.players.append(ps)
+            
+            # Add a simple vampire for each player
+            from gehenna_api.engine.card_instance import CardInstance, CardPosition
+            v = CardInstance(
+                id=f'p{i}_vamp_1',
+                card_id=1000 + i,
+                name=f'Vampire {i}',
+                tipo='vampire',
+                capacity=5,
+                blood=5,
+                pool_cost=5,
+                position=CardPosition.uncontrolled,
+                strength=1,
+                stealth=0,
+                intercept=0,
+                bleed=0,
+                disciplines='|dom|DOM|',
+            )
+            state.cards[v.id] = v
+            ps.crypt = [v.id]
         
         # Create bots - RL bot as Player 1, Random bots for others
         bots = {}
@@ -153,11 +191,11 @@ class Trainer:
         engine.start()
         
         total_reward = 0.0
+        reward_calc = RewardCalculator(state, 1)
         
         for turn in range(30):
-            # Track state before turn
-            encoder = StateEncoder(state, 1)
-            prev_state = encoder.encode()
+            # Track pool before turn
+            prev_pool = state.player_by_id(1).pool if state.player_by_id(1) else 30
             
             # Run turn
             engine.run_turn()
@@ -166,9 +204,18 @@ class Trainer:
                 break
             
             # Calculate reward based on pool change
+            current_pool = state.player_by_id(1).pool if state.player_by_id(1) else 30
+            pool_delta = current_pool - prev_pool
+            
             if rl_bot.current_state:
-                reward_calc = RewardCalculator(state, 1)
-                reward = reward_calc.calculate_turn_reward(action_taken=True)
+                reward = 0.0
+                if pool_delta > 0:
+                    reward = 0.2 * pool_delta  # Gained pool
+                elif pool_delta < 0:
+                    reward = -0.1 * abs(pool_delta)  # Lost pool
+                
+                # Record outcome
+                rl_bot.record_outcome(state, 1, reward)
                 total_reward += reward
         
         # Final reward based on game outcome
@@ -184,6 +231,10 @@ class Trainer:
             winner_name = None
         
         total_reward += final_reward
+        
+        # Record final outcome
+        if rl_bot.current_state:
+            rl_bot.record_outcome(state, 1, final_reward)
         
         return {
             'winner': winner_name,
