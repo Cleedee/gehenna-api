@@ -49,6 +49,9 @@ class StrategyBot(Bot):
         self.use_rl = use_rl
         self.rl_agent = rl_agent
         self.rl_state_encoder: StateEncoder | None = None
+        
+        # Track observed vampires (clan + disciplines)
+        self.observed_vampires: dict[int, set[str]] = {}  # player_id -> set of vampire_ids
 
     def choose_action(
         self, state: GameState, player_id: int
@@ -117,6 +120,10 @@ class StrategyBot(Bot):
     ) -> str:
         """Choose action type based on strategy."""
         self.turns_played = state.turn_number
+        
+        # Observe game state for archetype recognition (once per turn)
+        if self.use_rl and self.rl_agent:
+            self.observe_game_state(state)
         
         # Initialize combo system if needed
         if self.combo_system is None:
@@ -559,6 +566,83 @@ class StrategyBot(Bot):
         
         # Default: play the card
         return True
+    
+    def observe_game_state(self, state: GameState) -> None:
+        """Observe all players' vampires and cards for archetype recognition.
+        
+        This should be called at the start of each turn to observe:
+        - Vampires in play (clans + disciplines)
+        - Cards in ash heap
+        - Actions taken by opponents
+        """
+        if not self.rl_agent:
+            return
+        
+        for player in state.players:
+            if player.id == self.deck_id or player.is_ousted:
+                continue
+            
+            # Observe vampires in play
+            if player.id not in self.observed_vampires:
+                self.observed_vampires[player.id] = set()
+            
+            for vampire_id in player.crypt:
+                if vampire_id in self.observed_vampires[player.id]:
+                    continue
+                
+                vampire = state.card_by_id(vampire_id)
+                if not vampire:
+                    continue
+                
+                # Check if vampire is in play (ready or torpor)
+                from gehenna_api.engine.card_instance import CardPosition
+                if vampire.position not in (CardPosition.ready, CardPosition.torpor):
+                    continue
+                
+                # Observe clan
+                clan = getattr(vampire, 'clan', '') or ''
+                if clan:
+                    self.rl_agent.observe_clan(player.id, clan)
+                
+                # Observe disciplines
+                disc_str = getattr(vampire, 'disciplines', '') or ''
+                # Parse discipline string (e.g., '|dom|DOM|'
+                discs = []
+                for i in range(0, len(disc_str) - 1, 3):
+                    if i + 1 < len(disc_str):
+                        disc = disc_str[i:i+2].upper()
+                        if disc.isalpha():
+                            discs.append(disc)
+                if discs:
+                    self.rl_agent.observe_discipline(player.id, discs[0])
+                
+                self.observed_vampires[player.id].add(vampire_id)
+    
+    def observe_card_played(
+        self,
+        state: GameState,
+        player_id: int,
+        card_id: str,
+    ) -> None:
+        """Observe a card played by an opponent."""
+        if not self.rl_agent or player_id == self.deck_id:
+            return
+        
+        card = state.card_by_id(card_id)
+        if card:
+            self.rl_agent.observe_card(player_id, card.name)
+    
+    def observe_action_taken(
+        self,
+        state: GameState,
+        player_id: int,
+        action_type: str,
+    ) -> None:
+        """Observe an action taken by an opponent."""
+        if not self.rl_agent or player_id == self.deck_id:
+            return
+        
+        self.rl_agent.observe_action(player_id, action_type)
 
 
 def create_strategy_bot(
