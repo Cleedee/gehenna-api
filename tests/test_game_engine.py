@@ -2,7 +2,6 @@
 
 import pytest
 
-from gehenna_api.engine.ai.base import Bot
 from gehenna_api.engine.ai.random_bot import RandomBot
 from gehenna_api.engine.card_instance import CardInstance, CardPosition
 from gehenna_api.engine.engine import GameEngine
@@ -29,7 +28,10 @@ def basic_state():
         for i in range(6):
             c = CardInstance(
                 id=f"p{pid}_crypt_{i}", card_id=i, name=f"Vamp{pid}_{i}",
-                position=CardPosition.crypt, tipo="Vampire", capacity=5, blood=0,
+                position=CardPosition.crypt,
+                tipo="Vampire",
+                capacity=5,
+                blood=0,
             )
             state.cards[c.id] = c
             p.crypt.append(c.id)
@@ -140,7 +142,9 @@ class TestMasterPhase:
 
 class TestMinionPhase:
     def test_no_ready_minions_skips(self, engine):
-        engine.phases.execute_minion({p.id: RandomBot() for p in engine.state.players})
+        engine.phases.execute_minion(
+            {p.id: RandomBot() for p in engine.state.players}
+        )
         log_texts = [e["data"].get("text", "") for e in engine.log]
         assert any("skip" in t.lower() for t in log_texts)
 
@@ -209,7 +213,8 @@ class TestBlockSystem:
     def test_block_fails_intercept_lt_stealth(self, basic_state):
         """Block fails when intercept < stealth."""
         # Don't call start() - it moves crypt to uncontrolled
-        make_ready(basic_state, 1, 0, blood=0, stealth=5)  # Hunt with high stealth
+        # Hunt with high stealth
+        make_ready(basic_state, 1, 0, blood=0, stealth=5)
         make_ready(basic_state, 2, 0, blood=3, intercept=0)  # Can't block
         # Draw cards manually
         for pid in range(1, 3):
@@ -253,7 +258,9 @@ class TestInfluencePhase:
         engine = GameEngine(basic_state)
         engine.start()
         engine.state.turn_number = 3
-        engine.phases.execute_influence(basic_state.players[0], engine.state, {})
+        engine.phases.execute_influence(
+            basic_state.players[0], engine.state, {}
+        )
         assert c.blood > 0
 
     def test_moves_to_ready_when_full(self, basic_state):
@@ -265,7 +272,9 @@ class TestInfluencePhase:
         engine = GameEngine(basic_state)
         engine.start()
         engine.state.turn_number = 3
-        engine.phases.execute_influence(basic_state.players[0], engine.state, {})
+        engine.phases.execute_influence(
+            basic_state.players[0], engine.state, {}
+        )
         assert c.position == CardPosition.ready
 
     def test_costs_pool(self, basic_state):
@@ -367,35 +376,56 @@ class TestTurnFlow:
 
 class TestCardInstance:
     def test_is_ready(self):
-        c = CardInstance(id="t", card_id=1, name="T", position=CardPosition.ready, locked=False)
+        c = CardInstance(
+            id="t", card_id=1, name="T",
+            position=CardPosition.ready, locked=False,
+        )
         assert c.is_ready is True
 
     def test_not_ready_when_locked(self):
-        c = CardInstance(id="t", card_id=1, name="T", position=CardPosition.ready, locked=True)
+        c = CardInstance(
+            id="t", card_id=1, name="T",
+            position=CardPosition.ready, locked=True,
+        )
         assert c.is_ready is False
 
     def test_not_ready_in_crypt(self):
-        c = CardInstance(id="t", card_id=1, name="T", position=CardPosition.crypt)
+        c = CardInstance(
+            id="t", card_id=1, name="T",
+            position=CardPosition.crypt,
+        )
         assert c.is_ready is False
 
     def test_add_blood(self):
-        c = CardInstance(id="t", card_id=1, name="T", position=CardPosition.ready, blood=0, capacity=5)
+        c = CardInstance(
+            id="t", card_id=1, name="T",
+            position=CardPosition.ready, blood=0, capacity=5,
+        )
         assert c.add_blood(3) == 3
         assert c.blood == 3
 
     def test_add_blood_capped(self):
-        c = CardInstance(id="t", card_id=1, name="T", position=CardPosition.ready, blood=3, capacity=5)
+        c = CardInstance(
+            id="t", card_id=1, name="T",
+            position=CardPosition.ready, blood=3, capacity=5,
+        )
         assert c.add_blood(5) == 2
         assert c.blood == 5
 
     def test_take_damage(self):
-        c = CardInstance(id="t", card_id=1, name="T", position=CardPosition.ready, blood=3, capacity=5)
+        c = CardInstance(
+            id="t", card_id=1, name="T",
+            position=CardPosition.ready, blood=3, capacity=5,
+        )
         c.take_damage(2)
         assert c.blood == 1
         assert c.damage_taken == 0
 
     def test_take_damage_torpor(self):
-        c = CardInstance(id="t", card_id=1, name="T", position=CardPosition.ready, blood=1, capacity=5)
+        c = CardInstance(
+            id="t", card_id=1, name="T",
+            position=CardPosition.ready, blood=1, capacity=5,
+        )
         c.take_damage(3)
         assert c.position == CardPosition.torpor
         assert c.locked is True
@@ -408,7 +438,10 @@ class TestCardInstance:
         assert c.locked is False
 
     def test_is_alive(self):
-        c = CardInstance(id="t", card_id=1, name="T", position=CardPosition.ready)
+        c = CardInstance(
+            id="t", card_id=1, name="T",
+            position=CardPosition.ready,
+        )
         assert c.is_alive is True
         c.position = CardPosition.ash_heap
         assert c.is_alive is False
@@ -416,7 +449,10 @@ class TestCardInstance:
         assert c.is_alive is False
 
     def test_is_wounded(self):
-        c = CardInstance(id="t", card_id=1, name="T", position=CardPosition.ready)
+        c = CardInstance(
+            id="t", card_id=1, name="T",
+            position=CardPosition.ready,
+        )
         assert c.is_wounded is False
         c.damage_taken = 1
         assert c.is_wounded is True
@@ -424,13 +460,19 @@ class TestCardInstance:
         assert c.is_wounded is True
 
     def test_mend_damage(self):
-        c = CardInstance(id="t", card_id=1, name="T", position=CardPosition.ready, damage_taken=3)
+        c = CardInstance(
+            id="t", card_id=1, name="T",
+            position=CardPosition.ready, damage_taken=3,
+        )
         mended = c.mend_damage(2)
         assert mended == 2
         assert c.damage_taken == 1
 
     def test_take_damage_aggravated(self):
-        c = CardInstance(id="t", card_id=1, name="T", position=CardPosition.ready, blood=3, capacity=5)
+        c = CardInstance(
+            id="t", card_id=1, name="T",
+            position=CardPosition.ready, blood=3, capacity=5,
+        )
         c.take_damage(2, aggravated=True)
         # Aggravated damage doesn't burn blood, goes straight to damage_taken
         assert c.blood == 3
@@ -438,7 +480,10 @@ class TestCardInstance:
         assert c.position == CardPosition.torpor
 
     def test_take_damage_kills_empty_vampire(self):
-        c = CardInstance(id="t", card_id=1, name="T", position=CardPosition.ready, blood=0, capacity=5)
+        c = CardInstance(
+            id="t", card_id=1, name="T",
+            position=CardPosition.ready, blood=0, capacity=5,
+        )
         c.take_damage(1)
         # No blood to mend, goes to torpor
         assert c.position == CardPosition.torpor
@@ -471,7 +516,9 @@ class TestCardInstance:
 
 
 class TestCombat:
-    def _make_combat_state(self, p1_blood=4, p1_str=2, p2_blood=3, p2_str=1, p2_intercept=5):
+    def _make_combat_state(
+        self, p1_blood=4, p1_str=2, p2_blood=3, p2_str=1, p2_intercept=5
+    ):
         """Helper to create a 2-player state with combat-ready minions."""
         state = GameState(game_id="combat")
         state.edge_uncontrolled = True
@@ -548,14 +595,17 @@ class TestCombat:
             for i in range(6):
                 c = CardInstance(
                     id=f"p{pid}_crypt_{i}", card_id=i, name=f"Vamp{pid}_{i}",
-                    position=CardPosition.crypt, tipo="Vampire", capacity=5, blood=0,
+                    position=CardPosition.crypt,
+                    tipo="Vampire",
+                    capacity=5,
+                    blood=0,
                 )
                 state.cards[c.id] = c
                 p.crypt.append(c.id)
             blocker = CardInstance(
                 id=f"p{pid}_blocker", card_id=99, name=f"Blocker{pid}",
-                position=CardPosition.ready, tipo="Vampire", capacity=5, blood=3,
-                locked=False, intercept=5, strength=1,
+                position=CardPosition.ready, tipo="Vampire",
+                capacity=5, blood=3, locked=False, intercept=5, strength=1,
             )
             state.cards[blocker.id] = blocker
             p.crypt.append(blocker.id)
@@ -631,11 +681,14 @@ class TestCombat:
             'steal_amount': 0, 'dodge': False, 'combat_ends': False,
             'first_strike': False, 'ranged': False,
         }
-        engine.phases._resolve_strikes(attacker, defender, atk_strike, def_strike, 'close')
+        engine.phases._resolve_strikes(
+            attacker, defender, atk_strike, def_strike, 'close'
+        )
         # Defender should be in torpor (took 5 damage, only had 3 blood)
         # and shouldn't have struck back
         assert defender.position == CardPosition.torpor
-        assert attacker.blood == 10  # No damage from defender (killed before counter)
+        # No damage from defender (killed before counter)
+        assert attacker.blood == 10
 
     def test_dodge_protects_from_first_strike(self):
         """Dodge should protect from first strike."""
@@ -655,7 +708,9 @@ class TestCombat:
             'steal_amount': 0, 'dodge': True, 'combat_ends': False,
             'first_strike': False, 'ranged': False,
         }
-        engine.phases._resolve_strikes(attacker, defender, atk_strike, def_strike, 'close')
+        engine.phases._resolve_strikes(
+            attacker, defender, atk_strike, def_strike, 'close'
+        )
         # Defender should be unharmed (dodged)
         assert defender.blood == 10
 
@@ -677,7 +732,9 @@ class TestCombat:
             'steal_amount': 0, 'dodge': False, 'combat_ends': False,
             'first_strike': True, 'ranged': False,
         }
-        result = engine.phases._resolve_strikes(attacker, defender, atk_strike, def_strike, 'close')
+        result = engine.phases._resolve_strikes(
+            attacker, defender, atk_strike, def_strike, 'close'
+        )
         assert result is True  # Combat ended
         assert defender.blood == 10  # No damage
         assert attacker.blood == 10  # No damage
@@ -699,7 +756,9 @@ class TestCombat:
             'steal_amount': 0, 'dodge': False, 'combat_ends': False,
             'first_strike': True, 'ranged': False,
         }
-        engine.phases._resolve_strikes(attacker, defender, atk_strike, def_strike, 'close')
+        engine.phases._resolve_strikes(
+            attacker, defender, atk_strike, def_strike, 'close'
+        )
         # Both should take damage (simultaneous resolution)
         assert attacker.blood == 7  # 10 - 3
         assert defender.blood == 7  # 10 - 3
@@ -722,10 +781,12 @@ class TestCombat:
             'first_strike': False, 'ranged': False,
         }
         # At long range, only ranged strikes work
-        engine.phases._resolve_strikes(attacker, defender, atk_strike, def_strike, 'long')
+        engine.phases._resolve_strikes(
+            attacker, defender, atk_strike, def_strike, 'long'
+        )
         # Defender took damage (attacker's ranged strike worked)
         assert defender.blood == 7
-        # Attacker didn't take damage (defender's non-ranged strike doesn't work at long)
+        # Attacker unharmed: non-ranged strike fails at long range
         assert attacker.blood == 10
 
     def test_aggravated_damage(self):
@@ -745,7 +806,9 @@ class TestCombat:
             'steal_amount': 0, 'dodge': False, 'combat_ends': False,
             'first_strike': False, 'ranged': False,
         }
-        engine.phases._resolve_strikes(attacker, defender, atk_strike, def_strike, 'close')
+        engine.phases._resolve_strikes(
+            attacker, defender, atk_strike, def_strike, 'close'
+        )
         # Defender: 2 aggravated damage -> cannot mend -> goes to torpor
         assert defender.position == CardPosition.torpor
         assert defender.blood == 10  # Blood not burned for aggravated
@@ -797,7 +860,9 @@ class TestLeaveTorpor:
 
 
 class TestRescue:
-    def _make_rescue_state(self, rescuer_blood=4, victim_blood=0, victim_dmg=3):
+    def _make_rescue_state(
+        self, rescuer_blood=4, victim_blood=0, victim_dmg=3
+    ):
         state = GameState(game_id="rescue")
         p1 = PlayerState(id=1, username="P1", pool=30)
         state.players.append(p1)
@@ -827,7 +892,9 @@ class TestRescue:
 
     def test_rescue_insufficient_blood(self):
         """Rescuer with < 2 blood cannot rescue."""
-        state, rescuer, victim, player = self._make_rescue_state(rescuer_blood=1)
+        state, rescuer, victim, player = self._make_rescue_state(
+            rescuer_blood=1
+        )
         engine = GameEngine(state)
         engine._is_running = True
         engine.phases._resolve_rescue(rescuer, player, victim)
@@ -851,7 +918,9 @@ class TestRescue:
 
 
 class TestDiablerie:
-    def _make_diablerie_state(self, diablerist_cap=5, victim_cap=7, victim_blood=4):
+    def _make_diablerie_state(
+        self, diablerist_cap=5, victim_cap=7, victim_blood=4
+    ):
         state = GameState(game_id="diablerie")
         p1 = PlayerState(id=1, username="P1", pool=30)
         p2 = PlayerState(id=2, username="P2", pool=30)
@@ -929,7 +998,10 @@ class TestOusting:
             for i in range(6):
                 c = CardInstance(
                     id=f"p{pid}_crypt_{i}", card_id=i, name=f"Vamp{pid}_{i}",
-                    position=CardPosition.crypt, tipo="Vampire", capacity=5, blood=0,
+                    position=CardPosition.crypt,
+                    tipo="Vampire",
+                    capacity=5,
+                    blood=0,
                 )
                 state.cards[c.id] = c
                 p.crypt.append(c.id)
@@ -1027,7 +1099,7 @@ class TestVictory:
         assert winner.id == 1
         # Award last survivor bonus
         state.award_last_survivor_bonus()
-        # P1 got VP from ousting P2 (predator) and P3 (predator), plus last survivor
+        # P1 gained VP from ousting P2 and P3, plus last survivor bonus
         assert winner.victory_points >= 1
 
     def test_winner_with_oust_vp(self):
@@ -1193,7 +1265,7 @@ class TestPoliticalAction:
     def test_blood_hunt_passes(self):
         """Blood hunt should pass when majority votes for."""
         state, vamp, pol = self._make_political_state()
-        # P1 is diablerist with 1 vote, P2 and P3 have 3 each (vote for blood hunt)
+        # P1 has 1 vote; P2 and P3 have 3 each (vote for blood hunt)
         state.players[0].votes = 1
         state.players[1].votes = 3
         state.players[2].votes = 3
@@ -1233,7 +1305,9 @@ class TestPoliticalAction:
 
 
 class TestActionModifiers:
-    def _make_modifier_state(self, mod_stealth=1, mod_bleed=1, mod_cost=1, minion_blood=4):
+    def _make_modifier_state(
+        self, mod_stealth=1, mod_bleed=1, mod_cost=1, minion_blood=4
+    ):
         state = GameState(game_id="mod")
         p1 = PlayerState(id=1, username="P1", pool=30)
         p2 = PlayerState(id=2, username="P2", pool=30)
@@ -1259,7 +1333,9 @@ class TestActionModifiers:
         engine = GameEngine(state)
         engine._is_running = True
         action_info = {'stealth': 0, 'directed': True}
-        modifiers = engine.phases._play_action_modifiers(minion, p1, action_info, RandomBot())
+        modifiers = engine.phases._play_action_modifiers(
+            minion, p1, action_info, RandomBot()
+        )
         engine.phases._apply_modifier_effects(action_info, modifiers)
         assert action_info['stealth'] == 2
 
@@ -1269,7 +1345,9 @@ class TestActionModifiers:
         engine = GameEngine(state)
         engine._is_running = True
         action_info = {'stealth': 0, 'directed': True}
-        modifiers = engine.phases._play_action_modifiers(minion, p1, action_info, RandomBot())
+        modifiers = engine.phases._play_action_modifiers(
+            minion, p1, action_info, RandomBot()
+        )
         engine.phases._apply_modifier_effects(action_info, modifiers)
         assert action_info.get('bleed_bonus', 0) == 2
 
@@ -1279,17 +1357,23 @@ class TestActionModifiers:
         engine = GameEngine(state)
         engine._is_running = True
         action_info = {'stealth': 0, 'directed': True}
-        modifiers = engine.phases._play_action_modifiers(minion, p1, action_info, RandomBot())
+        modifiers = engine.phases._play_action_modifiers(
+            minion, p1, action_info, RandomBot()
+        )
         assert minion.blood == 2  # 4 - 2
         assert len(modifiers) == 1
 
     def test_modifier_insufficient_blood(self):
         """Cannot play modifier without enough blood."""
-        state, minion, mod, p1, p2 = self._make_modifier_state(mod_cost=3, minion_blood=2)
+        state, minion, mod, p1, p2 = self._make_modifier_state(
+            mod_cost=3, minion_blood=2
+        )
         engine = GameEngine(state)
         engine._is_running = True
         action_info = {'stealth': 0, 'directed': True}
-        modifiers = engine.phases._play_action_modifiers(minion, p1, action_info, RandomBot())
+        modifiers = engine.phases._play_action_modifiers(
+            minion, p1, action_info, RandomBot()
+        )
         assert len(modifiers) == 0
         assert minion.blood == 2  # Unchanged
 
@@ -1299,7 +1383,9 @@ class TestActionModifiers:
         engine = GameEngine(state)
         engine._is_running = True
         action_info = {'stealth': 0, 'directed': True}
-        modifiers = engine.phases._play_action_modifiers(minion, p1, action_info, RandomBot())
+        engine.phases._play_action_modifiers(
+            minion, p1, action_info, RandomBot()
+        )
         assert mod.id not in p1.hand
         assert mod.position == CardPosition.ash_heap
 
@@ -1317,12 +1403,16 @@ class TestActionModifiers:
         engine = GameEngine(state)
         engine._is_running = True
         action_info = {'stealth': 0, 'directed': True}
-        modifiers = engine.phases._play_action_modifiers(minion, p1, action_info, RandomBot())
+        modifiers = engine.phases._play_action_modifiers(
+            minion, p1, action_info, RandomBot()
+        )
         assert len(modifiers) == 0
 
 
 class TestReactions:
-    def _make_reaction_state(self, react_intercept=2, react_cost=1, blocker_blood=3):
+    def _make_reaction_state(
+        self, react_intercept=2, react_cost=1, blocker_blood=3
+    ):
         state = GameState(game_id="react")
         p1 = PlayerState(id=1, username="P1", pool=30)
         p2 = PlayerState(id=2, username="P2", pool=30)
@@ -1357,7 +1447,7 @@ class TestReactions:
         engine = GameEngine(state)
         engine._is_running = True
         action_info = {'stealth': 0, 'directed': True}
-        reactions = engine.phases._play_reactions(attacker, p1, action_info, RandomBot())
+        engine.phases._play_reactions(attacker, p1, action_info, RandomBot())
         assert action_info.get('reaction_intercept', 0) == 2
 
     def test_reaction_costs_blood(self):
@@ -1390,7 +1480,7 @@ class TestReactions:
         # Without reaction: block succeeds (0 >= 0)
         # With reaction: block still succeeds (0 + 3 >= 0)
         action_info = {'stealth': 0, 'directed': True}
-        reactions = engine.phases._play_reactions(attacker, p1, action_info, RandomBot())
+        engine.phases._play_reactions(attacker, p1, action_info, RandomBot())
         # Reaction adds intercept bonus
         assert action_info.get('reaction_intercept', 0) == 3
 
@@ -1408,7 +1498,9 @@ class TestReactions:
         engine = GameEngine(state)
         engine._is_running = True
         action_info = {'stealth': 0, 'directed': False}
-        reactions = engine.phases._play_reactions(attacker, p1, action_info, RandomBot())
+        reactions = engine.phases._play_reactions(
+            attacker, p1, action_info, RandomBot()
+        )
         assert len(reactions) == 0
 
     def test_reaction_insufficient_blood(self):
@@ -1419,7 +1511,9 @@ class TestReactions:
         engine = GameEngine(state)
         engine._is_running = True
         action_info = {'stealth': 0, 'directed': True}
-        reactions = engine.phases._play_reactions(attacker, p1, action_info, RandomBot())
+        reactions = engine.phases._play_reactions(
+            attacker, p1, action_info, RandomBot()
+        )
         assert len(reactions) == 0
         assert blocker.blood == 2  # Unchanged
 
@@ -1468,7 +1562,9 @@ class TestEquip:
 
     def test_equip_insufficient_blood(self):
         """Equip should fail if minion doesn't have enough blood."""
-        state, minion, equip, player = self._make_equip_state(minion_blood=0, equip_cost=1)
+        state, minion, equip, player = self._make_equip_state(
+            minion_blood=0, equip_cost=1
+        )
         engine = GameEngine(state)
         engine._is_running = True
         engine.phases._resolve_equip(minion, player, equip)
@@ -1477,7 +1573,9 @@ class TestEquip:
 
     def test_equip_no_cost(self):
         """Equip with 0 cost should work without blood."""
-        state, minion, equip, player = self._make_equip_state(minion_blood=1, equip_cost=0)
+        state, minion, equip, player = self._make_equip_state(
+            minion_blood=1, equip_cost=0
+        )
         engine = GameEngine(state)
         engine._is_running = True
         engine.phases._resolve_equip(minion, player, equip)
@@ -1504,7 +1602,9 @@ class TestEquip:
 
 
 class TestEmployRetainer:
-    def _make_retainer_state(self, minion_blood=4, retainer_cost=1, retainer_cap=2):
+    def _make_retainer_state(
+        self, minion_blood=4, retainer_cost=1, retainer_cap=2
+    ):
         state = GameState(game_id="retainer")
         p1 = PlayerState(id=1, username="P1", pool=30)
         state.players.append(p1)
@@ -1544,7 +1644,9 @@ class TestEmployRetainer:
 
     def test_employ_retainer_insufficient_blood(self):
         """Employ retainer should fail if not enough blood."""
-        state, minion, retainer, player = self._make_retainer_state(minion_blood=0)
+        state, minion, retainer, player = self._make_retainer_state(
+            minion_blood=0
+        )
         engine = GameEngine(state)
         engine._is_running = True
         engine.phases._resolve_employ_retainer(minion, player, retainer)
@@ -1613,7 +1715,9 @@ class TestRecruitAlly:
 
     def test_recruit_ally_insufficient_blood(self):
         """Recruit ally should fail if not enough blood."""
-        state, minion, ally_card, player = self._make_ally_state(minion_blood=1, ally_cost=2)
+        state, minion, ally_card, player = self._make_ally_state(
+            minion_blood=1, ally_cost=2
+        )
         engine = GameEngine(state)
         engine._is_running = True
         engine.phases._resolve_recruit_ally(minion, player, ally_card)
@@ -1649,7 +1753,9 @@ class TestRecruitAlly:
 
 
 class TestCombatManeuvers:
-    def _make_maneuver_state(self, atk_maneuvers=0, def_maneuvers=0):
+    def _make_maneuver_state(
+        self, atk_maneuvers=0, def_maneuvers=0
+    ):
         state = GameState(game_id="maneuver")
         p1 = PlayerState(id=1, username="P1", pool=30)
         p2 = PlayerState(id=2, username="P2", pool=30)
@@ -1678,7 +1784,9 @@ class TestCombatManeuvers:
 
     def test_attacker_maneuvers_to_long(self):
         """Attacker with maneuvers goes to long range."""
-        state, attacker, defender, p1, p2 = self._make_maneuver_state(atk_maneuvers=1)
+        state, attacker, defender, p1, p2 = self._make_maneuver_state(
+            atk_maneuvers=1
+        )
         engine = GameEngine(state)
         engine._is_running = True
         result = engine.phases._determine_range(attacker, defender, p1, p2)
@@ -1727,7 +1835,9 @@ class TestCombatManeuvers:
             'steal_amount': 0, 'dodge': False, 'combat_ends': False,
             'first_strike': False, 'ranged': False,
         }
-        engine.phases._resolve_strikes(attacker, defender, atk_strike, def_strike, 'long')
+        engine.phases._resolve_strikes(
+            attacker, defender, atk_strike, def_strike, 'long'
+        )
         # Attacker's ranged strike works at long range
         assert defender.blood == 8  # 10 - 2
         # Defender's non-ranged strike doesn't work at long range
@@ -1773,7 +1883,9 @@ class TestCombatManeuvers:
             'steal_amount': 0, 'dodge': False, 'combat_ends': False,
             'first_strike': False, 'ranged': False,
         }
-        engine.phases._resolve_strikes(attacker, defender, atk_strike, def_strike, 'long')
+        engine.phases._resolve_strikes(
+            attacker, defender, atk_strike, def_strike, 'long'
+        )
         # Attacker's ranged strike works at long range
         assert defender.blood == 7  # 10 - 3
         # Defender's non-ranged strike doesn't work at long range
