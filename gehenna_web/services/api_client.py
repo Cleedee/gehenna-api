@@ -294,6 +294,21 @@ def import_vdb_deck(deck_id, owner_id):
     return api.get(f'/decks/import-vdb/{deck_id}/{owner_id}')
 
 
+def import_deck_from_text(
+    text, owner_id, name=None, author=None, description=None, tags=None, tipo=None
+):
+    data = {
+        'text': text,
+        'owner_id': owner_id,
+        'name': name,
+        'author': author,
+        'description': description,
+        'tags': tags or '',
+        'tipo': tipo or '',
+    }
+    return api.post('/decks/import-text', json=data)
+
+
 def auto_import_decks(username, limit_decks=5, min_card_overlap=5):
     return api.post(
         '/trends/auto-import',

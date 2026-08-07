@@ -10,7 +10,15 @@ from gehenna_api.models.auth import User
 from gehenna_api.models.deck import Deck
 from gehenna_api.models.slot import Slot
 from gehenna_api.models.card import Card
-from gehenna_api.schemas import DeckList, DeckPublic, DeckSchema, DeckUpdateSchema, Message, Scalar
+from gehenna_api.schemas import (
+    DeckList,
+    DeckPublic,
+    DeckSchema,
+    DeckTextImportSchema,
+    DeckUpdateSchema,
+    Message,
+    Scalar,
+)
 
 router = APIRouter(prefix='/decks', tags=['decks'])
 
@@ -152,6 +160,72 @@ def read_preconstructed_decks_with_card(
             }
             for deck in decks
         ]
+    }
+
+
+@router.post('/import-text', status_code=201)
+def import_deck_from_text(
+    payload: DeckTextImportSchema,
+    session: Session = Depends(get_session),
+):
+    from gehenna_api.utils.deck_text import parse_deck_text
+
+    parsed = parse_deck_text(payload.text)
+
+    name = (payload.name or parsed['name'] or '').strip() or 'Imported Deck'
+    author = (payload.author or parsed['author']).strip()
+    description = (payload.description or parsed['description'] or '').strip()
+
+    user = session.scalar(select(User).where(User.id == payload.owner_id))
+    if user is None:
+        raise HTTPException(status_code=404, detail='Owner not found')
+
+    db_deck = Deck(
+        name=name,
+        description=description,
+        creator=author,
+        player=author,
+        tipo=payload.tipo or '2R+F',
+        tags=payload.tags or '',
+        created=date.today(),
+        preconstructed=payload.preconstructed,
+        owner_id=payload.owner_id,
+        code=0,
+    )
+    session.add(db_deck)
+    session.commit()
+    session.refresh(db_deck)
+
+    missing = []
+    imported = 0
+    for entry in parsed['crypt'] + parsed['library']:
+        card = session.scalar(
+            select(Card).where(func.lower(Card.name) == entry['name'].lower())
+        )
+        if card is None:
+            missing.append(
+                {'name': entry['name'], 'quantity': entry['quantity']}
+            )
+            continue
+        session.add(
+            Slot(
+                deck_id=db_deck.id,
+                card_id=card.id,
+                quantity=entry['quantity'],
+            )
+        )
+        imported += 1
+
+    session.commit()
+
+    return {
+        'deck_id': db_deck.id,
+        'name': db_deck.name,
+        'author': author,
+        'crypt_total': sum(e['quantity'] for e in parsed['crypt']),
+        'library_total': sum(e['quantity'] for e in parsed['library']),
+        'cards_imported': imported,
+        'cards_not_found': missing,
     }
 
 

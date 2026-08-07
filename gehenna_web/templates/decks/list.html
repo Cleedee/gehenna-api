@@ -11,6 +11,7 @@
 <div class="page-header">
     <h2>Decks</h2>
     {% if session.username %}
+    <a href="{{ url_for('decks.import_text') }}" class="btn btn-primary">Import Text</a>
     <a href="{{ url_for('decks.create') }}" class="btn btn-primary">Create Deck</a>
     {% endif %}
 </div>

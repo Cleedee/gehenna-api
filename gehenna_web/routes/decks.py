@@ -383,6 +383,56 @@ class VDBImportForm(FlaskForm):
     submit = SubmitField("Import")
 
 
+class DeckTextImportForm(FlaskForm):
+    text = TextAreaField(
+        "Deck list",
+        validators=[DataRequired()],
+        description="Cole a lista do deck (formato VDB/TWDA)",
+    )
+    name = StringField("Name (override)")
+    author = StringField("Author (override)")
+    tipo = StringField("Type")
+    tags = StringField("Tags")
+    submit = SubmitField("Import")
+
+
+@bp.route("/import-text", methods=["GET", "POST"])
+@login_required
+def import_text():
+    form = DeckTextImportForm()
+    if form.validate_on_submit():
+        data = {
+            "text": form.text.data,
+            "name": form.name.data or None,
+            "author": form.author.data or None,
+            "tipo": form.tipo.data or None,
+            "tags": form.tags.data or "",
+        }
+        response = api_client.import_deck_from_text(
+            data["text"],
+            session.get("user_id"),
+            name=data["name"],
+            author=data["author"],
+            tipo=data["tipo"],
+            tags=data["tags"],
+        )
+        if response.status_code == 201:
+            result = response.json()
+            missing = result.get("cards_not_found", [])
+            msg = (
+                f"Deck imported: {result.get('name')} "
+                f"({result.get('cards_imported')} cards)"
+            )
+            if missing:
+                msg += f". {len(missing)} not found: " + ", ".join(
+                    m["name"] for m in missing[:5]
+                )
+            flash(msg, "success")
+            return redirect(url_for("decks.detail", deck_id=result["deck_id"]))
+        flash("Error importing deck", "error")
+    return render_template("decks/import_text.html", form=form)
+
+
 @bp.route("/<int:deck_id>/export-text")
 def export_text(deck_id):
     resp = api_client.get_deck(deck_id)

@@ -156,6 +156,17 @@ class DeckSchema(BaseModel):
     code: int
 
 
+class DeckTextImportSchema(BaseModel):
+    text: str
+    owner_id: int
+    name: Optional[str] = None
+    author: Optional[str] = None
+    description: Optional[str] = None
+    tags: Optional[str] = ''
+    tipo: Optional[str] = ''
+    preconstructed: bool = False
+
+
 class DeckUpdateSchema(BaseModel):
     name: Optional[str] = None
     description: Optional[str] = None

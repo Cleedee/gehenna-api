@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}Import Deck from Text - Gehenna{% endblock %}
+
+{% block breadcrumbs %}
+{% set breadcrumbs = [('Home', 'index'), ('Decks', 'decks.my_decks'), ('Import Text')] %}
+{% include "components/breadcrumb.html" %}
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4>Import Deck from Text</h4>
+            </div>
+            <div class="card-body">
+                <p class="text-muted">
+                    Cole uma lista de deck no formato VDB/TWDA. Exemplo:
+                </p>
+                <pre class="bg-body-tertiary p-3 rounded"><code>Deck Name: Meu Deck
+
+Autor: Fulano
+
+Crypt(12 cards)
+1x Vampire A  7  AUS OBF  Clan:6
+
+Library (90 cards)
+Master (2)
+5x Villein
+
+Action (1)
+1x Govern the Unaligned</code></pre>
+                <form method="POST">
+                    {{ form.hidden_tag() }}
+                    <div class="mb-3">
+                        {{ form.text.label(class="form-label") }}
+                        {{ form.text(class="form-control", rows=12, placeholder="Cole aqui a lista do deck...") }}
+                        {% if form.text.errors %}
+                        <div class="text-danger">{{ form.text.errors[0] }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            {{ form.name.label(class="form-label") }}
+                            {{ form.name(class="form-control") }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            {{ form.author.label(class="form-label") }}
+                            {{ form.author(class="form-control") }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            {{ form.tipo.label(class="form-label") }}
+                            {{ form.tipo(class="form-control", placeholder="2R+F") }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            {{ form.tags.label(class="form-label") }}
+                            {{ form.tags(class="form-control") }}
+                        </div>
+                    </div>
+                    {{ form.submit(class="btn btn-primary") }}
+                    <a href="{{ url_for('decks.my_decks') }}" class="btn btn-secondary">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
