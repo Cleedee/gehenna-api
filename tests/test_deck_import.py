@@ -140,6 +140,53 @@ def test_parse_deck_text_empty():
     }
 
 
+def test_parse_deck_text_equals_separator_and_merged_capacity():
+    """'=====' separators and merged capacity must not crash."""
+    text = (
+        'Deck Name: megalowall\n'
+        'Author: Pedro Santana\n\n'
+        'Crypt (2 cards, min=37 max=44 avg=10.46)\n'
+        '=========================================\n'
+        '1x Saulot, The Wanderer      11 AUS FOR OBE THA VAL dai  Salubri:4\n'
+        '1x Neighbor John  5 AUS dom for  Ventrue:4\n\n'
+        'Library (1 cards)\n'
+        'Master (1)\n'
+        '1x Villein\n'
+    )
+    parsed = parse_deck_text(text)
+    crypt = parsed['crypt']
+    assert len(crypt) == 2
+
+    saulot = crypt[0]
+    assert saulot['name'] == 'Saulot, The Wanderer'
+    assert saulot['quantity'] == 1
+    assert saulot['capacity'] == '11'
+    assert saulot['disciplines'] == 'AUS FOR OBE THA VAL dai'
+    assert saulot['clan'] == 'Salubri'
+    assert saulot['group'] == '4'
+
+    john = crypt[1]
+    assert john['capacity'] == '5'
+    assert john['disciplines'] == 'AUS dom for'
+    assert john['clan'] == 'Ventrue'
+    assert john['group'] == '4'
+
+
+def test_parse_deck_text_ignores_equals_separators_in_library():
+    text = (
+        'Deck Name: Foo\n\n'
+        'Crypt (1 cards)\n'
+        '===============\n'
+        '1x Test Vampire  6  AUS  Clan:5\n\n'
+        'Library (1 cards)\n'
+        '================\n'
+        '1x Villein\n'
+    )
+    parsed = parse_deck_text(text)
+    assert len(parsed['crypt']) == 1
+    assert len(parsed['library']) == 1
+
+
 def _create_cards(session):
     cards = [
         ('Parijat, the Dark Oracle', 'vampire'),

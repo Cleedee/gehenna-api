@@ -25,7 +25,7 @@ import re
 _CARD_RE = re.compile(r'^\s*(\d+)\s*[xX×]\s*(.+?)\s*$')
 _PLAIN_CARD_RE = re.compile(r'^\s*(\d+)\s+(\S.*?)\s*$')
 _SECTION_RE = re.compile(r'^\s*([A-Za-z][A-Za-z /-]*?)\s*\(\s*\d')
-_SEPARATOR_RE = re.compile(r'^\s*-{3,}\s*$')
+_SEPARATOR_RE = re.compile(r'^\s*[-=]{3,}\s*$')
 
 
 def _parse_card_line(line: str) -> tuple[int, str] | None:
@@ -41,25 +41,32 @@ def _parse_card_line(line: str) -> tuple[int, str] | None:
 
 def _parse_crypt_line(line: str) -> dict:
     """Parse a crypt line with quantity, name and extra columns."""
-    qty, rest = _parse_card_line(line)
-    if qty is None:
+    parsed = _parse_card_line(line)
+    if parsed is None:
         return {}
+    qty, rest = parsed
 
     parts = re.split(r'\s{2,}', rest)
     name = parts[0].strip()
-    capacity = next((p for p in parts[1:] if p.strip().isdigit()), '')
-    tail = [
-        p.strip() for p in parts[1:]
-        if p.strip() and p.strip() != capacity
-    ]
+    body = [p.strip() for p in parts[1:] if p.strip()]
+
+    capacity = ''
+    # Capacity is usually its own column, but may be merged with the
+    # disciplines (single space), e.g. "11 AUS FOR OBE THA VAL".
+    if body:
+        tokens = body[0].split()
+        if tokens and tokens[0].isdigit():
+            capacity = tokens[0]
+            body[0] = ' '.join(tokens[1:])
+    body = [b for b in body if b]
 
     clan = ''
     group = ''
-    if tail and ':' in tail[-1]:
-        clan, _, group = tail[-1].partition(':')
-        tail = tail[:-1]
+    if body and ':' in body[-1]:
+        clan, _, group = body[-1].partition(':')
+        body = body[:-1]
 
-    disciplines = ' '.join(tail)
+    disciplines = ' '.join(body)
 
     return {
         'name': name,
