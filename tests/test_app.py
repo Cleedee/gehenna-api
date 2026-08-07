@@ -204,7 +204,7 @@ def test_read_moviments_with_items(client, user, moviment):
     print(f'User: {user.id} {user.username}')
     move_schema = MovimentPublic.model_validate(moviment).model_dump()
     print(f'Moviment {moviment.owner.username}')
-    response = client.get('/stocks/all-moviments')
+    response = client.get('/stocks/all-moviments/')
     assert response.status_code == 200
     moves = response.json()
     move = moves['moviments'][0]['name']
@@ -284,6 +284,7 @@ def test_create_deck(client):
         'created': dt_str,
         'updated': None,
         'preconstructed': False,
+        'tags': '',
         'owner_id': 1,
         'code': 1,
         'id': 1,

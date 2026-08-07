@@ -114,13 +114,14 @@ class TestUnlockPhase:
         engine.phases.execute_unlock()
         assert p1.pool == initial + 1
 
-    def test_uncontrolled_edge_granted_to_first_player(self, basic_state):
+    def test_edge_uncontrolled_at_game_start(self, basic_state):
         engine = GameEngine(basic_state)
         engine.start()
         engine.phases.execute_unlock()
-        # P1 (current player) should get the uncontrolled Edge
-        assert basic_state.edge_uncontrolled is False
-        assert basic_state.current_player.has_edge is True
+        # V:TES rule: the Edge begins uncontrolled. No player holds it
+        # until a successful bleed against a predator (see _resolve_bleed).
+        assert basic_state.edge_uncontrolled is True
+        assert all(not p.has_edge for p in basic_state.players)
 
 
 # ── Master Phase Tests ──────────────────────────────────────────────────────
@@ -316,9 +317,9 @@ class TestPredatorPrey:
         for pid in range(1, 4):
             p = PlayerState(id=pid, username=f"P{pid}", pool=30)
             state.players.append(p)
-        assert state.prey_of(1).id == 3
-        assert state.prey_of(2).id == 1
-        assert state.prey_of(3).id == 2
+        assert state.prey_of(1).id == 2
+        assert state.prey_of(2).id == 3
+        assert state.prey_of(3).id == 1
 
     def test_three_player_predator(self):
         state = GameState(game_id="3p")
@@ -326,9 +327,9 @@ class TestPredatorPrey:
         for pid in range(1, 4):
             p = PlayerState(id=pid, username=f"P{pid}", pool=30)
             state.players.append(p)
-        assert state.predator_of(1).id == 2
-        assert state.predator_of(2).id == 3
-        assert state.predator_of(3).id == 1
+        assert state.predator_of(1).id == 3
+        assert state.predator_of(2).id == 1
+        assert state.predator_of(3).id == 2
 
     def test_prey_updates_after_oust(self):
         state = GameState(game_id="3p")
@@ -962,12 +963,12 @@ class TestOusting:
     def test_oust_awards_vp_and_pool_to_predator(self):
         """Predator should gain 6 pool and 1 VP when prey is ousted."""
         state = self._make_3p_state()
-        # In 3-player: P1's predator is P2, P2's predator is P3, P3's predator is P1
-        # Oust P3 -> P1 is predator
+        # In 3-player: P1's prey is P2, P2's prey is P3, P3's prey is P1
+        # So P3's predator is P2; ousting P3 awards VP/pool to P2
         state.oust_player(3)
-        p1 = state.players[0]
-        assert p1.victory_points == 1
-        assert p1.pool == 36  # 30 + 6
+        p2 = state.players[1]
+        assert p2.victory_points == 1
+        assert p2.pool == 36  # 30 + 6
 
     def test_oust_edge_returns_to_uncontrolled(self):
         """Edge should return to uncontrolled if ousted player had it."""
@@ -995,19 +996,19 @@ class TestOusting:
     def test_oust_updates_prey(self):
         """Prey relationships should update after ousting."""
         state = self._make_3p_state()
-        # Before: P1's prey is P3
-        assert state.prey_of(1).id == 3
+        # Before: P2's prey is P3
+        assert state.prey_of(2).id == 3
         state.oust_player(3)
-        # After: P1's prey should be P2
-        assert state.prey_of(1).id == 2
+        # After: P2's prey should be P1 (circle closes)
+        assert state.prey_of(2).id == 1
 
     def test_oust_updates_predator(self):
         """Predator relationships should update after ousting."""
         state = self._make_3p_state()
-        # Before: P1's predator is P2
-        assert state.predator_of(1).id == 2
+        # Before: P1's predator is P3
+        assert state.predator_of(1).id == 3
         state.oust_player(3)
-        # After: P1's predator should still be P2
+        # After: P1's predator should be P2 (circle closes)
         assert state.predator_of(1).id == 2
 
 
@@ -1036,8 +1037,8 @@ class TestVictory:
         for pid in range(1, 4):
             p = PlayerState(id=pid, username=f"P{pid}", pool=30)
             state.players.append(p)
-        state.oust_player(3)
         state.oust_player(2)
+        state.oust_player(3)
         winner = state.check_winner()
         assert winner is not None
         assert winner.id == 1
@@ -1082,8 +1083,8 @@ class TestVictory:
         for pid in range(1, 4):
             p = PlayerState(id=pid, username=f"P{pid}", pool=30)
             state.players.append(p)
-        state.oust_player(3)
         state.oust_player(2)
+        state.oust_player(3)
         # Award last survivor bonus
         state.award_last_survivor_bonus()
         scores = state.get_final_scores()

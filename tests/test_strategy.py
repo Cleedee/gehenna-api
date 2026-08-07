@@ -567,9 +567,9 @@ class TestGameStateAnalyzer:
         analyzer = GameStateAnalyzer(state, player_id=1)
 
         assert analyzer.prey is not None
-        assert analyzer.prey.id == 4  # Player 4 is prey of Player 1 (counter-clockwise)
+        assert analyzer.prey.id == 2  # Prey is the next player
         assert analyzer.predator is not None
-        assert analyzer.predator.id == 2  # Player 2 is predator of Player 1 (clockwise)
+        assert analyzer.predator.id == 4  # Predator is the previous player
         assert len(analyzer.cross_players) == 1  # Player 3 is cross
 
     def test_analyzer_strategic_position(self):
