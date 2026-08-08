@@ -424,9 +424,10 @@ def import_text():
                 f"({result.get('cards_imported')} cards)"
             )
             if missing:
-                msg += f". {len(missing)} not found: " + ", ".join(
-                    m["name"] for m in missing[:5]
+                missing_str = ", ".join(
+                    f"{m['name']} (x{m['quantity']})" for m in missing
                 )
+                msg += f". {len(missing)} cards not found: {missing_str}"
             flash(msg, "success")
             return redirect(url_for("decks.detail", deck_id=result["deck_id"]))
         flash("Error importing deck", "error")
