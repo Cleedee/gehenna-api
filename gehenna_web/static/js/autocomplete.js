@@ -62,7 +62,7 @@
        ------------------------------------------ */
 
     function attachToInputs() {
-        document.querySelectorAll('input[name="name"]').forEach(function (input) {
+        document.querySelectorAll('input[name="name"], input[data-card-picker]').forEach(function (input) {
             input.setAttribute('autocomplete', 'off');
             input.addEventListener('input', onInput);
             input.addEventListener('focus', onFocus);
@@ -78,6 +78,10 @@
     function onInput(e) {
         const input = e.target;
         const value = input.value.trim();
+
+        if (isPicker(input)) {
+            clearPickerSelection(input);
+        }
 
         clearTimeout(debounceTimer);
         closeDropdown();
@@ -212,6 +216,10 @@
             item.setAttribute('role', 'option');
             item.setAttribute('data-card-id', card.id);
             item.setAttribute('data-card-name', card.name);
+            item.setAttribute('data-card-tipo', card.tipo || '');
+            item.setAttribute('data-card-group', card.group || '');
+            item.setAttribute('data-card-clan', card.clan || '');
+            item.setAttribute('data-card-clan-icon', card.clan_icon_url || '');
             item.className = 'autocomplete-item';
             item.style.cssText = [
                 'display: flex',
@@ -257,6 +265,12 @@
         const cardName = item.getAttribute('data-card-name');
         if (!cardId || !activeInput) return;
 
+        // Picker mode: fill the form instead of navigating
+        if (isPicker(activeInput)) {
+            pickCardForForm(activeInput, cardId, cardName);
+            return;
+        }
+
         // Fill the input and navigate to card detail
         activeInput.value = cardName;
         closeDropdown();
@@ -268,6 +282,70 @@
     /* ------------------------------------------
        Helpers
        ------------------------------------------ */
+
+    function isPicker(input) {
+        return input && input.hasAttribute('data-card-picker');
+    }
+
+    function getForm(input) {
+        return input && input.closest('form');
+    }
+
+    function getCardIdField(input) {
+        const form = getForm(input);
+        return form ? form.querySelector('input[name="card_id"]') : null;
+    }
+
+    function getPreview(input) {
+        const form = getForm(input);
+        return form ? form.querySelector('[data-card-preview]') : null;
+    }
+
+    function pickCardForForm(input, cardId, cardName) {
+        input.value = cardName;
+        input.setAttribute('data-selected-card-id', cardId);
+
+        const idField = getCardIdField(input);
+        if (idField) {
+            idField.value = cardId;
+        }
+
+        const preview = getPreview(input);
+        if (preview) {
+            const item = document.querySelector('[data-card-id="' + cardId + '"][role="option"]');
+            const tipo = item ? item.getAttribute('data-card-tipo') : '';
+            const group = item ? item.getAttribute('data-card-group') : '';
+            const clan = item ? item.getAttribute('data-card-clan') : '';
+            const clanIcon = item ? item.getAttribute('data-card-clan-icon') : '';
+            const meta = [tipo, group ? 'Group ' + group : ''].filter(Boolean).join(' · ');
+
+            preview.innerHTML =
+                '<div class="selected-card-chip" data-selected-card-name="' + escapeHtml(cardName) + '">' +
+                (clanIcon ? '<img src="' + escapeHtml(clanIcon) + '" alt="" class="selected-card-clan">' : '') +
+                '<div class="selected-card-info">' +
+                '<span class="selected-card-name">' + escapeHtml(cardName) + '</span>' +
+                (meta ? '<span class="selected-card-meta">' + escapeHtml(meta) + '</span>' : '') +
+                '</div>' +
+                '<span class="selected-card-id">#' + escapeHtml(cardId) + '</span>' +
+                '</div>';
+            preview.style.display = '';
+        }
+
+        closeDropdown();
+    }
+
+    function clearPickerSelection(input) {
+        input.removeAttribute('data-selected-card-id');
+        const idField = getCardIdField(input);
+        if (idField) {
+            idField.value = '';
+        }
+        const preview = getPreview(input);
+        if (preview) {
+            preview.innerHTML = '';
+            preview.style.display = 'none';
+        }
+    }
 
     function closeDropdown() {
         if (dropdownEl) {

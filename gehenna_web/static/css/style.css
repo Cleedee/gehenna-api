@@ -860,6 +860,55 @@ a:focus-visible {
     border-radius: 2px;
 }
 
+/* ------------------------------
+   Selected Card Chip (slot form)
+   ------------------------------ */
+
+.selected-card-chip {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-muted);
+    border-left: 3px solid var(--accent);
+    border-radius: var(--radius-md);
+}
+
+.selected-card-clan {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    filter: brightness(0.9);
+}
+
+.selected-card-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.selected-card-name {
+    color: var(--text-primary);
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.selected-card-meta {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+}
+
+.selected-card-id {
+    color: var(--text-dim);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    flex-shrink: 0;
+}
+
 @media print {
     .navbar,
     footer,

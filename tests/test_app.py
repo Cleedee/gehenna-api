@@ -305,3 +305,18 @@ def test_create_slot(client, card, deck):
     assert data['id'] == 1
     assert data['card']['name'] == 'Teste'
     assert data['card']['code'] == 1
+
+
+def test_cors_allows_web_ui_origins(client):
+    for origin in ('http://127.0.0.1:5000', 'http://localhost:5000'):
+        response = client.get('/cards/', headers={'Origin': origin})
+        assert response.status_code == 200
+        assert (
+            response.headers.get('access-control-allow-origin') == origin
+        )
+
+
+def test_cors_blocks_unknown_origin(client):
+    response = client.get('/cards/', headers={'Origin': 'http://evil.example'})
+    assert response.status_code == 200
+    assert 'access-control-allow-origin' not in response.headers

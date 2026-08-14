@@ -111,6 +111,11 @@ def get_card(card_id):
     return api.get(f'/cards/{card_id}')
 
 
+def get_card_by_name(name):
+    from urllib.parse import quote
+    return api.get(f'/cards/{quote(name, safe="")}/name')
+
+
 def get_moviments(username, tipo=None, skip=0, limit=200):
     params = {'skip': skip, 'limit': limit}
     if tipo:

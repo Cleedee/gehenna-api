@@ -8,23 +8,59 @@
 {% endblock %}
 
 {% block content %}
-<h2>{{ title }}</h2>
+<div class="page-header">
+    <h2>{{ title }}</h2>
+</div>
 
-<form method="POST" class="mb-4">
-    {{ form.hidden_tag() }}
-    <div class="mb-3">
-        {{ form.card_id.label(class="form-label") }}
-        {{ form.card_id(class="form-control", required=True) }}
+<div class="row">
+    <div class="col-lg-7">
+        <form method="POST" class="slot-form">
+            {{ form.hidden_tag() }}
+            {{ form.card_id() }}
+
+            <div class="mb-3">
+                {{ form.card_name.label(class="form-label") }}
+                {{ form.card_name(class="form-control", placeholder="Type a card name, e.g. Earth Meld", autocomplete="off", data_card_picker="", required=False) }}
+                <div class="form-text">Start typing to search the card database, then pick from the suggestions.</div>
+                <div class="mt-2" data-card-preview{% if not selected_card %} style="display:none"{% endif %}>
+                    {% if selected_card %}
+                    <div class="selected-card-chip">
+                        {% if selected_card.clan_icon_url %}
+                        <img src="{{ selected_card.clan_icon_url }}" alt="" class="selected-card-clan">
+                        {% endif %}
+                        <div class="selected-card-info">
+                            <span class="selected-card-name">{{ selected_card.name }}</span>
+                            <span class="selected-card-meta">
+                                {{ selected_card.tipo or '' }}{% if selected_card.tipo and selected_card.group %} · {% endif %}{% if selected_card.group %}Group {{ selected_card.group }}{% endif %}
+                            </span>
+                        </div>
+                        <span class="selected-card-id">#{{ selected_card.id }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="row g-3 mb-3">
+                <div class="col-md-4">
+                    {{ form.quantity.label(class="form-label") }}
+                    {{ form.quantity(class="form-control", required=True) }}
+                </div>
+                <div class="col-md-4">
+                    {{ form.code.label(class="form-label") }}
+                    {{ form.code(class="form-control") }}
+                </div>
+            </div>
+
+            {{ form.submit(class="btn btn-primary") }}
+            <a href="{{ url_for('slots.list', deck_id=deck_id) }}" class="btn btn-secondary">Cancel</a>
+        </form>
     </div>
-    <div class="mb-3">
-        {{ form.quantity.label(class="form-label") }}
-        {{ form.quantity(class="form-control", required=True) }}
-    </div>
-    <div class="mb-3">
-        {{ form.code.label(class="form-label") }}
-        {{ form.code(class="form-control") }}
-    </div>
-    {{ form.submit(class="btn btn-primary") }}
-    <a href="{{ url_for('slots.list', deck_id=deck_id) }}" class="btn btn-secondary">Cancel</a>
-</form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+window.GEHENNA_API_URL = '{{ config.API_BASE_URL or "http://127.0.0.1:8002" }}';
+</script>
+<script src="{{ url_for('static', filename='js/autocomplete.js') }}"></script>
 {% endblock %}
