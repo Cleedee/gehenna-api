@@ -91,7 +91,10 @@ def cadastrar_carta(data, funcao_criacao_carta):
         if not carta:
             carta = funcao_criacao_carta(data, codevdb)
             session.add(carta)
-            print(f'Cadastrando {carta.name}')
+            try:
+                print(f'Cadastrando {carta.name}')
+            except UnicodeEncodeError:
+                print(f'Cadastrando carta codevdb={codevdb}')
         session.commit()
 
 

@@ -8,7 +8,7 @@ mapa_disciplinas = {
     'BloodSorcery': {1: 'blo', 2: 'BLO'},
     'Celerity': {1: 'cel', 2: 'CEL'},
     'Chimerstry': {1: 'chi', 2: 'CHI'},
-    'Daimonon': {1: 'dai', 2: 'DAI'},
+    'Daimoinon': {1: 'dai', 2: 'DAI'},
     'Defense': {1: 'def', 2: 'DEF'},
     'Dementation': {1: 'dem', 2: 'DEM'},
     'Dominate': {1: 'dom', 2: 'DOM'},
