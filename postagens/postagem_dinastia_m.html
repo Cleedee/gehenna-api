@@ -1,0 +1,719 @@
+<!-- ============================================================
+     POST: DINASTIA M — TERESINA BY NIGHT
+     Colar no editor HTML do Blogger (sem conversão para Redigir)
+     ============================================================ -->
+
+<style>
+  /* ── Fontes ── */
+  @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap');
+
+  /* ── Container principal ── */
+  .tb-dinastia {
+    --bg-dark: #0b0a0a;
+    --bg-card: #141212;
+    --bg-table: #1a1616;
+    --bg-row: #1f1a1a;
+    --bg-row-alt: #251f1f;
+    --crimson: #a01020;
+    --crimson-glow: #c01030;
+    --gold: #c9a84c;
+    --gold-dim: #8a7535;
+    --cream: #e8d5b7;
+    --cream-dim: #b8a58a;
+    --text-body: #d4c9b8;
+    --text-muted: #8a7e6e;
+    --border: #2a2222;
+
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0;
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    color: var(--text-body);
+    line-height: 1.7;
+    font-size: 18px;
+    background: transparent;
+  }
+
+  /* ── Header ── */
+  .tb-dinastia .header {
+    text-align: center;
+    padding: 48px 24px 32px;
+    background: linear-gradient(180deg, #0b0a0a 0%, #141212 100%);
+    border-bottom: 2px solid var(--crimson);
+    position: relative;
+  }
+
+  .tb-dinastia .header::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 2px;
+    background: var(--gold);
+  }
+
+  .tb-dinastia .header .ornament {
+    color: var(--crimson);
+    font-size: 22px;
+    letter-spacing: 12px;
+    margin-bottom: 8px;
+    opacity: 0.6;
+  }
+
+  .tb-dinastia .header h1 {
+    font-family: 'Cinzel', Georgia, serif;
+    font-weight: 900;
+    font-size: 36px;
+    color: var(--cream);
+    margin: 0 0 6px;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    text-shadow: 0 0 40px rgba(160, 16, 32, 0.3);
+  }
+
+  .tb-dinastia .header h1 .highlight {
+    color: var(--crimson);
+  }
+
+  .tb-dinastia .header .subtitle {
+    font-family: 'Cinzel', Georgia, serif;
+    font-weight: 400;
+    font-size: 15px;
+    color: var(--gold-dim);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin: 0;
+  }
+
+  .tb-dinastia .header .blood-drop {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background: var(--crimson);
+    border-radius: 50%;
+    margin: 16px auto 0;
+    box-shadow: 0 0 12px rgba(160, 16, 32, 0.6);
+  }
+
+  /* ── Body ── */
+  .tb-dinastia .body {
+    padding: 32px 24px 24px;
+    background: var(--bg-card);
+  }
+
+  .tb-dinastia .body p {
+    margin: 0 0 18px;
+    font-size: 18px;
+    line-height: 1.8;
+  }
+
+  .tb-dinastia .body .dropcap::first-letter {
+    font-family: 'Cinzel', Georgia, serif;
+    font-size: 52px;
+    font-weight: 700;
+    color: var(--crimson);
+    float: left;
+    line-height: 0.8;
+    margin: 8px 8px 0 0;
+    padding: 0;
+  }
+
+  .tb-dinastia .body strong {
+    color: var(--cream);
+    font-weight: 600;
+  }
+
+  .tb-dinastia .body em {
+    color: var(--gold);
+    font-style: italic;
+  }
+
+  /* ── Divisor ── */
+  .tb-dinastia .divider {
+    text-align: center;
+    color: var(--crimson);
+    font-size: 20px;
+    letter-spacing: 16px;
+    margin: 28px 0 24px;
+    opacity: 0.5;
+    user-select: none;
+  }
+
+  /* ── Section header ── */
+  .tb-dinastia .section-title {
+    font-family: 'Cinzel', Georgia, serif;
+    font-weight: 700;
+    font-size: 22px;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    margin: 36px 0 18px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .tb-dinastia .section-title .num {
+    color: var(--crimson);
+    font-weight: 400;
+  }
+
+  /* ── Tabela de jogadores ── */
+  .tb-dinastia .player-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 15px;
+    margin: 18px 0 24px;
+    background: var(--bg-table);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .tb-dinastia .player-table thead {
+    background: var(--crimson);
+    color: #fff;
+    font-family: 'Cinzel', Georgia, serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .tb-dinastia .player-table thead th {
+    padding: 10px 12px;
+    text-align: left;
+  }
+
+  .tb-dinastia .player-table thead th:first-child {
+    text-align: center;
+    width: 32px;
+  }
+
+  .tb-dinastia .player-table tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.2s;
+  }
+
+  .tb-dinastia .player-table tbody tr:nth-child(even) {
+    background: var(--bg-row-alt);
+  }
+
+  .tb-dinastia .player-table tbody tr:hover {
+    background: #2d2424;
+  }
+
+  .tb-dinastia .player-table tbody td {
+    padding: 9px 12px;
+    vertical-align: middle;
+  }
+
+  .tb-dinastia .player-table tbody td:first-child {
+    text-align: center;
+    color: var(--gold-dim);
+    font-family: 'Cinzel', Georgia, serif;
+    font-size: 14px;
+  }
+
+  .tb-dinastia .player-table .player-name {
+    color: var(--cream);
+    font-weight: 600;
+    font-size: 16px;
+  }
+
+  .tb-dinastia .player-table .deck-name {
+    color: var(--text-body);
+    font-style: italic;
+  }
+
+  .tb-dinastia .player-table .clan {
+    font-family: 'Cinzel', Georgia, serif;
+    font-size: 13px;
+    letter-spacing: 1px;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+  }
+
+  .tb-dinastia .player-table .archetype {
+    font-size: 14px;
+    color: var(--text-muted);
+  }
+
+  .tb-dinastia .player-table .clan-toreador { color: #d4a0a0; }
+  .tb-dinastia .player-table .clan-lasombra  { color: #a0a0d4; }
+  .tb-dinastia .player-table .clan-nosferatu { color: #a0c0a0; }
+  .tb-dinastia .player-table .clan-sabbat    { color: #d0a0c0; }
+  .tb-dinastia .player-table .clan-ravnos    { color: #c0b080; }
+  .tb-dinastia .player-table .clan-hecata    { color: #80b0b0; }
+  .tb-dinastia .player-table .clan-independent { color: #c0c0a0; }
+
+  /* ── Mesa cards ── */
+  .tb-dinastia .mesas {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin: 18px 0 24px;
+  }
+
+  .tb-dinastia .mesa-card {
+    background: var(--bg-table);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--crimson);
+    border-radius: 4px;
+    padding: 16px 20px;
+    transition: border-color 0.2s;
+  }
+
+  .tb-dinastia .mesa-card:hover {
+    border-left-color: var(--gold);
+  }
+
+  .tb-dinastia .mesa-card .mesa-title {
+    font-family: 'Cinzel', Georgia, serif;
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--gold);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .tb-dinastia .mesa-card .chain {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  .tb-dinastia .mesa-card .chain .player-tag {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 5px;
+  }
+
+  .tb-dinastia .mesa-card .chain .player-tag .name {
+    color: var(--cream);
+    font-weight: 600;
+  }
+
+  .tb-dinastia .mesa-card .chain .player-tag .deck-tag {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-style: italic;
+  }
+
+  .tb-dinastia .mesa-card .chain .arrow {
+    color: var(--crimson);
+    font-size: 20px;
+    margin: 0 6px;
+    user-select: none;
+  }
+
+  .tb-dinastia .mesa-card .chain .arrow-label {
+    display: none;
+  }
+
+  /* ── Análise ── */
+  .tb-dinastia .analysis-box {
+    background: linear-gradient(135deg, #1a1414, #141212);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 18px 22px;
+    margin: 18px 0 24px;
+    position: relative;
+  }
+
+  .tb-dinastia .analysis-box::before {
+    content: '⟡';
+    position: absolute;
+    top: -10px;
+    left: 22px;
+    color: var(--crimson);
+    font-size: 18px;
+    background: var(--bg-card);
+    padding: 0 8px;
+  }
+
+  .tb-dinastia .analysis-box p {
+    margin: 0 0 10px;
+    font-size: 17px;
+  }
+
+  .tb-dinastia .analysis-box p:last-child {
+    margin-bottom: 0;
+  }
+
+  .tb-dinastia .clan-badge {
+    display: inline-block;
+    font-family: 'Cinzel', Georgia, serif;
+    font-size: 13px;
+    letter-spacing: 1px;
+    padding: 0 6px;
+    border-radius: 2px;
+  }
+
+  /* ── Liga box ── */
+  .tb-dinastia .liga-box {
+    background: linear-gradient(135deg, #0d0a0a, #141010);
+    border: 1px solid var(--gold-dim);
+    border-radius: 6px;
+    padding: 22px 24px;
+    margin: 18px 0 24px;
+    text-align: center;
+  }
+
+  .tb-dinastia .liga-box p {
+    margin: 0 0 10px;
+    font-size: 17px;
+  }
+
+  .tb-dinastia .liga-box p:last-child {
+    margin-bottom: 0;
+  }
+
+  .tb-dinastia .liga-box .highlight-number {
+    font-family: 'Cinzel', Georgia, serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--crimson);
+    padding: 0 4px;
+  }
+
+  /* ── Footer ── */
+  .tb-dinastia .footer {
+    background: var(--bg-card);
+    border-top: 1px solid var(--border);
+    padding: 24px 24px 32px;
+    text-align: center;
+  }
+
+  .tb-dinastia .footer .sigil {
+    font-size: 28px;
+    color: var(--crimson);
+    margin-bottom: 10px;
+    letter-spacing: 8px;
+    opacity: 0.5;
+  }
+
+  .tb-dinastia .footer .cta {
+    font-family: 'Cinzel', Georgia, serif;
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--gold);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin: 0 0 8px;
+  }
+
+  .tb-dinastia .footer .tagline {
+    font-size: 16px;
+    color: var(--text-muted);
+    font-style: italic;
+    margin: 0;
+  }
+
+  /* ── Responsivo ── */
+  @media (max-width: 540px) {
+    .tb-dinastia {
+      font-size: 16px;
+    }
+    .tb-dinastia .header h1 {
+      font-size: 26px;
+      letter-spacing: 4px;
+    }
+    .tb-dinastia .player-table {
+      font-size: 13px;
+    }
+    .tb-dinastia .player-table thead th,
+    .tb-dinastia .player-table tbody td {
+      padding: 7px 8px;
+    }
+    .tb-dinastia .mesa-card .chain {
+      font-size: 14px;
+    }
+  }
+</style>
+
+<!-- ============================================================ -->
+<!-- INÍCIO DO CONTEÚDO                                            -->
+<!-- ============================================================ -->
+
+<div class="tb-dinastia">
+
+  <!-- ─── HEADER ─── -->
+  <div class="header">
+    <div class="ornament">✦ ✦ ✦</div>
+    <h1>Dinastia <span class="highlight">M</span></h1>
+    <p class="subtitle">12 jogadores · 3 rodadas · uma final</p>
+    <div class="blood-drop"></div>
+  </div>
+
+  <!-- ─── BODY ─── -->
+  <div class="body">
+
+    <p class="dropcap">
+      <strong>Agosto chegou</strong>, e com ele a <strong>Dinastia M</strong> — uma liga de V:TES que vai agitar as noites de Teresina ao longo do mês inteiro. São <strong>12 jogadores</strong> dispostos a entrar na arena, divididos em <strong>3 rodadas classificatórias</strong> que rolam ao longo de agosto, cada mesa marcada pelos próprios competidores. Ao final, os <strong>5 melhores colocados</strong> se enfrentam numa mesa final de tirar o fôlego.
+    </p>
+
+    <p>
+      O formato é simples, mas a estrada até o topo é longa: 3 rodadas, cada uma valendo pontos, e só os 5 primeiros garantem vaga na final. Quem será que vai coroar o nome mais alto desta dinastia?
+    </p>
+
+    <p>
+      Vamos conhecer os 12 competidores e seus arsenais para a batalha.
+    </p>
+
+    <!-- ─── DIVISOR ─── -->
+    <div class="divider">✦ ✦ ✦</div>
+
+    <!-- ─── SEÇÃO: PLANTEL ─── -->
+    <h2 class="section-title"><span class="num">01</span> O Plantel</h2>
+
+    <table class="player-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Jogador</th>
+          <th>Deck</th>
+          <th>Clã</th>
+          <th>Arquétipo</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td><span class="player-name">David</span></td>
+          <td><span class="deck-name">Bonito que dói</span></td>
+          <td><span class="clan clan-toreador">Toreador</span></td>
+          <td><span class="archetype">Beleza Dolorosa G6/7</span></td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td><span class="player-name">Samuel</span></td>
+          <td><span class="deck-name">Queria um bounce</span></td>
+          <td><span class="clan clan-nosferatu">Nosferatu</span></td>
+          <td><span class="archetype">Nosferatu Rush G1/2</span></td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td><span class="player-name">Artur Mirço</span></td>
+          <td><span class="deck-name">Arrastão de Nova Santa Rita</span></td>
+          <td><span class="clan clan-lasombra">Lasombra</span></td>
+          <td><span class="archetype">Lasombra Servitor Swarm Bleed G6</span></td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td><span class="player-name">Lucas</span></td>
+          <td><span class="deck-name">Cain Contratos Finais</span></td>
+          <td><span class="clan clan-sabbat">Sabbat</span></td>
+          <td><span class="archetype">Sabbat Rush G6</span></td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td><span class="player-name">Igor</span></td>
+          <td><span class="deck-name">Ravnos Bleed</span></td>
+          <td><span class="clan clan-ravnos">Ravnos</span></td>
+          <td><span class="archetype">Ravnos Bleed G7</span></td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td><span class="player-name">Rafael</span></td>
+          <td><span class="deck-name">Losta do Rafael</span></td>
+          <td><span class="clan clan-toreador">Toreador</span></td>
+          <td><span class="archetype">Toreador Midcap Vote G6</span></td>
+        </tr>
+        <tr>
+          <td>7</td>
+          <td><span class="player-name">Artur Sudário</span></td>
+          <td><span class="deck-name">Vereador Bola Grande</span></td>
+          <td><span class="clan clan-toreador">Toreador</span></td>
+          <td><span class="archetype">Toreador G6/7</span></td>
+        </tr>
+        <tr>
+          <td>8</td>
+          <td><span class="player-name">Thyago</span></td>
+          <td><span class="deck-name">Tô com o Sombra aí ó</span></td>
+          <td><span class="clan clan-hecata">Hecata</span></td>
+          <td><span class="archetype">Hecata Decay Bleed G6</span></td>
+        </tr>
+        <tr>
+          <td>9</td>
+          <td><span class="player-name">Airlan</span></td>
+          <td><span class="deck-name">Toreador Pistoleiros</span></td>
+          <td><span class="clan clan-toreador">Toreador</span></td>
+          <td><span class="archetype">Toreador Guns Intercept Combat G1/2</span></td>
+        </tr>
+        <tr>
+          <td>10</td>
+          <td><span class="player-name">Iago</span></td>
+          <td><span class="deck-name">Lasombra do Iago</span></td>
+          <td><span class="clan clan-lasombra">Lasombra</span></td>
+          <td><span class="archetype">Lasombra S&amp;B G6</span></td>
+        </tr>
+        <tr>
+          <td>11</td>
+          <td><span class="player-name">Pedro</span></td>
+          <td><span class="deck-name">megalowall GTI amarelo sunny</span></td>
+          <td><span class="clan clan-independent">Independent</span></td>
+          <td><span class="archetype">Wall Bigcap G4/5</span></td>
+        </tr>
+        <tr>
+          <td>12</td>
+          <td><span class="player-name">Cláudio Torcato</span></td>
+          <td><span class="deck-name">Morte e Alma Toolbox</span></td>
+          <td><span class="clan clan-lasombra">Lasombra</span></td>
+          <td><span class="archetype">Lasombra Sabbat Toolbox G6</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- ─── ANÁLISE ─── -->
+    <div class="analysis-box">
+      <p>
+        O mosaico de decks é diverso: <strong>Toreador</strong> é o clã mais representado, com 4 jogadores, mas cada um com uma pegada bem diferente — David aposta na beleza dolorosa, Rafael no voto de midcap, Artur Sudário num bleed genérico G6/7 e Airlan nos pistoleiros com intercept e combate agressivo. <strong>Lasombra</strong> também marca presença forte com três jogadores: Artur Mirço com o swarm de servitors, Iago com Stealth &amp; Bleed, e Cláudio Torcato com um toolbox de Sabbat versátil.
+      </p>
+      <p>
+        Nos extremos, temos Samuel com o rush dos Nosferatu mais antigos, Lucas com o Sabbat rush pesado, Igor tentando furar defesas com Ravnos bleed, Thyago com a decadência dos Hecata, e Pedro montando um paredão independente de capacidade alta.
+      </p>
+    </div>
+
+    <!-- ─── DIVISOR ─── -->
+    <div class="divider">✦ ✦ ✦</div>
+
+    <!-- ─── SEÇÃO: RODADA 1 ─── -->
+    <h2 class="section-title"><span class="num">02</span> Rodada 1 — As Mesas</h2>
+
+    <p>
+      O sorteio da primeira rodada já definiu os confrontos. As mesas têm 4 jogadores cada, e a predação promete esquentar <em>(a seta → indica quem preda quem)</em>:
+    </p>
+
+    <div class="mesas">
+
+      <div class="mesa-card">
+        <div class="mesa-title">Mesa 1</div>
+        <div class="chain">
+          <span class="player-tag">
+            <span class="name">Igor</span>
+            <span class="deck-tag">Ravnos Bleed</span>
+          </span>
+          <span class="arrow">→</span>
+          <span class="player-tag">
+            <span class="name">Artur Mirço</span>
+            <span class="deck-tag">Lasombra Servitor</span>
+          </span>
+          <span class="arrow">→</span>
+          <span class="player-tag">
+            <span class="name">Iago</span>
+            <span class="deck-tag">Lasombra S&amp;B</span>
+          </span>
+          <span class="arrow">→</span>
+          <span class="player-tag">
+            <span class="name">Samuel</span>
+            <span class="deck-tag">Nosferatu Rush</span>
+          </span>
+          <span class="arrow">→</span>
+          <span class="player-tag">
+            <span class="name">Igor</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="mesa-card">
+        <div class="mesa-title">Mesa 2</div>
+        <div class="chain">
+          <span class="player-tag">
+            <span class="name">Thyago</span>
+            <span class="deck-tag">Hecata Decay</span>
+          </span>
+          <span class="arrow">→</span>
+          <span class="player-tag">
+            <span class="name">Artur Sudário</span>
+            <span class="deck-tag">Toreador G6/7</span>
+          </span>
+          <span class="arrow">→</span>
+          <span class="player-tag">
+            <span class="name">Cláudio Torcato</span>
+            <span class="deck-tag">Lasombra Toolbox</span>
+          </span>
+          <span class="arrow">→</span>
+          <span class="player-tag">
+            <span class="name">Lucas</span>
+            <span class="deck-tag">Sabbat Rush</span>
+          </span>
+          <span class="arrow">→</span>
+          <span class="player-tag">
+            <span class="name">Thyago</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="mesa-card">
+        <div class="mesa-title">Mesa 3</div>
+        <div class="chain">
+          <span class="player-tag">
+            <span class="name">Airlan</span>
+            <span class="deck-tag">Toreador Guns</span>
+          </span>
+          <span class="arrow">→</span>
+          <span class="player-tag">
+            <span class="name">Rafael</span>
+            <span class="deck-tag">Toreador Vote</span>
+          </span>
+          <span class="arrow">→</span>
+          <span class="player-tag">
+            <span class="name">David</span>
+            <span class="deck-tag">Toreador Beleza</span>
+          </span>
+          <span class="arrow">→</span>
+          <span class="player-tag">
+            <span class="name">Pedro</span>
+            <span class="deck-tag">Wall Bigcap</span>
+          </span>
+          <span class="arrow">→</span>
+          <span class="player-tag">
+            <span class="name">Airlan</span>
+          </span>
+        </div>
+      </div>
+
+    </div>
+
+    <p>
+      Na <strong>Mesa 1</strong>, Igor tenta sangrar com Ravnos enquanto Artur Mirço e Iago duelam entre Lasombras; Samuel, o predador de Igor, espera o momento certo para rushar. Na <strong>Mesa 2</strong>, Thyago e sua decadência Hecata encaram Artur Sudário, Cláudio e Lucas — três estilos que vão do bleed ao rush, passando pelo toolbox. Já na <strong>Mesa 3</strong>, é a mesa dos Toreador: três representantes do clã da beleza (Airlan, Rafael, David) mais o paredão de Pedro. Quem vai conseguir furar o bloqueio dos pistoleiros?
+    </p>
+
+    <!-- ─── DIVISOR ─── -->
+    <div class="divider">✦ ✦ ✦</div>
+
+    <!-- ─── SEÇÃO: A LIGA ─── -->
+    <h2 class="section-title"><span class="num">03</span> A Liga</h2>
+
+    <div class="liga-box">
+      <p>
+        Diferente de um torneio tradicional, a <strong>Dinastia M</strong> é uma liga. As mesas de cada rodada são marcadas pelos próprios jogadores ao longo de agosto, dando mais flexibilidade para todo mundo participar sem precisar estar no mesmo lugar no mesmo dia. Cada rodada vale pontos, e a classificação é acumulativa.
+      </p>
+      <p>
+        Ao final das 3 rodadas, os <span class="highlight-number">5</span> melhores no ranking geral se enfrentam numa mesa final — e aí, meu amigo, é cada um por si.
+      </p>
+    </div>
+
+    <p>
+      Fique de olho nas redes sociais para saber quando as mesas vão rolar, e prepare o deck porque a <strong>Dinastia M</strong> está só começando.
+    </p>
+
+  </div>
+
+  <!-- ─── FOOTER ─── -->
+  <div class="footer">
+    <div class="sigil">⟡ ✦ ⟡</div>
+    <p class="cta">Que vença o melhor — ou o mais sanguinário</p>
+    <p class="tagline">Teresina by Night · Agosto de 2026</p>
+  </div>
+
+</div>
+
+<!-- ============================================================ -->
+<!-- FIM DO CONTEÚDO                                               -->
+<!-- ============================================================ -->
