@@ -122,6 +122,24 @@
 </div>
 {% endif %}
 
+{% if preconstructed_decks %}
+<div class="card mt-3">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Preconstructed Decks with this Card</h5>
+    </div>
+    <div class="card-body">
+        <p class="mb-2">This card appears in the following preconstructed decks:</p>
+        <div>
+            {% for pdeck in preconstructed_decks %}
+            <a href="{{ url_for('decks.detail', deck_id=pdeck.id) }}" class="badge bg-primary text-decoration-none me-1 mb-1" target="_blank" rel="noopener noreferrer">
+                {{ pdeck.name }} ({{ pdeck.slots[0].quantity }}x)
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}
+
 {% if prices %}
 <div class="card mt-3">
     <div class="card-header bg-success text-white">

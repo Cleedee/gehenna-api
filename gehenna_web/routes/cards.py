@@ -305,6 +305,7 @@ def detail(card_id):
     cost_icon = None
     stock_qty = 0
     moviment_history = []
+    preconstructed_decks = []
 
     if card and card.get('name'):
         card_image_url = api_client.get_card_image_url(
@@ -332,6 +333,11 @@ def detail(card_id):
                 mov_data = mov_resp.json()
                 moviment_history = mov_data.get('moviments', [])[:10]
 
+        # Fetch preconstructed decks that contain this card
+        pc_resp = api_client.get_preconstructed_decks_with_card(card_id)
+        if pc_resp.status_code == 200:
+            preconstructed_decks = pc_resp.json().get('decks', [])
+
     return render_template(
         'cards/detail.html',
         card=card,
@@ -341,5 +347,6 @@ def detail(card_id):
         discipline_icons=discipline_icons,
         cost_icon=cost_icon,
         stock_qty=stock_qty,
-        moviment_history=moviment_history
+        moviment_history=moviment_history,
+        preconstructed_decks=preconstructed_decks
     )
